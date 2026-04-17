@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Incidenti Stradali in Europa — Ricerca SDMX</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://unpkg.com/rough-viz@1.0.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+  <style>
+    :root {
+      --ink:        #1a1a1a;
+      --ink-light:  #555;
+      --ink-faint:  #888;
+      --paper:      #fafaf7;
+      --paper-warm: #f5f3ee;
+      --rule:       #d0ccc4;
+      --accent:     #c0392b;
+      --accent2:    #2980b9;
+      --serif:      'Georgia', 'Times New Roman', serif;
+      --mono:       'Courier New', Courier, monospace;
+      --bs-body-font-family:   var(--serif);
+      --bs-body-color:         var(--ink);
+      --bs-body-bg:            var(--paper);
+      --bs-border-color:       var(--rule);
+      --bs-card-border-radius: 0;
+      --bs-card-border-color:  var(--rule);
+    }
+    html { font-size: 19px; scroll-behavior: smooth; }
+    .container { max-width: 1060px; }
+
+    /* ── HEADER ── */
+    .site-header { background: var(--paper-warm); border-bottom: 2px solid var(--ink); }
+    .eyebrow { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); }
+    .site-header h1 { font-size: 2rem; font-weight: normal; line-height: 1.2; }
+    .intro { color: var(--ink-light); line-height: 1.7; }
+    .ds-badge { font-family: var(--mono); font-size: 1rem; background: var(--paper); border: 1px solid var(--rule); padding: 2px 8px; color: var(--ink-light); }
+    .ds-badge strong { color: var(--ink); }
+
+    /* ── NAV ── */
+    .site-nav { background: var(--paper) !important; border-bottom: 1px solid var(--rule); z-index: 1020; }
+    .site-nav .nav-link { font-family: var(--mono); font-size: 1rem; color: var(--ink-light); padding: 3px 10px; border: 1px solid transparent; border-radius: 0; transition: border-color 0.15s, color 0.15s; }
+    .site-nav .nav-link:hover { border-color: var(--rule); color: var(--ink); }
+
+    /* ── SECTIONS ── */
+    .section { border-bottom: 1px solid var(--rule); }
+    .section:last-child { border-bottom: none; }
+    .section-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+    .section h2 { font-size: 1.5rem; font-weight: normal; }
+    .section .subtitle { color: var(--ink-light); line-height: 1.5; }
+    .subsection-title { font-size: 1rem; font-weight: normal; color: var(--ink); padding-bottom: 0.3rem; border-bottom: 1px dashed var(--rule); }
+
+    /* ── COMPONENTS ── */
+    .callout { background: var(--paper-warm); border-left: 3px solid var(--accent); border-top: none; border-right: none; border-bottom: none; border-radius: 0; color: var(--ink-light); }
+    .callout strong { color: var(--ink); }
+
+    .finding-card { background: #fff; border: 1px solid var(--rule); padding: 0.9rem 1rem; height: 100%; }
+    .big-num { font-size: 2rem; font-family: var(--mono); color: var(--accent); line-height: 1; }
+    .big-num.blue { color: var(--accent2); }
+    .finding-card p { font-size: 1rem; color: var(--ink-light); line-height: 1.4; }
+    .finding-card strong { color: var(--ink); }
+
+    .chart-wrap { background: #fff; border: 1px solid var(--rule); padding: 1.2rem; overflow-x: auto; }
+    .chart-wrap svg { display: block; width: 100%; min-height: 380px; }
+
+    .sm-card { background: #fff; border: 1px solid var(--rule); padding: 0.6rem 0.6rem 0; }
+    .sm-card h4 { font-size: 1rem; font-family: var(--mono); color: var(--ink-light); padding: 0 0.3rem 0.3rem; border-bottom: 1px dashed var(--rule); margin-bottom: 0.3rem; }
+    .sm-card svg { width: 100%; height: 210px; display: block; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+
+    .transform { background: var(--paper-warm); border: 1px solid var(--rule); border-left: 3px solid var(--accent2); }
+    .transform h4 { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+    .transform ul { color: var(--ink-light); line-height: 1.7; }
+    .transform li code { font-family: var(--mono); font-size: 1rem; background: var(--paper); padding: 1px 4px; border: 1px solid var(--rule); }
+
+    .note { font-size: 1rem; color: var(--ink-faint); border-top: 1px dashed var(--rule); line-height: 1.6; }
+    .note code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; border: 1px solid var(--rule); }
+    .note a { color: var(--ink-faint); }
+
+    .query-url { background: #fff; border: 1px solid var(--rule); font-family: var(--mono); font-size: 1rem; color: var(--ink-light); word-break: break-all; line-height: 1.6; }
+    .query-url a { color: var(--accent2); }
+
+    .data-table { font-size: 1rem; }
+    .data-table thead th { background: var(--paper-warm); font-family: var(--mono); font-size: 1rem; font-weight: normal; letter-spacing: 0.05em; border-color: var(--rule); }
+    .data-table td { border-color: var(--rule); }
+    .data-table tbody tr:nth-child(even) td { background: var(--paper-warm); }
+    .data-table code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; color: var(--ink); }
+
+    .dl-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
+    .dl-title { color: var(--ink); font-size: 1rem; }
+    .dl-meta { font-family: var(--mono); font-size: 1rem; color: var(--ink-faint); }
+    a.dl-link { font-family: var(--mono); font-size: 1rem; color: var(--accent2); text-decoration: none; border: 1px solid var(--accent2); padding: 2px 8px; display: inline-block; }
+    a.dl-link:hover { background: var(--accent2); color: #fff; }
+
+    .site-footer { border-top: 2px solid var(--ink); font-size: 1rem; color: var(--ink-faint); font-family: var(--mono); }
+    .site-footer a { color: var(--ink-faint); }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="site-nav navbar sticky-top py-2">
+  <div class="container">
+    <div class="d-flex flex-wrap gap-1">
+      <a class="nav-link" href="#intro">↓ Intro</a>
+      <a class="nav-link" href="#ranking">Classifica</a>
+      <a class="nav-link" href="#assoluti">Numeri Assoluti</a>
+      <a class="nav-link" href="#serie">Serie Storica</a>
+      <a class="nav-link" href="#strade">Tipo di Strada</a>
+      <a class="nav-link" href="#dati">Dati grezzi</a>
+      <a class="nav-link" href="#metodologia">Metodologia</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header py-5">
+  <div class="container">
+    <p class="eyebrow mb-2">Ricerca SDMX · Aprile 2026 · opensdmx CLI</p>
+    <h1 class="mb-3">Incidenti Stradali in Europa: La Mappa della Sicurezza</h1>
+    <p class="intro mb-3" style="max-width:720px;">
+      Analisi della mortalità stradale nei paesi europei basata sugli indicatori SDG di Eurostat. 
+      Il report confronta i tassi di decessi per 100.000 abitanti e l'evoluzione nell'ultimo decennio.
+    </p>
+    <div class="d-flex flex-wrap gap-2">
+      <span class="ds-badge"><strong>Eurostat</strong> SDG_11_40</span>
+      <span class="ds-badge"><strong>Periodo</strong> 2010–2024</span>
+      <span class="ds-badge"><strong>Paesi</strong> 27 UE + EFTA</span>
+    </div>
+  </div>
+</header>
+
+<main class="container py-2">
+
+  <!-- ═══ INTRO ═══ -->
+  <section class="section py-5" id="intro">
+    <p class="section-label mb-1">Contesto</p>
+    <h2 class="mb-2">La sfida della sicurezza stradale</h2>
+    <p class="subtitle mb-4">Morti per incidenti stradali in Europa</p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Limite di scope:</strong> I dati includono i decessi avvenuti entro 30 giorni dall'incidente su strade pubbliche. 
+      Non coprono i danni materiali o le lesioni non fatali. I dati 2024 sono parziali per alcuni paesi.
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-4 g-3">
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2">4,5</div>
+          <p class="mb-0"><strong>Media UE</strong> — morti per 100k abitanti nel 2023</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2">2,2</div>
+          <p class="mb-0"><strong>Svezia</strong> — il paese più sicuro nel 2023</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num blue mb-2">8,1</div>
+          <p class="mb-0"><strong>Romania</strong> — tasso più alto registrato (pari alla Bulgaria)</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2">5,2</div>
+          <p class="mb-0"><strong>Italia</strong> — tasso superiore alla media europea del 15%</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ RANKING ═══ -->
+  <section class="section py-5" id="ranking">
+    <p class="section-label mb-1">Fase 1 · Eurostat SDG_11_40 · Tasso (RT)</p>
+    <h2 class="mb-2">Mortalità stradale per paese (2023)</h2>
+    <p class="subtitle mb-4">
+      Morti per 100.000 abitanti · Totale strade · 27 paesi UE
+    </p>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Il grafico mostra il numero di vittime per ogni 100.000 residenti. 
+      Valori bassi indicano strade più sicure o migliori politiche di prevenzione. 
+      Fonte SDMX: <code>SDG_11_40</code>, Eurostat.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+    </p>
+
+    <div class="chart-wrap mb-4">
+      <div id="chart-ranking"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 400+ righe (2010-2024)</li>
+        <li>Selezionato l'anno 2023 come riferimento più completo</li>
+        <li>Filtrati solo i 27 stati membri dell'Unione Europea</li>
+        <li>Ordine decrescente per evidenziare le criticità</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ ASSOLUTI ═══ -->
+  <section class="section py-5" id="assoluti">
+    <p class="section-label mb-1">Fase 2 · Eurostat SDG_11_40 · Numero (NR)</p>
+    <h2 class="mb-2">Il costo umano: decessi totali (2023)</h2>
+    <p class="subtitle mb-4">
+      Numero assoluto di morti · Totale strade · 27 paesi UE
+    </p>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Mentre il tasso per 100k abitanti (sezione precedente) misura la sicurezza, questi dati mostrano l'impatto reale in termini di vite umane. I paesi più popolosi (FR, IT, DE) registrano naturalmente i numeri più elevati.
+      Fonte SDMX: <code>SDG_11_40</code>, Eurostat.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+    </p>
+
+    <div class="chart-wrap mb-4">
+      <div id="chart-assoluti"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 400+ righe (2010-2024)</li>
+        <li>Filtro: Unità <code>NR</code> (numero assoluto) e anno <code>2023</code></li>
+        <li>Selezione dei soli 27 paesi UE</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SERIE STORICA ═══ -->
+  <section class="section py-5" id="serie">
+    <p class="section-label mb-1">Fase 2 · Serie Temporale · Trend 2010–2023</p>
+    <h2 class="mb-2">L'evoluzione del rischio stradale</h2>
+    <p class="subtitle mb-4">
+      Confronto tra Italia e Media Europea (EU27_2020)
+    </p>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Il trend mostra una diminuzione costante fino al 2020 (minimo storico dovuto ai lockdown). 
+      Dal 2021 si osserva un leggero rimbalzo.
+      Fonte SDMX: <code>SDG_11_40</code>, Eurostat.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+
+    <div class="chart-wrap mb-4">
+      <svg id="chart-trend"></svg>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Estratti i dati aggregati per l'Unione Europea (EU27_2020)</li>
+        <li>Confronto con la serie storica italiana</li>
+        <li>Il dato 2024 non è mostrato per mancanza di uniformità tra i paesi</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ TIPO STRADA ═══ -->
+  <section class="section py-5" id="strade">
+    <p class="section-label mb-1">Fase 3 · Breakdown infrastruttura · 2022</p>
+    <h2 class="mb-2">Dove avvengono gli incidenti?</h2>
+    <p class="subtitle mb-4">
+      Morti per 100.000 abitanti per tipo di strada · Italia vs UE
+    </p>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> La maggior parte dei decessi avviene su strade rurali ed extra-urbane. 
+      In Italia, il tasso su strade urbane è significativamente superiore alla media UE.
+      Fonte SDMX: <code>SDG_11_40</code>, Eurostat.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+    </p>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      <div class="col">
+        <div class="chart-wrap">
+          <h4 class="subsection-title">ITALIA (2022)</h4>
+          <div id="chart-roads-it"></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="chart-wrap">
+          <h4 class="subsection-title">MEDIA UE (2022)</h4>
+          <div id="chart-roads-eu"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="transform p-3 mt-4 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Usati codici <code>MWAY</code> (Autostrade), <code>RD_URB</code> (Urbane), <code>RD_RUR</code> (Rurali)</li>
+        <li>Dati riferiti al 2022 per garantire la massima granularità</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ DATI GREZZI ═══ -->
+  <section class="section py-5" id="dati">
+    <p class="section-label mb-1">Dati grezzi</p>
+    <h2 class="mb-2">Scarica i dati originali</h2>
+    <div class="callout p-3 mb-4">
+      Dati estratti da Eurostat tramite API SDMX. Licenza: Eurostat CC BY 4.0.
+      Data estrazione: <strong>Aprile 2026</strong>.
+    </div>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat SDG_11_40</div>
+          <div class="dl-title mb-1">Tasso mortalità stradale</div>
+          <div class="dl-meta mb-2">400+ righe · EU27+ · 2010-2024</div>
+          <a class="dl-link" href="output/A_tasso_mortalita.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat SDG_11_40</div>
+          <div class="dl-title mb-1">Numero decessi (assoluti)</div>
+          <div class="dl-meta mb-2">400+ righe · EU27+ · 2010-2024</div>
+          <a class="dl-link" href="output/B_numero_morti.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat SDG_11_40</div>
+          <div class="dl-title mb-1">Breakdown tipo strada</div>
+          <div class="dl-meta mb-2">1200+ righe · 2010-2024</div>
+          <a class="dl-link" href="output/C_tipo_strada.csv" download>↓ CSV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ METODOLOGIA ═══ -->
+  <section class="section py-5" id="metodologia">
+    <p class="section-label mb-1">Note metodologiche</p>
+    <h2 class="mb-2">Fonti e riproducibilità</h2>
+    
+    <h3 class="subsection-title mt-4 mb-3">URL API SDMX</h3>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/SDG_11_40/A.TOTAL.RT.?format=SDMX-CSV&startPeriod=2010" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/SDG_11_40/A.TOTAL.RT.?format=SDMX-CSV&startPeriod=2010</a>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">Comandi CLI</h3>
+    <div class="table-responsive mb-4">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>Dataset</th><th>Comando</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>SDG_11_40</td>
+            <td><code>opensdmx run queries/A_tasso_mortalita.yaml --out output/A_tasso_mortalita.csv</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- File disponibili -->
+    <h3 class="subsection-title mt-4 mb-3">File disponibili</h3>
+    <div class="table-responsive">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>File</th><th>Contenuto</th></tr></thead>
+        <tbody>
+          <tr><td><code>output/A_tasso_mortalita.csv</code></td><td>Tasso per 100k abitanti (2010-2024)</td></tr>
+          <tr><td><code>output/B_numero_morti.csv</code></td><td>Numero assoluto decessi (2010-2024)</td></tr>
+          <tr><td><code>output/C_tipo_strada.csv</code></td><td>Breakdown per infrastruttura (MWAY, URB, RUR)</td></tr>
+          <tr><td><code>metadata/A_tasso_mortalita-meta.csv</code></td><td>Codelist unità di misura per Dataset A</td></tr>
+          <tr><td><code>metadata/B_numero_morti-meta.csv</code></td><td>Codelist unità di misura per Dataset B</td></tr>
+          <tr><td><code>metadata/C_tipo_strada-meta.csv</code></td><td>Codelist infrastrutture per Dataset C</td></tr>
+          <tr><td><code>metadata/common-geo-meta.csv</code></td><td>Codelist entità geopolitiche (Codici Paese)</td></tr>
+          <tr><td><code>queries/*.yaml</code></td><td>Query riproducibili per ogni dataset</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer py-4 mt-2">
+  <div class="container d-flex flex-wrap gap-4 justify-content-between">
+    <span>Dati: Eurostat · Formato SDMX 2.1</span>
+    <span>Strumento: <a href="https://github.com/opensdmx/opensdmx">opensdmx CLI</a></span>
+    <span>Aprile 2026</span>
+  </div>
+</footer>
+
+<script>
+// ── RANKING 2023 ───────────────────────────────────────────────────────────
+const rankingLabels = ['ROMANIA', 'BULGARIA', 'LETTONIA', 'CROAZIA', 'GRECIA', 'PORTOGALLO', 'LITUANIA', 'POLONIA', 'ITALIA', 'SLOVACCHIA', 'UNGHERIA', 'FRANCIA', 'REP. CECA', 'AUSTRIA', 'ESTONIA', 'BELGIO', 'SLOVENIA', 'LUSSEMBURGO', 'SPAGNA', 'CIPRO', 'OLANDA', 'IRLANDA', 'GERMANIA', 'FINLANDIA', 'MALTA', 'DANIMARCA', 'SVEZIA'];
+const rankingValues = [8.1, 8.1, 7.3, 7.1, 6.2, 6.1, 5.5, 5.2, 5.2, 4.9, 4.9, 4.6, 4.6, 4.4, 4.3, 4.3, 3.9, 3.9, 3.7, 3.6, 3.4, 3.4, 3.4, 3.3, 2.9, 2.7, 2.2];
+
+new roughViz.BarH({
+  element: '#chart-ranking',
+  data: { labels: rankingLabels, values: rankingValues },
+  title: 'TASSO DI MORTALITÀ STRADALE (2023)',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  color: '#c0392b',
+  width: 900,
+  height: 800,
+  margin: { top: 40, right: 100, bottom: 50, left: 160 },
+  xLabel: 'morti per 100.000 abitanti',
+});
+
+// ── ASSOLUTI 2023 ──────────────────────────────────────────────────────────
+const absoluteLabels = ['FRANCIA', 'ITALIA', 'GERMANIA', 'POLONIA', 'SPAGNA', 'ROMANIA', 'GRECIA', 'PORTOGALLO', 'OLANDA', 'BULGARIA', 'REP. CECA', 'BELGIO', 'UNGHERIA', 'AUSTRIA', 'CROAZIA', 'SLOVACCHIA', 'SVEZIA', 'FINLANDIA', 'IRLANDA', 'DANIMARCA', 'LITUANIA', 'LETTONIA', 'SLOVENIA', 'ESTONIA', 'CIPRO', 'LUSSEMBURGO', 'MALTA'];
+const absoluteValues = [3154, 3039, 2839, 1893, 1806, 1545, 646, 642, 608, 525, 502, 501, 472, 402, 274, 266, 229, 185, 180, 162, 159, 138, 82, 59, 34, 26, 16];
+
+new roughViz.BarH({
+  element: '#chart-assoluti',
+  data: { labels: absoluteLabels, values: absoluteValues },
+  title: 'NUMERO TOTALE DI DECESSI (2023)',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  color: '#2980b9',
+  width: 900,
+  height: 800,
+  margin: { top: 40, right: 100, bottom: 50, left: 160 },
+  xLabel: 'numero di decessi',
+});
+
+// ── TREND 2010-2023 ────────────────────────────────────────────────────────
+const years = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
+const euTrend = [6.7, 6.5, 6.0, 5.5, 5.5, 5.5, 5.4, 5.3, 5.2, 5.1, 4.2, 4.5, 4.6, 4.5];
+const itTrend = [6.9, 6.6, 6.3, 5.7, 5.7, 5.8, 5.5, 5.8, 5.5, 5.3, 4.0, 4.9, 5.4, 5.2];
+
+const dataEU = years.map((y, i) => ({ x: y, y: euTrend[i] }));
+const dataIT = years.map((y, i) => ({ x: y, y: itTrend[i] }));
+
+new chartXkcd.XY(document.getElementById('chart-trend'), {
+  xLabel: 'ANNO',
+  yLabel: 'TASSO PER 100K ABITANTI',
+  data: {
+    datasets: [
+      { label: 'MEDIA UE', data: dataEU },
+      { label: 'ITALIA', data: dataIT }
+    ]
+  },
+  options: {
+    showLine: true,
+    dotSize: 0.6,
+    xTickCount: 8,
+    yTickCount: 4,
+    dataColors: ['#555', '#c0392b'],
+    legendPosition: chartXkcd.config.positionType.upLeft
+  }
+});
+
+// ── BREAKDOWN TIPO STRADA (2022) ──────────────────────────────────────────
+new roughViz.Bar({
+  element: '#chart-roads-it',
+  data: { labels: ['AUTOSTRADE', 'URBANE', 'RURALI'], values: [0.5, 2.3, 2.6] },
+  title: 'ITALIA',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  color: '#c0392b',
+  width: 400,
+  height: 300,
+  margin: { top: 40, right: 20, bottom: 60, left: 50 },
+  yLabel: 'tasso per 100k'
+});
+
+new roughViz.Bar({
+  element: '#chart-roads-eu',
+  data: { labels: ['AUTOSTRADE', 'URBANE', 'RURALI'], values: [0.4, 1.8, 2.4] },
+  title: 'MEDIA UE',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  color: '#555',
+  width: 400,
+  height: 300,
+  margin: { top: 40, right: 20, bottom: 60, left: 50 },
+  yLabel: 'tasso per 100k'
+});
+</script>
+</body>
+</html>

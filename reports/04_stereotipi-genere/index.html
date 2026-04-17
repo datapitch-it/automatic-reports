@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stereotipi di genere nei dati — Ricerca SDMX</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://unpkg.com/rough-viz@1.0.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+  <style>
+    :root {
+      --ink:        #1a1a1a;
+      --ink-light:  #555;
+      --ink-faint:  #888;
+      --paper:      #fafaf7;
+      --paper-warm: #f5f3ee;
+      --rule:       #d0ccc4;
+      --accent:     #c0392b;
+      --accent2:    #2980b9;
+      --serif:      'Georgia', 'Times New Roman', serif;
+      --mono:       'Courier New', Courier, monospace;
+      --bs-body-font-family:   var(--serif);
+      --bs-body-color:         var(--ink);
+      --bs-body-bg:            var(--paper);
+      --bs-border-color:       var(--rule);
+      --bs-card-border-radius: 0;
+      --bs-card-border-color:  var(--rule);
+    }
+    html { font-size: 19px; scroll-behavior: smooth; }
+    .container { max-width: 1060px; }
+
+    .site-header { background: var(--paper-warm); border-bottom: 2px solid var(--ink); }
+    .eyebrow { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); }
+    .site-header h1 { font-size: 2rem; font-weight: normal; line-height: 1.2; }
+    .intro { color: var(--ink-light); line-height: 1.7; }
+    .ds-badge { font-family: var(--mono); font-size: 1rem; background: var(--paper); border: 1px solid var(--rule); padding: 2px 8px; color: var(--ink-light); }
+    .ds-badge strong { color: var(--ink); }
+
+    .site-nav { background: var(--paper) !important; border-bottom: 1px solid var(--rule); z-index: 1020; }
+    .site-nav .nav-link { font-family: var(--mono); font-size: 1rem; color: var(--ink-light); padding: 3px 10px; border: 1px solid transparent; border-radius: 0; transition: border-color 0.15s, color 0.15s; }
+    .site-nav .nav-link:hover { border-color: var(--rule); color: var(--ink); }
+
+    .section { border-bottom: 1px solid var(--rule); }
+    .section:last-child { border-bottom: none; }
+    .section-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+    .section h2 { font-size: 1.5rem; font-weight: normal; }
+    .section .subtitle { color: var(--ink-light); line-height: 1.5; }
+    .subsection-title { font-size: 1rem; font-weight: normal; color: var(--ink); padding-bottom: 0.3rem; border-bottom: 1px dashed var(--rule); }
+
+    .callout { background: var(--paper-warm); border-left: 3px solid var(--accent); border-top: none; border-right: none; border-bottom: none; border-radius: 0; color: var(--ink-light); }
+    .callout strong { color: var(--ink); }
+
+    .finding-card { background: #fff; border: 1px solid var(--rule); padding: 0.9rem 1rem; height: 100%; }
+    .big-num { font-size: 2rem; font-family: var(--mono); color: var(--accent); line-height: 1; }
+    .big-num.blue { color: var(--accent2); }
+    .finding-card p { font-size: 1rem; color: var(--ink-light); line-height: 1.4; }
+    .finding-card strong { color: var(--ink); }
+
+    .chart-wrap { background: #fff; border: 1px solid var(--rule); padding: 1.2rem; overflow-x: auto; }
+    .chart-wrap svg { display: block; width: 100%; min-height: 380px; }
+
+    .transform { background: var(--paper-warm); border: 1px solid var(--rule); border-left: 3px solid var(--accent2); }
+    .transform h4 { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+    .transform ul { color: var(--ink-light); line-height: 1.7; }
+    .transform li code { font-family: var(--mono); font-size: 1rem; background: var(--paper); padding: 1px 4px; border: 1px solid var(--rule); }
+
+    .note { font-size: 1rem; color: var(--ink-faint); border-top: 1px dashed var(--rule); line-height: 1.6; }
+    .note code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; border: 1px solid var(--rule); }
+    .note a { color: var(--ink-faint); }
+
+    .query-url { background: #fff; border: 1px solid var(--rule); font-family: var(--mono); font-size: 1rem; color: var(--ink-light); word-break: break-all; line-height: 1.6; }
+    .query-url a { color: var(--accent2); }
+
+    .data-table { font-size: 1rem; }
+    .data-table thead th { background: var(--paper-warm); font-family: var(--mono); font-size: 1rem; font-weight: normal; letter-spacing: 0.05em; border-color: var(--rule); }
+    .data-table td { border-color: var(--rule); }
+    .data-table tbody tr:nth-child(even) td { background: var(--paper-warm); }
+    .data-table code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; color: var(--ink); }
+
+    .dl-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
+    .dl-title { color: var(--ink); font-size: 1rem; }
+    .dl-meta { font-family: var(--mono); font-size: 1rem; color: var(--ink-faint); }
+    a.dl-link { font-family: var(--mono); font-size: 1rem; color: var(--accent2); text-decoration: none; border: 1px solid var(--accent2); padding: 2px 8px; display: inline-block; }
+    a.dl-link:hover { background: var(--accent2); color: #fff; }
+
+    .site-footer { border-top: 2px solid var(--ink); font-size: 1rem; color: var(--ink-faint); font-family: var(--mono); }
+    .site-footer a { color: var(--ink-faint); }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="site-nav navbar sticky-top py-2">
+  <div class="container">
+    <div class="d-flex flex-wrap gap-1">
+      <a class="nav-link" href="#intro">↓ Intro</a>
+      <a class="nav-link" href="#stem">Laureate STEM</a>
+      <a class="nav-link" href="#settori">Segregazione settoriale</a>
+      <a class="nav-link" href="#parttime">Lavoro part-time</a>
+      <a class="nav-link" href="#dati">Dati grezzi</a>
+      <a class="nav-link" href="#metodologia">Metodologia</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header py-5">
+  <div class="container">
+    <p class="eyebrow mb-2">Ricerca SDMX · Aprile 2026 · opensdmx CLI</p>
+    <h1 class="mb-3">Stereotipi di genere nei dati europei</h1>
+    <p class="intro mb-3" style="max-width:720px;">
+      Segregazione occupazionale, divario nelle lauree STEM e asimmetria nel lavoro part-time:
+      tre proxy statistiche che misurano come gli stereotipi di genere si riflettano nelle scelte
+      di istruzione e lavoro nei paesi dell'Unione Europea.
+    </p>
+    <div class="d-flex flex-wrap gap-2">
+      <span class="ds-badge"><strong>Eurostat</strong> TPS00217</span>
+      <span class="ds-badge"><strong>Eurostat</strong> LFSA_EGAN2</span>
+      <span class="ds-badge"><strong>Eurostat</strong> LFSA_EPPGA</span>
+      <span class="ds-badge"><strong>Periodo</strong> 2010–2023</span>
+      <span class="ds-badge"><strong>Paesi</strong> EU27 + candidati</span>
+    </div>
+  </div>
+</header>
+
+<main class="container py-2">
+
+  <!-- ═══ INTRO ═══ -->
+  <section class="section py-5" id="intro">
+    <p class="section-label mb-1">Contesto</p>
+    <h2 class="mb-2">Cosa misurano questi dati</h2>
+    <p class="subtitle mb-4">Tre proxy quantitative per fenomeni che i sondaggi di opinione non possono catturare con la stessa precisione.</p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Nota metodologica.</strong> I dati SDMX di Eurostat misurano esiti osservabili (chi lavora dove, chi studia cosa, chi lavora a tempo parziale) ma non permettono di stabilire le cause. La correlazione tra segregazione settoriale e stereotipi di genere è solida nella letteratura scientifica, ma questi dati da soli non dimostrano causalità. Influenze come politiche di congedo parentale, struttura del mercato del lavoro e aspettative culturali agiscono in modo combinato.
+    </div>
+
+    <div class="row g-3 mb-2">
+      <div class="col-sm-6 col-lg-3">
+        <div class="finding-card">
+          <div class="big-num">78%</div>
+          <p><strong>dei lavoratori nella sanità EU</strong> sono donne (2023) — il settore più femminilizzato d'Europa</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="finding-card">
+          <div class="big-num">10,5%</div>
+          <p><strong>delle occupate nelle costruzioni EU</strong> sono donne (2023) — il settore più mascolinizzato</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="finding-card">
+          <div class="big-num blue">3×</div>
+          <p><strong>più donne che uomini</strong> lavorano part-time in EU27: 29% vs 9% nel 2023</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="finding-card">
+          <div class="big-num">35%</div>
+          <p><strong>media UE delle laureate STEM</strong> — in calo rispetto ai paesi dell'Est Europa dove si supera il 40%</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE A: STEM ═══ -->
+  <section class="section py-5" id="stem">
+    <p class="section-label mb-1">Dataset A · TPS00217 · Eurostat</p>
+    <h2 class="mb-2">Laureate STEM: quante donne nell'istruzione superiore scientifica?</h2>
+    <p class="subtitle mb-4">Percentuale di donne tra i laureati di livello terziario (bachelor, master, dottorato) in ambiti STEM — scienze naturali, matematica, ICT, ingegneria e costruzioni.</p>
+
+    <div class="chart-wrap mb-3">
+      <div id="chart-stem-ranking" style="min-height:820px;"></div>
+    </div>
+
+    <div class="transform p-3 mb-3">
+      <h4 class="mb-2">Trasformazioni Dataset A</h4>
+      <ul class="mb-0">
+        <li>Dati grezzi: 333 righe, 39 paesi/territori, anni 2015–2023</li>
+        <li>Filtrato: mantenuti paesi EU27 + CH, NO, IS, TR e candidati (RS, ME, BA, MK, AL); escluso LI (Liechtenstein: outlier 70% con campione demografico ridotto)</li>
+        <li>Selezionato l'ultimo anno disponibile per paese (2023 per tutti i paesi qui mostrati)</li>
+        <li>Ordinamento crescente per valore</li>
+        <li>Dati finali nel grafico: 35 osservazioni</li>
+      </ul>
+    </div>
+
+    <p class="note pt-3">
+      <strong>Come leggere il grafico.</strong> La soglia di parità sarebbe 50%. Nessun paese europeo la raggiunge in STEM. I paesi dell'Europa sudorientale (Albania, Bosnia, Macedonia del Nord) presentano valori più alti — probabile effetto di una diversa distribuzione delle famiglie di corsi rispetto all'UE occidentale. I paesi UE occidentali (Germania, Svizzera, Belgio) si attestano tra il 26% e il 29%. Fonte: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/TPS00217">Eurostat TPS00217</a>, iscedf13=<code>F05_06_07</code>, isced11=<code>ED5-8</code>.
+    </p>
+  </section>
+
+  <!-- ═══ SEZIONE B: SEGREGAZIONE SETTORIALE ═══ -->
+  <section class="section py-5" id="settori">
+    <p class="section-label mb-1">Dataset B · LFSA_EGAN2 · Eurostat</p>
+    <h2 class="mb-2">Segregazione occupazionale: chi lavora dove in Europa?</h2>
+    <p class="subtitle mb-4">Quota percentuale di donne tra gli occupati 15–74 anni nei cinque settori NACE Rev.2 più emblematici per la segregazione di genere, EU27, 2010–2023.</p>
+
+    <h3 class="subsection-title mb-3">Quota femminile per settore — EU27 2023</h3>
+    <div class="chart-wrap mb-3">
+      <div id="chart-settori-2023" style="min-height:320px;"></div>
+    </div>
+
+    <h3 class="subsection-title mb-3 mt-4">Evoluzione temporale della quota femminile per settore — EU27 2010–2023</h3>
+    <div class="row g-2 mb-3">
+      <div class="col-md-6 col-lg-4">
+        <div style="background:#fff;border:1px solid var(--rule);padding:0.6rem 0.6rem 0;">
+          <p style="font-family:var(--mono);font-size:1rem;color:var(--ink-light);padding:0 0.3rem 0.3rem;border-bottom:1px dashed var(--rule);margin-bottom:0.3rem;">SANITÀ (Q)</p>
+          <svg id="chart-ts-Q" style="width:100%;height:210px;display:block;"></svg>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div style="background:#fff;border:1px solid var(--rule);padding:0.6rem 0.6rem 0;">
+          <p style="font-family:var(--mono);font-size:1rem;color:var(--ink-light);padding:0 0.3rem 0.3rem;border-bottom:1px dashed var(--rule);margin-bottom:0.3rem;">ISTRUZIONE (P)</p>
+          <svg id="chart-ts-P" style="width:100%;height:210px;display:block;"></svg>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div style="background:#fff;border:1px solid var(--rule);padding:0.6rem 0.6rem 0;">
+          <p style="font-family:var(--mono);font-size:1rem;color:var(--ink-light);padding:0 0.3rem 0.3rem;border-bottom:1px dashed var(--rule);margin-bottom:0.3rem;">ICT (J)</p>
+          <svg id="chart-ts-J" style="width:100%;height:210px;display:block;"></svg>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div style="background:#fff;border:1px solid var(--rule);padding:0.6rem 0.6rem 0;">
+          <p style="font-family:var(--mono);font-size:1rem;color:var(--ink-light);padding:0 0.3rem 0.3rem;border-bottom:1px dashed var(--rule);margin-bottom:0.3rem;">MANIFATTURA (C)</p>
+          <svg id="chart-ts-C" style="width:100%;height:210px;display:block;"></svg>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div style="background:#fff;border:1px solid var(--rule);padding:0.6rem 0.6rem 0;">
+          <p style="font-family:var(--mono);font-size:1rem;color:var(--ink-light);padding:0 0.3rem 0.3rem;border-bottom:1px dashed var(--rule);margin-bottom:0.3rem;">COSTRUZIONI (F)</p>
+          <svg id="chart-ts-F" style="width:100%;height:210px;display:block;"></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="transform p-3 mb-3">
+      <h4 class="mb-2">Trasformazioni Dataset B</h4>
+      <ul class="mb-0">
+        <li>Dati grezzi: 140 righe, EU27 aggregato, 5 settori NACE × 2 sessi × 14 anni (2010–2023)</li>
+        <li>Calcolata quota femminile per settore e anno: <code>F / (F + M) × 100</code></li>
+        <li>2023: Sanità 78.1%, Istruzione 72.7%, Manifattura 30.5%, ICT 30.2%, Costruzioni 10.5%</li>
+        <li>Nota: la quota femminile in ICT è in lieve declino dal 2010 (32.4%) al 2023 (30.2%)</li>
+        <li>Dati finali: 70 osservazioni (5 settori × 14 anni)</li>
+      </ul>
+    </div>
+
+    <p class="note pt-3">
+      <strong>Come leggere i grafici.</strong> La soglia di parità è 50%. Sanità e istruzione sono stabilmente sopra il 70%. ICT, manifattura e costruzioni restano strutturalmente sotto il 35%. La quota femminile in ICT non è cresciuta nel periodo — anzi è leggermente diminuita — nonostante la digitalizzazione abbia moltiplicato il numero assoluto di occupati nel settore. Fonte: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/LFSA_EGAN2">Eurostat LFSA_EGAN2</a>, unit=<code>THS_PER</code>, age=<code>Y15-74</code>.
+    </p>
+  </section>
+
+  <!-- ═══ SEZIONE C: PART-TIME ═══ -->
+  <section class="section py-5" id="parttime">
+    <p class="section-label mb-1">Dataset C · LFSA_EPPGA · Eurostat</p>
+    <h2 class="mb-2">Lavoro part-time: un indicatore del lavoro di cura non retribuito?</h2>
+    <p class="subtitle mb-4">Percentuale di donne e uomini (15–74 anni) in occupazione a tempo parziale sul totale degli occupati. Il divario sistematico riflette la distribuzione asimmetrica del lavoro di cura familiare.</p>
+
+    <h3 class="subsection-title mb-3">EU27: evoluzione 2010–2023 per sesso</h3>
+    <div class="chart-wrap mb-3">
+      <svg id="chart-parttime-ts" style="min-height:380px;"></svg>
+    </div>
+
+    <h3 class="subsection-title mb-3 mt-4">Divario part-time (F − M) per paese EU27 — ultimo anno disponibile</h3>
+    <div class="chart-wrap mb-3">
+      <div id="chart-parttime-gap" style="min-height:760px;"></div>
+    </div>
+
+    <div class="transform p-3 mb-3">
+      <h4 class="mb-2">Trasformazioni Dataset C</h4>
+      <ul class="mb-0">
+        <li>Dati grezzi: 1026 righe, 38 entità geografiche, anni 1983–2023</li>
+        <li>Filtrato per analisi trend: EU27_2020, anni 2010–2023, sessi M e F</li>
+        <li>EU27 2023: donne 29.1%, uomini 9.4% — gap di 19.7 punti percentuali</li>
+        <li>Per il ranking: selezionato l'ultimo anno disponibile per paese, solo paesi EU27</li>
+        <li>Calcolato il divario F − M per paese; ordinato in senso decrescente</li>
+        <li>Nota: Romania (gap −0.7pp, esclusa dal grafico perché roughViz non supporta valori negativi) e Bulgaria (gap +0.3pp) presentano quasi parità — in quei mercati il part-time è raro per entrambi i sessi</li>
+        <li>Dati finali nel ranking: 27 osservazioni</li>
+      </ul>
+    </div>
+
+    <p class="note pt-3">
+      <strong>Come leggere i grafici.</strong> Il divario part-time è interpretato dalla letteratura come proxy del carico di cura non retribuito (figli, anziani, lavoro domestico) che ricade prevalentemente sulle donne. Un divario elevato — come in NL, AT, DE — è correlato a sistemi fiscali che penalizzano il secondo reddito e a una minore disponibilità di asili nido pubblici. Fonte: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/LFSA_EPPGA">Eurostat LFSA_EPPGA</a>, unit=<code>PC</code>, age=<code>Y15-74</code>.
+    </p>
+  </section>
+
+  <!-- ═══ DATI GREZZI ═══ -->
+  <section class="section py-5" id="dati">
+    <p class="section-label mb-1">Dati</p>
+    <h2 class="mb-3">File CSV originali</h2>
+
+    <div class="callout p-3 mb-4">
+      I dati sono distribuiti da Eurostat sotto licenza <strong>CC BY 4.0</strong>. I file CSV non sono stati modificati rispetto al download originale (formato SDMX-CSV). Le query riproducibili sono disponibili nella cartella <code>queries/</code>.
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="p-3" style="background:#fff;border:1px solid var(--rule);">
+          <p class="dl-label mb-1">Dataset A</p>
+          <p class="dl-title mb-1">Laureate STEM — % su totale laureati STEM</p>
+          <p class="dl-meta mb-2">TPS00217 · Eurostat · 333 righe · 2015–2023</p>
+          <a class="dl-link" href="output/A_stem_laureate_femmine.csv">↓ CSV</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="p-3" style="background:#fff;border:1px solid var(--rule);">
+          <p class="dl-label mb-1">Dataset B</p>
+          <p class="dl-title mb-1">Occupati per settore NACE e sesso — EU27</p>
+          <p class="dl-meta mb-2">LFSA_EGAN2 · Eurostat · 140 righe · 2010–2023</p>
+          <a class="dl-link" href="output/B_occupazione_settore_sesso.csv">↓ CSV</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="p-3" style="background:#fff;border:1px solid var(--rule);">
+          <p class="dl-label mb-1">Dataset C</p>
+          <p class="dl-title mb-1">Occupati part-time per sesso — % sul totale</p>
+          <p class="dl-meta mb-2">LFSA_EPPGA · Eurostat · 1026 righe · 1983–2023</p>
+          <a class="dl-link" href="output/C_part_time_sesso.csv">↓ CSV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ METODOLOGIA ═══ -->
+  <section class="section py-5" id="metodologia">
+    <p class="section-label mb-1">Metodologia</p>
+    <h2 class="mb-3">Come sono stati raccolti e trattati i dati</h2>
+
+    <h3 class="subsection-title mb-2">URL API Eurostat (riproducibili)</h3>
+
+    <div class="query-url p-3 mb-3">
+      <strong>Dataset A — TPS00217</strong><br>
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00217/A.F.ED5-8.F05_06_07.PC./?startPeriod=2013&endPeriod=2023&format=SDMX-CSV">
+        https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00217/A.F.ED5-8.F05_06_07.PC./?startPeriod=2013&endPeriod=2023&format=SDMX-CSV
+      </a>
+    </div>
+
+    <div class="query-url p-3 mb-3">
+      <strong>Dataset B — LFSA_EGAN2</strong><br>
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFSA_EGAN2/A.THS_PER.M+F.Y15-74.C+F+J+P+Q.EU27_2020/?startPeriod=2010&endPeriod=2023&format=SDMX-CSV">
+        https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFSA_EGAN2/A.THS_PER.M+F.Y15-74.C+F+J+P+Q.EU27_2020/?startPeriod=2010&endPeriod=2023&format=SDMX-CSV
+      </a>
+    </div>
+
+    <div class="query-url p-3 mb-4">
+      <strong>Dataset C — LFSA_EPPGA</strong><br>
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFSA_EPPGA/A.PC.M+F.Y15-74./?startPeriod=2010&endPeriod=2023&format=SDMX-CSV">
+        https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFSA_EPPGA/A.PC.M+F.Y15-74./?startPeriod=2010&endPeriod=2023&format=SDMX-CSV
+      </a>
+    </div>
+
+    <h3 class="subsection-title mb-2">Classificazioni utilizzate</h3>
+    <table class="table data-table mb-4">
+      <thead><tr><th>Codice</th><th>Nome</th><th>Valore usato</th><th>Descrizione</th></tr></thead>
+      <tbody>
+        <tr><td><code>ISCEDF13</code></td><td>Campi ISCED 2013</td><td><code>F05_06_07</code></td><td>Scienze naturali, ICT, ingegneria e costruzioni (aggregato STEM)</td></tr>
+        <tr><td><code>ISCED11</code></td><td>Livello istruzione</td><td><code>ED5-8</code></td><td>Istruzione terziaria (livelli 5–8: dal ciclo breve al dottorato)</td></tr>
+        <tr><td><code>NACE_R2</code></td><td>Attività economica</td><td><code>C, F, J, P, Q</code></td><td>Manifattura, Costruzioni, ICT, Istruzione, Sanità e assistenza sociale</td></tr>
+        <tr><td><code>AGE</code></td><td>Classe d'età</td><td><code>Y15-74</code></td><td>Popolazione in età lavorativa (15–74 anni)</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title mb-2">Comandi CLI (opensdmx)</h3>
+    <pre style="font-family:var(--mono);font-size:1rem;background:#fff;border:1px solid var(--rule);padding:1rem;overflow-x:auto;color:var(--ink-light);">opensdmx get "TPS00217" --provider eurostat --freq A --sex F \
+  --isced11 ED5-8 --iscedf13 F05_06_07 \
+  --start-period 2013 --end-period 2023 \
+  --out output/A_stem_laureate_femmine.csv
+
+opensdmx get "LFSA_EGAN2" --provider eurostat --freq A \
+  --unit THS_PER --sex M+F --age Y15-74 \
+  --nace_r2 C+F+J+P+Q --geo EU27_2020 \
+  --start-period 2010 --end-period 2023 \
+  --out output/B_occupazione_settore_sesso.csv
+
+opensdmx get "LFSA_EPPGA" --provider eurostat --freq A \
+  --unit PC --sex M+F --age Y15-74 \
+  --start-period 2010 --end-period 2023 \
+  --out output/C_part_time_sesso.csv</pre>
+  </section>
+
+</main>
+
+<footer class="site-footer py-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <strong>Fonti:</strong> Eurostat — Labour Force Survey (LFSA), Education and Training Statistics (TPS).<br>
+        Licenza dati: CC BY 4.0 · <a href="https://ec.europa.eu/eurostat">ec.europa.eu/eurostat</a>
+      </div>
+      <div class="col-md-6 mt-3 mt-md-0">
+        <strong>Strumenti:</strong> opensdmx CLI · Bootstrap 5.3 · roughViz 1.0.6 · chart.xkcd 1.1<br>
+        Generato il 9 aprile 2026
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// DATASET A — STEM LAUREATE FEMMINE (ranking per paese)
+// ══════════════════════════════════════════════════════════════════
+const stemData = {
+  labels: ['CH','ES','HU','DE','BE','AT','LT','NO','LU','MT','SI','FI','SK','LV','NL','TR','FR','DK','CY','IE','CZ','BG','PT','SE','IT','HR','PL','EL','EE','RO','IS','AL','ME','RS','BA','MK'].map(s => s.toUpperCase()),
+  values: [26.3,27.2,27.8,28.1,28.7,29.4,30.0,30.4,32.2,32.8,32.8,33.2,33.4,33.5,33.9,34.2,34.5,35.1,35.4,36.0,36.1,36.2,36.5,37.8,39.3,39.4,40.2,41.1,41.7,42.1,43.3,44.3,45.4,45.9,48.2,51.9]
+};
+
+new roughViz.BarH({
+  element: '#chart-stem-ranking',
+  data: stemData,
+  title: '% DONNE TRA I LAUREATI STEM — ULTIMO ANNO DISPONIBILE (2023)',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  color: '#c0392b',
+  highlight: '#e74c3c',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900,
+  height: 820,
+  margin: { top: 40, right: 100, bottom: 30, left: 80 },
+  xLabel: 'PERCENTUALE (%)',
+});
+
+// ══════════════════════════════════════════════════════════════════
+// DATASET B — SEGREGAZIONE SETTORIALE EU27 2023
+// ══════════════════════════════════════════════════════════════════
+new roughViz.BarH({
+  element: '#chart-settori-2023',
+  data: {
+    labels: ['COSTRUZIONI (F)', 'ICT (J)', 'MANIFATTURA (C)', 'ISTRUZIONE (P)', 'SANITÀ E ASSISTENZA (Q)'],
+    values: [10.5, 30.2, 30.5, 72.7, 78.1]
+  },
+  title: 'QUOTA FEMMINILE PER SETTORE — EU27 2023 (% SUL TOTALE OCCUPATI)',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  color: '#c0392b',
+  highlight: '#e74c3c',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900,
+  height: 320,
+  margin: { top: 40, right: 100, bottom: 30, left: 230 },
+  xLabel: 'PERCENTUALE (%)',
+});
+
+// ══════════════════════════════════════════════════════════════════
+// DATASET B — SERIE TEMPORALI SETTORI (small multiples)
+// ══════════════════════════════════════════════════════════════════
+const anni = [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023];
+
+const sectorTS = {
+  Q: [78.1,78.0,77.9,78.3,78.4,78.6,78.1,78.2,78.2,78.1,77.9,78.0,78.2,78.1],
+  P: [71.3,71.2,71.4,71.4,71.5,71.8,72.1,72.1,72.4,72.1,71.5,72.1,72.4,72.7],
+  J: [32.4,32.3,32.4,31.5,31.6,31.0,30.8,30.7,30.1,30.3,30.1,30.4,30.3,30.2],
+  C: [30.1,30.1,30.2,30.0,30.0,29.8,29.7,30.0,30.1,30.0,29.7,30.1,30.6,30.5],
+  F: [8.6,8.9,9.1,9.5,9.4,9.2,9.2,9.5,9.6,9.7,9.8,10.3,10.3,10.5]
+};
+
+const sectorColors = { Q: '#c0392b', P: '#c0392b', J: '#2980b9', C: '#2980b9', F: '#2980b9' };
+
+['Q','P','J','C','F'].forEach(s => {
+  const points = anni.map((a, i) => ({ x: a, y: sectorTS[s][i] }));
+  new chartXkcd.XY(document.getElementById('chart-ts-' + s), {
+    xLabel: '',
+    yLabel: '%',
+    data: { datasets: [{ label: s, data: points }] },
+    options: {
+      showLine: true,
+      dotSize: 0.4,
+      xTickCount: 3,
+      yTickCount: 3,
+      dataColors: [sectorColors[s]],
+    }
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════
+// DATASET C — PART-TIME EU27 SERIE TEMPORALE
+// ══════════════════════════════════════════════════════════════════
+const ptYears = [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023];
+const ptDonne = [29.9,30.2,30.7,31.3,31.2,31.1,30.9,30.7,30.5,30.5,30.2,29.3,29.0,29.1];
+const ptUomini = [8.0,8.3,8.7,9.1,9.3,9.3,9.3,9.4,9.2,9.3,9.3,9.1,9.2,9.4];
+
+const ptPointsD = ptYears.map((a, i) => ({ x: a, y: ptDonne[i] }));
+const ptPointsM = ptYears.map((a, i) => ({ x: a, y: ptUomini[i] }));
+
+new chartXkcd.XY(document.getElementById('chart-parttime-ts'), {
+  xLabel: '',
+  yLabel: '% PART-TIME',
+  data: {
+    datasets: [
+      { label: 'DONNE', data: ptPointsD },
+      { label: 'UOMINI', data: ptPointsM }
+    ]
+  },
+  options: {
+    showLine: true,
+    dotSize: 0.4,
+    xTickCount: 4,
+    yTickCount: 4,
+    dataColors: ['#c0392b', '#2980b9'],
+  }
+});
+
+// ══════════════════════════════════════════════════════════════════
+// DATASET C — GAP PART-TIME PER PAESE EU27 (ranking)
+// ══════════════════════════════════════════════════════════════════
+// roughViz.BarH non supporta valori negativi — RO (gap=-0.7pp) esclusa dal grafico (vedi nota)
+const ptGapLabels = ['BG','HR','SK','HU','LT','LV','CY','PL','PT','SI','EL','CZ','EE','FI','MT','SE','ES','FR','DK','IE','LU','IT','BE','DE','AT','NL'].map(s => s.toUpperCase());
+const ptGapValues = [0.3,1.2,3.1,3.5,4.1,4.6,4.6,5.0,5.2,6.8,7.6,8.8,9.8,10.4,11.7,14.6,14.6,18.0,18.4,18.7,20.6,23.5,26.8,35.4,37.3,38.8];
+
+new roughViz.BarH({
+  element: '#chart-parttime-gap',
+  data: { labels: ptGapLabels, values: ptGapValues },
+  title: 'DIVARIO PART-TIME (DONNE − UOMINI, PP) — EU27 2023',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  color: '#c0392b',
+  highlight: '#e74c3c',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900,
+  height: 760,
+  margin: { top: 40, right: 100, bottom: 30, left: 80 },
+  xLabel: 'PUNTI PERCENTUALI (PP)',
+});
+</script>
+
+</body>
+</html>

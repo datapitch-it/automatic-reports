@@ -1,0 +1,11 @@
+provider: eurostat
+dataset: SDG_11_40
+filters:
+  freq:
+    value: A
+  tra_infr:
+    value: TOTAL
+  unit:
+    value: NR
+start_period: "2010"
+end_period: "2024"

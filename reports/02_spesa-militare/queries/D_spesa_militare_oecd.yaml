@@ -1,0 +1,26 @@
+# Dataset D — Spesa militare in valuta locale, 9 paesi OECD, 2005–2024
+# Fonte: OECD NASEC10 DF_TABLE11
+# Nota: dati in XDC (valuta nazionale corrente) — non confrontabili tra paesi senza normalizzazione
+# Indice 2015=100 calcolato in post-processing per la visualizzazione
+# Nota: provider OECD non espone URL API pubblico — usare comando CLI sotto
+#
+# Riesegui:
+# opensdmx get "OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11" --provider oecd \
+#   --FREQ A \
+#   --REF_AREA "DEU+FRA+GBR+JPN+ITA+POL+ESP+SWE+NOR" \
+#   --SECTOR S13 \
+#   --EXPENDITURE GF0201 \
+#   --TRANSACTION OTE \
+#   --start-period 2005 --end-period 2024 \
+#   --out output/D_spesa_militare_oecd.csv
+
+provider: oecd
+dataset: "OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11"
+filters:
+  FREQ: A
+  REF_AREA: DEU+FRA+GBR+JPN+ITA+POL+ESP+SWE+NOR
+  SECTOR: S13
+  EXPENDITURE: GF0201
+  TRANSACTION: OTE
+start_period: "2005"
+end_period: "2024"

@@ -1,0 +1,50 @@
+id,name
+AIRP,Airports
+AIRP_MAIN,Main airports
+AIRP_OTH,Other airports
+AIRP_SML,Small airports
+CKIN,Check-in facilities
+CKIN_CV,Check-in facilities - conventional desks
+CKIN_SELF,Check-in facilities - self service kiosks
+CNL,Navigable canals
+IMOD,Intermodal freight area (in square meters)
+IURB,Interurban and city line buses
+MET,Metro/underground lines
+MWAY,Motorways
+NSP,Not specified
+PARK_CAR,Car parking places
+PARK_CAR_ML,Car parking places - medium and long stay
+PARK_CAR_SH,Car parking places - short stay
+PAS_GATE,Passenger gates
+PAS_GATE_BB,Gates with passenger boarding bridges
+PAS_GATE_OTH,Other passenger gates
+RD_COM,Communal roads
+RD_EUR,E-roads
+RD_INB,Other roads within built-up areas
+RD_NPAV,Unpaved roads
+RD_NTEN,Roads not on Trans-European Networks
+RD_OTH,Other roads
+RD_OUTB,Other roads outside built-up areas
+RD_PAV,Paved roads
+RD_PRO,Provincial roads
+RD_RUR,Rural roads
+RD_STA,State roads
+RD_TEN,Roads on Trans-European Networks
+RD_URB,Urban roads
+RIV,Navigable rivers
+RIV_LAK,Navigable rivers and lakes
+RL,Total railway lines
+RL_CV,Conventional railway lines
+RL_DHSPD,Dedicated high speed railway lines
+RL_ELC,Electrified railway lines
+RL_HSPD,High speed railway lines
+RL_NELC,Non-electrified railway lines
+RL_OTH,Other railway lines
+RL_TGE2,Railway lines with double and more tracks
+RL_UHSPD,Upgraded high speed railway lines
+RT_ELC,Electrified railway tracks
+RT_NELC,Non-electrified railway tracks
+RWAY,Airport runways
+RWAY_M_GT2438,Paved airport runways longer than 2 438 metres
+TOTAL,Total
+UNK,Unknown

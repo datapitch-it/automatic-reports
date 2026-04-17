@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>R&D per la difesa — % budget R&D governativo</title>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #fefefe;
+      font-family: 'Georgia', serif;
+      padding: 2rem;
+      max-width: 900px;
+    }
+    h1 { font-size: 1.3rem; margin-bottom: 0.3rem; color: #222; }
+    .subtitle { font-size: 0.85rem; color: #666; margin-bottom: 1.5rem; }
+    .chart-wrap { background: #fff; padding: 1rem; border: 1px solid #eee; }
+    .section-title {
+      font-size: 1rem;
+      margin: 2rem 0 0.5rem;
+      color: #333;
+      border-bottom: 1px dashed #ccc;
+      padding-bottom: 0.3rem;
+    }
+    .note {
+      font-size: 0.75rem;
+      color: #888;
+      margin-top: 1.5rem;
+      border-top: 1px dashed #ccc;
+      padding-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>R&D governativo allocato alla difesa</h1>
+  <p class="subtitle">
+    Percentuale del budget governativo per R&D (GBARD) destinata alla difesa · Ultimo anno disponibile (2021–2025) · Fonte: Eurostat TSC00008
+  </p>
+
+  <h2 class="section-title">Tutti i paesi con dati (ordinati per valore)</h2>
+  <div class="chart-wrap">
+    <svg id="chart-all"></svg>
+  </div>
+
+  <h2 class="section-title">Focus paesi europei (esclusi USA, KR, UK, JP)</h2>
+  <div class="chart-wrap">
+    <svg id="chart-eu"></svg>
+  </div>
+
+  <p class="note">
+    <strong>Che cos'è il GBARD?</strong> Il "Government Budget Appropriations or Outlays for R&D" misura gli
+    <em>stanziamenti</em> di bilancio per la ricerca e sviluppo — non la spesa effettiva.
+    Il valore qui mostrato indica quanta parte del budget R&D governativo è destinata alla difesa
+    (incluse ricerca militare, sviluppo di sistemi d'arma, ecc.).
+    USA: 52% significa che più della metà della ricerca governativa americana è militare.
+    Fonte SDMX: <code>TSC00008</code>, Eurostat.
+    Grafici: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+  </p>
+
+  <script>
+    // Tutti i paesi (ordinati decrescente)
+    const allLabels = ['USA','Corea del Sud','UK','Francia','Germania','Polonia','Romania','Albania','Norvegia','Lussemburgo','Svezia','Lettonia','Spagna','Turchia','Paesi Bassi','Giappone','Slovenia','Ungheria','Slovacchia','Estonia','Finlandia','Serbia','Belgio','Grecia','Cechia','Italia','Montenegro','Bulgaria','Svizzera','Danimarca','Portogallo','Austria','Lituania','Croazia','Cipro','Bosnia','Irlanda','Islanda','Malta'];
+    const allValues = [52.3,15.9,13.1,7.8,7.6,6.2,5.7,5.2,4.5,4.4,4.0,4.0,3.8,3.6,3.4,3.2,3.1,2.9,2.8,2.4,2.0,1.9,1.5,1.3,0.8,0.6,0.5,0.4,0.4,0.4,0.3,0.2,0.2,0.1,0.0,0.0,0.0,0.0,0.0];
+
+    new chartXkcd.Bar(document.getElementById('chart-all'), {
+      title: '% budget R&D governativo → difesa (ultimo anno disponibile)',
+      data: {
+        labels: allLabels,
+        datasets: [{ label: '% GBARD', data: allValues }]
+      },
+      options: {
+        yTickCount: 6,
+        dataColors: ['#c0392b'],
+      }
+    });
+
+    // Solo europei (escludi USA, KR, UK, JP, AL, RS, ME, BA, TR)
+    const euLabels = ['Francia','Germania','Polonia','Romania','Norvegia','Lussemburgo','Svezia','Lettonia','Spagna','Paesi Bassi','Slovenia','Ungheria','Slovacchia','Estonia','Finlandia','Belgio','Grecia','Cechia','Italia','Bulgaria','Svizzera','Danimarca','Portogallo','Austria','Lituania','Croazia','Cipro','Irlanda','Islanda','Malta'];
+    const euValues = [7.8,7.6,6.2,5.7,4.5,4.4,4.0,4.0,3.8,3.4,3.1,2.9,2.8,2.4,2.0,1.5,1.3,0.8,0.6,0.4,0.4,0.4,0.3,0.2,0.2,0.1,0.0,0.0,0.0,0.0];
+
+    new chartXkcd.Bar(document.getElementById('chart-eu'), {
+      title: 'Paesi europei — % GBARD per difesa',
+      data: {
+        labels: euLabels,
+        datasets: [{ label: '% GBARD', data: euValues }]
+      },
+      options: {
+        yTickCount: 5,
+        dataColors: ['#2980b9'],
+      }
+    });
+  </script>
+</body>
+</html>

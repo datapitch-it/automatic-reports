@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Divario retributivo di genere in Europa — Ricerca SDMX</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://unpkg.com/rough-viz@1.0.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+  <style>
+    :root {
+      --ink:        #1a1a1a;
+      --ink-light:  #555;
+      --ink-faint:  #888;
+      --paper:      #fafaf7;
+      --paper-warm: #f5f3ee;
+      --rule:       #d0ccc4;
+      --accent:     #c0392b;
+      --accent2:    #2980b9;
+      --serif:      'Georgia', 'Times New Roman', serif;
+      --mono:       'Courier New', Courier, monospace;
+      --bs-body-font-family:   var(--serif);
+      --bs-body-color:         var(--ink);
+      --bs-body-bg:            var(--paper);
+      --bs-border-color:       var(--rule);
+      --bs-card-border-radius: 0;
+      --bs-card-border-color:  var(--rule);
+    }
+    html { font-size: 19px; scroll-behavior: smooth; }
+    .container { max-width: 1060px; }
+
+    /* ── HEADER ── */
+    .site-header { background: var(--paper-warm); border-bottom: 2px solid var(--ink); }
+    .eyebrow { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); }
+    .site-header h1 { font-size: 2rem; font-weight: normal; line-height: 1.2; }
+    .intro { color: var(--ink-light); line-height: 1.7; }
+    .ds-badge { font-family: var(--mono); font-size: 1rem; background: var(--paper); border: 1px solid var(--rule); padding: 2px 8px; color: var(--ink-light); }
+    .ds-badge strong { color: var(--ink); }
+
+    /* ── NAV ── */
+    .site-nav { background: var(--paper) !important; border-bottom: 1px solid var(--rule); z-index: 1020; }
+    .site-nav .nav-link { font-family: var(--mono); font-size: 1rem; color: var(--ink-light); padding: 3px 10px; border: 1px solid transparent; border-radius: 0; transition: border-color 0.15s, color 0.15s; }
+    .site-nav .nav-link:hover { border-color: var(--rule); color: var(--ink); }
+
+    /* ── SECTIONS ── */
+    .section { border-bottom: 1px solid var(--rule); }
+    .section:last-child { border-bottom: none; }
+    .section-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+    .section h2 { font-size: 1.5rem; font-weight: normal; }
+    .section .subtitle { color: var(--ink-light); line-height: 1.5; }
+    .subsection-title { font-size: 1rem; font-weight: normal; color: var(--ink); padding-bottom: 0.3rem; border-bottom: 1px dashed var(--rule); }
+
+    /* ── COMPONENTS ── */
+    .callout { background: var(--paper-warm); border-left: 3px solid var(--accent); border-top: none; border-right: none; border-bottom: none; border-radius: 0; color: var(--ink-light); }
+    .callout strong { color: var(--ink); }
+
+    .finding-card { background: #fff; border: 1px solid var(--rule); padding: 0.9rem 1rem; height: 100%; }
+    .big-num { font-size: 2rem; font-family: var(--mono); color: var(--accent); line-height: 1; }
+    .big-num.blue { color: var(--accent2); }
+    .finding-card p { font-size: 1rem; color: var(--ink-light); line-height: 1.4; }
+    .finding-card strong { color: var(--ink); }
+
+    .chart-wrap { background: #fff; border: 1px solid var(--rule); padding: 1.2rem; overflow-x: auto; }
+    .chart-wrap svg { display: block; width: 100%; }
+
+    .transform { background: var(--paper-warm); border: 1px solid var(--rule); border-left: 3px solid var(--accent2); }
+    .transform h4 { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+    .transform ul { color: var(--ink-light); line-height: 1.7; }
+    .transform li code { font-family: var(--mono); font-size: 1rem; background: var(--paper); padding: 1px 4px; border: 1px solid var(--rule); }
+
+    .note { font-size: 1rem; color: var(--ink-faint); border-top: 1px dashed var(--rule); line-height: 1.6; }
+    .note code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; border: 1px solid var(--rule); }
+    .note a { color: var(--ink-faint); }
+
+    .query-url { background: #fff; border: 1px solid var(--rule); font-family: var(--mono); font-size: 1rem; color: var(--ink-light); word-break: break-all; line-height: 1.6; }
+    .query-url a { color: var(--accent2); }
+
+    .data-table { font-size: 1rem; }
+    .data-table thead th { background: var(--paper-warm); font-family: var(--mono); font-size: 1rem; font-weight: normal; letter-spacing: 0.05em; border-color: var(--rule); }
+    .data-table td { border-color: var(--rule); }
+    .data-table tbody tr:nth-child(even) td { background: var(--paper-warm); }
+    .data-table code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; color: var(--ink); }
+
+    .dl-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
+    .dl-title { color: var(--ink); font-size: 1rem; }
+    .dl-meta { font-family: var(--mono); font-size: 1rem; color: var(--ink-faint); }
+    a.dl-link { font-family: var(--mono); font-size: 1rem; color: var(--accent2); text-decoration: none; border: 1px solid var(--accent2); padding: 2px 8px; display: inline-block; }
+    a.dl-link:hover { background: var(--accent2); color: #fff; }
+
+    .site-footer { border-top: 2px solid var(--ink); font-size: 1rem; color: var(--ink-faint); font-family: var(--mono); }
+    .site-footer a { color: var(--ink-faint); }
+
+    /* chart sizing helpers */
+    #chart-ranking { min-height: 700px; }
+    #chart-trend { min-height: 420px; }
+    #chart-age { min-height: 200px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="site-nav navbar sticky-top py-2">
+  <div class="container">
+    <div class="d-flex flex-wrap gap-1">
+      <a class="nav-link" href="#intro">↓ Intro</a>
+      <a class="nav-link" href="#ranking">Classifica 2024</a>
+      <a class="nav-link" href="#trend">Evoluzione storica</a>
+      <a class="nav-link" href="#eta">Per fascia d'età</a>
+      <a class="nav-link" href="#dati">Dati grezzi</a>
+      <a class="nav-link" href="#metodologia">Metodologia</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header py-5">
+  <div class="container">
+    <p class="eyebrow mb-2">Ricerca SDMX · 9 aprile 2026 · opensdmx CLI</p>
+    <h1 class="mb-3">Quanto guadagnano le donne rispetto agli uomini in Europa?</h1>
+    <p class="intro mb-3" style="max-width:720px;">
+      In tutta l'Unione Europea le donne guadagnano in media meno degli uomini per ogni ora lavorata.
+      Questo report misura il divario retributivo di genere non aggiustato nei paesi europei,
+      la sua evoluzione dal 2007 al 2024 e come cambia lungo l'arco della vita lavorativa,
+      usando dati ufficiali Eurostat in formato SDMX.
+    </p>
+    <div class="d-flex flex-wrap gap-2">
+      <span class="ds-badge"><strong>Eurostat</strong> TESEM180</span>
+      <span class="ds-badge"><strong>Eurostat</strong> EARN_GR_GPGR2AG</span>
+      <span class="ds-badge"><strong>Periodo</strong> 2007–2024</span>
+      <span class="ds-badge"><strong>Paesi</strong> 30 (UE + IS, NO, CH)</span>
+    </div>
+  </div>
+</header>
+
+<main class="container py-2">
+
+  <!-- ═══ INTRO ═══ -->
+  <section class="section py-5" id="intro">
+    <p class="section-label mb-1">Contesto</p>
+    <h2 class="mb-2">Il divario retributivo di genere in Europa</h2>
+    <p class="subtitle mb-4">Differenza percentuale tra la retribuzione oraria lorda media degli uomini e quella delle donne</p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Limite di scope:</strong> Questi dati misurano il <em>divario non aggiustato</em>
+      — cioè la differenza grezza tra retribuzioni orarie medie, senza tener conto di settore,
+      orario, anzianità o livello di istruzione. Non coprono il lavoro sommerso, il lavoro di cura
+      non retribuito (principalmente svolto da donne), né le differenze nel numero di ore lavorate
+      su base annua. Il divario <em>aggiustato</em> (a parità di mansione e caratteristiche) è in
+      genere inferiore, ma non è disponibile con la stessa copertura geografica e temporale.
+      Fonte per approfondire: Eurostat, <em>Adjusted gender pay gap</em> (EARN_GR_GPGR2CT).
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-4 g-3">
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2">11,1%</div>
+          <p class="mb-0"><strong>Media UE27 2024</strong> — le donne guadagnano in media l'11,1% in meno degli uomini per ogni ora lavorata (dato provvisorio)</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2">18,8%</div>
+          <p class="mb-0"><strong>Estonia</strong> — il divario più alto nell'UE nel 2024; in calo rispetto al 30,9% del 2007</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num blue mb-2">5,3%</div>
+          <p class="mb-0"><strong>Italia</strong> — divario inferiore alla media UE e sostanzialmente stabile dal 2007 (era 5,1%); tra i più bassi d'Europa</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num blue mb-2">−0,8%</div>
+          <p class="mb-0"><strong>Lussemburgo</strong> — unico paese in cui le donne guadagnano (leggermente) più degli uomini; in Belgio il divario è quasi azzerato (0,7%)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE A: RANKING ═══ -->
+  <section class="section py-5" id="ranking">
+    <p class="section-label mb-1">Fase A · Eurostat TESEM180 · nace_r2=B-S_X_O · anno 2024</p>
+    <h2 class="mb-2">Chi ha il divario maggiore? Classifica europea 2024</h2>
+    <p class="subtitle mb-4">
+      % · industria, costruzioni e servizi (esclusa pubblica amministrazione) · 30 paesi
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Divario retributivo di genere non aggiustato (GPG):</strong> differenza percentuale
+      tra la retribuzione oraria lorda media degli uomini e quella delle donne, espressa in
+      percentuale della retribuzione maschile. Formula: <em>(retribuzione_uomini − retribuzione_donne)
+      / retribuzione_uomini × 100</em>. Un valore negativo (come in Lussemburgo) indica che le donne
+      guadagnano in media più degli uomini in quel paese e settore.
+    </div>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> ogni barra rappresenta il divario retributivo in un paese nel 2024.
+      Un valore di 15% significa che, in media, per ogni euro guadagnato da un uomo in quel paese,
+      una donna ne guadagna 0,85. La quasi totalità dei dati 2024 è ancora provvisoria (flag <code>p</code>).
+      <strong>Lussemburgo (−0,8%) non appare nel grafico</strong>: roughViz.BarH non supporta valori
+      negativi (la scala parte da zero); il dato è riportato nella finding card in cima alla pagina.
+      Fonte SDMX: <code>TESEM180</code>, Eurostat.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz 1.0.6</a>.
+    </p>
+
+    <div class="chart-wrap mb-4">
+      <div id="chart-ranking"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 584 righe (39 entità geografiche × 18 anni, 2007–2024)</li>
+        <li>Selezionato l'ultimo anno disponibile per ogni entità geografica: 2024 per 30 paesi, anni precedenti per candidati non-UE (UK, TR, ME, MK, AL, RS) — questi ultimi esclusi dalla classifica</li>
+        <li>Esclusi gli aggregati statistici: <code>EU27_2020</code>, <code>EA20</code>, <code>EA21</code>, <code>EA19</code></li>
+        <li>Mantenuti 30 paesi con dati 2024: i 27 stati UE + Islanda (IS), Norvegia (NO), Svizzera (CH)</li>
+        <li>Ordinamento: dal divario minore (Belgio) al divario maggiore (Estonia)</li>
+        <li>Escluso Lussemburgo (−0,8%) dal grafico: roughViz.BarH costruisce la scala x da 0 al massimo e produce un <code>rect width</code> negativo per valori sotto zero; il dato è riportato nella finding card</li>
+        <li>Nessuna aggregazione o interpolazione applicata; 1 osservazione 2024 con flag <code>dp</code> (definizione diversa + provvisorio): CZ</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE B: TREND ═══ -->
+  <section class="section py-5" id="trend">
+    <p class="section-label mb-1">Fase B · Eurostat TESEM180 · nace_r2=B-S_X_O · 2007–2024</p>
+    <h2 class="mb-2">Il divario si sta riducendo? Evoluzione storica 2007–2024</h2>
+    <p class="subtitle mb-4">
+      % · cinque paesi selezionati + media UE27 · dati annuali
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Nota sui dati mancanti:</strong> la media <strong>EU27_2020</strong> è disponibile
+      da Eurostat solo dal 2010 in poi. I dati 2023 e 2024 sono provvisori per tutti i paesi.
+    </div>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> ogni linea mostra l'andamento del GPG in un paese.
+      Una linea in discesa indica che il divario si sta riducendo.
+      La media UE27 è scesa dal 15,8% del 2010 all'11,1% del 2024.
+      L'Italia si distingue per un divario storicamente basso e stabile.
+      L'Estonia mostra la riduzione assoluta più ampia: da 30,9% nel 2007 a 18,8% nel 2024,
+      ma rimane il paese con il divario più alto nell'UE.
+      Fonte SDMX: <code>TESEM180</code>, Eurostat.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd 1.1</a>.
+    </p>
+
+    <div class="chart-wrap mb-4">
+      <svg id="chart-trend"></svg>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 584 righe dal dataset TESEM180 (2007–2024, tutti i paesi)</li>
+        <li>Selezionati 5 paesi rappresentativi + aggregato UE27: Italia (IT), Germania (DE), Francia (FR), Spagna (ES), Estonia (EE), media UE27 (EU27_2020)</li>
+        <li>Scelta motivata dalla varietà: paese con divario stabile e basso (IT), paese con divario alto in calo (EE), due grandi economie (DE, FR), un paese mediterraneo (ES) e la media comunitaria</li>
+        <li>Valori <code>null</code> per anni mancanti esclusi dalla serie (non interpolati)</li>
+        <li>Nessuna aggregazione; totale: 6 serie × max 18 punti = 104 osservazioni usate</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE C: ETÀ ═══ -->
+  <section class="section py-5" id="eta">
+    <p class="section-label mb-1">Fase C · Eurostat EARN_GR_GPGR2AG · 2022 · media 29 paesi</p>
+    <h2 class="mb-2">Il divario cresce con l'età: GPG per fascia d'età</h2>
+    <p class="subtitle mb-4">
+      % · media di 29 paesi europei · anno 2022 · settore B-S (esclusa pubblica amministrazione)
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Effetto carriera:</strong> il divario retributivo di genere non è uniforme lungo la vita lavorativa.
+      Tra i lavoratori più giovani (sotto i 25 anni) il divario è minimo perché le retribuzioni
+      di ingresso sono simili per uomini e donne. Il divario si allarga significativamente
+      nelle fasce centrali della carriera (35–54 anni), spesso in coincidenza con
+      maternità, interruzioni lavorative e minore progressione nelle posizioni senior.
+    </div>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> ogni barra rappresenta il divario retributivo medio in quella
+      fascia d'età, calcolato su 29 paesi europei nel 2022. Non si tratta di un dato per singolo paese
+      ma di una media non ponderata. Le variazioni tra paesi sono sostanziali: in alcuni paesi (es. Estonia)
+      il divario nelle fasce centrali supera il 25%, mentre in altri (es. Lussemburgo) è negativo.
+      Fonte SDMX: <code>EARN_GR_GPGR2AG</code>, Eurostat.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz 1.0.6</a>.
+    </p>
+
+    <div class="chart-wrap mb-4">
+      <div id="chart-age"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 2099 righe (EARN_GR_GPGR2AG, 2010–2022, 36 entità geo × 6 fasce d'età × settori NACE)</li>
+        <li>Filtrato per settore aggregato (<code>B-S_X_O</code>: industria + servizi, esclusa P.A.) e anno 2022</li>
+        <li>Esclusi aggregati geografici (<code>EU27_2020</code>, <code>EA20</code>, ecc.) e paesi non-UE/SEE (AL, MK, ME, RS, TR)</li>
+        <li>Calcolata la media semplice del GPG per fascia d'età su 29 paesi con dati disponibili nel 2022</li>
+        <li>Formula: <code>media = somma(GPG_paese) / n_paesi</code> — nessuna ponderazione per popolazione</li>
+        <li>Esclusa la fascia <code>Y_GE65</code> (65+ anni) per scarsa copertura (pochi paesi)</li>
+        <li>Dati finali: 5 osservazioni (una per fascia d'età)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ DATI GREZZI ═══ -->
+  <section class="section py-5" id="dati">
+    <p class="section-label mb-1">Dati grezzi</p>
+    <h2 class="mb-2">Scarica i dati originali</h2>
+    <p class="subtitle mb-4">
+      Dati estratti da Eurostat tramite API SDMX e usati per le analisi in questa pagina.
+    </p>
+    <div class="callout p-3 mb-4">
+      Questi sono i dati <strong>così come restituiti dall'API</strong> — nessuna aggregazione.
+      Licenza: Eurostat CC BY 4.0.
+      Data di estrazione: <strong>9 aprile 2026</strong>.
+    </div>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat TESEM180</div>
+          <div class="dl-title mb-1">Gender pay gap non aggiustato — tutti i paesi 2007–2024</div>
+          <div class="dl-meta mb-2">584 righe · 39 paesi/aggregati · 2007–2024</div>
+          <a class="dl-link" href="output/A_tesem180_gpg_overall.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat EARN_GR_GPGR2AG</div>
+          <div class="dl-title mb-1">GPG per fascia d'età e settore NACE Rev.2 — 2010–2022</div>
+          <div class="dl-meta mb-2">2099 righe · 36 paesi · 6 fasce d'età · 2010–2022</div>
+          <a class="dl-link" href="output/B_earn_gpg_age.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat EARN_GR_GPGR2WT</div>
+          <div class="dl-title mb-1">GPG per tipo di orario (part-time / full-time) — 2010–2022</div>
+          <div class="dl-meta mb-2">602 righe · 36 paesi · 2 categorie orario · 2010–2022</div>
+          <a class="dl-link" href="output/C_earn_gpg_worktime.csv" download>↓ CSV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ METODOLOGIA ═══ -->
+  <section class="section py-5" id="metodologia">
+    <p class="section-label mb-1">Note metodologiche</p>
+    <h2 class="mb-2">Fonti, definizioni e riproducibilità</h2>
+    <p class="subtitle mb-4">Tutti i dati sono riproducibili tramite opensdmx CLI.</p>
+
+    <h3 class="subsection-title mt-4 mb-3">Classificazioni usate</h3>
+    <div class="table-responsive mb-4">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>Codice</th><th>Sistema</th><th>Significato</th></tr></thead>
+        <tbody>
+          <tr><td><code>B-S_X_O</code></td><td>NACE Rev. 2</td><td>Industria, costruzioni e servizi — esclusa sezione O (Pubblica Amministrazione e Difesa)</td></tr>
+          <tr><td><code>PC</code></td><td>Unità di misura</td><td>Percentuale (punti percentuali)</td></tr>
+          <tr><td><code>p</code></td><td>Flag OBS_FLAG</td><td>Dato provvisorio (provisional)</td></tr>
+          <tr><td><code>d</code></td><td>Flag OBS_FLAG</td><td>Definizione diversa (definition differs)</td></tr>
+          <tr><td><code>dp</code></td><td>Flag OBS_FLAG</td><td>Definizione diversa + provvisorio (combinato)</td></tr>
+          <tr><td><code>EU27_2020</code></td><td>GEO</td><td>Aggregato UE a 27 stati (composizione dal 2020)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">URL API SDMX delle query originali</h3>
+    <p class="mb-2" style="color:var(--ink-light);">
+      URL esatti usati per scaricare i dati. Cliccabili o incollabili in qualsiasi client HTTP.
+    </p>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">TESEM180 — Eurostat (GPG non aggiustato, tutti i paesi, 2007–2024)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TESEM180/A.PC.B-S_X_O./ALL/?startPeriod=2007&endPeriod=2024&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TESEM180/A.PC.B-S_X_O./ALL/?startPeriod=2007&amp;endPeriod=2024&amp;format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">EARN_GR_GPGR2AG — Eurostat (GPG per fascia d'età, 2010–2022)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/EARN_GR_GPGR2AG/A.PC../ALL/?startPeriod=2010&endPeriod=2022&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/EARN_GR_GPGR2AG/A.PC../ALL/?startPeriod=2010&amp;endPeriod=2022&amp;format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">EARN_GR_GPGR2WT — Eurostat (GPG per orario di lavoro, 2010–2022)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/EARN_GR_GPGR2WT/A.PC../ALL/?startPeriod=2010&endPeriod=2022&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/EARN_GR_GPGR2WT/A.PC../ALL/?startPeriod=2010&amp;endPeriod=2022&amp;format=SDMX-CSV</a>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">Comandi CLI per riprodurre i dati</h3>
+    <div class="table-responsive mb-4">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>Dataset</th><th>Comando</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>TESEM180</td>
+            <td><code>opensdmx run queries/A_tesem180_gpg_overall.yaml --out output/A_tesem180_gpg_overall.csv</code></td>
+          </tr>
+          <tr>
+            <td>EARN_GR_GPGR2AG</td>
+            <td><code>opensdmx run queries/B_earn_gpg_age.yaml --out output/B_earn_gpg_age.csv</code></td>
+          </tr>
+          <tr>
+            <td>EARN_GR_GPGR2WT</td>
+            <td><code>opensdmx run queries/C_earn_gpg_worktime.yaml --out output/C_earn_gpg_worktime.csv</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">File disponibili</h3>
+    <div class="table-responsive">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>File</th><th>Contenuto</th></tr></thead>
+        <tbody>
+          <tr><td><code>output/A_tesem180_gpg_overall.csv</code></td><td>584 righe · GPG non aggiustato per paese e anno (2007–2024)</td></tr>
+          <tr><td><code>output/B_earn_gpg_age.csv</code></td><td>2099 righe · GPG per fascia d'età e settore (2010–2022)</td></tr>
+          <tr><td><code>output/C_earn_gpg_worktime.csv</code></td><td>602 righe · GPG per orario (PT/FT) e settore (2010–2022)</td></tr>
+          <tr><td><code>queries/A_tesem180_gpg_overall.yaml</code></td><td>Query riproducibile per TESEM180</td></tr>
+          <tr><td><code>queries/B_earn_gpg_age.yaml</code></td><td>Query riproducibile per EARN_GR_GPGR2AG</td></tr>
+          <tr><td><code>queries/C_earn_gpg_worktime.yaml</code></td><td>Query riproducibile per EARN_GR_GPGR2WT</td></tr>
+          <tr><td><code>notes.md</code></td><td>Log cronologico delle operazioni</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer py-4 mt-2">
+  <div class="container d-flex flex-wrap gap-4 justify-content-between">
+    <span>Dati: Eurostat · Formato SDMX 2.1 · Licenza CC BY 4.0</span>
+    <span>Strumento: <a href="https://github.com/opensdmx/opensdmx">opensdmx CLI</a></span>
+    <span>Grafici: <a href="https://github.com/jwilber/roughViz">roughViz</a> · <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a></span>
+    <span>9 aprile 2026</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── GRAFICO A — RANKING 2024 ──────────────────────────────────────────────────
+// Fonte: TESEM180, ultimo anno disponibile per paese (2024 per 30 paesi EU/SEE).
+// Ordinamento ascendente (valore minore in basso, maggiore in alto per roughViz.BarH).
+// Lussemburgo (−0.8%) escluso dal grafico: roughViz.BarH non supporta valori negativi
+// (la scala parte da 0 e produce rect width negativo). Il dato è riportato nella finding card.
+const labelsRanking = [
+  'BELGIO','ROMANIA','POLONIA','MALTA',
+  'ITALIA','CROAZIA','PORTOGALLO','SPAGNA','SLOVENIA',
+  'IRLANDA','LITUANIA','ISLANDA','SVEZIA','PAESI BASSI',
+  'FRANCIA','CIPRO','BULGARIA','NORVEGIA','GRECIA',
+  'LETTONIA','DANIMARCA','GERMANIA','SLOVACCHIA','FINLANDIA',
+  'SVIZZERA','UNGHERIA','AUSTRIA','CECHIA','ESTONIA'
+];
+const valuesRanking = [
+   0.7, 3.7, 4.0, 4.9,
+   5.3, 6.6, 7.0, 7.3, 8.0,
+   8.3,10.0,11.1,11.2,11.2,
+  11.8,11.8,12.0,13.0,13.4,
+  13.9,14.0,15.6,15.7,16.3,
+  16.0,16.9,17.6,18.5,18.8
+];
+
+new roughViz.BarH({
+  element: '#chart-ranking',
+  data: {
+    labels: labelsRanking,
+    values: valuesRanking
+  },
+  title: 'Divario retributivo di genere (GPG) per paese — 2024',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  color: '#c0392b',
+  highlight: '#e74c3c',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900,
+  height: 720,
+  margin: { top: 40, right: 80, bottom: 40, left: 190 },
+  xLabel: 'Divario retributivo di genere (%)',
+});
+
+// ── GRAFICO B — SERIE STORICA ─────────────────────────────────────────────────
+// Fonte: TESEM180, 6 serie (IT, DE, FR, ES, EE, EU27_2020), 2007–2024.
+// Null per anni senza dato (non interpolati).
+const anni = [2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024];
+
+const seriesData = {
+  'ITALIA':     [5.1, 4.9, 5.5, 5.3, 5.7, 6.5, 7.0, 6.1, 5.5, 5.3, 5.0, 5.5, 4.6, 4.0, 4.7, 3.8, 2.2, 5.3],
+  'GERMANIA':   [22.8,22.8,22.6,22.3,22.4,22.7,22.1,22.3,21.8,21.1,20.4,20.1,19.2,18.3,17.6,17.7,17.6,15.6],
+  'FRANCIA':    [17.3,16.9,15.2,15.6,15.7,15.6,15.5,15.5,15.6,15.9,16.3,16.7,16.0,15.0,13.7,12.8,12.3,11.8],
+  'SPAGNA':     [18.1,16.1,16.7,16.2,17.6,18.7,17.8,14.9,14.1,14.8,13.5,11.9, 9.6, 9.3, 9.3, 9.2, 7.3, 7.3],
+  'ESTONIA':    [30.9,27.6,26.6,27.7,27.3,29.9,29.8,28.1,26.7,24.8,24.9,21.8,21.6,21.0,20.3,21.1,19.6,18.8],
+  'MEDIA UE27': [null,null,null,15.8,16.2,16.4,16.0,15.7,15.5,15.1,14.6,14.4,13.7,12.7,12.3,12.2,11.7,11.1]
+};
+
+const datasetColors = ['#c0392b','#2980b9','#27ae60','#e67e22','#8e44ad','#16a085'];
+const datasets = Object.entries(seriesData).map(([label, valori], i) => {
+  const points = [];
+  anni.forEach((a, idx) => {
+    if (valori[idx] !== null) points.push({ x: a, y: valori[idx] });
+  });
+  return { label, data: points };
+});
+
+new chartXkcd.XY(document.getElementById('chart-trend'), {
+  xLabel: '',
+  yLabel: 'GPG (%)',
+  data: { datasets },
+  options: {
+    showLine: true,
+    dotSize: 0.4,
+    xTickCount: 6,
+    yTickCount: 5,
+    dataColors: datasetColors,
+  }
+});
+
+// ── GRAFICO C — GPG PER FASCIA D'ETÀ ─────────────────────────────────────────
+// Fonte: EARN_GR_GPGR2AG, media semplice di 29 paesi EU/SEE, anno 2022, settore B-S_X_O.
+// Calcolo: media aritmetica del GPG per fascia d'età (non ponderata per popolazione).
+const labelsAge = ['< 25 ANNI','25–34 ANNI','35–44 ANNI','45–54 ANNI','55–64 ANNI'];
+const valuesAge = [3.2, 6.7, 11.6, 13.9, 13.3];
+
+new roughViz.BarH({
+  element: '#chart-age',
+  data: {
+    labels: labelsAge,
+    values: valuesAge
+  },
+  title: 'GPG medio per fascia d\'età — media 29 paesi EU/SEE, 2022',
+  titleFontSize: '0.95rem',
+  axisFontSize: '0.75rem',
+  roughness: 1.5,
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  color: '#2980b9',
+  highlight: '#3498db',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900,
+  height: 240,
+  margin: { top: 40, right: 80, bottom: 40, left: 160 },
+  xLabel: 'Divario retributivo di genere (%)',
+});
+</script>
+</body>
+</html>

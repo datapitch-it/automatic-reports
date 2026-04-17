@@ -1,0 +1,19 @@
+provider: eurostat
+provider_url: https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1
+agency_id: ESTAT
+dataset: SDG_11_40
+description: Road traffic deaths, by type of roads
+filters:
+  freq:
+    value: A
+    description: ''
+  tra_infr:
+    value: TOTAL
+    description: Total
+  unit:
+    value: RT
+    description: Rate
+start_period: '2010'
+end_period: '2024'
+last_n: null
+first_n: null

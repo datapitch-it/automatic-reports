@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spesa militare — Serie storica paesi selezionati</title>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #fefefe;
+      font-family: 'Georgia', serif;
+      padding: 2rem;
+    }
+    h1 { font-size: 1.3rem; margin-bottom: 0.3rem; color: #222; }
+    .subtitle { font-size: 0.85rem; color: #666; margin-bottom: 1rem; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #eee;
+      padding: 0.5rem;
+    }
+    .card h3 {
+      font-size: 0.9rem;
+      color: #333;
+      margin-bottom: 0.2rem;
+      padding-left: 0.3rem;
+    }
+    .card svg {
+      width: 100%;
+      height: 220px;
+      display: block;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.3rem; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .note {
+      font-size: 0.75rem;
+      color: #888;
+      margin-top: 1.5rem;
+      border-top: 1px dashed #ccc;
+      padding-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Spesa per difesa militare — Serie storica 2000–2024</h1>
+  <p class="subtitle">
+    Paesi selezionati · % del PIL · Fonte: Eurostat GOV_10A_EXP (COFOG GF0201, settore S13)
+  </p>
+
+  <div class="grid">
+    <div class="card"><h3>Estonia</h3><svg id="viz-EE"></svg></div>
+    <div class="card"><h3>Grecia</h3><svg id="viz-EL"></svg></div>
+    <div class="card"><h3>Polonia</h3><svg id="viz-PL"></svg></div>
+    <div class="card"><h3>Norvegia</h3><svg id="viz-NO"></svg></div>
+    <div class="card"><h3>Svezia</h3><svg id="viz-SE"></svg></div>
+    <div class="card"><h3>Italia</h3><svg id="viz-IT"></svg></div>
+    <div class="card"><h3>Spagna</h3><svg id="viz-ES"></svg></div>
+  </div>
+
+  <div class="legend">
+    <span style="color:#555;font-size:0.8rem;">Colori per paese:</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#c0392b"></span>Estonia</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#2980b9"></span>Grecia</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#27ae60"></span>Polonia</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#e67e22"></span>Norvegia</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#8e44ad"></span>Svezia</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#16a085"></span>Italia</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#d35400"></span>Spagna</span>
+  </div>
+
+  <p class="note">
+    <strong>Nota:</strong> Anni senza osservazione esclusi dalla serie. Flag [p] = provvisorio.
+    Germania e Francia non riportano dati in questo dataset Eurostat.
+    Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+  </p>
+
+  <script>
+    // roughViz.Line v1.0.6 ha un bug nel callback async (perde `this`).
+    // Sostituito con chart.xkcd.XY che accetta dati inline.
+    const anni = [2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024];
+
+    const series = {
+      'EE': { colore: '#c0392b', valori: [1.1,1.2,1.3,1.2,1.3,1.3,1.2,1.2,1.6,2.1,1.6,1.4,1.7,1.7,1.7,1.8,2.2,1.9,1.9,2.0,2.3,2.0,2.1,3.0,3.6] },
+      'EL': { colore: '#2980b9', valori: [null,2.7,3.0,3.7,2.9,2.7,2.6,2.8,3.0,3.4,2.7,2.4,2.5,2.2,2.7,2.5,2.1,2.5,2.3,2.0,2.5,2.7,2.6,2.2,2.1] },
+      'PL': { colore: '#27ae60', valori: [null,1.5,1.5,1.5,1.5,1.5,1.6,1.8,1.8,1.4,1.5,1.5,1.4,1.6,1.4,1.5,1.5,1.7,1.6,1.6,1.7,1.5,1.6,1.9,null] },
+      'NO': { colore: '#e67e22', valori: [1.6,1.6,1.8,1.7,1.6,1.3,1.4,1.4,1.3,1.4,1.3,1.3,1.2,1.2,1.3,1.3,1.4,1.5,1.5,1.7,1.8,1.5,1.2,1.5,1.8] },
+      'SE': { colore: '#8e44ad', valori: [null,1.8,1.8,1.8,1.6,1.1,1.2,1.1,1.1,1.1,1.2,1.2,1.2,1.2,1.1,1.0,1.0,1.0,1.0,1.0,1.1,1.2,1.5,1.5,1.7] },
+      'IT': { colore: '#16a085', valori: [null,1.1,1.1,1.2,1.2,1.2,1.2,1.1,1.3,1.4,1.3,1.3,1.2,1.2,1.1,1.1,1.2,1.2,1.2,1.2,1.3,1.3,1.1,1.1,1.2] },
+      'ES': { colore: '#d35400', valori: [1.0,1.0,1.0,0.9,1.0,1.0,0.9,0.9,0.9,0.9,0.9,0.9,0.8,0.8,0.7,0.8,0.8,0.8,0.7,0.7,0.8,0.8,1.0,0.8,0.7] },
+    };
+
+    Object.entries(series).forEach(([code, info]) => {
+      const points = [];
+      anni.forEach((a, i) => {
+        if (info.valori[i] !== null) points.push({ x: a, y: info.valori[i] });
+      });
+      new chartXkcd.XY(document.getElementById(`viz-${code}`), {
+        xLabel: '', yLabel: '% PIL',
+        data: { datasets: [{ label: code, data: points }] },
+        options: {
+          showLine: true,
+          dotSize: 0.4,
+          xTickCount: 4,
+          yTickCount: 3,
+          dataColors: [info.colore],
+        }
+      });
+    });
+  </script>
+</body>
+</html>

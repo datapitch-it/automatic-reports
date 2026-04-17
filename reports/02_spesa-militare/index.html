@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spesa militare e industria della difesa — Ricerca SDMX</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://unpkg.com/rough-viz@1.0.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+  <style>
+    /* ── BRAND TOKENS ── */
+    :root {
+      --ink:        #1a1a1a;
+      --ink-light:  #555;
+      --ink-faint:  #888;
+      --paper:      #fafaf7;
+      --paper-warm: #f5f3ee;
+      --rule:       #d0ccc4;
+      --accent:     #c0392b;
+      --accent2:    #2980b9;
+      --serif:      'Georgia', 'Times New Roman', serif;
+      --mono:       'Courier New', Courier, monospace;
+
+      /* Bootstrap overrides via its own custom props */
+      --bs-body-font-family:  var(--serif);
+      --bs-body-color:        var(--ink);
+      --bs-body-bg:           var(--paper);
+      --bs-border-color:      var(--rule);
+      --bs-card-border-radius: 0;
+      --bs-card-border-color: var(--rule);
+      --bs-table-striped-bg:  var(--paper-warm);
+      --bs-table-border-color: var(--rule);
+    }
+
+    html { font-size: 19px; scroll-behavior: smooth; }
+
+    /* ── CONTAINER ── */
+    .container { max-width: 1060px; }
+
+    /* ── HEADER ── */
+    .site-header {
+      background: var(--paper-warm);
+      border-bottom: 2px solid var(--ink);
+    }
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+    .site-header h1 {
+      font-size: 2rem;
+      font-weight: normal;
+      line-height: 1.2;
+    }
+    .intro { color: var(--ink-light); line-height: 1.7; }
+
+    /* ── DATASET BADGES ── */
+    .ds-badge {
+      font-family: var(--mono);
+      font-size: 1rem;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 2px 8px;
+      color: var(--ink-light);
+    }
+    .ds-badge strong { color: var(--ink); }
+
+    /* ── STICKY NAV ── */
+    .site-nav {
+      background: var(--paper) !important;
+      border-bottom: 1px solid var(--rule);
+      z-index: 1020;
+    }
+    .site-nav .nav-link {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--ink-light);
+      padding: 3px 10px;
+      border: 1px solid transparent;
+      border-radius: 0;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .site-nav .nav-link:hover { border-color: var(--rule); color: var(--ink); }
+
+    /* ── SECTIONS ── */
+    .section { border-bottom: 1px solid var(--rule); }
+    .section:last-child { border-bottom: none; }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+    .section h2 { font-size: 1.5rem; font-weight: normal; }
+    .section .subtitle { color: var(--ink-light); line-height: 1.5; }
+
+    .subsection-title {
+      font-size: 1rem;
+      font-weight: normal;
+      color: var(--ink);
+      padding-bottom: 0.3rem;
+      border-bottom: 1px dashed var(--rule);
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background: var(--paper-warm);
+      border-left: 3px solid var(--accent);
+      border-top: none; border-right: none; border-bottom: none;
+      border-radius: 0;
+      color: var(--ink-light);
+    }
+    .callout strong { color: var(--ink); }
+
+    /* ── FINDING CARDS ── */
+    .finding-card {
+      background: #fff;
+      border: 1px solid var(--rule);
+      padding: 0.9rem 1rem;
+      height: 100%;
+    }
+    .big-num {
+      font-size: 2rem;
+      font-family: var(--mono);
+      color: var(--accent);
+      line-height: 1;
+    }
+    .big-num.blue { color: var(--accent2); }
+    .finding-card p { font-size: 1rem; color: var(--ink-light); line-height: 1.4; }
+    .finding-card strong { color: var(--ink); }
+
+    /* ── CHART CONTAINERS ── */
+    .chart-wrap {
+      background: #fff;
+      border: 1px solid var(--rule);
+      padding: 1.2rem;
+      overflow-x: auto;
+    }
+    .chart-wrap svg { display: block; width: 100%; min-height: 380px; }
+
+    /* ── SMALL MULTIPLES ── */
+    .sm-card {
+      background: #fff;
+      border: 1px solid var(--rule);
+      padding: 0.6rem 0.6rem 0;
+    }
+    .sm-card h4 {
+      font-size: 1rem;
+      font-family: var(--mono);
+      color: var(--ink-light);
+      padding: 0 0.3rem 0.3rem;
+      border-bottom: 1px dashed var(--rule);
+      margin-bottom: 0.3rem;
+    }
+    .sm-card svg { width: 100%; height: 210px; display: block; }
+
+    /* ── LEGEND ── */
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: inline-block;
+    }
+
+    /* ── DATA TABLES ── */
+    .data-table { font-size: 1rem; }
+    .data-table thead th {
+      background: var(--paper-warm);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: normal;
+      letter-spacing: 0.05em;
+      border-color: var(--rule);
+    }
+    .data-table td { border-color: var(--rule); }
+    .data-table tbody tr:nth-child(even) td { background: var(--paper-warm); }
+    .data-table code {
+      font-family: var(--mono);
+      font-size: 1rem;
+      background: var(--paper-warm);
+      padding: 1px 4px;
+      color: var(--ink);
+    }
+
+    /* ── NOTE ── */
+    .note {
+      font-size: 1rem;
+      color: var(--ink-faint);
+      border-top: 1px dashed var(--rule);
+      line-height: 1.6;
+    }
+    .note code {
+      font-family: var(--mono);
+      font-size: 1rem;
+      background: var(--paper-warm);
+      padding: 1px 4px;
+      border: 1px solid var(--rule);
+    }
+    .note a { color: var(--ink-faint); }
+
+    /* ── TRANSFORM BLOCK ── */
+    .transform {
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--accent2);
+    }
+    .transform h4 {
+      font-family: var(--mono);
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+    .transform ul { color: var(--ink-light); line-height: 1.7; }
+    .transform li code {
+      font-family: var(--mono);
+      font-size: 1rem;
+      background: var(--paper);
+      padding: 1px 4px;
+      border: 1px solid var(--rule);
+    }
+
+    /* ── QUERY URL BLOCK ── */
+    .query-url {
+      background: #fff;
+      border: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--ink-light);
+      word-break: break-all;
+      line-height: 1.6;
+    }
+    .query-url a { color: var(--accent2); }
+
+    /* ── DOWNLOAD CARDS ── */
+    .dl-label {
+      font-family: var(--mono);
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+    .dl-title { color: var(--ink); font-size: 1rem; }
+    .dl-meta { font-family: var(--mono); font-size: 1rem; color: var(--ink-faint); }
+    a.dl-link {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--accent2);
+      text-decoration: none;
+      border: 1px solid var(--accent2);
+      padding: 2px 8px;
+      display: inline-block;
+    }
+    a.dl-link:hover { background: var(--accent2); color: #fff; }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      border-top: 2px solid var(--ink);
+      font-size: 1rem;
+      color: var(--ink-faint);
+      font-family: var(--mono);
+    }
+    .site-footer a { color: var(--ink-faint); }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="site-nav navbar sticky-top py-2">
+  <div class="container">
+    <div class="d-flex flex-wrap gap-1">
+      <a class="nav-link" href="#intro">↓ Intro</a>
+      <a class="nav-link" href="#fase-a">A — Ranking EU</a>
+      <a class="nav-link" href="#fase-b">B — Serie storica</a>
+      <a class="nav-link" href="#fase-c">C — R&amp;D difesa</a>
+      <a class="nav-link" href="#fase-d">D — Confronto OECD</a>
+      <a class="nav-link" href="#dati">Dati grezzi</a>
+      <a class="nav-link" href="#metodologia">Metodologia</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header py-5">
+  <div class="container">
+    <p class="eyebrow mb-2">Ricerca SDMX · 2026-04-08 · opensdmx CLI</p>
+    <h1 class="mb-3">Spesa militare e industria della difesa</h1>
+    <p class="intro mb-3" style="max-width:720px;">
+      Analisi della spesa pubblica per la difesa militare in Europa e nel mondo,
+      basata su dati statistici istituzionali (Eurostat e OECD) in formato SDMX.
+      I dati coprono la domanda pubblica di difesa — la proxy statistica più affidabile
+      disponibile in formato aperto per l'industria degli armamenti.
+    </p>
+    <div class="d-flex flex-wrap gap-2">
+      <span class="ds-badge"><strong>Eurostat</strong> GOV_10A_EXP</span>
+      <span class="ds-badge"><strong>Eurostat</strong> TSC00008</span>
+      <span class="ds-badge"><strong>OECD</strong> NASEC10 DF_TABLE11</span>
+      <span class="ds-badge"><strong>Periodo</strong> 2000–2024</span>
+      <span class="ds-badge"><strong>Paesi</strong> 40+</span>
+      <span class="ds-badge"><strong>Grafici</strong> roughViz · chart.xkcd</span>
+    </div>
+  </div>
+</header>
+
+<main class="container py-2">
+
+  <!-- ═══ INTRO ═══ -->
+  <section class="section py-5" id="intro">
+    <p class="section-label mb-1">Contesto</p>
+    <h2 class="mb-2">Cosa misuriamo e perché</h2>
+    <p class="subtitle mb-4">
+      I provider SDMX pubblicano aggregati macroeconomici, non dati su singole aziende.
+      Queste analisi misurano la domanda pubblica di difesa.
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Limite di scope:</strong> I dati SDMX (Eurostat, OECD) non contengono informazioni
+      su singole aziende produttrici di armi. Per dati su BAE Systems, Leonardo, Rheinmetall ecc.
+      la fonte è il <a href="https://www.sipri.org/databases/armsindustry">SIPRI Arms Industry Database</a>.
+      Questi grafici misurano la <strong>spesa governativa per la difesa</strong>, che rappresenta
+      la domanda pubblica a cui l'industria risponde.
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-4 g-3">
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2">52%</div>
+          <p class="mb-0"><strong>USA</strong> — quota del budget R&amp;D governativo destinata alla difesa militare (2024)</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2">3.6%</div>
+          <p class="mb-0"><strong>Estonia</strong> — record EU per spesa militare in % del PIL (2024), da 1.1% nel 2000</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num blue mb-2">249</div>
+          <p class="mb-0"><strong>Svezia</strong> — indice spesa militare 2024 (base 2015=100): quasi triplicata in 9 anni</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num blue mb-2">0.6%</div>
+          <p class="mb-0"><strong>Italia</strong> — % GBARD per R&amp;D militare, tra i più bassi d'Europa occidentale</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FASE A ═══ -->
+  <section class="section py-5" id="fase-a">
+    <p class="section-label mb-1">Fase A · Eurostat GOV_10A_EXP · COFOG GF0201</p>
+    <h2 class="mb-2">Spesa per difesa militare — Ranking europeo</h2>
+    <p class="subtitle mb-4">
+      Ultimo anno disponibile (2023 o 2024) · % del PIL · Governo generale (S13) · 27 paesi
+    </p>
+
+    <div class="chart-wrap mb-4">
+      <div id="viz"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 660 righe (tutti i paesi EU + Svizzera, Norvegia, Islanda · anni 2000–2024)</li>
+        <li>Selezione dell'<strong>ultimo anno disponibile</strong> per ciascun paese (non sempre 2024)</li>
+        <li><strong>Esclusa Slovacchia</strong>: valore <code>-0.1</code> causato da rettifiche contabili, non rappresentabile in un grafico a barre orizzontali</li>
+        <li>Ordinamento crescente per valore (dal più basso al più alto)</li>
+        <li>Nessuna aggregazione numerica: i valori sono quelli originali Eurostat in <code>PC_GDP</code></li>
+      </ul>
+    </div>
+
+    <p class="note pt-3">
+      <strong>Come leggere:</strong> Spesa del governo generale (<code>S13</code>) per la funzione
+      "difesa militare" (<code>GF0201 COFOG 1999</code>), espressa come percentuale del PIL.
+      Germania e Francia non riportano dati in questo dataset Eurostat — sono disponibili solo via OECD (vedi Fase D).
+      Il valore negativo della Slovacchia riflette rettifiche contabili nell'anno riportato.
+      Flag <code>p</code> = dato provvisorio. Fonte SDMX: <code>GOV_10A_EXP</code>, Eurostat.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+    </p>
+  </section>
+
+  <!-- ═══ FASE B ═══ -->
+  <section class="section py-5" id="fase-b">
+    <p class="section-label mb-1">Fase B · Eurostat GOV_10A_EXP · 2000–2024</p>
+    <h2 class="mb-2">Serie storica — Paesi selezionati</h2>
+    <p class="subtitle mb-3">
+      % del PIL · 7 paesi con profili strategici diversi · 2000–2024
+    </p>
+
+    <div class="d-flex flex-wrap align-items-center gap-3 mb-4" style="color:var(--ink-light);">
+      <span style="color:var(--ink-faint);">Colori:</span>
+      <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#c0392b"></span>Estonia</span>
+      <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#2980b9"></span>Grecia</span>
+      <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#27ae60"></span>Polonia</span>
+      <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#e67e22"></span>Norvegia</span>
+      <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#8e44ad"></span>Svezia</span>
+      <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#16a085"></span>Italia</span>
+      <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#d35400"></span>Spagna</span>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mb-4">
+      <div class="col"><div class="sm-card"><h4>Estonia — crescita più rapida EU</h4><svg id="viz-EE"></svg></div></div>
+      <div class="col"><div class="sm-card"><h4>Grecia — storicamente elevata</h4><svg id="viz-EL"></svg></div></div>
+      <div class="col"><div class="sm-card"><h4>Polonia — in forte rialzo dal 2022</h4><svg id="viz-PL"></svg></div></div>
+      <div class="col"><div class="sm-card"><h4>Norvegia — graduale aumento</h4><svg id="viz-NO"></svg></div></div>
+      <div class="col"><div class="sm-card"><h4>Svezia — storico neutrale, ora in rialzo</h4><svg id="viz-SE"></svg></div></div>
+      <div class="col"><div class="sm-card"><h4>Italia — sostanzialmente stabile</h4><svg id="viz-IT"></svg></div></div>
+      <div class="col"><div class="sm-card"><h4>Spagna — tra i più bassi</h4><svg id="viz-ES"></svg></div></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Stessa query sorgente del Dataset A (<code>GOV_10A_EXP</code>), filtrata in fase di download su 7 paesi: <code>IT+PL+ES+SE+EE+EL+NO</code></li>
+        <li>Nessuna aggregazione: serie temporale completa 2000–2024 per ciascun paese</li>
+        <li>Valori <code>null</code> per anni senza osservazione: esclusi dalla linea (non interpolati)</li>
+        <li>Small multiples: ogni paese in un grafico separato, scala Y autonoma per leggibilità</li>
+      </ul>
+    </div>
+
+    <p class="note pt-3">
+      Valori mancanti (anni senza osservazione) esclusi dalla serie. Germania e Francia non riportano dati in questo dataset Eurostat.
+      Fonte SDMX: <code>GOV_10A_EXP</code>. Grafici: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+  </section>
+
+  <!-- ═══ FASE C ═══ -->
+  <section class="section py-5" id="fase-c">
+    <p class="section-label mb-1">Fase C · Eurostat TSC00008 · GBARD · 2014–2025</p>
+    <h2 class="mb-2">R&amp;D governativo allocato alla difesa</h2>
+    <p class="subtitle mb-4">
+      % del budget R&amp;D governativo (GBARD) destinata alla difesa · Ultimo anno disponibile · 39 paesi
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Che cos'è il GBARD?</strong> "Government Budget Appropriations or Outlays for R&amp;D" —
+      misura gli <em>stanziamenti</em> di bilancio per R&amp;D, non la spesa effettiva realizzata.
+      Il valore mostra quanta parte del budget R&amp;D governativo va alla difesa (ricerca militare,
+      sviluppo sistemi d'arma, ecc.). Un valore USA del 52% significa che più della metà della
+      ricerca governativa americana è di natura militare.
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">Tutti i paesi — ranking globale</h3>
+    <div class="chart-wrap mb-4">
+      <div id="chart-all"></div>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">Focus paesi europei (esclusi USA, Corea del Sud, UK, Giappone)</h3>
+    <div class="chart-wrap mb-4">
+      <div id="chart-eu"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 39 paesi × anni 2014–2025 (serie disaggregata per paese e anno)</li>
+        <li>Per il grafico: selezionato l'<strong>ultimo anno disponibile</strong> per ciascun paese (varia: alcuni hanno dati 2024, altri si fermano al 2021–2023)</li>
+        <li>Ordinamento decrescente per valore (dal più alto al più basso)</li>
+        <li>Grafico "tutti i paesi" e grafico "solo EU" costruiti dallo stesso array, filtrandolo per escludere USA, UK, Corea del Sud, Giappone, Turchia</li>
+        <li>Nessuna aggregazione: <code>PC_GBA</code> è già un valore percentuale nativo del dataset</li>
+      </ul>
+    </div>
+
+    <p class="note pt-3">
+      Fonte SDMX: <code>TSC00008</code>, Eurostat. Codice NABS 2007: <code>NABS14</code> (difesa).
+      Unità: <code>PC_GBA</code> (% del totale GBARD). Flag <code>d</code> = definizione divergente dalla standard.
+      Grafici: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+  </section>
+
+  <!-- ═══ FASE D ═══ -->
+  <section class="section py-5" id="fase-d">
+    <p class="section-label mb-1">Fase D · OECD NASEC10 DF_TABLE11 · 2005–2024</p>
+    <h2 class="mb-2">Confronto globale — Crescita relativa della spesa</h2>
+    <p class="subtitle mb-4">
+      Indice 2015 = 100 · Valuta nazionale corrente · Governo generale (S13) · 9 paesi
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Come leggere l'indice:</strong> I dati OECD sono in valuta nazionale (XDC), non comparabili
+      direttamente tra paesi. L'indice 2015=100 mostra la <em>crescita relativa</em>: un valore
+      di 200 significa che la spesa è raddoppiata rispetto al 2015, indipendentemente dalla valuta.
+      Germania e Francia sono disponibili qui ma non nel dataset Eurostat (Fasi A e B).
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">Indice spesa 2024 (base 2015 = 100) — tutti i paesi</h3>
+    <div class="chart-wrap mb-4">
+      <div id="chart-est"></div>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">Variazione % della spesa militare dal 2015 al 2024</h3>
+    <div class="chart-wrap mb-4">
+      <div id="chart-west"></div>
+    </div>
+
+    <div class="table-responsive mb-4">
+      <table class="data-table table table-bordered table-sm">
+        <thead>
+          <tr>
+            <th>Paese</th>
+            <th>Indice 2024 (o ultimo disponibile)</th>
+            <th>Variazione % da 2015</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Svezia</td><td>249 (2024)</td><td>+149%</td><td>Massimo del campione; ingresso NATO 2024</td></tr>
+          <tr><td>Polonia</td><td>235 (2023)</td><td>+135%</td><td>Crescita accelerata dopo 2022</td></tr>
+          <tr><td>Norvegia</td><td>226 (2024)</td><td>+126%</td><td>Graduale ma costante</td></tr>
+          <tr><td>Germania</td><td>177 (2024)</td><td>+77%</td><td>Sondervermögen (fondo speciale 100 mld €) visibile dal 2022</td></tr>
+          <tr><td>Giappone</td><td>173 (2024)</td><td>+73%</td><td>Forte accelerazione dal 2022; obiettivo 2% PIL al 2027</td></tr>
+          <tr><td>UK</td><td>163 (2024)</td><td>+63%</td><td></td></tr>
+          <tr><td>Francia</td><td>145 (2024)</td><td>+45%</td><td>LPM (Loi de Programmation Militaire) 2024–2030</td></tr>
+          <tr><td>Italia</td><td>142 (2024)</td><td>+42%</td><td></td></tr>
+          <tr><td>Spagna</td><td>128 (2024)</td><td>+28%</td><td>Crescita più lenta; obiettivo 2% PIL sotto pressione NATO</td></tr>
+          <tr><td>Australia</td><td>—</td><td>—</td><td>Dati zero nel dataset OECD</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 198 righe (9 paesi × anni 2005–2024) in <strong>valuta nazionale corrente</strong> (<code>XDC</code>) — non confrontabili direttamente tra paesi</li>
+        <li>Trasformazione principale: calcolo dell'<strong>indice 2015=100</strong> per ciascun paese: <code>indice_anno = (valore_anno / valore_2015) × 100</code></li>
+        <li>Variazione percentuale: <code>(valore_2024 − valore_2015) / valore_2015 × 100</code></li>
+        <li>Australia esclusa dai grafici: dati zero nel dataset OECD per <code>GF0201</code></li>
+        <li>Grafico 1 (indice 2024): barre orizzontali con valore indice per tutti i 9 paesi</li>
+        <li>Grafico 2 (variazione %): stessi dati espressi come variazione percentuale da 2015</li>
+      </ul>
+    </div>
+
+    <p class="note pt-3">
+      Fonte SDMX: <code>OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11</code> (provider OECD).
+      Transazione <code>OTE</code> · Settore <code>S13</code> · COFOG <code>GF0201</code>.
+      USA e Corea del Sud non presenti in questo dataset — per questi paesi vedi Fase C (R&amp;D difesa).
+      Grafici: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+  </section>
+
+  <!-- ═══ DATI GREZZI ═══ -->
+  <section class="section py-5" id="dati">
+    <p class="section-label mb-1">Dati grezzi</p>
+    <h2 class="mb-2">Scarica i dati originali</h2>
+    <p class="subtitle mb-4">
+      Qui puoi trovare i dati grezzi estratti da Eurostat e OECD tramite API SDMX
+      e usati per le analisi e i grafici in questa pagina.
+    </p>
+
+    <div class="callout p-3 mb-4">
+      Caro utente, questi sono i dati <strong>così come restituiti dall'API</strong> — nessuna aggregazione,
+      solo le colonne originali più eventuali label aggiuntive per i codici paese.
+      Puoi usarli liberamente: i dati Eurostat sono rilasciati con licenza
+      <a href="https://ec.europa.eu/eurostat/web/main/about/our-partner-organisations/legal-notice">CC BY 4.0</a>;
+      i dati OECD con licenza
+      <a href="https://www.oecd.org/termsandconditions/">CC BY-NC-SA 3.0</a>.
+      La data di estrazione è <strong>2026-04-08</strong>.
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Dataset A · Eurostat GOV_10A_EXP</div>
+          <div class="dl-title mb-1">Spesa militare % PIL — EU</div>
+          <div class="dl-meta mb-2">660 righe · 27 paesi · 2000–2024</div>
+          <a class="dl-link" href="output/A_spesa_militare_pil_eu.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Dataset B · Eurostat GOV_10A_EXP (filtrato)</div>
+          <div class="dl-title mb-1">Paesi selezionati — serie storica</div>
+          <div class="dl-meta mb-2">7 paesi · IT PL ES SE EE EL NO · 2000–2024</div>
+          <a class="dl-link" href="output/B_spesa_militare_paesi_selezionati.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Dataset C · Eurostat TSC00008</div>
+          <div class="dl-title mb-1">R&amp;D difesa — % budget GBARD</div>
+          <div class="dl-meta mb-2">39 paesi · 2014–2025</div>
+          <a class="dl-link" href="output/C_rd_difesa.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Dataset D · OECD NASEC10 DF_TABLE11</div>
+          <div class="dl-title mb-1">Spesa militare — valuta locale</div>
+          <div class="dl-meta mb-2">198 righe · 9 paesi · 2005–2024</div>
+          <a class="dl-link" href="output/D_spesa_militare_oecd.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Metadati · Eurostat</div>
+          <div class="dl-title mb-1">Codelist COFOG 1999</div>
+          <div class="dl-meta mb-2">80 codici con label · classificazione spesa pubblica</div>
+          <a class="dl-link" href="metadata/cofog99_codes.csv" download>↓ CSV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ METODOLOGIA ═══ -->
+  <section class="section py-5" id="metodologia">
+    <p class="section-label mb-1">Note metodologiche</p>
+    <h2 class="mb-2">Fonti, definizioni e riproducibilità</h2>
+    <p class="subtitle mb-4">
+      Tutti i dati sono scaricabili e riproducibili tramite opensdmx CLI.
+    </p>
+
+    <h3 class="subsection-title mt-4 mb-3">Classificazioni usate</h3>
+    <div class="table-responsive mb-4">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>Codice</th><th>Sistema</th><th>Significato</th></tr></thead>
+        <tbody>
+          <tr><td><code>GF0201</code></td><td>COFOG 1999</td><td>Difesa militare (esclude difesa civile e aiuti militari esteri)</td></tr>
+          <tr><td><code>S13</code></td><td>SEC 2010</td><td>Governo generale (centrale + locale + previdenziale)</td></tr>
+          <tr><td><code>PC_GDP</code></td><td>Eurostat</td><td>Percentuale del PIL — preferita per confronti internazionali</td></tr>
+          <tr><td><code>NABS14</code></td><td>NABS 2007</td><td>Difesa nel sistema di classificazione R&amp;D</td></tr>
+          <tr><td><code>PC_GBA</code></td><td>Eurostat</td><td>% del budget R&amp;D governativo totale (GBARD)</td></tr>
+          <tr><td><code>XDC</code></td><td>OECD</td><td>Valuta nazionale corrente (non confrontabile tra paesi)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">URL API SDMX delle query originali</h3>
+    <p class="mb-2" style="color:var(--ink-light);">
+      Gli URL seguenti sono le query esatte usate per scaricare i dati.
+      Puoi incollarli direttamente nel browser o in qualsiasi client HTTP per ottenere gli stessi dati.
+    </p>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">Dataset A &amp; B — Eurostat GOV_10A_EXP (spesa militare % PIL)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/GOV_10A_EXP/A.PC_GDP.S13.GF0201.TE./ALL/?startPeriod=2000&endPeriod=2024&format=SDMX-CSV" target="_blank">
+        https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/GOV_10A_EXP/A.PC_GDP.S13.GF0201.TE./ALL/?startPeriod=2000&amp;endPeriod=2024&amp;format=SDMX-CSV
+      </a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">Dataset C — Eurostat TSC00008 (R&amp;D difesa % GBARD)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TSC00008/A.NABS14.PC_GBA./ALL/?startPeriod=2014&endPeriod=2025&format=SDMX-CSV" target="_blank">
+        https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TSC00008/A.NABS14.PC_GBA./ALL/?startPeriod=2014&amp;endPeriod=2025&amp;format=SDMX-CSV
+      </a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">Dataset D — OECD NASEC10 DF_TABLE11 (spesa militare valuta locale)</p>
+    <div class="query-url p-2 mb-4" style="color:var(--ink-faint);">
+      Non disponibile come URL diretto — il provider OECD SDMX 2.1 richiede autenticazione o CLI.<br>
+      <strong>Comando opensdmx:</strong><br>
+      opensdmx get "OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11" --provider oecd --FREQ A --REF_AREA "DEU+FRA+GBR+JPN+ITA+POL+ESP+SWE+NOR" --SECTOR S13 --EXPENDITURE GF0201 --TRANSACTION OTE --start-period 2005 --end-period 2024 --out output/D_spesa_militare_oecd.csv
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">Comandi CLI per riprodurre i dati</h3>
+    <div class="table-responsive mb-4">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>Fase</th><th>Comando</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>A + B</td>
+            <td><code>opensdmx run spesa_militare_eu_pil.yaml --out output/A_refresh.csv</code></td>
+          </tr>
+          <tr>
+            <td>C</td>
+            <td><code>opensdmx run rd_difesa_eurostat.yaml --out output/C_refresh.csv</code></td>
+          </tr>
+          <tr>
+            <td>D</td>
+            <td><code>opensdmx get "OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11" --provider oecd --FREQ A --REF_AREA "DEU+FRA+GBR+JPN+ITA+POL+ESP+SWE+NOR" --SECTOR S13 --EXPENDITURE GF0201 --TRANSACTION OTE --start-period 2005 --end-period 2024 --out output/D_refresh.csv</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">File disponibili</h3>
+    <div class="table-responsive">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>File</th><th>Contenuto</th></tr></thead>
+        <tbody>
+          <tr><td><code>output/A_spesa_militare_pil_eu.csv</code></td><td>660 righe · 27 paesi · % PIL · 2000–2024</td></tr>
+          <tr><td><code>output/B_spesa_militare_paesi_selezionati.csv</code></td><td>7 paesi · serie storica completa</td></tr>
+          <tr><td><code>output/C_rd_difesa.csv</code></td><td>39 paesi · % GBARD · 2014–2025</td></tr>
+          <tr><td><code>output/D_spesa_militare_oecd.csv</code></td><td>198 righe · 9 paesi · valuta locale · 2005–2024</td></tr>
+          <tr><td><code>metadata/cofog99_codes.csv</code></td><td>80 codici COFOG con label</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer py-4 mt-2">
+  <div class="container d-flex flex-wrap gap-4 justify-content-between">
+    <span>Dati: Eurostat · OECD · Formato SDMX 2.1</span>
+    <span>Strumento: <a href="https://github.com/opensdmx/opensdmx">opensdmx CLI</a></span>
+    <span>Grafici: <a href="https://github.com/jwilber/roughViz">roughViz</a> · <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a></span>
+    <span>2026-04-08</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── FASE A — BarH ranking EU ──────────────────────────────────────────────
+// Slovacchia esclusa: valore -0.1 causato da rettifiche contabili, non renderizzabile in BarH
+const labelsA = ['Islanda','Irlanda','Lussemburgo','Malta','Austria','Svizzera','Spagna','Portogallo','Belgio','Cechia','Paesi Bassi','Slovenia','Italia','Danimarca','Finlandia','Bulgaria','Croazia','Romania','Svezia','Norvegia','Polonia','Ungheria','Grecia','Lituania','Lettonia','Estonia'];
+const valuesA = [0.0,0.2,0.4,0.5,0.6,0.7,0.7,0.7,1.1,1.2,1.2,1.2,1.2,1.3,1.3,1.4,1.4,1.5,1.7,1.8,1.9,2.0,2.1,2.3,2.6,3.6];
+
+new roughViz.BarH({
+  element: '#viz',
+  data: { labels: labelsA, values: valuesA },
+  title: '% PIL destinato alla difesa militare (ultimo anno disponibile)',
+  titleFontSize: '0.95rem',
+  axisFontSize: '0.72rem',
+  roughness: 2,
+  stroke: '#333',
+  strokeWidth: 1.2,
+  fillStyle: 'hachure',
+  fillWeight: 0.8,
+  color: '#c0392b',
+  highlight: '#e74c3c',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 860,
+  height: 640,
+  margin: { top: 40, right: 90, bottom: 30, left: 130 },
+  xLabel: '% del PIL',
+});
+
+// ── FASE B — Small multiples con chart.xkcd.XY ───────────────────────────
+// roughViz.Line v1.0.6 ha un bug nel callback d3.csv (perde `this`).
+// chart.xkcd.XY accetta dati inline senza fetch asincrono.
+const anniB = [2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024];
+
+const seriesB = {
+  'EE': { colore: '#c0392b', valori: [1.1,1.2,1.3,1.2,1.3,1.3,1.2,1.2,1.6,2.1,1.6,1.4,1.7,1.7,1.7,1.8,2.2,1.9,1.9,2.0,2.3,2.0,2.1,3.0,3.6] },
+  'EL': { colore: '#2980b9', valori: [null,2.7,3.0,3.7,2.9,2.7,2.6,2.8,3.0,3.4,2.7,2.4,2.5,2.2,2.7,2.5,2.1,2.5,2.3,2.0,2.5,2.7,2.6,2.2,2.1] },
+  'PL': { colore: '#27ae60', valori: [null,1.5,1.5,1.5,1.5,1.5,1.6,1.8,1.8,1.4,1.5,1.5,1.4,1.6,1.4,1.5,1.5,1.7,1.6,1.6,1.7,1.5,1.6,1.9,null] },
+  'NO': { colore: '#e67e22', valori: [1.6,1.6,1.8,1.7,1.6,1.3,1.4,1.4,1.3,1.4,1.3,1.3,1.2,1.2,1.3,1.3,1.4,1.5,1.5,1.7,1.8,1.5,1.2,1.5,1.8] },
+  'SE': { colore: '#8e44ad', valori: [null,1.8,1.8,1.8,1.6,1.1,1.2,1.1,1.1,1.1,1.2,1.2,1.2,1.2,1.1,1.0,1.0,1.0,1.0,1.0,1.1,1.2,1.5,1.5,1.7] },
+  'IT': { colore: '#16a085', valori: [null,1.1,1.1,1.2,1.2,1.2,1.2,1.1,1.3,1.4,1.3,1.3,1.2,1.2,1.1,1.1,1.2,1.2,1.2,1.2,1.3,1.3,1.1,1.1,1.2] },
+  'ES': { colore: '#d35400', valori: [1.0,1.0,1.0,0.9,1.0,1.0,0.9,0.9,0.9,0.9,0.9,0.9,0.8,0.8,0.7,0.8,0.8,0.8,0.7,0.7,0.8,0.8,1.0,0.8,0.7] },
+};
+
+Object.entries(seriesB).forEach(([code, info]) => {
+  const points = [];
+  anniB.forEach((a, i) => {
+    if (info.valori[i] !== null) points.push({ x: a, y: info.valori[i] });
+  });
+  new chartXkcd.XY(document.getElementById(`viz-${code}`), {
+    xLabel: '', yLabel: '% PIL',
+    data: { datasets: [{ label: code, data: points }] },
+    options: {
+      showLine: true,
+      dotSize: 0.4,
+      xTickCount: 4,
+      yTickCount: 3,
+      dataColors: [info.colore],
+    }
+  });
+});
+
+// ── FASE C — BarH R&D difesa (roughViz — barre orizzontali, etichette leggibili) ──
+// chart.xkcd.Bar con 30-39 barre sovrappone le etichette sull'asse X.
+// roughViz.BarH le mette sull'asse Y (testo orizzontale) — molto più leggibile.
+const allLabels = ['USA','Corea del Sud','UK','Francia','Germania','Polonia','Romania','Albania','Norvegia','Lussemburgo','Svezia','Lettonia','Spagna','Turchia','Paesi Bassi','Giappone','Slovenia','Ungheria','Slovacchia','Estonia','Finlandia','Serbia','Belgio','Grecia','Cechia','Italia','Montenegro','Bulgaria','Svizzera','Danimarca','Portogallo','Austria','Lituania','Croazia','Cipro','Bosnia','Irlanda','Islanda','Malta'];
+const allValues = [52.3,15.9,13.1,7.8,7.6,6.2,5.7,5.2,4.5,4.4,4.0,4.0,3.8,3.6,3.4,3.2,3.1,2.9,2.8,2.4,2.0,1.9,1.5,1.3,0.8,0.6,0.5,0.4,0.4,0.4,0.3,0.2,0.2,0.1,0.0,0.0,0.0,0.0,0.0];
+
+new roughViz.BarH({
+  element: '#chart-all',
+  data: { labels: allLabels, values: allValues },
+  title: '% budget R&D governativo → difesa (ultimo anno disponibile)',
+  titleFontSize: '0.9rem',
+  axisFontSize: '0.68rem',
+  roughness: 1.5,
+  color: '#c0392b',
+  highlight: '#e74c3c',
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  width: 900,
+  height: 820,
+  margin: { top: 40, right: 100, bottom: 30, left: 140 },
+  xLabel: '% GBARD',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+});
+
+const euLabels = ['Francia','Germania','Polonia','Romania','Norvegia','Lussemburgo','Svezia','Lettonia','Spagna','Paesi Bassi','Slovenia','Ungheria','Slovacchia','Estonia','Finlandia','Belgio','Grecia','Cechia','Italia','Bulgaria','Svizzera','Danimarca','Portogallo','Austria','Lituania','Croazia','Cipro','Irlanda','Islanda','Malta'];
+const euValues = [7.8,7.6,6.2,5.7,4.5,4.4,4.0,4.0,3.8,3.4,3.1,2.9,2.8,2.4,2.0,1.5,1.3,0.8,0.6,0.4,0.4,0.4,0.3,0.2,0.2,0.1,0.0,0.0,0.0,0.0];
+
+new roughViz.BarH({
+  element: '#chart-eu',
+  data: { labels: euLabels, values: euValues },
+  title: 'Paesi europei — % GBARD per difesa',
+  titleFontSize: '0.9rem',
+  axisFontSize: '0.68rem',
+  roughness: 1.5,
+  color: '#2980b9',
+  highlight: '#3498db',
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  width: 900,
+  height: 660,
+  margin: { top: 40, right: 100, bottom: 30, left: 140 },
+  xLabel: '% GBARD',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+});
+
+// ── FASE D — XY Line OECD ────────────────────────────────────────────────
+const rawData = {
+  POL: { nome:'Polonia', anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023], valori:[53.7,60.8,80.0,85.5,70.1,78.2,84.3,82.4,95.5,89.3,100.0,104.9,120.2,123.5,132.1,144.7,148.0,177.0,235.4] },
+  NOR: { nome:'Norvegia', anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[63.2,74.1,78.8,83.8,83.6,79.4,89.2,85.1,88.3,95.1,100.0,103.2,118.1,130.0,145.4,149.3,156.0,165.8,190.0,225.8] },
+  SWE: { nome:'Svezia',  anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[72.3,87.5,81.9,86.5,80.9,92.6,97.8,97.4,105.4,98.8,100.0,103.0,105.7,112.8,116.7,129.2,142.4,191.2,205.4,249.2] },
+  DEU: { nome:'Germania',anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[85.8,91.0,79.4,84.6,91.3,94.0,98.0,102.6,100.9,94.9,100.0,104.9,114.9,126.7,129.0,133.0,145.2,149.1,161.3,177.2] },
+  FRA: { nome:'Francia', anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[83.2,88.0,88.2,92.8,96.4,101.8,93.8,97.1,99.5,94.5,100.0,113.8,103.4,105.7,107.3,113.8,113.8,126.7,136.5,144.5] },
+  GBR: { nome:'UK',      anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[77.2,80.5,77.7,88.9,91.6,94.5,95.0,97.1,96.2,97.8,100.0,100.1,103.6,105.8,118.6,122.1,128.6,142.3,153.3,163.2] },
+  ITA: { nome:'Italia',  anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[99.1,99.0,99.8,113.3,124.6,117.6,118.9,109.2,104.3,98.2,100.0,112.7,113.6,111.7,118.5,114.8,127.4,121.2,127.7,141.5] },
+  ESP: { nome:'Spagna',  anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[102.9,104.5,109.3,113.2,109.9,114.4,107.6,95.4,97.4,87.5,100.0,105.8,101.8,99.1,103.0,103.0,114.0,150.9,128.6,127.7] },
+  JPN: { nome:'Giappone',anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[96.2,93.5,94.1,91.4,95.2,89.9,93.1,96.8,95.1,100.3,100.0,94.8,104.1,109.9,109.1,109.8,120.5,113.0,135.4,172.6] },
+};
+
+// Fase D: roughViz.BarH — snapshot confrontabile.
+// chart.xkcd.Line con serie multiple scala l'asse Y in modo errato (max ~600 vs dati ~250).
+// roughViz.BarH accetta dati inline e scala correttamente.
+// Grafico 1: indice finale (2015=100), Grafico 2: variazione % dal 2015.
+const dPaesi  = ['Spagna','Italia','Francia','UK','Giappone','Germania','Norvegia','Polonia','Svezia'];
+const dIndice = [128, 142, 145, 163, 173, 177, 226, 235, 249];
+const dVar    = [28, 42, 45, 63, 73, 77, 126, 135, 149];
+
+new roughViz.BarH({
+  element: '#chart-est',
+  data: { labels: dPaesi, values: dIndice },
+  title: 'Indice spesa militare — ultimo anno disponibile (2015 = 100)',
+  titleFontSize: '0.9rem',
+  axisFontSize: '0.72rem',
+  roughness: 1.5,
+  color: '#2980b9', highlight: '#3498db',
+  stroke: '#333', strokeWidth: 1,
+  fillStyle: 'hachure', fillWeight: 0.7,
+  width: 900, height: 380,
+  margin: { top: 40, right: 80, bottom: 40, left: 100 },
+  xLabel: 'Indice (2015=100)',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+});
+
+new roughViz.BarH({
+  element: '#chart-west',
+  data: { labels: dPaesi, values: dVar },
+  title: 'Crescita % spesa militare 2015→2024 (o ultimo disponibile)',
+  titleFontSize: '0.9rem',
+  axisFontSize: '0.72rem',
+  roughness: 1.5,
+  color: '#c0392b', highlight: '#e74c3c',
+  stroke: '#333', strokeWidth: 1,
+  fillStyle: 'hachure', fillWeight: 0.7,
+  width: 900, height: 380,
+  margin: { top: 40, right: 80, bottom: 40, left: 100 },
+  xLabel: '% crescita dal 2015',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+});
+</script>
+
+</body>
+</html>

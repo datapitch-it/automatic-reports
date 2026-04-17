@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv output/*.csv reports/01_spesa-militare/output/)",
+      "Bash(mv metadata/*.csv reports/01_spesa-militare/metadata/)",
+      "Bash(mv charts/*.html reports/01_spesa-militare/charts/)",
+      "Bash(opensdmx search:*)",
+      "Bash(opensdmx info:*)",
+      "Bash(opensdmx constraints:*)",
+      "Bash(opensdmx get:*)",
+      "Bash(wc -l /home/nelsonmau/Coding/infonodes/test-ricerca-sdmx/reports/01_gender-pay-gap/output/*.csv)",
+      "Bash(opensdmx providers:*)",
+      "Bash(opensdmx -o csv values TPS00217 iscedf13 --provider eurostat)",
+      "Bash(opensdmx -o csv values LFSA_EGAN2 nace_r2 --provider eurostat)",
+      "Bash(opensdmx:*)",
+      "Bash(opensdmx -o csv values TPS00217 isced11 --provider eurostat)",
+      "Bash(python3:*)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  }
+}

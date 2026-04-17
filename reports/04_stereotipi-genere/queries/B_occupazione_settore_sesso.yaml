@@ -1,0 +1,12 @@
+provider: eurostat
+dataset: LFSA_EGAN2
+filters:
+  freq: A
+  unit: THS_PER
+  sex: M+F
+  age: Y15-74
+  nace_r2: C+F+J+P+Q
+  geo: EU27_2020
+start_period: "2010"
+end_period: "2023"
+format: SDMX-CSV

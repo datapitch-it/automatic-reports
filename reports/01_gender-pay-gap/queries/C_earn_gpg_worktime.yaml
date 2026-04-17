@@ -1,0 +1,8 @@
+provider: estat
+dataset: EARN_GR_GPGR2WT
+filters:
+  freq: A
+  unit: PC
+start_period: "2010"
+end_period: "2022"
+format: SDMX-CSV

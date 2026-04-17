@@ -1,0 +1,15 @@
+# Dataset A — Spesa militare % PIL, tutti i paesi europei disponibili, 2000–2024
+# Fonte: Eurostat GOV_10A_EXP
+# Riesegui: opensdmx run queries/A_spesa_militare_eu_pil.yaml --out output/A_spesa_militare_pil_eu.csv
+
+provider: estat
+dataset: GOV_10A_EXP
+filters:
+  unit: PC_GDP
+  sector: S13
+  cofog99: GF0201
+  na_item: TE
+  geo: ALL
+start_period: "2000"
+end_period: "2024"
+format: SDMX-CSV

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JournAI — Analisi dati statistici con SDMX</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <style>
+    :root {
+      --ink:        #1a1a1a;
+      --ink-light:  #555;
+      --ink-faint:  #888;
+      --paper:      #fafaf7;
+      --paper-warm: #f5f3ee;
+      --rule:       #d0ccc4;
+      --accent:     #c0392b;
+      --accent2:    #2980b9;
+      --serif:      'Georgia', 'Times New Roman', serif;
+      --mono:       'Courier New', Courier, monospace;
+      --bs-body-font-family:   var(--serif);
+      --bs-body-color:         var(--ink);
+      --bs-body-bg:            var(--paper);
+      --bs-border-color:       var(--rule);
+    }
+    html { font-size: 19px; scroll-behavior: smooth; }
+    .container { max-width: 1060px; }
+
+    .site-header {
+      background: var(--paper-warm);
+      border-bottom: 2px solid var(--ink);
+    }
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+    .site-header h1 { font-size: 2.2rem; font-weight: normal; line-height: 1.2; }
+    .lead-text { color: var(--ink-light); line-height: 1.7; font-size: 1rem; max-width: 720px; }
+
+    .method-strip {
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      background: var(--paper);
+    }
+    .method-step {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--ink-faint);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+    .method-step .num {
+      color: var(--accent);
+      font-size: 1rem;
+      line-height: 1.4;
+      flex-shrink: 0;
+    }
+    .method-step .label { color: var(--ink); }
+    .method-step .desc { font-size: 1rem; display: block; }
+
+    .reports-grid { }
+
+    .report-card {
+      background: #fff;
+      border: 1px solid var(--rule);
+      text-decoration: none;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .report-card:hover {
+      border-color: var(--ink);
+      box-shadow: 3px 3px 0 var(--rule);
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .report-card-preview {
+      background: var(--paper-warm);
+      border-bottom: 1px solid var(--rule);
+      overflow: hidden;
+      position: relative;
+      height: 180px;
+    }
+    .report-card-preview iframe {
+      width: 200%;
+      height: 400%;
+      transform: scale(0.5);
+      transform-origin: top left;
+      border: none;
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .report-card-preview .preview-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(250,250,247,0.3) 100%);
+      z-index: 1;
+    }
+    .report-card-preview .report-num {
+      position: absolute;
+      top: 0.6rem;
+      left: 0.7rem;
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--ink-faint);
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 1px 6px;
+      z-index: 2;
+    }
+
+    .report-card-body {
+      padding: 1rem 1.1rem 1.1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .report-card-body h2 {
+      font-size: 1.1rem;
+      font-weight: normal;
+      line-height: 1.35;
+      margin-bottom: 0.5rem;
+    }
+    .report-card-body .desc {
+      font-size: 1rem;
+      color: var(--ink-light);
+      line-height: 1.55;
+      flex: 1;
+    }
+    .report-card-footer {
+      margin-top: 0.9rem;
+      padding-top: 0.6rem;
+      border-top: 1px dashed var(--rule);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+    .badge-sm {
+      font-family: var(--mono);
+      font-size: 1rem;
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      padding: 1px 6px;
+      color: var(--ink-faint);
+      white-space: nowrap;
+    }
+    .badge-sm strong { color: var(--ink); }
+
+    .cta-link {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--accent2);
+      text-decoration: none;
+      border: 1px solid var(--accent2);
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 0.8rem;
+    }
+    .cta-link:hover { background: var(--accent2); color: #fff; }
+
+    .callout {
+      background: var(--paper-warm);
+      border-left: 3px solid var(--accent);
+      border-top: none;
+      border-right: none;
+      border-bottom: none;
+      border-radius: 0;
+      color: var(--ink-light);
+      font-size: 1rem;
+    }
+    .callout strong { color: var(--ink); }
+
+    .site-footer {
+      border-top: 2px solid var(--ink);
+      font-size: 1rem;
+      color: var(--ink-faint);
+      font-family: var(--mono);
+    }
+    .site-footer a { color: var(--ink-faint); }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    /* ── COME FUNZIONA ── */
+    .how-section {
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      background: var(--paper-warm);
+    }
+    .how-section h2 { font-size: 1.5rem; font-weight: normal; }
+
+    .step-v {
+      display: flex;
+      gap: 1.2rem;
+      padding: 1.4rem 0;
+      border-bottom: 1px dashed var(--rule);
+    }
+    .step-v:last-child { border-bottom: none; }
+
+    .step-v-num {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--accent);
+      min-width: 2.2rem;
+      padding-top: 0.1rem;
+      flex-shrink: 0;
+    }
+    .step-v-body { flex: 1; min-width: 0; }
+    .step-v-title {
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: bold;
+      color: var(--ink);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .step-v-desc {
+      font-size: 1rem;
+      color: var(--ink-light);
+      line-height: 1.6;
+      margin-bottom: 0.6rem;
+    }
+
+    .cli-block {
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--accent2);
+      font-family: var(--mono);
+      font-size: 1rem;
+      padding: 0.6rem 0.9rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      margin-bottom: 0.5rem;
+    }
+    .cli-block .cp { color: var(--ink-faint); }
+    .cli-block .cc { color: var(--accent2); }
+    .cli-block .cv { color: #27ae60; }
+    .cli-block .cf { color: #8e44ad; }
+    .cli-block .cm { color: var(--ink-faint); font-style: italic; }
+
+    .result-rows { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.5rem; }
+    .result-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.7rem;
+      font-family: var(--mono);
+      font-size: 1rem;
+      background: #fff;
+      border: 1px solid var(--rule);
+      padding: 0.4rem 0.8rem;
+    }
+    .result-row.sel { border-color: var(--accent); background: #fff9f8; }
+    .r-id { color: var(--accent2); min-width: 9rem; flex-shrink: 0; }
+    .r-verdict { color: var(--accent); flex-shrink: 0; }
+    .r-verdict.ok { color: #27ae60; }
+    .r-verdict.skip { color: var(--ink-faint); }
+    .r-verdict.no { color: var(--accent); }
+    .r-note { color: var(--ink-faint); font-size: 1rem; }
+
+    .ct-mini { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 1rem; }
+    .ct-mini th {
+      color: var(--ink-faint); font-weight: normal;
+      padding: 0.3rem 0.7rem; text-align: left;
+      border-bottom: 1px solid var(--rule);
+      background: var(--paper-warm);
+    }
+    .ct-mini td { padding: 0.25rem 0.7rem; color: var(--ink-light); border-bottom: 1px dashed var(--rule); }
+    .ct-mini td:first-child { color: #8e44ad; }
+    .ct-mini td:nth-child(2) { color: var(--accent2); text-align: center; }
+
+    .proc-rows { display: flex; flex-direction: column; gap: 0.3rem; }
+    .proc-row-v {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-family: var(--mono); font-size: 1rem;
+      color: var(--ink-light); background: #fff;
+      border: 1px solid var(--rule); padding: 0.4rem 0.8rem;
+    }
+    .proc-icon { flex-shrink: 0; }
+
+    /* ── PROVIDERS ── */
+    .providers-section { border-top: 1px solid var(--rule); }
+    .providers-section h2 { font-size: 1.5rem; font-weight: normal; }
+    .prov-note {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--ink-faint);
+      line-height: 1.6;
+    }
+    .prov-table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+    .prov-table thead th {
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: normal;
+      color: var(--ink-faint);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.8rem;
+      border-bottom: 2px solid var(--ink);
+      background: var(--paper-warm);
+      text-align: left;
+    }
+    .prov-table tbody td {
+      padding: 0.55rem 0.8rem;
+      border-bottom: 1px solid var(--rule);
+      vertical-align: top;
+      color: var(--ink-light);
+      line-height: 1.5;
+    }
+    .prov-table tbody tr:nth-child(even) td { background: var(--paper-warm); }
+    .prov-table .p-alias {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--accent2);
+      white-space: nowrap;
+    }
+    .prov-table .p-name { color: var(--ink); font-size: 1rem; }
+    .prov-table .p-agency {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--ink-faint);
+      white-space: nowrap;
+    }
+    .prov-table .p-check { text-align: center; font-family: var(--mono); font-size: 1rem; }
+    .prov-table .yes { color: #27ae60; }
+    .prov-table .no  { color: var(--rule); }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header py-5">
+  <div class="container">
+    <p class="eyebrow mb-2">JournAI · Ricerche SDMX · opensdmx CLI</p>
+    <h1 class="mb-3">Dati statistici istituzionali,<br>analizzati con metodo</h1>
+    <p class="lead-text mb-4">
+      Una raccolta di analisi giornalistiche costruite su dati aperti in formato SDMX —
+      Eurostat, OECD e altri provider istituzionali. Ogni ricerca parte da una domanda,
+      scarica i dati grezzi via API, documenta ogni trasformazione e produce
+      una pagina autosufficiente e verificabile da chiunque.
+    </p>
+  </div>
+</header>
+
+<!-- ═══ METODO ═══ -->
+<div class="method-strip py-4">
+  <div class="container">
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3">
+      <div class="col">
+        <div class="method-step">
+          <span class="num">01</span>
+          <div>
+            <span class="label">Domanda</span>
+            <span class="desc">cosa si vuole misurare</span>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="method-step">
+          <span class="num">02</span>
+          <div>
+            <span class="label">Dataset</span>
+            <span class="desc">ricerca con opensdmx</span>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="method-step">
+          <span class="num">03</span>
+          <div>
+            <span class="label">Download</span>
+            <span class="desc">API SDMX, CSV grezzo</span>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="method-step">
+          <span class="num">04</span>
+          <div>
+            <span class="label">Trasformazioni</span>
+            <span class="desc">documentate passo-passo</span>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="method-step">
+          <span class="num">05</span>
+          <div>
+            <span class="label">Grafici</span>
+            <span class="desc">roughViz · chart.xkcd</span>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="method-step">
+          <span class="num">06</span>
+          <div>
+            <span class="label">Accountability</span>
+            <span class="desc">riproducibile da chiunque</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ REPORTS GRID ═══ -->
+<main class="container py-5">
+
+  <p class="section-label mb-4">Ricerche pubblicate</p>
+
+  <div class="row row-cols-1 row-cols-md-2 g-4 reports-grid">
+
+    <!-- 01 Gender Pay Gap -->
+    <div class="col">
+      <a class="report-card" href="reports/01_gender-pay-gap/index.html">
+        <div class="report-card-preview">
+          <span class="report-num">01</span>
+          <iframe src="reports/01_gender-pay-gap/index.html" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
+          <div class="preview-overlay"></div>
+        </div>
+        <div class="report-card-body">
+          <h2>Quanto guadagnano le donne rispetto agli uomini in Europa?</h2>
+          <p class="desc">
+            Il divario retributivo di genere non aggiustato nei paesi europei: chi guadagna meno,
+            dove il gap è aumentato e dove si è ridotto negli ultimi 15 anni.
+          </p>
+          <div class="report-card-footer">
+            <span class="badge-sm"><strong>Eurostat</strong> TESEM180</span>
+            <span class="badge-sm"><strong>Eurostat</strong> EARN_GR_GPGR2AG</span>
+            <span class="badge-sm"><strong>Periodo</strong> 2007–2024</span>
+            <span class="badge-sm"><strong>Paesi</strong> 30</span>
+          </div>
+          <span class="cta-link">Leggi il report →</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- 02 Spesa Militare -->
+    <div class="col">
+      <a class="report-card" href="reports/02_spesa-militare/index.html">
+        <div class="report-card-preview">
+          <span class="report-num">02</span>
+          <iframe src="reports/02_spesa-militare/index.html" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
+          <div class="preview-overlay"></div>
+        </div>
+        <div class="report-card-body">
+          <h2>Spesa militare e industria della difesa</h2>
+          <p class="desc">
+            Analisi della spesa pubblica per la difesa militare in Europa e nel mondo,
+            confrontando bilanci nazionali in percentuale del PIL su dati Eurostat e OECD.
+          </p>
+          <div class="report-card-footer">
+            <span class="badge-sm"><strong>Eurostat</strong> GOV_10A_EXP</span>
+            <span class="badge-sm"><strong>OECD</strong> NASEC10</span>
+            <span class="badge-sm"><strong>Periodo</strong> 2000–2024</span>
+            <span class="badge-sm"><strong>Paesi</strong> 40+</span>
+          </div>
+          <span class="cta-link">Leggi il report →</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- 03 Incidenti Stradali -->
+    <div class="col">
+      <a class="report-card" href="reports/03_incidenti-stradali/index.html">
+        <div class="report-card-preview">
+          <span class="report-num">03</span>
+          <iframe src="reports/03_incidenti-stradali/index.html" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
+          <div class="preview-overlay"></div>
+        </div>
+        <div class="report-card-body">
+          <h2>Incidenti stradali in Europa: la mappa della sicurezza</h2>
+          <p class="desc">
+            Mortalità stradale nei paesi europei: tassi di decessi per 100.000 abitanti
+            e l'evoluzione nell'ultimo decennio secondo gli indicatori SDG di Eurostat.
+          </p>
+          <div class="report-card-footer">
+            <span class="badge-sm"><strong>Eurostat</strong> SDG_11_40</span>
+            <span class="badge-sm"><strong>Periodo</strong> 2010–2024</span>
+            <span class="badge-sm"><strong>Paesi</strong> 27 UE + EFTA</span>
+          </div>
+          <span class="cta-link">Leggi il report →</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- 04 Stereotipi di Genere -->
+    <div class="col">
+      <a class="report-card" href="reports/04_stereotipi-genere/index.html">
+        <div class="report-card-preview">
+          <span class="report-num">04</span>
+          <iframe src="reports/04_stereotipi-genere/index.html" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
+          <div class="preview-overlay"></div>
+        </div>
+        <div class="report-card-body">
+          <h2>Stereotipi di genere nei dati europei</h2>
+          <p class="desc">
+            Segregazione occupazionale, divario nelle lauree STEM e asimmetria nel lavoro
+            part-time: tre proxy statistiche che misurano come gli stereotipi di genere
+            si riflettano nelle scelte lavorative e formative.
+          </p>
+          <div class="report-card-footer">
+            <span class="badge-sm"><strong>Eurostat</strong> TPS00217</span>
+            <span class="badge-sm"><strong>Eurostat</strong> LFSA_EGAN2</span>
+            <span class="badge-sm"><strong>Eurostat</strong> LFSA_EPPGA</span>
+            <span class="badge-sm"><strong>Periodo</strong> 2010–2023</span>
+          </div>
+          <span class="cta-link">Leggi il report →</span>
+        </div>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- NOTE METODOLOGICHE -->
+  <div class="callout p-3 mt-5">
+    <strong>Riproducibilità:</strong> ogni report contiene i dati grezzi scaricati via API SDMX,
+    i comandi CLI esatti per riscaricarli, e un log cronologico delle operazioni in <code>notes.md</code>.
+    Nessun dato è modificato a mano. I file YAML in <code>queries/</code> permettono di rigenerare
+    ogni dataset in qualsiasi momento.
+  </div>
+
+</main>
+
+<!-- ═══ COME FUNZIONA ═══ -->
+<div class="how-section py-5">
+  <div class="container">
+    <p class="section-label mb-2">Metodologia</p>
+    <h2 class="mb-1">Come funziona</h2>
+    <p class="lead-text mb-5">
+      Esempio reale: ricerca della popolazione europea per paese via opensdmx CLI su Eurostat.
+    </p>
+
+    <!-- STEP 1 -->
+    <div class="step-v">
+      <div class="step-v-num">01</div>
+      <div class="step-v-body">
+        <div class="step-v-title">Analisi della richiesta</div>
+        <p class="step-v-desc">
+          La richiesta viene scomposta in parole chiave, dimensioni attese e provider.
+        </p>
+        <div class="cli-block">
+          <span class="cm">Parole chiave:</span> <span class="cv">population</span> · <span class="cv">Europe</span><br>
+          <span class="cm">Dimensioni attese:</span> <span class="cf">geo</span> · <span class="cf">time</span><br>
+          <span class="cm">Provider:</span> <span class="cv">Eurostat · default</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-v">
+      <div class="step-v-num">02</div>
+      <div class="step-v-body">
+        <div class="step-v-title">Ricerca dataset</div>
+        <p class="step-v-desc">
+          Ricerca full-text sull'indice del provider. Su Eurostat restituisce centinaia di dataset;
+          vengono selezionati i candidati rilevanti per la verifica successiva.
+        </p>
+        <div class="cli-block">
+          <span class="cp">$ </span><span class="cc">opensdmx</span> search <span class="cv">"population"</span> <span class="cf">--n</span> <span class="cv">50</span><br>
+          <span class="cm">  ↳ 514 dataset trovati · seleziono i candidati rilevanti</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-v">
+      <div class="step-v-num">03</div>
+      <div class="step-v-body">
+        <div class="step-v-title">Valutazione candidati · 3 chiamate info in parallelo</div>
+        <p class="step-v-desc">
+          Per ogni candidato viene interrogato lo structure endpoint per verificare
+          copertura temporale, granularità geografica e dimensioni disponibili.
+          I dataset non adatti vengono esclusi con motivazione esplicita.
+        </p>
+        <div class="cli-block">
+          <span class="cp">$ </span><span class="cc">opensdmx</span> info <span class="cv">DEMO_PJAN</span>  <span class="cm">→ freq · unit · age · sex · geo · 1960–2025 ✓</span><br>
+          <span class="cp">$ </span><span class="cc">opensdmx</span> info <span class="cv">TPS00001</span>  <span class="cm">→ freq · indic_de · geo · solo 12 anni ↗</span><br>
+          <span class="cp">$ </span><span class="cc">opensdmx</span> info <span class="cv">TGS00096</span>  <span class="cm">→ geo NUTS2, non nazionale ✗</span>
+        </div>
+        <div class="result-rows">
+          <div class="result-row sel">
+            <span class="r-id">DEMO_PJAN</span>
+            <span class="r-verdict ok">✓ selezionato</span>
+            <span class="r-note">Population on 1 January by age and sex</span>
+          </div>
+          <div class="result-row">
+            <span class="r-id">TPS00001</span>
+            <span class="r-verdict skip">↗ parziale</span>
+            <span class="r-note">solo 2014–2025</span>
+          </div>
+          <div class="result-row">
+            <span class="r-id">TGS00096</span>
+            <span class="r-verdict no">✗ escluso</span>
+            <span class="r-note">livello regionale NUTS2 — non nazionale</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-v">
+      <div class="step-v-num">04</div>
+      <div class="step-v-body">
+        <div class="step-v-title">Verifica codici reali · constraint endpoint</div>
+        <p class="step-v-desc">
+          Prima di scaricare i dati, vengono interrogati i constraint reali del dataset:
+          quanti valori esistono per ogni dimensione e quali codici sono effettivamente
+          disponibili. Questo impedisce di costruire query con codici inesistenti.
+        </p>
+        <div class="cli-block">
+          <span class="cp">$ </span><span class="cc">opensdmx</span> constraints <span class="cv">DEMO_PJAN</span><br>
+          <span class="cm">  ↳ availableconstraint · verifica codici reali</span>
+        </div>
+        <div style="background:#fff;border:1px solid var(--rule);overflow-x:auto;">
+          <table class="ct-mini">
+            <thead><tr><th>Dimensione</th><th>n valori</th><th>Campione</th></tr></thead>
+            <tbody>
+              <tr><td>freq</td><td>1</td><td>A — annuale</td></tr>
+              <tr><td>unit</td><td>1</td><td>NR — numero assoluto</td></tr>
+              <tr><td>age</td><td>103</td><td>TOTAL, Y_LT1, Y1, Y2 …</td></tr>
+              <tr><td>sex</td><td>3</td><td>T · M · F</td></tr>
+              <tr><td>geo</td><td>59</td><td>EU27_2020, EU28, IT, DE …</td></tr>
+              <tr><td>TIME_PERIOD</td><td>66</td><td>1960 → 2025</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step-v">
+      <div class="step-v-num">05</div>
+      <div class="step-v-body">
+        <div class="step-v-title">Download con filtri precisi</div>
+        <p class="step-v-desc">
+          La query viene costruita con i codici verificati al passo precedente.
+          <code>--last-n 1</code> seleziona l'osservazione più recente per ogni serie,
+          evitando di scaricare l'intera serie storica quando non serve.
+        </p>
+        <div class="cli-block">
+          <span class="cp">$ </span><span class="cc">opensdmx</span> get <span class="cv">DEMO_PJAN</span> <span class="cf">--age</span> <span class="cv">TOTAL</span> <span class="cf">--sex</span> <span class="cv">T</span> <span class="cf">--last-n</span> <span class="cv">1</span><br>
+          <span class="cm">  ↳ osservazione più recente per serie · tutti i paesi · 59 righe raw</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step-v">
+      <div class="step-v-num">06</div>
+      <div class="step-v-body">
+        <div class="step-v-title">Elaborazione · filtra, decodifica, ordina</div>
+        <p class="step-v-desc">
+          I dati grezzi contengono codici aggregati (EU27, EA20, EEA…) che vanno rimossi
+          prima della visualizzazione. I codici ISO vengono sostituiti con i nomi paese.
+          Ogni operazione è documentata e dichiarata nel report.
+        </p>
+        <div class="proc-rows">
+          <div class="proc-row-v"><span class="proc-icon">🗑️</span> Filtro aggregati EU/EA/EEA/EFTA — rimossi 10 codici</div>
+          <div class="proc-row-v"><span class="proc-icon">🏷️</span> Decodifica codici ISO → nomi paese — 49 stati</div>
+          <div class="proc-row-v"><span class="proc-icon">↕️</span> Ordinamento DESC per OBS_VALUE</div>
+        </div>
+        <div class="cli-block mt-2">
+          <span class="cm">Risultato: </span><span class="cv">49 stati</span> · anno prevalente: <span class="cv">1 gennaio 2025</span> · pronti per la visualizzazione
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ PROVIDER ═══ -->
+<div class="providers-section py-5">
+  <div class="container">
+    <p class="section-label mb-2">Fonti</p>
+    <h2 class="mb-2">Provider disponibili</h2>
+    <p class="prov-note mb-4">
+      I provider elencati sono esempi curati. opensdmx funziona con qualsiasi endpoint
+      SDMX 2.1 REST — usa <code>--provider &lt;URL&gt;</code> per connetterti a provider non elencati.
+    </p>
+    <div class="table-responsive">
+      <table class="prov-table">
+        <thead>
+          <tr>
+            <th>Alias</th>
+            <th>Nome</th>
+            <th>Descrizione</th>
+            <th>Agency</th>
+            <th title="Supporta constraints endpoint">Constraints</th>
+            <th title="Supporta --last-n">last-n</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="p-alias">eurostat</td>
+            <td class="p-name">Eurostat</td>
+            <td>Statistical office of the EU. Covers demographics, economy, employment, trade, agriculture and environment for 27 member states and associated countries. Primary source for European comparative statistics.</td>
+            <td class="p-agency">ESTAT</td>
+            <td class="p-check yes">✓</td>
+            <td class="p-check yes">✓</td>
+          </tr>
+          <tr>
+            <td class="p-alias">comext</td>
+            <td class="p-name">Eurostat Comext</td>
+            <td>Eurostat's reference database for detailed statistics on international trade in goods (ITG). Covers EU and non-EU trade by CN8 product codes since 1988. Also includes PRODCOM manufacturing data. Dataset IDs are prefixed DS-. Full dataset download is disabled by the API — dimension filters are required.</td>
+            <td class="p-agency">ESTAT</td>
+            <td class="p-check no">✗</td>
+            <td class="p-check yes">✓</td>
+          </tr>
+          <tr>
+            <td class="p-alias">istat</td>
+            <td class="p-name">ISTAT</td>
+            <td>Italian National Institute of Statistics. Covers population, economy, employment, prices and social indicators for Italy. Main source for Italian official statistics.</td>
+            <td class="p-agency">IT1</td>
+            <td class="p-check yes">✓</td>
+            <td class="p-check yes">✓</td>
+          </tr>
+          <tr>
+            <td class="p-alias">ecb</td>
+            <td class="p-name">European Central Bank</td>
+            <td>ECB Statistical Data Warehouse. Covers monetary policy, banking supervision, exchange rates, balance of payments and financial statistics for the euro area.</td>
+            <td class="p-agency">ECB</td>
+            <td class="p-check no">✗</td>
+            <td class="p-check yes">✓</td>
+          </tr>
+          <tr>
+            <td class="p-alias">oecd</td>
+            <td class="p-name">OECD</td>
+            <td>Organisation for Economic Co-operation and Development. Covers education, health, tax, trade, environment and social indicators across 38 member countries. Strong on cross-country comparisons.</td>
+            <td class="p-agency">OECD</td>
+            <td class="p-check no">✗</td>
+            <td class="p-check yes">✓</td>
+          </tr>
+          <tr>
+            <td class="p-alias">insee</td>
+            <td class="p-name">INSEE</td>
+            <td>French National Institute of Statistics and Economic Studies. Covers French population, economy, employment, prices and social indicators via the BDM macro-economic time series database.</td>
+            <td class="p-agency">FR1</td>
+            <td class="p-check no">✗</td>
+            <td class="p-check yes">✓</td>
+          </tr>
+          <tr>
+            <td class="p-alias">bundesbank</td>
+            <td class="p-name">Deutsche Bundesbank</td>
+            <td>German central bank time series database. Covers monetary statistics, banking, financial markets, exchange rates and German macroeconomic indicators.</td>
+            <td class="p-agency">BBK</td>
+            <td class="p-check no">✗</td>
+            <td class="p-check yes">✓</td>
+          </tr>
+          <tr>
+            <td class="p-alias">worldbank</td>
+            <td class="p-name">World Bank</td>
+            <td>World Development Indicators and other World Bank datasets. Covers 200+ countries with 1400+ indicators on development, poverty, health, education and environment.</td>
+            <td class="p-agency">WB</td>
+            <td class="p-check no">✗</td>
+            <td class="p-check no">✗</td>
+          </tr>
+          <tr>
+            <td class="p-alias">abs</td>
+            <td class="p-name">Australian Bureau of Statistics</td>
+            <td>Official Australian statistics. Covers population, economy, employment, trade, prices and environment for Australia and its territories.</td>
+            <td class="p-agency">ABS</td>
+            <td class="p-check yes">✓</td>
+            <td class="p-check yes">✓</td>
+          </tr>
+          <tr>
+            <td class="p-alias">bis</td>
+            <td class="p-name">Bank for International Settlements</td>
+            <td>The bank for central banks. Global financial statistics: international credit, debt securities, exchange rates, banking flows, derivatives and property prices. Data contributed by 63 central banks worldwide.</td>
+            <td class="p-agency">BIS</td>
+            <td class="p-check yes">✓</td>
+            <td class="p-check yes">✓</td>
+          </tr>
+          <tr>
+            <td class="p-alias">imf</td>
+            <td class="p-name">International Monetary Fund</td>
+            <td>IMF statistical databases. Includes the World Economic Outlook (WEO) with GDP growth, inflation and fiscal forecasts for 190+ countries; Balance of Payments; Financial Soundness Indicators; and more. Use dataflow WEO with agency IMF.RES for WEO data. Country codes: ISO alpha-3 (USA, DEU, JPN).</td>
+            <td class="p-agency">IMF.RES</td>
+            <td class="p-check yes">✓</td>
+            <td class="p-check yes">✓</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer py-4 mt-2">
+  <div class="container d-flex flex-wrap gap-4 justify-content-between">
+    <span>Dati: Eurostat · OECD · Formato SDMX 2.1</span>
+    <span>Strumento: <a href="https://github.com/opensdmx/opensdmx">opensdmx CLI</a></span>
+    <span>Grafici: <a href="https://github.com/jwilber/roughViz">roughViz</a> · <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a></span>
+    <span>Aprile 2026</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

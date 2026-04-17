@@ -1,0 +1,14 @@
+# Dataset C — R&D governativo per la difesa (GBARD), tutti i paesi, 2014–2025
+# Fonte: Eurostat TSC00008
+# Misura: stanziamenti di bilancio R&D, non spesa effettiva
+# Riesegui: opensdmx run queries/C_rd_difesa.yaml --out output/C_rd_difesa.csv
+
+provider: estat
+dataset: TSC00008
+filters:
+  nabs07: NABS14
+  unit: PC_GBA
+  geo: ALL
+start_period: "2014"
+end_period: "2025"
+format: SDMX-CSV

@@ -1,0 +1,11 @@
+provider: eurostat
+dataset: TPS00217
+filters:
+  freq: A
+  sex: F
+  isced11: ED5-8
+  iscedf13: F05_06_07
+  geo: ALL
+start_period: "2013"
+end_period: "2023"
+format: SDMX-CSV

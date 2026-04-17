@@ -1,0 +1,11 @@
+provider: eurostat
+dataset: LFSA_EPPGA
+filters:
+  freq: A
+  unit: PC
+  sex: M+F
+  age: Y15-74
+  geo: ALL
+start_period: "2010"
+end_period: "2023"
+format: SDMX-CSV

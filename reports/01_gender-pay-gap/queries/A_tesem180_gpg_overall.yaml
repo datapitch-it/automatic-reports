@@ -1,0 +1,9 @@
+provider: estat
+dataset: TESEM180
+filters:
+  freq: A
+  unit: PC
+  nace_r2: B-S_X_O
+start_period: "2007"
+end_period: "2024"
+format: SDMX-CSV

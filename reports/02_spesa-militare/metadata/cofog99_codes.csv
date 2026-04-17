@@ -1,0 +1,81 @@
+dimension,code,label
+cofog99,GF01,General public services
+cofog99,GF0101,"Executive and legislative organs, financial and fiscal affairs, external affairs"
+cofog99,GF0102,Foreign economic aid
+cofog99,GF0103,General services
+cofog99,GF0104,Basic research
+cofog99,GF0105,R&D General public services
+cofog99,GF0106,General public services n.e.c.
+cofog99,GF0107,Public debt transactions
+cofog99,GF0108,Transfers of a general character between different levels of government
+cofog99,GF02,Defence
+cofog99,GF0201,Military defence
+cofog99,GF0202,Civil defence
+cofog99,GF0203,Foreign military aid
+cofog99,GF0204,R&D Defence
+cofog99,GF0205,Defence n.e.c.
+cofog99,GF03,Public order and safety
+cofog99,GF0301,Police services
+cofog99,GF0302,Fire-protection services
+cofog99,GF0303,Law courts
+cofog99,GF0304,Prisons
+cofog99,GF0305,R&D Public order and safety
+cofog99,GF0306,Public order and safety n.e.c.
+cofog99,GF04,Economic affairs
+cofog99,GF0401,"General economic, commercial and labour affairs"
+cofog99,GF0402,"Agriculture, forestry, fishing and hunting"
+cofog99,GF0403,Fuel and energy
+cofog99,GF0404,"Mining, manufacturing and construction"
+cofog99,GF0405,Transport
+cofog99,GF0406,Communication
+cofog99,GF0407,Other industries
+cofog99,GF0408,R&D Economic affairs
+cofog99,GF0409,Economic affairs n.e.c.
+cofog99,GF05,Environmental protection
+cofog99,GF0501,Waste management
+cofog99,GF0502,Waste water management
+cofog99,GF0503,Pollution abatement
+cofog99,GF0504,Protection of biodiversity and landscape
+cofog99,GF0505,R&D Environmental protection
+cofog99,GF0506,Environmental protection n.e.c.
+cofog99,GF06,Housing and community amenities
+cofog99,GF0601,Housing development
+cofog99,GF0602,Community development
+cofog99,GF0603,Water supply
+cofog99,GF0604,Street lighting
+cofog99,GF0605,R&D Housing and community amenities
+cofog99,GF0606,Housing and community amenities n.e.c.
+cofog99,GF07,Health
+cofog99,GF0701,"Medical products, appliances and equipment"
+cofog99,GF0702,Outpatient services
+cofog99,GF0703,Hospital services
+cofog99,GF0704,Public health services
+cofog99,GF0705,R&D Health
+cofog99,GF0706,Health n.e.c.
+cofog99,GF08,"Recreation, culture and religion"
+cofog99,GF0801,Recreational and sporting services
+cofog99,GF0802,Cultural services
+cofog99,GF0803,Broadcasting and publishing services
+cofog99,GF0804,Religious and other community services
+cofog99,GF0805,"R&D Recreation, culture and religion"
+cofog99,GF0806,"Recreation, culture and religion n.e.c."
+cofog99,GF09,Education
+cofog99,GF0901,Pre-primary and primary education
+cofog99,GF0902,Secondary education
+cofog99,GF0903,Post-secondary non-tertiary education
+cofog99,GF0904,Tertiary education
+cofog99,GF0905,Education not definable by level
+cofog99,GF0906,Subsidiary services to education
+cofog99,GF0907,R&D Education
+cofog99,GF0908,Education n.e.c.
+cofog99,GF10,Social protection
+cofog99,GF1001,Sickness and disability
+cofog99,GF1002,Old age
+cofog99,GF1003,Survivors
+cofog99,GF1004,Family and children
+cofog99,GF1005,Unemployment
+cofog99,GF1006,Housing
+cofog99,GF1007,Social exclusion n.e.c.
+cofog99,GF1008,R&D Social protection
+cofog99,GF1009,Social protection n.e.c.
+cofog99,TOTAL,Total

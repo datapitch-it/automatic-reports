@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spesa militare globale — Indice 2015=100 (OECD)</title>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #fefefe;
+      font-family: 'Georgia', serif;
+      padding: 2rem;
+      max-width: 960px;
+    }
+    h1 { font-size: 1.3rem; margin-bottom: 0.3rem; color: #222; }
+    .subtitle { font-size: 0.85rem; color: #666; margin-bottom: 1.5rem; }
+    .section-title {
+      font-size: 1rem;
+      margin: 2rem 0 0.5rem;
+      color: #333;
+      border-bottom: 1px dashed #ccc;
+      padding-bottom: 0.3rem;
+    }
+    .chart-wrap { background: #fff; padding: 1rem; border: 1px solid #eee; margin-bottom: 1.5rem; }
+    .note {
+      font-size: 0.75rem;
+      color: #888;
+      margin-top: 1.5rem;
+      border-top: 1px dashed #ccc;
+      padding-top: 0.5rem;
+      line-height: 1.5;
+    }
+    .legend-table {
+      font-size: 0.78rem;
+      border-collapse: collapse;
+      margin: 0.8rem 0;
+      width: 100%;
+    }
+    .legend-table td, .legend-table th {
+      padding: 3px 8px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    .legend-table th { background: #f5f5f5; }
+  </style>
+</head>
+<body>
+  <h1>Spesa per difesa militare — Andamento reale (Indice 2015 = 100)</h1>
+  <p class="subtitle">
+    Paesi selezionati · Spesa del governo generale (S13) · Valuta nazionale corrente · Fonte: OECD NASEC10 — DF_TABLE11
+  </p>
+  <p style="font-size:0.8rem;color:#555;margin-bottom:1rem;">
+    <strong>Come leggere:</strong> L'indice 2015=100 mostra la crescita relativa della spesa militare in valuta locale.
+    Un valore di 200 significa che la spesa è raddoppiata rispetto al 2015. Non confronta livelli assoluti tra paesi.
+  </p>
+
+  <h2 class="section-title">Est Europa e Scandinavia (crescita accelerata)</h2>
+  <div class="chart-wrap">
+    <svg id="chart-est"></svg>
+  </div>
+
+  <h2 class="section-title">Europa occidentale e grandi economie</h2>
+  <div class="chart-wrap">
+    <svg id="chart-west"></svg>
+  </div>
+
+  <table class="legend-table">
+    <tr>
+      <th>Paese</th><th>Indice 2024 (o ultimo disponibile)</th><th>Anno base</th><th>Note</th>
+    </tr>
+    <tr><td>Polonia</td><td>235 (2023)</td><td>2015</td><td>Massima crescita del campione</td></tr>
+    <tr><td>Svezia</td><td>249 (2024)</td><td>2015</td><td>+149% in 9 anni</td></tr>
+    <tr><td>Norvegia</td><td>226 (2024)</td><td>2015</td><td>+126% in 9 anni</td></tr>
+    <tr><td>Giappone</td><td>173 (2024)</td><td>2015</td><td>Forte accelerazione dal 2022</td></tr>
+    <tr><td>Germania</td><td>177 (2024)</td><td>2015</td><td>Sondervermoegen (fondo speciale 100 mld €) visibile</td></tr>
+    <tr><td>Francia</td><td>145 (2024)</td><td>2015</td><td>Crescita costante</td></tr>
+    <tr><td>UK</td><td>163 (2024)</td><td>2015</td><td></td></tr>
+    <tr><td>Italia</td><td>142 (2024)</td><td>2015</td><td></td></tr>
+    <tr><td>Spagna</td><td>128 (2024)</td><td>2015</td><td>Crescita più lenta</td></tr>
+    <tr><td>Australia</td><td>—</td><td>—</td><td>Dati zero in dataset OECD</td></tr>
+  </table>
+
+  <p class="note">
+    <strong>Nota metodologica:</strong> Dati: OECD National Accounts (NASEC10), dataset DF_TABLE11.
+    Transazione <code>OTE</code> (Other Total Expenditure) per il governo generale (<code>S13</code>),
+    difesa militare (<code>GF0201 COFOG</code>). Valuta: XDC (moneta nazionale corrente) —
+    non confrontabile direttamente tra paesi, quindi normalizzata come indice 2015=100.
+    USA e Corea del Sud (<code>KOR</code>) non presenti in questo dataset OECD.
+    Per R&D difesa con copertura USA/KOR, vedi <code>C_rd_difesa.html</code>.
+    Grafici: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+  </p>
+
+  <script>
+    const allAnni = ['2005','2006','2007','2008','2009','2010','2011','2012','2013',
+                     '2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'];
+
+    // Helper: riempi array anni con null se mancante
+    function makeValues(rawAnni, rawVals, targetAnni) {
+      const map = {};
+      rawAnni.forEach((a, i) => map[String(a)] = rawVals[i]);
+      return targetAnni.map(a => map[a] !== undefined ? map[a] : null);
+    }
+
+    const rawData = {
+      POL: { nome:'Polonia', anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023], valori:[53.7,60.8,80.0,85.5,70.1,78.2,84.3,82.4,95.5,89.3,100.0,104.9,120.2,123.5,132.1,144.7,148.0,177.0,235.4] },
+      NOR: { nome:'Norvegia', anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[63.2,74.1,78.8,83.8,83.6,79.4,89.2,85.1,88.3,95.1,100.0,103.2,118.1,130.0,145.4,149.3,156.0,165.8,190.0,225.8] },
+      SWE: { nome:'Svezia',  anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[72.3,87.5,81.9,86.5,80.9,92.6,97.8,97.4,105.4,98.8,100.0,103.0,105.7,112.8,116.7,129.2,142.4,191.2,205.4,249.2] },
+      DEU: { nome:'Germania',anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[85.8,91.0,79.4,84.6,91.3,94.0,98.0,102.6,100.9,94.9,100.0,104.9,114.9,126.7,129.0,133.0,145.2,149.1,161.3,177.2] },
+      FRA: { nome:'Francia', anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[83.2,88.0,88.2,92.8,96.4,101.8,93.8,97.1,99.5,94.5,100.0,113.8,103.4,105.7,107.3,113.8,113.8,126.7,136.5,144.5] },
+      GBR: { nome:'UK',      anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[77.2,80.5,77.7,88.9,91.6,94.5,95.0,97.1,96.2,97.8,100.0,100.1,103.6,105.8,118.6,122.1,128.6,142.3,153.3,163.2] },
+      ITA: { nome:'Italia',  anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[99.1,99.0,99.8,113.3,124.6,117.6,118.9,109.2,104.3,98.2,100.0,112.7,113.6,111.7,118.5,114.8,127.4,121.2,127.7,141.5] },
+      ESP: { nome:'Spagna',  anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[102.9,104.5,109.3,113.2,109.9,114.4,107.6,95.4,97.4,87.5,100.0,105.8,101.8,99.1,103.0,103.0,114.0,150.9,128.6,127.7] },
+      JPN: { nome:'Giappone',anni:[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], valori:[96.2,93.5,94.1,91.4,95.2,89.9,93.1,96.8,95.1,100.3,100.0,94.8,104.1,109.9,109.1,109.8,120.5,113.0,135.4,172.6] },
+    };
+
+    // Grafico 1: Est Europa + Scandinavia (crescita elevata)
+    new chartXkcd.XY(document.getElementById('chart-est'), {
+      title: 'Indice spesa militare 2015=100 — Est Europa e Scandinavia',
+      xLabel: 'Anno',
+      yLabel: 'Indice (2015=100)',
+      data: {
+        datasets: ['POL','NOR','SWE'].map(code => ({
+          label: rawData[code].nome,
+          data: rawData[code].anni.map((a, i) => ({ x: a, y: rawData[code].valori[i] }))
+        }))
+      },
+      options: { xTickCount: 6, yTickCount: 6, showLine: true, dotSize: 0.3, legendPosition: chartXkcd.config.positionType.upLeft }
+    });
+
+    // Grafico 2: Europa occidentale + Giappone
+    new chartXkcd.XY(document.getElementById('chart-west'), {
+      title: 'Indice spesa militare 2015=100 — Europa occidentale e Giappone',
+      xLabel: 'Anno',
+      yLabel: 'Indice (2015=100)',
+      data: {
+        datasets: ['DEU','FRA','GBR','ITA','ESP','JPN'].map(code => ({
+          label: rawData[code].nome,
+          data: rawData[code].anni.map((a, i) => ({ x: a, y: rawData[code].valori[i] }))
+        }))
+      },
+      options: { xTickCount: 6, yTickCount: 6, showLine: true, dotSize: 0.3, legendPosition: chartXkcd.config.positionType.upLeft }
+    });
+  </script>
+</body>
+</html>
