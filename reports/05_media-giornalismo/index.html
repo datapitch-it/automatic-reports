@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media e giornalismo in Europa — Ricerca SDMX</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://unpkg.com/rough-viz@1.0.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+  <style>
+    :root {
+      --ink:        #1a1a1a;
+      --ink-light:  #333;
+      --ink-faint:  #666;
+      --paper:      #fafaf7;
+      --paper-warm: #f5f3ee;
+      --rule:       #999;
+      --accent:     #b02020;
+      --accent2:    #1a6fa8;
+      --serif:      'Georgia', 'Times New Roman', serif;
+      --mono:       'Courier New', Courier, monospace;
+      --bs-body-font-family:   var(--serif);
+      --bs-body-color:         var(--ink);
+      --bs-body-bg:            var(--paper);
+      --bs-border-color:       var(--rule);
+      --bs-card-border-radius: 0;
+      --bs-card-border-color:  var(--rule);
+    }
+    html { font-size: 19px; scroll-behavior: smooth; }
+    .container { max-width: 1060px; }
+
+    .site-header { background: #1a1a1a; border-bottom: 2px solid #000; }
+    .eyebrow { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; color: #888; }
+    .site-header h1 { font-size: 2rem; font-weight: normal; line-height: 1.2; color: #fff; }
+    .intro { color: #ccc; line-height: 1.7; }
+    .ds-badge { font-family: var(--mono); font-size: 1rem; background: #2a2a2a; border: 1px solid #444; padding: 2px 8px; color: #aaa; }
+    .ds-badge strong { color: #fff; }
+
+    .site-nav { background: #1a1a1a !important; border-bottom: 1px solid #333; z-index: 1020; }
+    .site-nav .nav-link { font-family: var(--mono); font-size: 1rem; color: #aaa; padding: 3px 10px; border: 1px solid transparent; border-radius: 0; transition: border-color 0.15s, color 0.15s; }
+    .site-nav .nav-link:hover { border-color: #555; color: #fff; }
+
+    .section { border-bottom: 1px solid var(--rule); }
+    .section:last-child { border-bottom: none; }
+    .section-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: #888; }
+    .section h2 { font-size: 1.5rem; font-weight: normal; }
+    .section .subtitle { color: var(--ink-light); line-height: 1.5; }
+    .subsection-title { font-size: 1rem; font-weight: normal; color: var(--ink); padding-bottom: 0.3rem; border-bottom: 1px dashed var(--rule); }
+
+    .callout { background: var(--paper-warm); border-left: 3px solid var(--accent); border-top: none; border-right: none; border-bottom: none; border-radius: 0; color: var(--ink-light); }
+    .callout strong { color: var(--ink); }
+
+    .finding-card { background: #fff; border: 1px solid var(--rule); padding: 0.9rem 1rem; height: 100%; }
+    .big-num { font-size: 2rem; font-family: var(--mono); color: var(--accent); line-height: 1; }
+    .big-num.blue { color: var(--accent2); }
+    .big-num.green { color: #27ae60; }
+    .finding-card p { font-size: 1rem; color: var(--ink-light); line-height: 1.4; }
+    .finding-card strong { color: var(--ink); }
+
+    .chart-wrap { background: #fff; border: 1px solid var(--rule); padding: 1.2rem; overflow-x: auto; }
+    .chart-wrap svg { display: block; width: 100%; }
+
+    .transform { background: var(--paper-warm); border: 1px solid var(--rule); border-left: 3px solid var(--accent2); }
+    .transform h4 { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: #888; }
+    .transform ul { color: var(--ink-light); line-height: 1.7; }
+    .transform li code { font-family: var(--mono); font-size: 1rem; background: var(--paper); padding: 1px 4px; border: 1px solid var(--rule); }
+
+    .note { font-size: 1rem; color: var(--ink-faint); border-top: 1px dashed var(--rule); line-height: 1.6; }
+    .note code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; border: 1px solid var(--rule); }
+    .note a { color: #888; }
+
+    .query-url { background: #fff; border: 1px solid var(--rule); font-family: var(--mono); font-size: 1rem; color: var(--ink-light); word-break: break-all; line-height: 1.6; }
+    .query-url a { color: var(--accent2); }
+
+    .data-table { font-size: 1rem; }
+    .data-table thead th { background: var(--paper-warm); font-family: var(--mono); font-size: 1rem; font-weight: normal; letter-spacing: 0.05em; border-color: var(--rule); }
+    .data-table td { border-color: var(--rule); }
+    .data-table tbody tr:nth-child(even) td { background: var(--paper-warm); }
+    .data-table code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; color: var(--ink); }
+
+    .dl-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; color: #888; }
+    .dl-title { color: var(--ink); font-size: 1rem; }
+    .dl-meta { font-family: var(--mono); font-size: 1rem; color: #888; }
+    a.dl-link { font-family: var(--mono); font-size: 1rem; color: var(--accent2); text-decoration: none; border: 1px solid var(--accent2); padding: 2px 8px; display: inline-block; }
+    a.dl-link:hover { background: var(--accent2); color: #fff; }
+
+    .site-footer { border-top: 2px solid var(--ink); font-size: 1rem; color: var(--ink-faint); font-family: var(--mono); }
+    .site-footer a { color: #888; }
+
+    .chart-title-label {
+      font-family: var(--mono);
+      font-size: 1rem;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="site-nav navbar sticky-top py-2">
+  <div class="container">
+    <div class="d-flex flex-wrap gap-1">
+      <a class="nav-link" href="#intro">↓ Intro</a>
+      <a class="nav-link" href="#occupazione">Occupazione</a>
+      <a class="nav-link" href="#eta">Per età</a>
+      <a class="nav-link" href="#sesso">Per sesso</a>
+      <a class="nav-link" href="#istruzione">Per istruzione</a>
+      <a class="nav-link" href="#dati">Dati grezzi</a>
+      <a class="nav-link" href="#metodologia">Metodologia</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header py-5">
+  <div class="container">
+    <p class="eyebrow mb-2">Ricerca SDMX · 21 aprile 2026 · opensdmx CLI</p>
+    <h1 class="mb-3">Due velocità nel settore media europeo:<br>l'editoria perde posti, la produzione audiovisiva li guadagna</h1>
+    <p class="intro mb-3" style="max-width:720px;">
+      Dal 2011 al 2024 il numero di occupati nell'editoria (giornali, riviste, libri) nell'Unione Europea
+      è calato di quasi un terzo, mentre la produzione audiovisiva — film, serie, podcast — ha guadagnato
+      altrettanto. E chi legge ancora i quotidiani di carta? Un'analisi del profilo demografico del lettore
+      tradizionale, fotografato dall'ultima grande indagine europea sul tema.
+    </p>
+    <div class="d-flex flex-wrap gap-2">
+      <span class="ds-badge"><strong>Eurostat</strong> CULT_EMP_N2</span>
+      <span class="ds-badge"><strong>Eurostat</strong> CULT_PCS_NWA/S/E</span>
+      <span class="ds-badge"><strong>Periodo occupazione</strong> 2011–2024</span>
+      <span class="ds-badge"><strong>Periodo lettura</strong> 2007–2011</span>
+      <span class="ds-badge"><strong>Paesi</strong> fino a 36</span>
+    </div>
+  </div>
+</header>
+
+<main class="container py-2">
+
+  <!-- ═══ INTRO ═══ -->
+  <section class="section py-5" id="intro">
+    <p class="section-label mb-1">Contesto</p>
+    <h2 class="mb-2">Il settore media in cifre: trasformazione, non collasso</h2>
+    <p class="subtitle mb-4">Occupazione per attività NACE · Percentuale di lettori di quotidiani per fascia demografica</p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Limite di scope:</strong> I dati SDMX misurano l'occupazione formale nel settore media
+      (codici NACE J58, J59, J60) e la percentuale di popolazione che leggeva quotidiani cartacei almeno una
+      volta al giorno. <strong>Non coprono</strong>: giornalisti freelance non contrattualizzati, consumo di
+      notizie online e digitali, pluralismo editoriale, indipendenza dei media. I dati sulla lettura dei
+      quotidiani sono fermi al 2011 (ultima indagine Eurostat disponibile) e riflettono un'era pre-smartphone
+      nella distribuzione dell'informazione.
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-4 g-3">
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2">−30%</div>
+          <p class="mb-0"><strong>Editoria EU27</strong> — Da 744.800 a 517.400 occupati tra il 2011 e il 2024 (attività NACE J58)</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num blue mb-2">+30%</div>
+          <p class="mb-0"><strong>Produzione audiovisiva EU27</strong> — Da 353.800 a 460.400 occupati nello stesso periodo (NACE J59)</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num green mb-2">54%</div>
+          <p class="mb-0"><strong>Lettori quotidiani</strong> — Percentuale di europei che leggevano un giornale ogni giorno nel 2011 (media 23 paesi)</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2">×1,8</div>
+          <p class="mb-0"><strong>Effetto istruzione</strong> — I laureati leggono quotidiani quasi il doppio rispetto a chi ha bassa scolarità (69,6% vs 37,8%)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE A: OCCUPAZIONE ═══ -->
+  <section class="section py-5" id="occupazione">
+    <p class="section-label mb-1">Fase A · Eurostat CULT_EMP_N2 · nace_r2 (J58, J59, J60)</p>
+    <h2 class="mb-2">Chi lavora nel settore media? Tredici anni di trasformazione</h2>
+    <p class="subtitle mb-4">
+      Migliaia di persone occupate · Attività NACE Rev.2 · EU27 + 35 paesi europei · 2011–2024 · frequenza annuale
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Cosa misura NACE:</strong> La classificazione NACE Rev.2 raggruppa le attività economiche in codici
+      standardizzati a livello europeo. <strong>J58</strong> comprende editori di giornali, riviste, libri e software;
+      <strong>J59</strong> la produzione di film, serie TV, programmi radio e registrazioni musicali;
+      <strong>J60</strong> i canali televisivi e radiofonici (broadcasting). Queste tre categorie insieme
+      rappresentano il cuore occupazionale del settore media e dell'informazione.
+    </div>
+
+    <!-- Chart 1: Trend EU27 -->
+    <p class="chart-title-label">EU27 — Tendenza 2011–2024 per settore</p>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Le tre linee mostrano l'andamento annuale degli occupati (in migliaia) in ciascun
+      settore nell'intera UE27. La divergenza tra editoria (in calo strutturale) e produzione audiovisiva (in crescita
+      continua, con un rimbalzo post-Covid nel 2021) è la storia centrale di questo grafico. Il broadcasting rimane
+      sostanzialmente stabile. Fonte SDMX: <code>CULT_EMP_N2</code>, Eurostat.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <svg id="chart-trend" style="min-height:400px;"></svg>
+    </div>
+
+    <!-- Chart 2: Ranking paesi 2024 -->
+    <p class="chart-title-label mt-5">Top 12 paesi per occupazione totale nel media 2024 (J58+J59+J60)</p>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Totale delle persone occupate nei tre settori media (editoria + produzione audiovisiva
+      + broadcasting) nell'anno più recente disponibile (2024). La Germania domina con quasi 300.000 occupati, seguita
+      da Francia e Spagna. L'Italia è quarta con 101.400. I valori sono in migliaia di persone.
+      Fonte SDMX: <code>CULT_EMP_N2</code>, Eurostat. Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <div id="chart-ranking"></div>
+    </div>
+
+    <!-- Chart 3: Declino editoria J58 -->
+    <p class="chart-title-label mt-5">Paesi con il maggior crollo nell'editoria (J58) dal 2011 al 2024</p>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Le barre mostrano la <em>magnitudine del calo percentuale</em> degli occupati
+      nell'editoria (NACE J58) tra il 2011 e il 2024. Tutti i valori sono perdite: un valore di 53 significa che il
+      paese ha perso oltre la metà degli occupati nel settore editoriale. Sono mostrati solo i 12 paesi con il calo
+      più pronunciato. I paesi con dati non disponibili per entrambi gli anni sono esclusi.
+      Fonte SDMX: <code>CULT_EMP_N2</code>, Eurostat. Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <div id="chart-decline"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 1.961 righe (36 paesi × 4 codici NACE × 14 anni, con lacune)</li>
+        <li>Grafico trend: filtrato su <code>geo = EU27_2020</code>, codici <code>J58, J59, J60</code>; valori <code>null</code> esclusi dai punti</li>
+        <li>Grafico ranking: filtrato su anno <code>2024</code>, somma di J58+J59+J60 per paese; escluso <code>EU27_2020</code> (aggregato); top 12 per valore</li>
+        <li>Grafico declino: calcolato <code>variazione% = (val_2024 − val_2011) / val_2011 × 100</code> per J58; mostrata la magnitudine assoluta (|variazione%|) per i 12 paesi con calo maggiore; esclusi paesi con dato mancante in uno dei due anni e <code>EU27_2020</code></li>
+        <li>Nessuna aggregazione aggiuntiva rispetto all'originale API</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE B: LETTORI PER ETÀ ═══ -->
+  <section class="section py-5" id="eta">
+    <p class="section-label mb-1">Fase B · Eurostat CULT_PCS_NWA · dimensione: age</p>
+    <h2 class="mb-2">Chi legge i giornali? Il profilo per età</h2>
+    <p class="subtitle mb-4">
+      Percentuale di popolazione per fascia d'età · Lettura giornaliera di quotidiani · Media su 23 paesi europei · 2011
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Cosa misura questo dataset:</strong> La quota di persone — all'interno di ciascuna fascia d'età —
+      che dichiarava di leggere un quotidiano <em>ogni giorno</em> negli ultimi 12 mesi prima dell'intervista.
+      Si tratta di un'indagine campionaria (EU-LFS + moduli ad hoc), non di dati amministrativi.
+      Attenzione: il dato si ferma al 2011 e non include la lettura di notizie su siti web, app o social media.
+    </div>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Le quattro barre mostrano la percentuale di lettori giornalieri per fascia
+      d'età, calcolata come media non ponderata su 23 paesi europei nel 2011. Le fasce sono non-sovrapposte
+      (25-34, 35-44, 45-54, 55-64 anni). La differenza tra giovani adulti e adulti maturi è contenuta:
+      circa 3 punti percentuali. Fonte SDMX: <code>CULT_PCS_NWA</code>, Eurostat.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <div id="chart-age"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 2.249 righe (25 paesi × 8 fasce d'età × 7 frequenze × 2 anni)</li>
+        <li>Filtrato su anno <code>2011</code> e frequenza <code>DAY</code> (lettura giornaliera)</li>
+        <li>Selezionate le 4 fasce d'età non sovrapposte: <code>Y25-34, Y35-44, Y45-54, Y55-64</code></li>
+        <li>Calcolata media aritmetica non ponderata su 23 paesi (2 paesi con dati mancanti esclusi automaticamente)</li>
+        <li>Nessuna aggregazione territoriale: ogni paese ha peso uguale nella media</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE C: LETTORI PER SESSO ═══ -->
+  <section class="section py-5" id="sesso">
+    <p class="section-label mb-1">Fase C · Eurostat CULT_PCS_NWS · dimensione: sex</p>
+    <h2 class="mb-2">Il gap di genere nella lettura dei quotidiani</h2>
+    <p class="subtitle mb-4">
+      Percentuale di popolazione per sesso · Lettura giornaliera di quotidiani · Media su 23 paesi europei · 2011
+    </p>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Le due barre confrontano la percentuale di uomini e donne che leggevano
+      un quotidiano ogni giorno nel 2011, media su 23 paesi. Il gap è di circa 8 punti percentuali (58% uomini
+      vs 50% donne). Questo gap era storicamente attribuito alla maggiore presenza maschile nelle professioni
+      dove la lettura del giornale era parte della routine quotidiana (uffici, bar, trasporti pubblici).
+      Fonte SDMX: <code>CULT_PCS_NWS</code>, Eurostat.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <div id="chart-sex"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 846 righe (25 paesi × 3 valori sesso × 7 frequenze × 2 anni)</li>
+        <li>Filtrato su anno <code>2011</code> e frequenza <code>DAY</code></li>
+        <li>Selezionati i valori <code>F</code> (donne) e <code>M</code> (uomini); escluso <code>T</code> (totale) per chiarezza visiva</li>
+        <li>Calcolata media aritmetica non ponderata su 23 paesi</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE D: LETTORI PER ISTRUZIONE ═══ -->
+  <section class="section py-5" id="istruzione">
+    <p class="section-label mb-1">Fase D · Eurostat CULT_PCS_NWE · dimensione: isced97</p>
+    <h2 class="mb-2">Il predittore più forte: quanto studi, tanto leggi</h2>
+    <p class="subtitle mb-4">
+      Percentuale di popolazione per livello di istruzione · Lettura giornaliera di quotidiani · Media su 23 paesi · 2011
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>ISCED 1997:</strong> La classificazione internazionale dei livelli di istruzione (International Standard
+      Classification of Education). <strong>Bassa (ED0-2)</strong> = nessun titolo, scuola primaria o secondaria inferiore;
+      <strong>Media (ED3-4)</strong> = diploma di scuola secondaria superiore o qualifica professionale equivalente;
+      <strong>Alta (ED5-6)</strong> = laurea triennale, magistrale, dottorato o titolo universitario equivalente.
+    </div>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Le tre barre mostrano come il livello di istruzione si correli fortemente
+      con l'abitudine di leggere quotidiani ogni giorno. Chi ha un'istruzione alta legge quasi il doppio
+      rispetto a chi ha un'istruzione bassa. Questo è il predittore demografico più potente che emerge dai dati —
+      più dell'età e del sesso combinati. Fonte SDMX: <code>CULT_PCS_NWE</code>, Eurostat.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <div id="chart-edu"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 1.120 righe (25 paesi × 4 livelli ISCED × 7 frequenze × 2 anni)</li>
+        <li>Filtrato su anno <code>2011</code> e frequenza <code>DAY</code></li>
+        <li>Selezionati i tre livelli non-aggregati: <code>ED0-2</code>, <code>ED3_4</code>, <code>ED5_6</code>; escluso <code>TOTAL</code></li>
+        <li>Calcolata media aritmetica non ponderata su 23 paesi</li>
+        <li>Label semplificata a "BASSA / MEDIA / ALTA" nel grafico; definizioni complete nel callout sopra</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ DATI GREZZI ═══ -->
+  <section class="section py-5" id="dati">
+    <p class="section-label mb-1">Dati grezzi</p>
+    <h2 class="mb-2">Scarica i dati originali</h2>
+    <p class="subtitle mb-4">
+      Dati estratti da Eurostat tramite API SDMX 2.1. Nessuna modifica rispetto all'output dell'API.
+    </p>
+    <div class="callout p-3 mb-4">
+      Questi sono i dati <strong>così come restituiti dall'API</strong> — nessuna aggregazione o modifica.
+      Licenza: <strong>Eurostat CC BY 4.0</strong>.
+      Data di estrazione: <strong>21 aprile 2026</strong>.
+    </div>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-3">
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat CULT_EMP_N2</div>
+          <div class="dl-title mb-1">Occupazione media per settore NACE (J58, J59, J60, TOT)</div>
+          <div class="dl-meta mb-2">1.961 righe · 36 paesi · 2011–2024</div>
+          <a class="dl-link" href="output/A_occupazione_media.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat CULT_PCS_NWA</div>
+          <div class="dl-title mb-1">Lettori di quotidiani per fascia d'età</div>
+          <div class="dl-meta mb-2">2.249 righe · 25 paesi · 2007–2011</div>
+          <a class="dl-link" href="output/B_lettori_eta.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat CULT_PCS_NWS</div>
+          <div class="dl-title mb-1">Lettori di quotidiani per sesso</div>
+          <div class="dl-meta mb-2">846 righe · 25 paesi · 2007–2011</div>
+          <a class="dl-link" href="output/C_lettori_sesso.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat CULT_PCS_NWE</div>
+          <div class="dl-title mb-1">Lettori di quotidiani per livello di istruzione (ISCED 1997)</div>
+          <div class="dl-meta mb-2">1.120 righe · 25 paesi · 2007–2011</div>
+          <a class="dl-link" href="output/D_lettori_istruzione.csv" download>↓ CSV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ METODOLOGIA ═══ -->
+  <section class="section py-5" id="metodologia">
+    <p class="section-label mb-1">Note metodologiche</p>
+    <h2 class="mb-2">Fonti, definizioni e riproducibilità</h2>
+    <p class="subtitle mb-4">Tutti i dati sono riproducibili tramite opensdmx CLI.</p>
+
+    <h3 class="subsection-title mt-4 mb-3">Classificazioni usate</h3>
+    <div class="table-responsive mb-4">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>Codice</th><th>Sistema</th><th>Significato</th></tr></thead>
+        <tbody>
+          <tr><td><code>J58</code></td><td>NACE Rev.2</td><td>Editoria: giornali, riviste, libri, software</td></tr>
+          <tr><td><code>J59</code></td><td>NACE Rev.2</td><td>Produzione cinematografica, TV, audio, musica</td></tr>
+          <tr><td><code>J60</code></td><td>NACE Rev.2</td><td>Programmazione e broadcasting radiotelevisivo</td></tr>
+          <tr><td><code>THS_PER</code></td><td>Eurostat unit</td><td>Migliaia di persone occupate</td></tr>
+          <tr><td><code>PC</code></td><td>Eurostat unit</td><td>Percentuale della popolazione</td></tr>
+          <tr><td><code>ED0-2</code></td><td>ISCED 1997</td><td>Istruzione bassa (nessun titolo → secondaria inferiore)</td></tr>
+          <tr><td><code>ED3_4</code></td><td>ISCED 1997</td><td>Istruzione media (diploma superiore, qualifica professionale)</td></tr>
+          <tr><td><code>ED5_6</code></td><td>ISCED 1997</td><td>Istruzione alta (laurea e oltre)</td></tr>
+          <tr><td><code>DAY</code></td><td>FREQUENC (Eurostat)</td><td>Lettura ogni giorno</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">URL API SDMX delle query originali</h3>
+    <p class="mb-2" style="color:var(--ink-light);">URL esatti usati per scaricare i dati. Cliccabili o incollabili in qualsiasi client HTTP.</p>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">CULT_EMP_N2 — Eurostat (occupazione media J58+J59+J60+TOT, 2011–2024)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/CULT_EMP_N2/A.J58+J59+J60+TOT.THS_PER./ALL/?startPeriod=2011&endPeriod=2024&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/CULT_EMP_N2/A.J58+J59+J60+TOT.THS_PER./ALL/?startPeriod=2011&endPeriod=2024&format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">CULT_PCS_NWA — Eurostat (lettori per età, 2007–2011)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/CULT_PCS_NWA/A...PC./ALL/?startPeriod=2007&endPeriod=2011&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/CULT_PCS_NWA/A...PC./ALL/?startPeriod=2007&endPeriod=2011&format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">CULT_PCS_NWS — Eurostat (lettori per sesso, 2007–2011)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/CULT_PCS_NWS/A...PC./ALL/?startPeriod=2007&endPeriod=2011&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/CULT_PCS_NWS/A...PC./ALL/?startPeriod=2007&endPeriod=2011&format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">CULT_PCS_NWE — Eurostat (lettori per istruzione, 2007–2011)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/CULT_PCS_NWE/A...PC./ALL/?startPeriod=2007&endPeriod=2011&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/CULT_PCS_NWE/A...PC./ALL/?startPeriod=2007&endPeriod=2011&format=SDMX-CSV</a>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">Comandi CLI per riprodurre i dati</h3>
+    <div class="table-responsive mb-4">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>Dataset</th><th>Comando</th></tr></thead>
+        <tbody>
+          <tr><td>CULT_EMP_N2</td><td><code>opensdmx run queries/A_occupazione_media.yaml --out output/A_occupazione_media.csv</code></td></tr>
+          <tr><td>CULT_PCS_NWA</td><td><code>opensdmx run queries/B_lettori_eta.yaml --out output/B_lettori_eta.csv</code></td></tr>
+          <tr><td>CULT_PCS_NWS</td><td><code>opensdmx run queries/C_lettori_sesso.yaml --out output/C_lettori_sesso.csv</code></td></tr>
+          <tr><td>CULT_PCS_NWE</td><td><code>opensdmx run queries/D_lettori_istruzione.yaml --out output/D_lettori_istruzione.csv</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">File disponibili</h3>
+    <div class="table-responsive">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>File</th><th>Contenuto</th></tr></thead>
+        <tbody>
+          <tr><td><code>output/A_occupazione_media.csv</code></td><td>1.961 righe · occupazione culturale per attività NACE</td></tr>
+          <tr><td><code>output/B_lettori_eta.csv</code></td><td>2.249 righe · lettori di quotidiani per fascia d'età</td></tr>
+          <tr><td><code>output/C_lettori_sesso.csv</code></td><td>846 righe · lettori di quotidiani per sesso</td></tr>
+          <tr><td><code>output/D_lettori_istruzione.csv</code></td><td>1.120 righe · lettori di quotidiani per livello ISCED</td></tr>
+          <tr><td><code>queries/A_occupazione_media.yaml</code></td><td>Query riproducibile per CULT_EMP_N2</td></tr>
+          <tr><td><code>queries/B_lettori_eta.yaml</code></td><td>Query riproducibile per CULT_PCS_NWA</td></tr>
+          <tr><td><code>queries/C_lettori_sesso.yaml</code></td><td>Query riproducibile per CULT_PCS_NWS</td></tr>
+          <tr><td><code>queries/D_lettori_istruzione.yaml</code></td><td>Query riproducibile per CULT_PCS_NWE</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer py-4 mt-2">
+  <div class="container d-flex flex-wrap gap-4 justify-content-between">
+    <span>Dati: Eurostat · Formato SDMX 2.1</span>
+    <span>Strumento: <a href="https://github.com/opensdmx/opensdmx">opensdmx CLI</a></span>
+    <span>Grafici: <a href="https://github.com/jwilber/roughViz">roughViz 1.0.6</a> · <a href="https://github.com/timqian/chart.xkcd">chart.xkcd 1.1</a></span>
+    <span>21 aprile 2026</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── SEZIONE A: TREND EU27 J58/J59/J60 2011–2024 ────────────────────────────
+// Dati: occupazione EU27 per settore media, in migliaia di persone occupate
+const anni = [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+const j58vals = [744.8, 767.3, 688.5, 661.3, 618.3, 613.6, 595.3, 609.7, 605.5, 558.7, 565.7, 577.6, 547.5, 517.4];
+const j59vals = [353.8, 348.7, 344.6, 356.2, 365.6, 374.4, 389.2, 406.8, 417.7, 386.8, 431.6, 446.4, 451.3, 460.4];
+const j60vals = [279.7, 277.6, 273.2, 282.0, 291.0, 288.6, 275.9, 269.5, 274.0, 286.6, 281.5, 266.7, 258.3, 286.2];
+
+const j58pts = anni.map((a, i) => j58vals[i] !== null ? { x: a, y: j58vals[i] } : null).filter(Boolean);
+const j59pts = anni.map((a, i) => j59vals[i] !== null ? { x: a, y: j59vals[i] } : null).filter(Boolean);
+const j60pts = anni.map((a, i) => j60vals[i] !== null ? { x: a, y: j60vals[i] } : null).filter(Boolean);
+
+new chartXkcd.XY(document.getElementById('chart-trend'), {
+  xLabel: '',
+  yLabel: 'MIGLIAIA DI PERSONE',
+  data: {
+    datasets: [
+      { label: 'J58 EDITORIA', data: j58pts },
+      { label: 'J59 PRODUZIONE AUDIOVISIVA', data: j59pts },
+      { label: 'J60 BROADCASTING', data: j60pts }
+    ]
+  },
+  options: {
+    showLine: true,
+    dotSize: 0.5,
+    xTickCount: 5,
+    yTickCount: 5,
+    dataColors: ['#c0392b', '#2980b9', '#27ae60'],
+  }
+});
+
+// ── SEZIONE A: RANKING PAESI 2024 (J58+J59+J60) ───────────────────────────
+// Top 12 paesi, ordine crescente (lowest at bottom, highest at top in BarH)
+new roughViz.BarH({
+  element: '#chart-ranking',
+  data: {
+    labels: ['UNGHERIA', 'DANIMARCA', 'SVIZZERA', 'BELGIO', 'SVEZIA', 'POLONIA', 'PAESI BASSI', 'TURCHIA', 'ITALIA', 'SPAGNA', 'FRANCIA', 'GERMANIA'],
+    values: [28.0, 29.2, 29.9, 33.8, 42.1, 77.8, 78.8, 79.6, 101.4, 152.9, 205.8, 297.0]
+  },
+  title: 'OCCUPAZIONE NEL SETTORE MEDIA 2024 (MIGLIAIA)',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  color: '#2980b9',
+  highlight: '#3498db',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900,
+  height: 520,
+  margin: { top: 40, right: 100, bottom: 30, left: 150 },
+  xLabel: 'MIGLIAIA DI PERSONE',
+});
+
+// ── SEZIONE A: DECLINO EDITORIA J58 (magnitudine %) ───────────────────────
+// Paesi con il calo maggiore degli occupati nell'editoria (J58) 2011→2024
+// Valori = magnitudine assoluta della variazione % negativa (tutti i paesi sono in calo)
+new roughViz.BarH({
+  element: '#chart-decline',
+  data: {
+    labels: ['SLOVENIA', 'SVEZIA', 'ISLANDA', 'REP. CECA', 'GERMANIA', 'PAESI BASSI', 'ESTONIA', 'FINLANDIA', 'GRECIA', 'NORVEGIA', 'POLONIA', 'CROAZIA'],
+    values: [27.3, 30.3, 33.3, 34.6, 34.8, 37.2, 40.0, 46.1, 49.6, 50.7, 53.2, 53.3]
+  },
+  title: 'CALO % OCCUPATI NELL\'EDITORIA (J58) DAL 2011 AL 2024',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  color: '#c0392b',
+  highlight: '#e74c3c',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900,
+  height: 520,
+  margin: { top: 40, right: 100, bottom: 30, left: 150 },
+  xLabel: '% POSTI DI LAVORO PERSI',
+});
+
+// ── SEZIONE B: LETTORI PER ETÀ (DAY, 2011, media 23 paesi) ───────────────
+new roughViz.Bar({
+  element: '#chart-age',
+  data: {
+    labels: ['25-34 ANNI', '35-44 ANNI', '45-54 ANNI', '55-64 ANNI'],
+    values: [52.0, 54.1, 55.1, 55.1]
+  },
+  title: 'LETTORI GIORNALIERI DI QUOTIDIANI PER ETÀ (2011)',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  color: '#8e44ad',
+  highlight: '#9b59b6',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900,
+  height: 340,
+  margin: { top: 40, right: 30, bottom: 60, left: 60 },
+  yLabel: '% DELLA POPOLAZIONE',
+});
+
+// ── SEZIONE C: LETTORI PER SESSO (DAY, 2011, media 23 paesi) ─────────────
+new roughViz.Bar({
+  element: '#chart-sex',
+  data: {
+    labels: ['DONNE', 'UOMINI'],
+    values: [50.2, 58.0]
+  },
+  title: 'LETTORI GIORNALIERI DI QUOTIDIANI PER SESSO (2011)',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  color: '#e67e22',
+  highlight: '#f39c12',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900,
+  height: 300,
+  margin: { top: 40, right: 30, bottom: 60, left: 60 },
+  yLabel: '% DELLA POPOLAZIONE',
+});
+
+// ── SEZIONE D: LETTORI PER ISTRUZIONE (DAY, 2011, media 23 paesi) ─────────
+new roughViz.Bar({
+  element: '#chart-edu',
+  data: {
+    labels: ['BASSA', 'MEDIA', 'ALTA'],
+    values: [37.8, 56.1, 69.6]
+  },
+  title: 'LETTORI GIORNALIERI DI QUOTIDIANI PER ISTRUZIONE (2011)',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  color: '#16a085',
+  highlight: '#1abc9c',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900,
+  height: 320,
+  margin: { top: 40, right: 30, bottom: 60, left: 60 },
+  yLabel: '% DELLA POPOLAZIONE',
+});
+</script>
+</body>
+</html>

@@ -16,7 +16,21 @@
       "Bash(opensdmx -o csv values TPS00217 isced11 --provider eurostat)",
       "Bash(python3:*)",
       "Bash(git init *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(git push *)",
+      "Bash(python3 -m http.server 8095 --bind 127.0.0.1)",
+      "Bash(echo \"PID=$!\")",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_console_messages",
+      "Bash(kill 29086)",
+      "Bash(echo \"OK PID=$!\")",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_take_screenshot",
+      "Bash(kill 30569)",
+      "Bash(kill 36576)"
     ]
   }
 }

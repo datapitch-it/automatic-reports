@@ -8,13 +8,13 @@
   <style>
     :root {
       --ink:        #1a1a1a;
-      --ink-light:  #555;
-      --ink-faint:  #888;
+      --ink-light:  #333;
+      --ink-faint:  #666;
       --paper:      #fafaf7;
       --paper-warm: #f5f3ee;
-      --rule:       #d0ccc4;
-      --accent:     #c0392b;
-      --accent2:    #2980b9;
+      --rule:       #999;
+      --accent:     #b02020;
+      --accent2:    #1a6fa8;
       --serif:      'Georgia', 'Times New Roman', serif;
       --mono:       'Courier New', Courier, monospace;
       --bs-body-font-family:   var(--serif);
@@ -26,18 +26,18 @@
     .container { max-width: 1060px; }
 
     .site-header {
-      background: var(--paper-warm);
-      border-bottom: 2px solid var(--ink);
+      background: #1a1a1a;
+      border-bottom: 2px solid #000;
     }
     .eyebrow {
       font-family: var(--mono);
       font-size: 1rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--ink-faint);
+      color: #888;
     }
-    .site-header h1 { font-size: 2.2rem; font-weight: normal; line-height: 1.2; }
-    .lead-text { color: var(--ink-light); line-height: 1.7; font-size: 1rem; max-width: 720px; }
+    .site-header h1 { font-size: 2.2rem; font-weight: normal; line-height: 1.2; color: #fff; }
+    .lead-text { color: #ccc; line-height: 1.7; font-size: 1rem; max-width: 720px; }
 
     .method-strip {
       border-top: 1px solid var(--rule);
@@ -518,6 +518,28 @@
             <span class="badge-sm"><strong>Eurostat</strong> LFSA_EGAN2</span>
             <span class="badge-sm"><strong>Eurostat</strong> LFSA_EPPGA</span>
             <span class="badge-sm"><strong>Periodo</strong> 2010–2023</span>
+          </div>
+          <span class="cta-link">Leggi il report →</span>
+        </div>
+      </a>
+
+      <a class="report-card" href="reports/05_media-giornalismo/index.html">
+        <div class="report-card-preview">
+          <span class="report-num">05</span>
+          <iframe src="reports/05_media-giornalismo/index.html" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
+          <div class="preview-overlay"></div>
+        </div>
+        <div class="report-card-body">
+          <h2>Due velocità nel settore media europeo</h2>
+          <p class="desc">
+            L'editoria tradizionale perde un terzo degli occupati in 13 anni, mentre la produzione
+            audiovisiva cresce del 30%. E chi legge ancora i quotidiani di carta? Un'analisi del
+            profilo demografico del lettore: maschio, over 45, laureato.
+          </p>
+          <div class="report-card-footer">
+            <span class="badge-sm"><strong>Eurostat</strong> CULT_EMP_N2</span>
+            <span class="badge-sm"><strong>Eurostat</strong> CULT_PCS_NWA/S/E</span>
+            <span class="badge-sm"><strong>Periodo</strong> 2011–2024</span>
           </div>
           <span class="cta-link">Leggi il report →</span>
         </div>

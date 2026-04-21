@@ -11,13 +11,13 @@
   <style>
     :root {
       --ink:        #1a1a1a;
-      --ink-light:  #555;
-      --ink-faint:  #888;
+      --ink-light:  #333;
+      --ink-faint:  #666;
       --paper:      #fafaf7;
       --paper-warm: #f5f3ee;
-      --rule:       #d0ccc4;
-      --accent:     #c0392b;
-      --accent2:    #2980b9;
+      --rule:       #999;
+      --accent:     #b02020;
+      --accent2:    #1a6fa8;
       --serif:      'Georgia', 'Times New Roman', serif;
       --mono:       'Courier New', Courier, monospace;
       --bs-body-font-family:   var(--serif);
@@ -30,20 +30,20 @@
     html { font-size: 19px; scroll-behavior: smooth; }
     .container { max-width: 1060px; }
 
-    .site-header { background: var(--paper-warm); border-bottom: 2px solid var(--ink); }
-    .eyebrow { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); }
-    .site-header h1 { font-size: 2rem; font-weight: normal; line-height: 1.2; }
-    .intro { color: var(--ink-light); line-height: 1.7; }
-    .ds-badge { font-family: var(--mono); font-size: 1rem; background: var(--paper); border: 1px solid var(--rule); padding: 2px 8px; color: var(--ink-light); }
-    .ds-badge strong { color: var(--ink); }
+    .site-header { background: #1a1a1a; border-bottom: 2px solid #000; }
+    .eyebrow { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; color: #888; }
+    .site-header h1 { font-size: 2rem; font-weight: normal; line-height: 1.2; color: #fff; }
+    .intro { color: #ccc; line-height: 1.7; }
+    .ds-badge { font-family: var(--mono); font-size: 1rem; background: #2a2a2a; border: 1px solid #444; padding: 2px 8px; color: #aaa; }
+    .ds-badge strong { color: #fff; }
 
-    .site-nav { background: var(--paper) !important; border-bottom: 1px solid var(--rule); z-index: 1020; }
-    .site-nav .nav-link { font-family: var(--mono); font-size: 1rem; color: var(--ink-light); padding: 3px 10px; border: 1px solid transparent; border-radius: 0; transition: border-color 0.15s, color 0.15s; }
-    .site-nav .nav-link:hover { border-color: var(--rule); color: var(--ink); }
+    .site-nav { background: #1a1a1a !important; border-bottom: 1px solid #333; z-index: 1020; }
+    .site-nav .nav-link { font-family: var(--mono); font-size: 1rem; color: #aaa; padding: 3px 10px; border: 1px solid transparent; border-radius: 0; transition: border-color 0.15s, color 0.15s; }
+    .site-nav .nav-link:hover { border-color: #555; color: #fff; }
 
     .section { border-bottom: 1px solid var(--rule); }
     .section:last-child { border-bottom: none; }
-    .section-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+    .section-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: #888; }
     .section h2 { font-size: 1.5rem; font-weight: normal; }
     .section .subtitle { color: var(--ink-light); line-height: 1.5; }
     .subsection-title { font-size: 1rem; font-weight: normal; color: var(--ink); padding-bottom: 0.3rem; border-bottom: 1px dashed var(--rule); }
@@ -61,13 +61,13 @@
     .chart-wrap svg { display: block; width: 100%; min-height: 380px; }
 
     .transform { background: var(--paper-warm); border: 1px solid var(--rule); border-left: 3px solid var(--accent2); }
-    .transform h4 { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+    .transform h4 { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: #888; }
     .transform ul { color: var(--ink-light); line-height: 1.7; }
     .transform li code { font-family: var(--mono); font-size: 1rem; background: var(--paper); padding: 1px 4px; border: 1px solid var(--rule); }
 
     .note { font-size: 1rem; color: var(--ink-faint); border-top: 1px dashed var(--rule); line-height: 1.6; }
     .note code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; border: 1px solid var(--rule); }
-    .note a { color: var(--ink-faint); }
+    .note a { color: #888; }
 
     .query-url { background: #fff; border: 1px solid var(--rule); font-family: var(--mono); font-size: 1rem; color: var(--ink-light); word-break: break-all; line-height: 1.6; }
     .query-url a { color: var(--accent2); }
@@ -78,14 +78,14 @@
     .data-table tbody tr:nth-child(even) td { background: var(--paper-warm); }
     .data-table code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; color: var(--ink); }
 
-    .dl-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
+    .dl-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; color: #888; }
     .dl-title { color: var(--ink); font-size: 1rem; }
-    .dl-meta { font-family: var(--mono); font-size: 1rem; color: var(--ink-faint); }
+    .dl-meta { font-family: var(--mono); font-size: 1rem; color: #888; }
     a.dl-link { font-family: var(--mono); font-size: 1rem; color: var(--accent2); text-decoration: none; border: 1px solid var(--accent2); padding: 2px 8px; display: inline-block; }
     a.dl-link:hover { background: var(--accent2); color: #fff; }
 
     .site-footer { border-top: 2px solid var(--ink); font-size: 1rem; color: var(--ink-faint); font-family: var(--mono); }
-    .site-footer a { color: var(--ink-faint); }
+    .site-footer a { color: #888; }
   </style>
 </head>
 <body>

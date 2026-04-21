@@ -1,0 +1,5 @@
+provider: estat
+dataset: CULT_PCS_NWS
+start_period: "2007"
+end_period: "2011"
+format: SDMX-CSV

@@ -1,0 +1,8 @@
+provider: estat
+dataset: CULT_EMP_N2
+filters:
+  nace_r2: J58+J59+J60+TOT
+  unit: THS_PER
+start_period: "2011"
+end_period: "2024"
+format: SDMX-CSV
