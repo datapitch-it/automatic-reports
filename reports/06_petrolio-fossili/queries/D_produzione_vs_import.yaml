@@ -1,0 +1,9 @@
+provider: eurostat
+dataset: NRG_CB_COSM
+filters:
+  freq: A
+  nrg_bal: PRD+IMP
+  indic_nrg: VOL_THS_BBL
+  geo: IT+DE+FR+ES+NL
+start_period: "2020"
+end_period: "2023"

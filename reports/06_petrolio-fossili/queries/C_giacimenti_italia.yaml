@@ -1,0 +1,7 @@
+provider: eurostat
+dataset: NRG_TI_COIFPM
+filters:
+  indic_nrg: VOL_THS_BBL
+  geo: IT
+start_period: "2020"
+end_period: "2024"

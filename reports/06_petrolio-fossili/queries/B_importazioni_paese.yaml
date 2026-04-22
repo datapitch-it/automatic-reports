@@ -1,0 +1,7 @@
+provider: eurostat
+dataset: NRG_TI_OIL
+filters:
+  siec: O4100_TOT
+  geo: EU27_2020
+start_period: "2015"
+end_period: "2023"

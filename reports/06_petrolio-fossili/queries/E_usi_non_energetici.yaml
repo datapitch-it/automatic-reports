@@ -1,0 +1,9 @@
+provider: eurostat
+dataset: NRG_CB_OIL
+filters:
+  nrg_bal: FC_NE
+  siec: O4640+O4300+O4000
+  unit: THS_T
+  geo: EU27_2020+IT
+start_period: "2010"
+end_period: "2022"

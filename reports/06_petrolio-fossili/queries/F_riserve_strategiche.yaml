@@ -1,0 +1,7 @@
+provider: eurostat
+dataset: NRG_STK_OEM
+filters:
+  stk_flow: STK_EUE_DIR
+  unit: NR
+start_period: "2013"
+end_period: "2024"

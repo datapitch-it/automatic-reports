@@ -1,0 +1,9 @@
+provider: imf
+dataset: IMF.RES,PCPS
+filters:
+  INDICATOR: POILBRE+POILWTI+PNGASEU+PCOAL
+  COUNTRY: G001
+  FREQUENCY: M
+  DATA_TRANSFORMATION: INDEX
+start_period: "2000"
+end_period: "2024"

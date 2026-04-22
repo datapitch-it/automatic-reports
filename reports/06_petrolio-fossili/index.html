@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petrolio e combustibili fossili — Ricerca SDMX</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://unpkg.com/rough-viz@1.0.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+  <style>
+    :root {
+      --ink:        #1a1a1a;
+      --ink-light:  #333;
+      --ink-faint:  #666;
+      --paper:      #fafaf7;
+      --paper-warm: #f5f3ee;
+      --rule:       #999;
+      --accent:     #b02020;
+      --accent2:    #1a6fa8;
+      --serif:      'Georgia', 'Times New Roman', serif;
+      --mono:       'Courier New', Courier, monospace;
+      --bs-body-font-family:   var(--serif);
+      --bs-body-color:         var(--ink);
+      --bs-body-bg:            var(--paper);
+      --bs-border-color:       var(--rule);
+      --bs-card-border-radius: 0;
+      --bs-card-border-color:  var(--rule);
+    }
+    html { font-size: 19px; scroll-behavior: smooth; }
+    .container { max-width: 1060px; }
+
+    .site-header { background: #1a1a1a; border-bottom: 2px solid #000; }
+    .eyebrow { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; color: #888; }
+    .site-header h1 { font-size: 2rem; font-weight: normal; line-height: 1.2; color: #fff; }
+    .intro { color: #ccc; line-height: 1.7; }
+    .ds-badge { font-family: var(--mono); font-size: 1rem; background: #2a2a2a; border: 1px solid #444; padding: 2px 8px; color: #aaa; }
+    .ds-badge strong { color: #fff; }
+
+    .site-nav { background: #1a1a1a !important; border-bottom: 1px solid #333; z-index: 1020; }
+    .site-nav .nav-link { font-family: var(--mono); font-size: 1rem; color: #aaa; padding: 3px 10px; border: 1px solid transparent; border-radius: 0; transition: border-color 0.15s, color 0.15s; }
+    .site-nav .nav-link:hover { border-color: #555; color: #fff; }
+
+    .section { border-bottom: 1px solid var(--rule); }
+    .section:last-child { border-bottom: none; }
+    .section-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+    .section h2 { font-size: 1.5rem; font-weight: normal; }
+    .section .subtitle { color: var(--ink-light); line-height: 1.5; }
+    .subsection-title { font-size: 1rem; font-weight: normal; color: var(--ink); padding-bottom: 0.3rem; border-bottom: 1px dashed var(--rule); }
+
+    .callout { background: var(--paper-warm); border-left: 3px solid var(--accent); border-top: none; border-right: none; border-bottom: none; border-radius: 0; color: var(--ink-light); }
+    .callout strong { color: var(--ink); }
+
+    .finding-card { background: #fff; border: 1px solid var(--rule); padding: 0.9rem 1rem; height: 100%; }
+    .big-num { font-size: 2rem; font-family: var(--mono); color: var(--accent); line-height: 1; }
+    .big-num.blue { color: var(--accent2); }
+    .big-num.green { color: #27ae60; }
+    .finding-card p { font-size: 1rem; color: var(--ink-light); line-height: 1.4; }
+    .finding-card strong { color: var(--ink); }
+
+    .chart-wrap { background: #fff; border: 1px solid var(--rule); padding: 1.2rem; overflow-x: auto; }
+    .chart-wrap svg { display: block; width: 100%; min-height: 380px; }
+
+    .sm-card { background: #fff; border: 1px solid var(--rule); padding: 0.6rem 0.6rem 0; }
+    .sm-card h4 { font-size: 1rem; font-family: var(--mono); color: var(--ink-light); padding: 0 0.3rem 0.3rem; border-bottom: 1px dashed var(--rule); margin-bottom: 0.3rem; }
+    .sm-card svg { width: 100%; height: 280px; display: block; }
+
+    .chart-title-label { font-family: var(--mono); font-size: 1rem; text-transform: uppercase; color: var(--ink-faint); letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+
+    .transform { background: var(--paper-warm); border: 1px solid var(--rule); border-left: 3px solid var(--accent2); }
+    .transform h4 { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+    .transform ul { color: var(--ink-light); line-height: 1.7; }
+    .transform li code { font-family: var(--mono); font-size: 1rem; background: var(--paper); padding: 1px 4px; border: 1px solid var(--rule); }
+
+    .note { font-size: 1rem; color: var(--ink-faint); border-top: 1px dashed var(--rule); line-height: 1.6; }
+    .note code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; border: 1px solid var(--rule); }
+    .note a { color: var(--ink-faint); }
+
+    .query-url { background: #fff; border: 1px solid var(--rule); font-family: var(--mono); font-size: 1rem; color: var(--ink-light); word-break: break-all; line-height: 1.6; }
+    .query-url a { color: var(--accent2); }
+
+    .data-table { font-size: 1rem; }
+    .data-table thead th { background: var(--paper-warm); font-family: var(--mono); font-size: 1rem; font-weight: normal; letter-spacing: 0.05em; border-color: var(--rule); }
+    .data-table td { border-color: var(--rule); }
+    .data-table tbody tr:nth-child(even) td { background: var(--paper-warm); }
+    .data-table code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; color: var(--ink); }
+
+    .dl-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
+    .dl-title { color: var(--ink); font-size: 1rem; }
+    .dl-meta { font-family: var(--mono); font-size: 1rem; color: var(--ink-faint); }
+    a.dl-link { font-family: var(--mono); font-size: 1rem; color: var(--accent2); text-decoration: none; border: 1px solid var(--accent2); padding: 2px 8px; display: inline-block; }
+    a.dl-link:hover { background: var(--accent2); color: #fff; }
+
+    .site-footer { border-top: 2px solid var(--ink); font-size: 1rem; color: var(--ink-faint); font-family: var(--mono); }
+    .site-footer a { color: var(--ink-faint); }
+
+    .russia-row { background: #fff3f3 !important; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="site-nav navbar sticky-top py-2">
+  <div class="container">
+    <div class="d-flex flex-wrap gap-1">
+      <a class="nav-link" href="#intro">↓ Intro</a>
+      <a class="nav-link" href="#prezzi">Prezzi</a>
+      <a class="nav-link" href="#fornitori">Fornitori EU</a>
+      <a class="nav-link" href="#giacimenti">Giacimenti IT</a>
+      <a class="nav-link" href="#produzione">Produzione vs import</a>
+      <a class="nav-link" href="#nonenerg">Usi non energetici</a>
+      <a class="nav-link" href="#riserve">Riserve strategiche</a>
+      <a class="nav-link" href="#dati">Dati grezzi</a>
+      <a class="nav-link" href="#metodologia">Metodologia</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header py-5">
+  <div class="container">
+    <p class="eyebrow mb-2">Ricerca SDMX · 22 aprile 2026 · opensdmx CLI</p>
+    <h1 class="mb-3">Petrolio e combustibili fossili:<br>produzione, importazioni, usi, riserve</h1>
+    <p class="intro mb-3" style="max-width:720px;">
+      Da dove arriva il greggio che entra in Europa, a quale prezzo, da quali giacimenti specifici?
+      Quanto viene usato come materia prima industriale invece che come combustibile?
+      Quanti giorni di autonomia ha ciascun paese UE in caso di crisi?
+      Sei dataset da IMF ed Eurostat, dal giacimento libico all'indice di Borsa del gas.
+    </p>
+    <div class="d-flex flex-wrap gap-2">
+      <span class="ds-badge"><strong>IMF</strong> PCPS</span>
+      <span class="ds-badge"><strong>Eurostat</strong> NRG_TI_OIL · NRG_TI_COIFPM · NRG_CB_COSM · NRG_CB_OIL · NRG_STK_OEM</span>
+      <span class="ds-badge"><strong>Periodo</strong> 2000–2024</span>
+      <span class="ds-badge"><strong>Paesi</strong> EU27 + Italia focus</span>
+    </div>
+  </div>
+</header>
+
+<main class="container py-2">
+
+  <!-- ═══ INTRO ═══ -->
+  <section class="section py-5" id="intro">
+    <p class="section-label mb-1">Contesto</p>
+    <h2 class="mb-2">Un continente senza pozzo: la dipendenza energetica europea</h2>
+    <p class="subtitle mb-4">L'Europa produce meno del 5% del petrolio che consuma. Il resto viene importato da 167 paesi, estratto da 819 giacimenti diversi, commerciato in dollari su mercati globali.</p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Limite di scope:</strong> Questi dati coprono le importazioni fisiche di greggio e derivati e i prezzi spot internazionali.
+      Non coprono: le emissioni di CO₂ associate alla combustione, i prezzi al dettaglio di benzina e gasolio alla pompa,
+      i contratti a lungo termine e gli accordi bilaterali riservati, le scorte di gas naturale (separate dalle scorte petrolifere).
+      Per i prezzi al consumo finale: Eurostat <code>NRG_PC_202</code>. Per i prezzi del gas in hub: ECB o Eurostat <code>NRG_CB_GASM</code>.
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-4 g-3">
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2">×16</div>
+          <p class="mb-0"><strong>Il gas europeo</strong> — tra agosto 2020 e agosto 2022 il prezzo del gas naturale EU è salito di 16 volte (indice IMF, base 2016=100)</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num blue mb-2">25%→3%</div>
+          <p class="mb-0"><strong>Russia fuori</strong> — la quota russa nelle importazioni EU di greggio è crollata dal 25,2% del 2021 al 3,0% del 2023</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num green mb-2">#1</div>
+          <p class="mb-0"><strong>Azeri Light</strong> — il giacimento azerbaigiano è la singola fonte più importante di greggio per l'Italia: 256 milioni di barili importati tra 2020 e 2024</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2" style="color:#8e44ad;">92gg</div>
+          <p class="mb-0"><strong>Italia al minimo</strong> — le riserve petrolifere di emergenza italiane ammontano a 92 giorni equivalenti (dic 2024), 2 giorni sopra il minimo UE di 90</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE A — PREZZI ═══ -->
+  <section class="section py-5" id="prezzi">
+    <p class="section-label mb-1">Sezione 1 · IMF PCPS · prezzi internazionali</p>
+    <h2 class="mb-2">Petrolio, gas e carbone: la storia dei prezzi dal 2000 al 2024</h2>
+    <p class="subtitle mb-4">
+      Indice (2016 = 100) · mensile aggregato in medie annuali · 4 commodity energetiche
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Indice 2016=100:</strong> tutti i valori sono normalizzati rispetto al valore medio del 2016. Un indice di 200 significa che il prezzo è raddoppiato rispetto al 2016. Questo permette di confrontare commodity con unità di misura diverse (dollari/barile, dollari/MMBtu, dollari/tonnellata) sullo stesso grafico.
+    </div>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> ogni linea rappresenta l'andamento annuale medio di un prezzo. Il gas europeo (linea blu) mostra la volatilità più estrema: praticamente piatto fino al 2021, poi un'esplosione verticale nel 2022 (+762% rispetto al 2020) legata alla guerra in Ucraina e al taglio delle forniture russe. Il petrolio Brent aveva già vissuto un picco simile in proporzione nel 2008 (crisi finanziaria), poi crollato nel 2009 e nuovamente nel 2020 (pandemia).
+      Fonte SDMX: <code>IMF.RES,PCPS</code>, IMF. Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd 1.1</a>.
+    </p>
+
+    <div class="chart-wrap mb-4">
+      <svg id="chart-A" style="min-height:420px;"></svg>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 1.200 osservazioni mensili per 4 indicatori (2000–2024)</li>
+        <li>Aggregazione: media aritmetica dei 12 mesi per ogni anno civile</li>
+        <li>La serie POPEC (OPEC Basket) è stata esclusa: non disponibile come indice mensile nel dataset IMF PCPS per l'intero periodo</li>
+        <li>TIME_PERIOD non restituito dall'API IMF in formato CSV: ricostruito sequenzialmente dal 2000-01 (300 mesi per indicatore)</li>
+        <li>Dati finali: 25 punti annuali per 4 serie</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE B — FORNITORI EU ═══ -->
+  <section class="section py-5" id="fornitori">
+    <p class="section-label mb-1">Sezione 2 · Eurostat NRG_TI_OIL · importazioni greggio EU27</p>
+    <h2 class="mb-2">Da chi importa l'Unione Europea? Prima e dopo l'invasione dell'Ucraina</h2>
+    <p class="subtitle mb-4">
+      % sul totale importazioni greggio EU27 · top 10 partner · 2021 vs 2023 · migliaia di tonnellate
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Greggio (O4100_TOT):</strong> è il petrolio grezzo non raffinato, così come estratto dal giacimento. Diverso dai prodotti petroliferi raffinati (benzina, gasolio, kerosene) che arrivano già lavorati. La quota per paese si riferisce al paese da cui parte fisicamente la spedizione, non necessariamente al paese produttore — ad es. parte del greggio kazako transita via Russia o Mar Nero e viene dichiarato come proveniente dal Kazakhstan.
+    </div>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> la barra mostra la percentuale di ciascun paese sul totale importazioni di greggio EU27. Confrontando 2021 e 2023 emerge il riassestamento delle forniture dopo le sanzioni alla Russia (feb 2022): la Russia scompare dalla top 10 (da 25,2% a 3,0%), sostituita principalmente da USA e Norvegia che quasi raddoppiano la loro quota.
+      Fonte SDMX: <code>NRG_TI_OIL</code>, Eurostat. Grafico: <a href="https://github.com/jwilber/roughViz">roughViz 1.0.6</a>.
+    </p>
+
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <p class="chart-title-label">2021 — PRIMA DELLE SANZIONI</p>
+        <div class="chart-wrap">
+          <div id="chart-B2021" style="min-height:340px;"></div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <p class="chart-title-label">2023 — DOPO LE SANZIONI</p>
+        <div class="chart-wrap">
+          <div id="chart-B2023" style="min-height:340px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout p-3 mb-4">
+      <strong>Nota sulla Russia:</strong> nel 2021 la Russia era il primo fornitore di greggio EU27 con il 25,2% del totale (112 milioni di tonnellate). Nel 2023 è scesa al 1,5% (14,4 milioni di tonnellate, fuori dalla top 10). L'embargo UE sul greggio russo via mare è entrato in vigore il 5 dicembre 2022; alcune importazioni continuano via pipeline verso i paesi dell'Europa orientale (esenzione parziale).
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 1.504 osservazioni (167 partner × 9 anni × siec O4100_TOT, EU27_2020)</li>
+        <li>Filtro anni: selezionati solo 2021 e 2023 per confronto pre/post sanzioni</li>
+        <li>Filtro partner: esclusi aggregati regionali (<code>TOTAL</code>, <code>NSP</code>, <code>AFR_OTH</code>, <code>AME_OTH</code>, <code>ASI_OTH</code>, <code>ASI_NME_OTH</code>)</li>
+        <li>Calcolo percentuale: <code>valore_partner / TOTAL × 100</code> per ciascun anno</li>
+        <li>Dati finali: top 10 partner individuali per anno</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE C — GIACIMENTI ITALIA ═══ -->
+  <section class="section py-5" id="giacimenti">
+    <p class="section-label mb-1">Sezione 3 · Eurostat NRG_TI_COIFPM · giacimenti Italia</p>
+    <h2 class="mb-2">Da quale pozzo viene il greggio italiano? I 15 giacimenti principali (2020–2024)</h2>
+    <p class="subtitle mb-4">
+      Volume cumulato in milioni di barili · Italia · 819 giacimenti monitorati · mensile 2020–2024
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Perché il giacimento e non il paese:</strong> questo dataset — unico nel panorama SDMX europeo — traccia le importazioni di greggio field-by-field, giacimento per giacimento. Non è detto che il paese di dichiarazione coincida con il paese dove si trova il giacimento: il "CPC Blend" del Kazakhstan, ad esempio, è un greggio estratto in Kazakhstan e trasportato via oleodotto Caspico–Mar Nero–Mediteraneo.
+    </div>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> ogni barra è il volume totale importato dall'Italia da quel singolo giacimento nel periodo 2020–2024, in milioni di barili. L'<em>Azeri Light</em> (Azerbaijan) è il principale giacimento fornitore, seguito da vari giacimenti libici aggregati e dal <em>CPC Blend</em> kazako. L'<em>Urals</em> russo (7° posto, 113 milioni di barili) era molto più alto prima del 2022 — questi dati mostrano già il calo post-sanzioni.
+      Fonte SDMX: <code>NRG_TI_COIFPM</code>, Eurostat. Grafico: <a href="https://github.com/jwilber/roughViz">roughViz 1.0.6</a>.
+    </p>
+
+    <div class="chart-wrap mb-4">
+      <div id="chart-C" style="min-height:520px;"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 33.953 osservazioni mensili (819 giacimenti × ~41 mesi × 1 indicatore, Italia)</li>
+        <li>Aggregazione: somma cumulata dell'intero periodo 2020–2024 per giacimento</li>
+        <li>Escluso il codice aggregato <code>TOTAL</code> (2.114.763 migliaia di barili)</li>
+        <li>Esclusi giacimenti con volume cumulato = 0 nel periodo</li>
+        <li>Selezione: top 15 giacimenti per volume cumulato</li>
+        <li>Conversione: da migliaia di barili (THS_BBL) a milioni di barili (÷1.000)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE D — PRODUZIONE VS IMPORT ═══ -->
+  <section class="section py-5" id="produzione">
+    <p class="section-label mb-1">Sezione 4 · Eurostat NRG_CB_COSM · bilancio greggio</p>
+    <h2 class="mb-2">Nessuno produce niente: importazioni di greggio nei principali paesi EU</h2>
+    <p class="subtitle mb-4">
+      Milioni di barili annui · 5 paesi · 2020–2023 · freq. annuale
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Produzione indigena (PRD):</strong> il greggio estratto all'interno dei confini nazionali. In tutta l'UE la produzione è marginale: la Francia produce circa 4–5 milioni di barili l'anno (campo di Parentis, Bacino di Parigi), la Polonia circa 10 milioni. Italia, Germania, Spagna e Paesi Bassi hanno produzioni trascurabili o nulle nel dataset. Per confronto, l'Arabia Saudita produce ~3.500 milioni di barili/anno.
+    </div>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> ogni small multiple mostra le importazioni annuali di un paese (barre) negli anni 2020–2023. La produzione domestica è talmente ridotta da non essere visibile alla stessa scala. I Paesi Bassi mostrano una crescita marcata nel 2023 (da 464 a 673 milioni di barili) per il ruolo del porto di Rotterdam come hub di ridistribuzione per l'intera Europa.
+      Fonte SDMX: <code>NRG_CB_COSM</code>, Eurostat. Grafico: <a href="https://github.com/jwilber/roughViz">roughViz 1.0.6</a>.
+    </p>
+
+    <div class="row g-3 mb-4" id="charts-D-row"></div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: file originale conteneva dati mensili e annuali mescolati; riscaricato con <code>freq=A</code> per avere solo dati annuali</li>
+        <li>Dati sorgente (puliti): 40 osservazioni (5 paesi × 2 bilanci × 4 anni)</li>
+        <li>Conversione: da migliaia di barili (THS_BBL) a milioni di barili (÷1.000)</li>
+        <li>Produzione (<code>PRD</code>) non visualizzata nei grafici: valori ≤5 milioni di barili per tutti i paesi, non leggibili alla stessa scala delle importazioni</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE E — USI NON ENERGETICI ═══ -->
+  <section class="section py-5" id="nonenerg">
+    <p class="section-label mb-1">Sezione 5 · Eurostat NRG_CB_OIL · bilancio petrolio</p>
+    <h2 class="mb-2">Il petrolio che non si brucia: usi non energetici in EU e in Italia</h2>
+    <p class="subtitle mb-4">
+      Milioni di tonnellate · EU27 e Italia · 2010–2022 · consumo finale non energetico (FC_NE)
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Uso non energetico:</strong> quota del petrolio destinata non alla combustione (calore, elettricità, trasporto) ma alla produzione di materiali. La <strong>nafta</strong> (naphtha, codice <code>O4640</code>) è il principale feedstock petrolchimico: viene "craccata" per produrre etilene e propilene, da cui derivano plastiche, fibre sintetiche, fertilizzanti, solventi, farmaci. In Europa circa il 40–45% del consumo non energetico di petrolio è nafta.
+    </div>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> la linea superiore (EU27 totale) mostra il consumo finale non energetico totale di tutti i prodotti petroliferi; quella inferiore (EU27 nafta) mostra la sola quota di nafta. Il calo visibile nel 2022 riflette sia l'aumento dei prezzi del greggio (che ha ridotto la domanda di feedstock) sia la contrazione della produzione industriale europea. Per l'Italia la nafta rappresenta circa il 40–50% degli usi non energetici.
+      Fonte SDMX: <code>NRG_CB_OIL</code>, Eurostat (<code>nrg_bal=FC_NE</code>). Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd 1.1</a>.
+    </p>
+
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-8">
+        <p class="chart-title-label">EU27 — TOTALE E NAFTA</p>
+        <div class="chart-wrap">
+          <svg id="chart-E-eu" style="min-height:320px;"></svg>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <p class="chart-title-label">ITALIA</p>
+        <div class="chart-wrap">
+          <svg id="chart-E-it" style="min-height:320px;"></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 52 osservazioni (EU27 + IT × 3 prodotti × 13 anni)</li>
+        <li>Filtro: selezionato <code>nrg_bal=FC_NE</code> (consumo finale non energetico)</li>
+        <li>Prodotti visualizzati: <code>O4000</code> (tutti i prodotti petroliferi) e <code>O4640</code> (nafta)</li>
+        <li>Il prodotto <code>O4300</code> (feedstock raffineria) aveva valori inconsistenti: escluso</li>
+        <li>Conversione: da migliaia di tonnellate a milioni di tonnellate (÷1.000)</li>
+        <li>Ultimo anno disponibile: 2022</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE F — RISERVE STRATEGICHE ═══ -->
+  <section class="section py-5" id="riserve">
+    <p class="section-label mb-1">Sezione 6 · Eurostat NRG_STK_OEM · riserve di emergenza</p>
+    <h2 class="mb-2">Quanti giorni teniamo duro? Le scorte petrolifere di emergenza in EU</h2>
+    <p class="subtitle mb-4">
+      Giorni equivalenti di consumo · 27 paesi EU · dicembre 2024 · obbligo UE: 90 giorni
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Scorte di emergenza (<code>STK_EUE_DIR</code>):</strong> ogni Stato membro UE è obbligato dalla Direttiva 2009/119/CE a mantenere scorte petrolifere equivalenti ad almeno 90 giorni di consumo medio giornaliero (o 61 giorni di importazioni nette giornaliere, se superiore). Le scorte possono essere detenute da operatori privati, da agenzie pubbliche o all'estero per conto di altri paesi. Il dato qui mostrato è la quota "Days Equivalent" dichiarata da ciascuno stato.
+    </div>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> ogni barra è il numero di giorni di scorta dichiarati dal paese per dicembre 2024. La linea verticale ideale è a 90 giorni (minimo UE). La Finlandia guida con 179 giorni — storica per la sua posizione geografica di vulnerabilità. La Lettonia è l'unico paese EU al di sotto dei 90 giorni (53), seguita dalla Danimarca (74). L'Italia è a 92 giorni, 2 sopra il minimo.
+      Fonte SDMX: <code>NRG_STK_OEM</code>, Eurostat. Grafico: <a href="https://github.com/jwilber/roughViz">roughViz 1.0.6</a>.
+    </p>
+
+    <div class="chart-wrap mb-4">
+      <div id="chart-F" style="min-height:760px;"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 4.354 osservazioni (≈36 paesi × 10 anni × 7 codici stk_flow × 2 unità)</li>
+        <li>Filtro: <code>stk_flow=STK_EUE_DIR</code> (scorte detenute ai sensi della Direttiva UE) · <code>unit=NR</code> (numero di giorni)</li>
+        <li>Selezione: ultimo valore disponibile per paese (dicembre 2024 per tutti i paesi EU; UK escluso post-Brexit)</li>
+        <li>Selezione: soli 27 paesi EU27, esclusi Norvegia, UK, Serbia, Macedonia, Moldova, Montenegro</li>
+        <li>Ordinamento: decrescente per numero di giorni</li>
+        <li>Nessuna aggregazione applicata</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ DATI GREZZI ═══ -->
+  <section class="section py-5" id="dati">
+    <p class="section-label mb-1">Dati grezzi</p>
+    <h2 class="mb-2">Scarica i dati originali</h2>
+    <p class="subtitle mb-4">
+      Dati estratti da IMF ed Eurostat tramite API SDMX e usati per le analisi in questa pagina. Nessuna modifica manuale.
+    </p>
+    <div class="callout p-3 mb-4">
+      I dati sono <strong>così come restituiti dall'API</strong> — nessuna aggregazione nei file CSV.
+      Licenza: IMF © International Monetary Fund, tutti i diritti riservati.
+      Eurostat: CC BY 4.0.
+      Data di estrazione: <strong>22 aprile 2026</strong>.
+    </div>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">IMF · PCPS</div>
+          <div class="dl-title mb-1">Prezzi commodity energetiche (indici)</div>
+          <div class="dl-meta mb-2">1.200 righe · 4 indicatori · 2000–2024 mensile</div>
+          <a class="dl-link" href="output/A_prezzi_fossili.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat · NRG_TI_OIL</div>
+          <div class="dl-title mb-1">Importazioni greggio EU27 per paese partner</div>
+          <div class="dl-meta mb-2">1.503 righe · 167 partner · 2015–2023 annuale</div>
+          <a class="dl-link" href="output/B_importazioni_paese.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat · NRG_TI_COIFPM</div>
+          <div class="dl-title mb-1">Importazioni greggio Italia per giacimento</div>
+          <div class="dl-meta mb-2">33.953 righe · 819 giacimenti · 2020–2024 mensile</div>
+          <a class="dl-link" href="output/C_giacimenti_italia.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat · NRG_CB_COSM</div>
+          <div class="dl-title mb-1">Produzione e importazioni greggio per paese</div>
+          <div class="dl-meta mb-2">40 righe · 5 paesi · 2020–2023 annuale</div>
+          <a class="dl-link" href="output/D_produzione_vs_import.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat · NRG_CB_OIL</div>
+          <div class="dl-title mb-1">Usi non energetici dei prodotti petroliferi</div>
+          <div class="dl-meta mb-2">52 righe · EU27 + Italia · 2010–2022 annuale</div>
+          <a class="dl-link" href="output/E_usi_non_energetici.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat · NRG_STK_OEM</div>
+          <div class="dl-title mb-1">Scorte petrolifere di emergenza per paese EU</div>
+          <div class="dl-meta mb-2">4.354 righe · 36 paesi · 2013–2024 mensile</div>
+          <a class="dl-link" href="output/F_riserve_strategiche.csv" download>↓ CSV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ METODOLOGIA ═══ -->
+  <section class="section py-5" id="metodologia">
+    <p class="section-label mb-1">Note metodologiche</p>
+    <h2 class="mb-2">Fonti, definizioni e riproducibilità</h2>
+    <p class="subtitle mb-4">Tutti i dati sono riproducibili tramite opensdmx CLI.</p>
+
+    <h3 class="subsection-title mt-4 mb-3">Classificazioni usate</h3>
+    <div class="table-responsive mb-4">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>Codice</th><th>Sistema</th><th>Significato</th></tr></thead>
+        <tbody>
+          <tr><td><code>O4100_TOT</code></td><td>SIEC (Eurostat)</td><td>Petrolio greggio — tutte le qualità</td></tr>
+          <tr><td><code>O4640</code></td><td>SIEC (Eurostat)</td><td>Nafta — principale feedstock petrolchimico</td></tr>
+          <tr><td><code>FC_NE</code></td><td>NRG_BAL (Eurostat)</td><td>Consumo finale — uso non energetico</td></tr>
+          <tr><td><code>STK_EUE_DIR</code></td><td>STK_FLOW (Eurostat)</td><td>Scorte di emergenza ai sensi della Direttiva UE 2009/119/CE</td></tr>
+          <tr><td><code>POILBRE</code></td><td>IMF PCPS</td><td>Brent Crude — prezzo spot FOB Mar del Nord</td></tr>
+          <tr><td><code>PNGASEU</code></td><td>IMF PCPS</td><td>Gas naturale EU — prezzo all'importazione (border price)</td></tr>
+          <tr><td><code>INDEX</code></td><td>IMF PCPS</td><td>Trasformazione: indice con base 2016=100</td></tr>
+          <tr><td><code>VOL_THS_BBL</code></td><td>INDIC_NRG (Eurostat)</td><td>Volume in migliaia di barili</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">URL API SDMX delle query originali (Eurostat)</h3>
+    <p class="mb-2" style="color:var(--ink-light);">URL esatti per riprodurre il download. Cliccabili o usabili con curl.</p>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">NRG_TI_OIL — Importazioni greggio per paese partner (EU27, 2015–2023)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/NRG_TI_OIL/A.O4100_TOT..THS_T.EU27_2020/?startPeriod=2015&endPeriod=2023&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/NRG_TI_OIL/A.O4100_TOT..THS_T.EU27_2020/?startPeriod=2015&endPeriod=2023&format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">NRG_TI_COIFPM — Importazioni greggio Italia per giacimento (2020–2024)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/NRG_TI_COIFPM/M..VOL_THS_BBL.IT/?startPeriod=2020&endPeriod=2024&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/NRG_TI_COIFPM/M..VOL_THS_BBL.IT/?startPeriod=2020&endPeriod=2024&format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">NRG_STK_OEM — Scorte di emergenza in giorni (2013–2024)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/NRG_STK_OEM/M.STK_EUE_DIR.NR./?startPeriod=2013&endPeriod=2024&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/NRG_STK_OEM/M.STK_EUE_DIR.NR./?startPeriod=2013&endPeriod=2024&format=SDMX-CSV</a>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">Comandi CLI per riprodurre i dati</h3>
+    <div class="table-responsive mb-4">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>File</th><th>Comando</th></tr></thead>
+        <tbody>
+          <tr><td><code>A_prezzi_fossili.csv</code></td><td><code>opensdmx run queries/A_prezzi_fossili.yaml --out output/A_prezzi_fossili.csv</code></td></tr>
+          <tr><td><code>B_importazioni_paese.csv</code></td><td><code>opensdmx run queries/B_importazioni_paese.yaml --out output/B_importazioni_paese.csv</code></td></tr>
+          <tr><td><code>C_giacimenti_italia.csv</code></td><td><code>opensdmx run queries/C_giacimenti_italia.yaml --out output/C_giacimenti_italia.csv</code></td></tr>
+          <tr><td><code>D_produzione_vs_import.csv</code></td><td><code>opensdmx run queries/D_produzione_vs_import.yaml --out output/D_produzione_vs_import.csv</code></td></tr>
+          <tr><td><code>E_usi_non_energetici.csv</code></td><td><code>opensdmx run queries/E_usi_non_energetici.yaml --out output/E_usi_non_energetici.csv</code></td></tr>
+          <tr><td><code>F_riserve_strategiche.csv</code></td><td><code>opensdmx run queries/F_riserve_strategiche.yaml --out output/F_riserve_strategiche.csv</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">File disponibili</h3>
+    <div class="table-responsive">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>File</th><th>Contenuto</th></tr></thead>
+        <tbody>
+          <tr><td><code>output/A_prezzi_fossili.csv</code></td><td>1.200 righe · indici IMF PCPS mensili (Brent, WTI, Gas EU, Carbone)</td></tr>
+          <tr><td><code>output/B_importazioni_paese.csv</code></td><td>1.503 righe · importazioni greggio EU27 per paese partner 2015–2023</td></tr>
+          <tr><td><code>output/C_giacimenti_italia.csv</code></td><td>33.953 righe · importazioni greggio Italia per giacimento 2020–2024</td></tr>
+          <tr><td><code>output/D_produzione_vs_import.csv</code></td><td>40 righe · produzione e importazioni annuali 5 paesi EU 2020–2023</td></tr>
+          <tr><td><code>output/E_usi_non_energetici.csv</code></td><td>52 righe · consumo non energetico EU27 e Italia 2010–2022</td></tr>
+          <tr><td><code>output/F_riserve_strategiche.csv</code></td><td>4.354 righe · scorte di emergenza in giorni, tutti i paesi, 2013–2024</td></tr>
+          <tr><td><code>queries/*.yaml</code></td><td>6 file YAML con le query riproducibili per ogni dataset</td></tr>
+          <tr><td><code>notes.md</code></td><td>Log metodologico completo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer py-4 mt-2">
+  <div class="container d-flex flex-wrap gap-4 justify-content-between">
+    <span>Dati: IMF Primary Commodity Price System · Eurostat SDMX 2.1</span>
+    <span>Strumento: <a href="https://github.com/opensdmx/opensdmx">opensdmx CLI</a></span>
+    <span>Grafici: <a href="https://github.com/jwilber/roughViz">roughViz 1.0.6</a> · <a href="https://github.com/timqian/chart.xkcd">chart.xkcd 1.1</a></span>
+    <span>22 aprile 2026</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── SEZIONE A — PREZZI FOSSILI (IMF PCPS) ─────────────────────────────────
+// Medie annuali di indici mensili (2016=100); TIME_PERIOD ricostruito (300 mesi da 2000-01)
+const anni_A = [2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024];
+const POILBRE = [64.0,54.8,55.7,63.8,84.8,121.3,145.5,161.2,215.9,136.6,177.0,247.4,248.5,241.7,220.4,117.6,100.0,121.8,158.9,142.4,96.1,157.1,219.6,182.6,177.3];
+const POILWTI = [70.2,60.0,60.4,72.0,95.8,130.6,152.8,167.3,230.2,142.7,183.7,219.8,217.8,226.5,215.3,112.9,100.0,117.7,149.9,131.7,91.0,157.2,219.2,179.4,177.2];
+const PNGASEU = [79.3,89.0,61.2,80.1,86.3,135.9,188.6,187.0,301.8,203.4,188.9,243.4,275.2,257.0,240.4,167.8,100.0,131.9,181.8,102.3,73.0,365.4,861.9,295.9,250.2];
+const PCOAL   = [39.4,49.3,39.5,43.3,82.9,71.9,76.9,98.4,192.2,104.4,145.8,182.6,144.5,126.7,110.1,89.0,100.0,132.7,156.8,114.0,94.8,199.9,484.5,227.8,184.2];
+
+function makePoints(years, vals) {
+  const pts = [];
+  years.forEach((y, i) => { if (vals[i] !== null) pts.push({ x: y, y: vals[i] }); });
+  return pts;
+}
+
+new chartXkcd.XY(document.getElementById('chart-A'), {
+  xLabel: '',
+  yLabel: 'Indice (2016=100)',
+  data: {
+    datasets: [
+      { label: 'Brent',    data: makePoints(anni_A, POILBRE) },
+      { label: 'WTI',      data: makePoints(anni_A, POILWTI) },
+      { label: 'Gas EU',   data: makePoints(anni_A, PNGASEU) },
+      { label: 'Carbone',  data: makePoints(anni_A, PCOAL)   }
+    ]
+  },
+  options: {
+    showLine: true,
+    dotSize: 0.3,
+    xTickCount: 6,
+    yTickCount: 5,
+    dataColors: ['#b02020', '#e67e22', '#1a6fa8', '#27ae60']
+  }
+});
+
+// ── SEZIONE B — FORNITORI EU (2021 vs 2023) ───────────────────────────────
+// % su totale importazioni greggio EU27; esclusi aggregati regionali
+const labels_B2021 = ['RUSSIA','NORVEGIA','USA','KAZAKISTAN','LIBIA','IRAQ','NIGERIA','ARABIA SAUDITA','UK','AZERBAIGIAN'];
+const vals_B2021   = [25.2, 9.8, 8.4, 8.0, 7.9, 7.3, 6.5, 5.3, 4.8, 4.6];
+const labels_B2023 = ['USA','NORVEGIA','KAZAKISTAN','IRAQ','ARABIA SAUDITA','LIBIA','NIGERIA','UK','AZERBAIGIAN','BRASILE'];
+const vals_B2023   = [14.2, 13.9, 9.5, 7.6, 7.6, 7.3, 6.1, 5.3, 4.5, 3.8];
+
+new roughViz.BarH({
+  element: '#chart-B2021',
+  data: { labels: labels_B2021, values: vals_B2021 },
+  title: '2021 — Top 10 fornitori EU27 (%)',
+  titleFontSize: '1rem', axisFontSize: '1rem',
+  roughness: 1.5, stroke: '#333', strokeWidth: 1,
+  fillStyle: 'hachure', fillWeight: 0.7,
+  color: '#b02020', highlight: '#c0392b',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 480, height: 360,
+  margin: { top: 30, right: 60, bottom: 40, left: 190 },
+  xLabel: '% importazioni EU27'
+});
+
+new roughViz.BarH({
+  element: '#chart-B2023',
+  data: { labels: labels_B2023, values: vals_B2023 },
+  title: '2023 — Top 10 fornitori EU27 (%)',
+  titleFontSize: '1rem', axisFontSize: '1rem',
+  roughness: 1.5, stroke: '#333', strokeWidth: 1,
+  fillStyle: 'hachure', fillWeight: 0.7,
+  color: '#1a6fa8', highlight: '#2980b9',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 480, height: 360,
+  margin: { top: 30, right: 60, bottom: 40, left: 190 },
+  xLabel: '% importazioni EU27'
+});
+
+// ── SEZIONE C — GIACIMENTI ITALIA ────────────────────────────────────────
+// Top 15 giacimenti per volume cumulato 2020-2024 (milioni di barili)
+const labels_C = [
+  'URALS (RUSSIA)','AMNA HP (LIBIA)','KAZAKISTAN - VARI',
+  'MEDJNOON (IRAQ)','ARAB LIGHT (ARABIA S.)','KIRKUK (IRAQ)',
+  'IRAQ - VARI','NIGERIA - VARI','URALS (RUSSIA) 2',
+  'ARAB LIGHT PG (ARABIA S.)','WTI TEXAS (USA)','CPC BLEND (KAZAKISTAN)',
+  'AZERBAIJAN - VARI','LIBIA - VARI','AZERI LIGHT (AZERBAIGIAN)'
+];
+// Ordine crescente per BarH (smallest at bottom → largest at top)
+const labels_C_sorted = ['AMNA HP (LIBIA)','KAZAKISTAN - VARI','RUSSIA - VARI','KIRKUK (IRAQ)','ARAB LIGHT (ARABIA S.)','MEDJNOON (IRAQ)','NIGERIA - VARI','IRAQ - VARI','ARAB LIGHT PG (ARABIA S.)','WTI TEXAS (USA)','CPC BLEND (KAZAKISTAN)','AZERBAIJAN - VARI','URALS (RUSSIA)','LIBIA - VARI','AZERI LIGHT (AZERBAIGIAN)'];
+const vals_C_sorted   = [48, 50, 44, 55, 57, 63, 64, 78, 115, 120, 133, 137, 113, 207, 256];
+
+new roughViz.BarH({
+  element: '#chart-C',
+  data: { labels: labels_C_sorted, values: vals_C_sorted },
+  title: 'Top 15 giacimenti — Italia 2020–2024 (milioni di barili)',
+  titleFontSize: '1rem', axisFontSize: '1rem',
+  roughness: 1.5, stroke: '#333', strokeWidth: 1,
+  fillStyle: 'hachure', fillWeight: 0.7,
+  color: '#b02020', highlight: '#c0392b',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900, height: 520,
+  margin: { top: 30, right: 80, bottom: 50, left: 250 },
+  xLabel: 'Milioni di barili (totale 2020–2024)'
+});
+
+// ── SEZIONE D — PRODUZIONE VS IMPORTAZIONI ───────────────────────────────
+// Small multiples: un grafico per paese, solo importazioni annuali (2020-2023)
+const paesi_D = [
+  { id: 'IT', nome: 'ITALIA',       imp: [369, 415, 459, 451] },
+  { id: 'DE', nome: 'GERMANIA',     imp: [572, 568, 614, 547] },
+  { id: 'FR', nome: 'FRANCIA',      imp: [254, 256, 310, 343] },
+  { id: 'NL', nome: 'PAESI BASSI',  imp: [418, 424, 464, 673] },
+  { id: 'ES', nome: 'SPAGNA',       imp: [399, 412, 464, 449] }
+];
+const anni_D = [2020, 2021, 2022, 2023];
+const colori_D = ['#b02020','#1a6fa8','#27ae60','#e67e22','#8e44ad'];
+
+const rowD = document.getElementById('charts-D-row');
+paesi_D.forEach((p, idx) => {
+  const col = document.createElement('div');
+  col.className = 'col-12 col-md-6 col-lg-4';
+  col.innerHTML = `<div class="sm-card"><h4>${p.nome}</h4><svg id="chart-D-${p.id}"></svg></div>`;
+  rowD.appendChild(col);
+  const pts = anni_D.map((a, i) => ({ x: a, y: p.imp[i] }));
+  new chartXkcd.XY(document.getElementById(`chart-D-${p.id}`), {
+    xLabel: '', yLabel: 'Mln barili',
+    data: { datasets: [{ label: 'Importazioni', data: pts }] },
+    options: {
+      showLine: true, dotSize: 0.5,
+      xTickCount: 4, yTickCount: 3,
+      dataColors: [colori_D[idx]]
+    }
+  });
+});
+
+// ── SEZIONE E — USI NON ENERGETICI ──────────────────────────────────────
+// EU27 e Italia: totale petrolio e nafta per uso non energetico (milioni di tonnellate)
+const anni_E = [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022];
+const eu_totale = [81.9,79.2,76.0,72.7,73.7,71.8,71.8,77.2,73.6,72.6,72.4,75.4,65.7];
+const eu_nafta  = [36.4,33.3,34.3,32.0,33.0,30.9,30.4,34.4,29.6,28.8,30.2,32.7,28.2];
+const it_totale = [8.9,8.6,7.3,5.8,6.5,5.9,5.6,7.1,6.3,6.3,6.1,5.9,5.9];
+const it_nafta  = [3.0,2.5,2.4,1.6,2.3,2.3,2.4,4.1,4.0,3.6,3.2,2.3,2.9];
+
+new chartXkcd.XY(document.getElementById('chart-E-eu'), {
+  xLabel: '', yLabel: 'Mln tonnellate',
+  data: {
+    datasets: [
+      { label: 'EU27 — Totale petrolio', data: anni_E.map((a,i) => ({x:a, y:eu_totale[i]})) },
+      { label: 'EU27 — Solo nafta',      data: anni_E.map((a,i) => ({x:a, y:eu_nafta[i]}))  }
+    ]
+  },
+  options: { showLine: true, dotSize: 0.3, xTickCount: 5, yTickCount: 4, dataColors: ['#b02020','#1a6fa8'] }
+});
+
+new chartXkcd.XY(document.getElementById('chart-E-it'), {
+  xLabel: '', yLabel: 'Mln tonn.',
+  data: {
+    datasets: [
+      { label: 'IT — Totale', data: anni_E.map((a,i) => ({x:a, y:it_totale[i]})) },
+      { label: 'IT — Nafta',  data: anni_E.map((a,i) => ({x:a, y:it_nafta[i]}))  }
+    ]
+  },
+  options: { showLine: true, dotSize: 0.3, xTickCount: 4, yTickCount: 4, dataColors: ['#b02020','#1a6fa8'] }
+});
+
+// ── SEZIONE F — RISERVE STRATEGICHE ─────────────────────────────────────
+// EU27 ordinati per giorni di scorta (dicembre 2024); minimo UE = 90 giorni
+const labels_F = ['FINLANDIA','GRECIA','SVEZIA','MALTA','PAESI BASSI','BELGIO','SLOVENIA','SPAGNA','FRANCIA','LUSSEMBURGO','PORTOGALLO','POLONIA','SLOVACCHIA','GERMANIA','CROAZIA','LITUANIA','AUSTRIA','ITALIA','ROMANIA','CECHIA','UNGHERIA','BULGARIA','CIPRO','ESTONIA','IRLANDA','DANIMARCA','LETTONIA'];
+const vals_F   = [179,117,112,108,108,104,99,98,98,97,97,96,96,94,94,94,92,92,92,90,90,89,89,88,85,74,53];
+
+new roughViz.BarH({
+  element: '#chart-F',
+  data: { labels: labels_F, values: vals_F },
+  title: 'Scorte di emergenza EU — giorni equivalenti (dicembre 2024)',
+  titleFontSize: '1rem', axisFontSize: '1rem',
+  roughness: 1.5, stroke: '#333', strokeWidth: 1,
+  fillStyle: 'hachure', fillWeight: 0.7,
+  color: '#1a6fa8', highlight: '#2980b9',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900, height: 760,
+  margin: { top: 30, right: 80, bottom: 60, left: 160 },
+  xLabel: 'Giorni equivalenti (minimo UE: 90 giorni)'
+});
+</script>
+</body>
+</html>
