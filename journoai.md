@@ -332,8 +332,8 @@ e iterare con `Object.entries(seriesData).forEach(...)`.
 ### Palette colori
 
 ```
-Rosso (serie primaria):   #c0392b  highlight: #e74c3c
-Blu (serie secondaria):   #2980b9  highlight: #3498db
+Rosso (serie primaria):   #b02020  highlight: #c0392b
+Blu (serie secondaria):   #1a6fa8  highlight: #2980b9
 Verde:   #27ae60
 Arancio: #e67e22
 Viola:   #8e44ad
@@ -372,13 +372,13 @@ La pagina `index.html` deve contenere nell'ordine:
   <style>
     :root {
       --ink:        #1a1a1a;
-      --ink-light:  #555;
-      --ink-faint:  #888;
+      --ink-light:  #333;
+      --ink-faint:  #666;
       --paper:      #fafaf7;
       --paper-warm: #f5f3ee;
-      --rule:       #d0ccc4;
-      --accent:     #c0392b;
-      --accent2:    #2980b9;
+      --rule:       #999;
+      --accent:     #b02020;
+      --accent2:    #1a6fa8;
       --serif:      'Georgia', 'Times New Roman', serif;
       --mono:       'Courier New', Courier, monospace;
       --bs-body-font-family:   var(--serif);
@@ -391,18 +391,18 @@ La pagina `index.html` deve contenere nell'ordine:
     html { font-size: 19px; scroll-behavior: smooth; }
     .container { max-width: 1060px; }
 
-    /* ── HEADER ── */
-    .site-header { background: var(--paper-warm); border-bottom: 2px solid var(--ink); }
-    .eyebrow { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); }
-    .site-header h1 { font-size: 2rem; font-weight: normal; line-height: 1.2; }
-    .intro { color: var(--ink-light); line-height: 1.7; }
-    .ds-badge { font-family: var(--mono); font-size: 1rem; background: var(--paper); border: 1px solid var(--rule); padding: 2px 8px; color: var(--ink-light); }
-    .ds-badge strong { color: var(--ink); }
+    /* ── HEADER (dark) ── */
+    .site-header { background: #1a1a1a; border-bottom: 2px solid #000; }
+    .eyebrow { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; color: #888; }
+    .site-header h1 { font-size: 2rem; font-weight: normal; line-height: 1.2; color: #fff; }
+    .intro { color: #ccc; line-height: 1.7; }
+    .ds-badge { font-family: var(--mono); font-size: 1rem; background: #2a2a2a; border: 1px solid #444; padding: 2px 8px; color: #aaa; }
+    .ds-badge strong { color: #fff; }
 
-    /* ── NAV ── */
-    .site-nav { background: var(--paper) !important; border-bottom: 1px solid var(--rule); z-index: 1020; }
-    .site-nav .nav-link { font-family: var(--mono); font-size: 1rem; color: var(--ink-light); padding: 3px 10px; border: 1px solid transparent; border-radius: 0; transition: border-color 0.15s, color 0.15s; }
-    .site-nav .nav-link:hover { border-color: var(--rule); color: var(--ink); }
+    /* ── NAV (dark) ── */
+    .site-nav { background: #1a1a1a !important; border-bottom: 1px solid #333; z-index: 1020; }
+    .site-nav .nav-link { font-family: var(--mono); font-size: 1rem; color: #aaa; padding: 3px 10px; border: 1px solid transparent; border-radius: 0; transition: border-color 0.15s, color 0.15s; }
+    .site-nav .nav-link:hover { border-color: #555; color: #fff; }
 
     /* ── SECTIONS ── */
     .section { border-bottom: 1px solid var(--rule); }
@@ -419,6 +419,7 @@ La pagina `index.html` deve contenere nell'ordine:
     .finding-card { background: #fff; border: 1px solid var(--rule); padding: 0.9rem 1rem; height: 100%; }
     .big-num { font-size: 2rem; font-family: var(--mono); color: var(--accent); line-height: 1; }
     .big-num.blue { color: var(--accent2); }
+    .big-num.green { color: #27ae60; }
     .finding-card p { font-size: 1rem; color: var(--ink-light); line-height: 1.4; }
     .finding-card strong { color: var(--ink); }
 
@@ -429,6 +430,16 @@ La pagina `index.html` deve contenere nell'ordine:
     .sm-card h4 { font-size: 1rem; font-family: var(--mono); color: var(--ink-light); padding: 0 0.3rem 0.3rem; border-bottom: 1px dashed var(--rule); margin-bottom: 0.3rem; }
     .sm-card svg { width: 100%; height: 210px; display: block; }
     .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+
+    /* Titolo testuale sopra un grafico, alternativo a quello inline roughViz/xkcd */
+    .chart-title-label {
+      font-family: var(--mono);
+      font-size: 1rem;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
 
     .transform { background: var(--paper-warm); border: 1px solid var(--rule); border-left: 3px solid var(--accent2); }
     .transform h4 { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
