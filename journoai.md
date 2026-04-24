@@ -661,7 +661,7 @@ La data corrisponde al giorno in cui i dati sono stati scaricati dall'API. Non u
 <footer class="site-footer py-4 mt-2">
   <div class="container d-flex flex-wrap gap-4 justify-content-between">
     <span>Dati: [Provider/i] · Formato SDMX 2.1</span>
-    <span>Strumento: <a href="https://github.com/opensdmx/opensdmx">opensdmx CLI</a></span>
+    <span>Strumento: <a href="https://github.com/ondata/opensdmx/blob/main/docs/skill/README.md">opensdmx CLI</a></span>
     <span>Grafici: <a href="https://github.com/jwilber/roughViz">roughViz</a> · <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a></span>
     <span>[DATA]</span>
   </div>
