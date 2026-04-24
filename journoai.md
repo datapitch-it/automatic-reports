@@ -354,7 +354,14 @@ La pagina `index.html` deve contenere nell'ordine:
 4. **Sezione per ogni dataset** — **Regola di granularità**: ogni file `output/*.csv` scaricato deve corrispondere esattamente a una sezione `<section>` dedicata. Questo garantisce che ogni query prodotta sia effettivamente analizzata e visualizzata.
 5. **Sezione Dati grezzi** — callout licenze + card di download per ogni CSV
 6. **Sezione Metodologia** — classificazioni, URL API, comandi CLI, file disponibili
-7. **Footer** — fonti, strumenti, data
+7. **Footer** — fonti, strumenti, **data di generazione**
+
+**Regola data di generazione**: la data deve comparire in **tre punti** della pagina, sempre nel formato `GG mese AAAA` in italiano (es. `24 aprile 2026`):
+- nell'eyebrow dell'header: `Ricerca SDMX · [GG mese AAAA] · opensdmx CLI`
+- nel callout della sezione Dati grezzi: `Data di estrazione: <strong>[GG mese AAAA]</strong>`
+- nell'ultimo `<span>` del footer
+
+La data corrisponde al giorno in cui i dati sono stati scaricati dall'API. Non usare formati ISO (`2026-04-08`) né mesi senza giorno (`Aprile 2026`).
 
 ### 5.2 Template HTML completo
 
@@ -743,6 +750,7 @@ Ogni sezione dataset deve avere:
 - [ ] **Link reali**: Sostituiti tutti i placeholder `[URL...]` con link effettivi (es. GitHub delle librerie)
 - [ ] Gli URL API Eurostat nella sezione Metodologia restituiscono dati se cliccati
 - [ ] Il blocco `.transform` è presente in ogni sezione dataset
+- [ ] **Data di generazione**: presente in formato `GG mese AAAA` (italiano) in tutti e tre i punti obbligatori: eyebrow header, callout Dati grezzi, footer
 - [ ] La sezione Dati grezzi indica data di estrazione e licenza
 - [ ] Il callout "Limite di scope" nella sezione Intro è presente e accurato
 - [ ] Nessun `font-size` sotto `1rem` nel CSS
