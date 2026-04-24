@@ -1,0 +1,7 @@
+provider: eurostat
+dataset: TPS00185
+filters:
+  indic_il: SC102+SC103
+start_period: "2014"
+end_period: "2024"
+format: SDMX-CSV

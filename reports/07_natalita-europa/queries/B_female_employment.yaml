@@ -1,0 +1,10 @@
+provider: eurostat
+dataset: LFSI_EMP_A
+filters:
+  indic_em: EMP_LFS
+  sex: F
+  age: Y15-64
+  unit: PC_POP
+start_period: "2003"
+end_period: "2024"
+format: SDMX-CSV

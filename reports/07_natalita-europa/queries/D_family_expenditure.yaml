@@ -1,0 +1,9 @@
+provider: eurostat
+dataset: SPR_EXP_FFA
+filters:
+  spdep: SPR
+  spdepm: TOTAL
+  unit: PC_GDP
+start_period: "2003"
+end_period: "2022"
+format: SDMX-CSV

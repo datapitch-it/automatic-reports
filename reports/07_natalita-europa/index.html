@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Natalità in Europa — Ricerca SDMX</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://unpkg.com/rough-viz@1.0.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+  <style>
+    :root {
+      --ink:        #1a1a1a;
+      --ink-light:  #333;
+      --ink-faint:  #666;
+      --paper:      #fafaf7;
+      --paper-warm: #f5f3ee;
+      --rule:       #999;
+      --accent:     #b02020;
+      --accent2:    #1a6fa8;
+      --serif:      'Georgia', 'Times New Roman', serif;
+      --mono:       'Courier New', Courier, monospace;
+      --bs-body-font-family:   var(--serif);
+      --bs-body-color:         var(--ink);
+      --bs-body-bg:            var(--paper);
+      --bs-border-color:       var(--rule);
+      --bs-card-border-radius: 0;
+      --bs-card-border-color:  var(--rule);
+    }
+    html { font-size: 19px; scroll-behavior: smooth; }
+    .container { max-width: 1060px; }
+
+    .site-header { background: #1a1a1a; border-bottom: 2px solid #000; }
+    .eyebrow { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; color: #888; }
+    .site-header h1 { font-size: 2rem; font-weight: normal; line-height: 1.2; color: #fff; }
+    .intro { color: #ccc; line-height: 1.7; }
+    .ds-badge { font-family: var(--mono); font-size: 1rem; background: #2a2a2a; border: 1px solid #444; padding: 2px 8px; color: #aaa; }
+    .ds-badge strong { color: #fff; }
+
+    .site-nav { background: #1a1a1a !important; border-bottom: 1px solid #333; z-index: 1020; }
+    .site-nav .nav-link { font-family: var(--mono); font-size: 1rem; color: #aaa; padding: 3px 10px; border: 1px solid transparent; border-radius: 0; transition: border-color 0.15s, color 0.15s; }
+    .site-nav .nav-link:hover { border-color: #555; color: #fff; }
+
+    .section { border-bottom: 1px solid var(--rule); }
+    .section:last-child { border-bottom: none; }
+    .section-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+    .section h2 { font-size: 1.5rem; font-weight: normal; }
+    .section .subtitle { color: var(--ink-light); line-height: 1.5; }
+    .subsection-title { font-size: 1rem; font-weight: normal; color: var(--ink); padding-bottom: 0.3rem; border-bottom: 1px dashed var(--rule); }
+
+    .callout { background: var(--paper-warm); border-left: 3px solid var(--accent); border-top: none; border-right: none; border-bottom: none; border-radius: 0; color: var(--ink-light); }
+    .callout strong { color: var(--ink); }
+
+    .finding-card { background: #fff; border: 1px solid var(--rule); padding: 0.9rem 1rem; height: 100%; }
+    .big-num { font-size: 2rem; font-family: var(--mono); color: var(--accent); line-height: 1; }
+    .big-num.blue { color: var(--accent2); }
+    .big-num.green { color: #27ae60; }
+    .big-num.orange { color: #e67e22; }
+    .finding-card p { font-size: 1rem; color: var(--ink-light); line-height: 1.4; }
+    .finding-card strong { color: var(--ink); }
+
+    .chart-wrap { background: #fff; border: 1px solid var(--rule); padding: 1.2rem; overflow-x: auto; }
+    .chart-wrap svg { display: block; width: 100%; min-height: 380px; }
+
+    .chart-title-label {
+      font-family: var(--mono);
+      font-size: 1rem;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+
+    .transform { background: var(--paper-warm); border: 1px solid var(--rule); border-left: 3px solid var(--accent2); }
+    .transform h4 { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+    .transform ul { color: var(--ink-light); line-height: 1.7; }
+    .transform li code { font-family: var(--mono); font-size: 1rem; background: var(--paper); padding: 1px 4px; border: 1px solid var(--rule); }
+
+    .note { font-size: 1rem; color: var(--ink-faint); border-top: 1px dashed var(--rule); line-height: 1.6; }
+    .note code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; border: 1px solid var(--rule); }
+    .note a { color: var(--ink-faint); }
+
+    .query-url { background: #fff; border: 1px solid var(--rule); font-family: var(--mono); font-size: 1rem; color: var(--ink-light); word-break: break-all; line-height: 1.6; }
+    .query-url a { color: var(--accent2); }
+
+    .data-table { font-size: 1rem; }
+    .data-table thead th { background: var(--paper-warm); font-family: var(--mono); font-size: 1rem; font-weight: normal; letter-spacing: 0.05em; border-color: var(--rule); }
+    .data-table td { border-color: var(--rule); }
+    .data-table tbody tr:nth-child(even) td { background: var(--paper-warm); }
+    .data-table code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; color: var(--ink); }
+
+    .dl-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
+    .dl-title { color: var(--ink); font-size: 1rem; }
+    .dl-meta { font-family: var(--mono); font-size: 1rem; color: var(--ink-faint); }
+    a.dl-link { font-family: var(--mono); font-size: 1rem; color: var(--accent2); text-decoration: none; border: 1px solid var(--accent2); padding: 2px 8px; display: inline-block; }
+    a.dl-link:hover { background: var(--accent2); color: #fff; }
+
+    .site-footer { border-top: 2px solid var(--ink); font-size: 1rem; color: var(--ink-faint); font-family: var(--mono); }
+    .site-footer a { color: var(--ink-faint); }
+
+    .legend-item { font-family: var(--mono); font-size: 1rem; color: var(--ink-light); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; display: inline-block; margin-right: 4px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="site-nav navbar sticky-top py-2">
+  <div class="container">
+    <div class="d-flex flex-wrap gap-1">
+      <a class="nav-link" href="#intro">↓ Intro</a>
+      <a class="nav-link" href="#tfr">TFR</a>
+      <a class="nav-link" href="#occupazione">Occupazione</a>
+      <a class="nav-link" href="#asili">Asili nido</a>
+      <a class="nav-link" href="#spesa">Spesa famiglia</a>
+      <a class="nav-link" href="#dati">Dati grezzi</a>
+      <a class="nav-link" href="#metodologia">Metodologia</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header py-5">
+  <div class="container">
+    <p class="eyebrow mb-2">Ricerca SDMX · 24 aprile 2026 · opensdmx CLI</p>
+    <h1 class="mb-3">Natalità in Europa: il crollo silenzioso</h1>
+    <p class="intro mb-3" style="max-width:720px;">
+      Il tasso di fecondità totale nell'Unione Europea ha raggiunto nel 2024 il minimo storico
+      di 1,34 figli per donna — meno della metà della soglia di rimpiazzo demografico.
+      Questa analisi esplora l'andamento della natalità nei 27 paesi UE e la sua relazione
+      con l'occupazione femminile, la disponibilità di asili nido e la spesa pubblica per
+      le politiche familiari, usando dati Eurostat estratti via API SDMX.
+    </p>
+    <div class="d-flex flex-wrap gap-2">
+      <span class="ds-badge"><strong>Eurostat</strong> DEMO_FIND</span>
+      <span class="ds-badge"><strong>Eurostat</strong> LFSI_EMP_A</span>
+      <span class="ds-badge"><strong>Eurostat</strong> TPS00185</span>
+      <span class="ds-badge"><strong>Eurostat</strong> SPR_EXP_FFA</span>
+      <span class="ds-badge"><strong>Periodo</strong> 2003–2024</span>
+      <span class="ds-badge"><strong>Paesi</strong> 27 (EU27)</span>
+    </div>
+  </div>
+</header>
+
+<main class="container py-2">
+
+  <!-- ═══ INTRO ═══ -->
+  <section class="section py-5" id="intro">
+    <p class="section-label mb-1">Contesto</p>
+    <h2 class="mb-2">Un'Europa che non si riproduce</h2>
+    <p class="subtitle mb-4">
+      Il tasso di fecondità totale (TFR) misura quanti figli partorisce in media una donna
+      nel corso della vita. La soglia di rimpiazzo demografico è 2,1.
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Limite di scope:</strong> questi dati misurano la fecondità delle residenti
+      nei paesi UE indipendentemente dalla cittadinanza. Non includono: migrazione e suo
+      impatto sul TFR complessivo, politiche fiscali (detrazioni, crediti d'imposta per figli),
+      costo della vita e accesso all'abitazione, welfare informale (nonni, reti familiari).
+      Per i dati sulle nascite per cittadinanza della madre: Eurostat <code>DEMO_FACZC</code>.
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-4 g-3">
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2">1,34</div>
+          <p class="mb-0"><strong>TFR EU27 nel 2024</strong> — minimo storico dall'inizio delle rilevazioni; era 1,57 nel 2008</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2 orange">24/27</div>
+          <p class="mb-0"><strong>Paesi sotto 1,5</strong> — solo Bulgaria (1,72), Francia (1,61) e Slovenia (1,52) restano sopra questa soglia critica</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2 blue">1,01</div>
+          <p class="mb-0"><strong>TFR di Malta</strong> — il più basso in EU27 nel 2024; Spagna a 1,10 e Lituania a 1,11</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2 green">78,9%</div>
+          <p class="mb-0"><strong>Bambini in asilo nido</strong> nei Paesi Bassi (sotto i 3 anni) — contro il 5,1% della Slovacchia</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE A — TFR ═══ -->
+  <section class="section py-5" id="tfr">
+    <p class="section-label mb-1">Fase A · Eurostat DEMO_FIND · indic_de=TOTFERRT</p>
+    <h2 class="mb-2">Tasso di fecondità totale per paese (2024)</h2>
+    <p class="subtitle mb-4">
+      Numero medio di figli per donna · dati annuali · 27 paesi EU27
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Tasso di fecondità totale (TFR):</strong> stima del numero medio di figli
+      che una donna partorisce nell'arco della vita, calcolata sui tassi di fecondità per
+      età di un dato anno. Non è un dato biografico (non segue donne reali), ma un
+      indicatore di periodo che sintetizza il comportamento riproduttivo di una popolazione
+      in un anno specifico. La soglia di rimpiazzo demografico — quella oltre la quale la
+      popolazione si mantiene stabile senza immigrazione — è convenzionalmente fissata a 2,1.
+    </div>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> ogni barra rappresenta il TFR di un paese nel 2024
+      (anno più recente disponibile). I paesi sono ordinati dal TFR più basso (Malta, 1,01)
+      al più alto (Bulgaria, 1,72). La linea verticale rossa implicita a 2,1 è la soglia
+      di rimpiazzo — nessun paese UE la raggiunge.
+      Flag <code>p</code> = dato provvisorio (presente in più paesi per il 2024).
+      Fonte SDMX: <code>DEMO_FIND</code>, Eurostat.
+      Grafico: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.
+    </p>
+
+    <div class="chart-wrap mb-4">
+      <div id="chart-tfr-rank"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 1.159 righe (tutti i paesi DEMO_FIND con TOTFERRT, 2000–2024)</li>
+        <li>Filtrati solo i 27 paesi EU27 (esclusi aggregati EU27_2020, EA20, paesi candidati, ecc.)</li>
+        <li>Per ogni paese: selezionato l'anno più recente con dato disponibile (2024 per tutti i 27 paesi)</li>
+        <li>Flag <code>p</code> (provvisorio) presente per la maggior parte dei paesi nell'anno 2024 — documentato nella nota</li>
+        <li>Ordinamento crescente per valore TFR (barre orizzontali, il più basso in alto)</li>
+        <li>Dati finali usati nel grafico: 27 osservazioni</li>
+      </ul>
+    </div>
+
+    <!-- Time series EU27 -->
+    <h3 class="subsection-title mt-5 mb-3">Andamento EU27 e paesi selezionati (2003–2024)</h3>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> la serie EU27 (media ponderata) mostra il picco del 2008
+      (1,57) seguito da una doppia contrazione: la prima post-crisi finanziaria (2008–2013),
+      la seconda, più acuta, a partire dal 2019. Le singole serie mostrano traiettorie molto
+      diverse: la Francia mantiene un TFR sistematicamente più alto; l'Italia e la Spagna
+      sono in declino strutturale; la Bulgaria è un'anomalia positiva (alta fecondità
+      nonostante bassa copertura asili).
+      Fonte SDMX: <code>DEMO_FIND</code>, Eurostat. Grafico: <a href="https://github.com/timqian/chart.xkcd" target="_blank">chart.xkcd 1.1</a>.
+    </p>
+
+    <div class="chart-wrap mb-4">
+      <div class="d-flex flex-wrap gap-3 mb-2">
+        <span class="legend-item"><span class="legend-dot" style="background:#1a1a1a;"></span>EU27</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#b02020;"></span>Francia</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#1a6fa8;"></span>Germania</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#27ae60;"></span>Italia</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#e67e22;"></span>Spagna</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#8e44ad;"></span>Svezia</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#16a085;"></span>Polonia</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#666;"></span>Bulgaria</span>
+      </div>
+      <svg id="chart-tfr-ts"></svg>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 1.159 righe</li>
+        <li>Serie EU27: estratta dal codice aggregato <code>EU27_2020</code> (media ponderata Eurostat)</li>
+        <li>Serie paese: estratte dai codici paese singolo per FR, DE, IT, ES, SE, PL, BG</li>
+        <li>Periodo comune: 2003–2024 (22 anni); nessun valore mancante per questi paesi/anni</li>
+        <li>Nessuna aggregazione aggiuntiva</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE B — OCCUPAZIONE FEMMINILE ═══ -->
+  <section class="section py-5" id="occupazione">
+    <p class="section-label mb-1">Fase B · Eurostat LFSI_EMP_A · sex=F · age=Y15-64</p>
+    <h2 class="mb-2">Tasso di occupazione femminile per paese (2024)</h2>
+    <p class="subtitle mb-4">
+      % donne occupate sulla popolazione femminile 15–64 anni · dati LFS annuali · 27 paesi EU27
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Occupazione femminile e fecondità:</strong> la letteratura economica
+      ha documentato un'inversione del rapporto tra questi due indicatori.
+      Fino agli anni '80, i paesi con alta occupazione femminile tendevano ad avere
+      bassa fecondità (conflitto lavoro-famiglia). Dal 2000 in poi, la correlazione si
+      è invertita nei paesi ad alto reddito: dove le politiche di conciliazione
+      (asili, congedi parentali, part-time) sono più sviluppate, sia il tasso di
+      occupazione femminile che il TFR tendono ad essere più alti.
+    </div>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> ogni barra è la percentuale di donne occupate
+      sulla popolazione femminile in età lavorativa (15–64 anni) nel 2024.
+      I Paesi Bassi guidano (78,9%), l'Italia è ultima (53,3%) — un divario di 25 punti
+      che riflette non solo la struttura del mercato del lavoro ma anche la diversa
+      disponibilità di servizi di cura.
+      Fonte SDMX: <code>LFSI_EMP_A</code>, Eurostat.
+      Grafico: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.
+    </p>
+
+    <div class="chart-wrap mb-4">
+      <div id="chart-emp-rank"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 598 righe (LFSI_EMP_A, sex=F, age=Y15-64, unit=PC_POP, 2003–2024)</li>
+        <li>Filtrati solo i 27 paesi EU27 (esclusi aggregati EU27_2020, EA20, paesi candidati)</li>
+        <li>Per ogni paese: selezionato l'anno più recente disponibile (2024 per tutti i 27 paesi)</li>
+        <li>Ordinamento crescente per valore (Italia più bassa, Paesi Bassi più alta)</li>
+        <li>Dati finali usati nel grafico: 27 osservazioni</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE C — ASILI NIDO ═══ -->
+  <section class="section py-5" id="asili">
+    <p class="section-label mb-1">Fase C · Eurostat TPS00185 · bambini &lt; 3 anni</p>
+    <h2 class="mb-2">Copertura degli asili nido formali (2024)</h2>
+    <p class="subtitle mb-4">
+      % bambini sotto i 3 anni in strutture di cura formale (almeno 1 ora/settimana) · 27 paesi EU27
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Cura formale:</strong> include asili nido pubblici e privati, centri
+      gioco, ludoteche con personale qualificato. Non include la cura informale
+      (nonni, babysitter, familiari). L'obiettivo europeo di Barcellona del 2002
+      fissava al 33% la copertura minima entro il 2010; nel 2022 la nuova
+      Strategia europea per la cura ha alzato il target al 45% entro il 2030.
+      I dati qui mostrati sommano SC102 (1–29 ore settimanali) e SC103 (30+ ore).
+    </div>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> ogni barra è la percentuale di bambini sotto i 3 anni
+      che frequentano strutture di cura formale per almeno 1 ora a settimana nel 2024.
+      La Slovacchia (5,1%) e la Rep. Ceca (7,3%) hanno una copertura quasi nulla;
+      i Paesi Bassi (78,9%), la Danimarca (62,9%) e il Portogallo (59,4%) guidano la classifica.
+      Flag <code>b</code> = rottura di serie (presente in alcuni paesi per cambiamenti metodologici);
+      <code>p</code> = dato provvisorio.
+      Fonte SDMX: <code>TPS00185</code>, Eurostat.
+      Grafico: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.
+    </p>
+
+    <div class="chart-wrap mb-4">
+      <div id="chart-care-rank"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 792 righe (TPS00185, indic_il=SC102+SC103, 2014–2024)</li>
+        <li>Filtrati solo i 27 paesi EU27; esclusi aggregati e candidati</li>
+        <li>Per ogni paese/anno: sommate le due categorie <code>SC102</code> (1–29 h/settimana) e <code>SC103</code> (30+ h/settimana) per ottenere la copertura totale dei bambini con almeno 1 ora di cura formale</li>
+        <li>Per ogni paese: selezionato l'anno più recente disponibile (2024 per tutti i 27 paesi)</li>
+        <li>Ordinamento crescente per valore</li>
+        <li>Dati finali usati nel grafico: 27 osservazioni</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE D — SPESA FAMIGLIA ═══ -->
+  <section class="section py-5" id="spesa">
+    <p class="section-label mb-1">Fase D · Eurostat SPR_EXP_FFA · spdep=SPR · unit=PC_GDP</p>
+    <h2 class="mb-2">Spesa pubblica per la famiglia in % del PIL (2022)</h2>
+    <p class="subtitle mb-4">
+      Protezione sociale funzione famiglia/bambini · % del PIL · 27 paesi EU27 · ultimo anno disponibile: 2022
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Spesa per la protezione sociale — funzione famiglia:</strong> include tutti
+      i trasferimenti pubblici destinati a sostenere le famiglie con figli: assegni
+      familiari, indennità di maternità e paternità, congedi parentali retribuiti,
+      servizi di cura sovvenzionati (asili nido pubblici), sostegno alle famiglie
+      monoparentali. La classificazione ESSPROS (European System of integrated Social
+      PROtection Statistics) garantisce la comparabilità tra paesi.
+    </div>
+
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> ogni barra è la spesa pubblica per la funzione
+      famiglia/bambini come percentuale del PIL nel 2022 (dato più recente disponibile).
+      La Germania spende il 3,39% del PIL — il più alto in EU27 — ma ha un TFR di 1,36.
+      Cipro e Malta spendono meno dello 0,9%. L'Italia è al 1,5%, tra gli ultimi dieci.
+      Fonte SDMX: <code>SPR_EXP_FFA</code>, Eurostat.
+      Grafico: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.
+    </p>
+
+    <div class="chart-wrap mb-4">
+      <div id="chart-exp-rank"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 734 righe (SPR_EXP_FFA, spdep=SPR, spdepm=TOTAL, unit=PC_GDP, 2003–2022)</li>
+        <li>Filtrati solo i 27 paesi EU27; esclusi aggregati e candidati</li>
+        <li>Per ogni paese: selezionato l'anno più recente disponibile (2022 per tutti i 27 paesi — ultimo anno pubblicato da Eurostat per questa serie)</li>
+        <li>Ordinamento crescente per valore</li>
+        <li>Dati finali usati nel grafico: 27 osservazioni</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ DATI GREZZI ═══ -->
+  <section class="section py-5" id="dati">
+    <p class="section-label mb-1">Dati grezzi</p>
+    <h2 class="mb-2">Scarica i dati originali</h2>
+    <p class="subtitle mb-4">
+      Dati estratti da Eurostat tramite API SDMX e usati per le analisi in questa pagina.
+    </p>
+    <div class="callout p-3 mb-4">
+      Questi sono i dati <strong>così come restituiti dall'API</strong> — nessuna aggregazione.
+      Licenza: <strong>Eurostat CC BY 4.0</strong>.
+      Data di estrazione: <strong>24 aprile 2026</strong>.
+    </div>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-3">
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat DEMO_FIND</div>
+          <div class="dl-title mb-1">Indicatori di fecondità — Tasso di fecondità totale</div>
+          <div class="dl-meta mb-2">1.159 righe · 60 aree geografiche · 2000–2024</div>
+          <a class="dl-link" href="output/A_fertility_rate.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat LFSI_EMP_A</div>
+          <div class="dl-title mb-1">Occupazione per sesso ed età — Donne 15–64 anni</div>
+          <div class="dl-meta mb-2">598 righe · 38 aree geografiche · 2003–2024</div>
+          <a class="dl-link" href="output/B_female_employment.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat TPS00185</div>
+          <div class="dl-title mb-1">Cura formale dei bambini &lt; 3 anni (1–29h e 30+h/settimana)</div>
+          <div class="dl-meta mb-2">792 righe · 41 aree geografiche · 2014–2024</div>
+          <a class="dl-link" href="output/C_childcare.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat SPR_EXP_FFA</div>
+          <div class="dl-title mb-1">Spesa protezione sociale — funzione famiglia/bambini, % PIL</div>
+          <div class="dl-meta mb-2">734 righe · 46 aree geografiche · 2003–2022</div>
+          <a class="dl-link" href="output/D_family_expenditure.csv" download>↓ CSV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ METODOLOGIA ═══ -->
+  <section class="section py-5" id="metodologia">
+    <p class="section-label mb-1">Note metodologiche</p>
+    <h2 class="mb-2">Fonti, definizioni e riproducibilità</h2>
+    <p class="subtitle mb-4">Tutti i dati sono riproducibili tramite opensdmx CLI.</p>
+
+    <h3 class="subsection-title mt-4 mb-3">Classificazioni usate</h3>
+    <div class="table-responsive mb-4">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>Codice</th><th>Sistema</th><th>Significato</th></tr></thead>
+        <tbody>
+          <tr><td><code>TOTFERRT</code></td><td>DEMO_FIND / indic_de</td><td>Tasso di fecondità totale (figli per donna)</td></tr>
+          <tr><td><code>EMP_LFS</code></td><td>LFSI_EMP_A / indic_em</td><td>Persone occupate — definizione Labour Force Survey</td></tr>
+          <tr><td><code>Y15-64</code></td><td>LFSI_EMP_A / age</td><td>Fascia d'età 15–64 anni (età lavorativa principale)</td></tr>
+          <tr><td><code>PC_POP</code></td><td>LFSI_EMP_A / unit</td><td>Percentuale della popolazione (tasso di occupazione)</td></tr>
+          <tr><td><code>SC102</code></td><td>TPS00185 / indic_il</td><td>Bambini &lt;3 anni in cura formale 1–29 ore/settimana</td></tr>
+          <tr><td><code>SC103</code></td><td>TPS00185 / indic_il</td><td>Bambini &lt;3 anni in cura formale 30+ ore/settimana</td></tr>
+          <tr><td><code>SPR</code></td><td>SPR_EXP_FFA / spdep</td><td>Totale protezione sociale (prestazioni in denaro + in natura)</td></tr>
+          <tr><td><code>PC_GDP</code></td><td>SPR_EXP_FFA / unit</td><td>Percentuale del PIL — classificazione ESSPROS</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">URL API SDMX delle query originali</h3>
+    <p class="mb-2" style="color:var(--ink-light);">URL esatti usati per scaricare i dati. Cliccabili o incollabili in qualsiasi client HTTP.</p>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">DEMO_FIND — Eurostat (tasso di fecondità totale, 2000–2024)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/DEMO_FIND/A.TOTFERRT./ALL/?startPeriod=2000&endPeriod=2024&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/DEMO_FIND/A.TOTFERRT./ALL/?startPeriod=2000&endPeriod=2024&format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">LFSI_EMP_A — Eurostat (occupazione femminile 15–64, 2003–2024)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFSI_EMP_A/A.EMP_LFS.F.Y15-64.PC_POP./ALL/?startPeriod=2003&endPeriod=2024&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFSI_EMP_A/A.EMP_LFS.F.Y15-64.PC_POP./ALL/?startPeriod=2003&endPeriod=2024&format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">TPS00185 — Eurostat (cura formale bambini &lt;3 anni, 2014–2024)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00185/A.PC.SC102+SC103./ALL/?startPeriod=2014&endPeriod=2024&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00185/A.PC.SC102+SC103./ALL/?startPeriod=2014&endPeriod=2024&format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">SPR_EXP_FFA — Eurostat (spesa famiglia % PIL, 2003–2022)</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/SPR_EXP_FFA/A.TOTAL.SPR.TOTAL.PC_GDP./ALL/?startPeriod=2003&endPeriod=2022&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/SPR_EXP_FFA/A.TOTAL.SPR.TOTAL.PC_GDP./ALL/?startPeriod=2003&endPeriod=2022&format=SDMX-CSV</a>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">Comandi CLI per riprodurre i dati</h3>
+    <div class="table-responsive mb-4">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>Dataset</th><th>Comando</th></tr></thead>
+        <tbody>
+          <tr><td>DEMO_FIND</td><td><code>opensdmx run queries/A_fertility_rate.yaml --out output/A_fertility_rate.csv</code></td></tr>
+          <tr><td>LFSI_EMP_A</td><td><code>opensdmx run queries/B_female_employment.yaml --out output/B_female_employment.csv</code></td></tr>
+          <tr><td>TPS00185</td><td><code>opensdmx run queries/C_childcare.yaml --out output/C_childcare.csv</code></td></tr>
+          <tr><td>SPR_EXP_FFA</td><td><code>opensdmx run queries/D_family_expenditure.yaml --out output/D_family_expenditure.csv</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">File disponibili</h3>
+    <div class="table-responsive">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>File</th><th>Contenuto</th></tr></thead>
+        <tbody>
+          <tr><td><code>output/A_fertility_rate.csv</code></td><td>1.159 righe · TFR per tutte le aree geografiche DEMO_FIND, 2000–2024</td></tr>
+          <tr><td><code>output/B_female_employment.csv</code></td><td>598 righe · tasso occupazione femminile 15–64, 2003–2024</td></tr>
+          <tr><td><code>output/C_childcare.csv</code></td><td>792 righe · copertura asili nido formali per bambini &lt;3 anni, 2014–2024</td></tr>
+          <tr><td><code>output/D_family_expenditure.csv</code></td><td>734 righe · spesa protezione sociale funzione famiglia % PIL, 2003–2022</td></tr>
+          <tr><td><code>queries/A_fertility_rate.yaml</code></td><td>Query riproducibile per DEMO_FIND</td></tr>
+          <tr><td><code>queries/B_female_employment.yaml</code></td><td>Query riproducibile per LFSI_EMP_A</td></tr>
+          <tr><td><code>queries/C_childcare.yaml</code></td><td>Query riproducibile per TPS00185</td></tr>
+          <tr><td><code>queries/D_family_expenditure.yaml</code></td><td>Query riproducibile per SPR_EXP_FFA</td></tr>
+          <tr><td><code>metadata/A_fertility_rate-meta-indic_de.csv</code></td><td>Codelist dimensione indic_de (DEMO_FIND)</td></tr>
+          <tr><td><code>metadata/A_fertility_rate-meta-geo.csv</code></td><td>Codelist dimensione geo (DEMO_FIND)</td></tr>
+          <tr><td><code>metadata/C_childcare-meta-indic_il.csv</code></td><td>Codelist dimensione indic_il (TPS00185)</td></tr>
+          <tr><td><code>metadata/D_family_expenditure-meta-spdep.csv</code></td><td>Codelist dimensione spdep (SPR_EXP_FFA)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer py-4 mt-2">
+  <div class="container d-flex flex-wrap gap-4 justify-content-between">
+    <span>Dati: Eurostat · Formato SDMX 2.1</span>
+    <span>Strumento: <a href="https://github.com/opensdmx/opensdmx" target="_blank">opensdmx CLI</a></span>
+    <span>Grafici: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz</a> · <a href="https://github.com/timqian/chart.xkcd" target="_blank">chart.xkcd</a></span>
+    <span>24 aprile 2026</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── DATASET A: TFR per paese 2024 — ranking BarH ──────────────────────────────
+// Fonte: DEMO_FIND/TOTFERRT, ultimo anno disponibile per paese (2024)
+const tfrLabels = ["MALTA","SPAGNA","LITUANIA","POLONIA","ESTONIA","ITALIA","GRECIA","LETTONIA","FINLANDIA","LUSSEMBURGO","AUSTRIA","REP. CECA","GERMANIA","CIPRO","ROMANIA","UNGHERIA","PORTOGALLO","PAESI BASSI","SVEZIA","BELGIO","SLOVACCHIA","CROAZIA","DANIMARCA","IRLANDA","SLOVENIA","FRANCIA","BULGARIA"];
+const tfrValues = [1.01,1.1,1.11,1.14,1.18,1.18,1.24,1.24,1.25,1.25,1.31,1.36,1.36,1.38,1.39,1.41,1.41,1.43,1.43,1.44,1.46,1.46,1.47,1.47,1.52,1.61,1.72];
+
+new roughViz.BarH({
+  element: '#chart-tfr-rank',
+  data: { labels: tfrLabels, values: tfrValues },
+  title: 'TFR per paese EU27 — 2024 (figli per donna)',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  color: '#b02020',
+  highlight: '#c0392b',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900,
+  height: 680,
+  margin: { top: 40, right: 100, bottom: 50, left: 170 },
+  xLabel: 'FIGLI PER DONNA',
+});
+
+// ── DATASET A: TFR time series EU27 + paesi selezionati — chart.xkcd XY ──────
+// Fonte: DEMO_FIND/TOTFERRT, 2003-2024
+const yearsTS = [2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024];
+const tfrEU27ts = [1.44,1.46,1.47,1.5,1.52,1.57,1.56,1.57,1.54,1.54,1.51,1.54,1.54,1.57,1.56,1.54,1.53,1.51,1.53,1.46,1.38,1.34];
+const tfrFR = [1.89,1.92,1.94,2.0,1.98,2.01,2.0,2.03,2.01,2.01,1.99,2.0,1.96,1.92,1.89,1.87,1.86,1.82,1.83,1.78,1.66,1.61];
+const tfrDE = [1.34,1.36,1.34,1.33,1.37,1.38,1.36,1.39,1.39,1.41,1.42,1.47,1.5,1.6,1.57,1.57,1.54,1.53,1.58,1.46,1.39,1.36];
+const tfrIT = [1.29,1.34,1.33,1.37,1.39,1.44,1.44,1.44,1.42,1.42,1.39,1.38,1.36,1.36,1.34,1.31,1.27,1.24,1.25,1.24,1.21,1.18];
+const tfrES = [1.3,1.31,1.33,1.36,1.38,1.45,1.38,1.37,1.34,1.32,1.27,1.32,1.33,1.33,1.31,1.26,1.23,1.18,1.18,1.16,1.12,1.1];
+const tfrSE = [1.71,1.75,1.77,1.85,1.88,1.91,1.94,1.98,1.9,1.91,1.89,1.88,1.85,1.85,1.78,1.76,1.71,1.67,1.67,1.53,1.45,1.43];
+const tfrPL = [1.22,1.23,1.24,1.27,1.31,1.39,1.4,1.41,1.33,1.33,1.29,1.32,1.32,1.39,1.48,1.46,1.44,1.39,1.33,1.29,1.2,1.14];
+const tfrBG = [1.26,1.33,1.37,1.44,1.49,1.56,1.66,1.57,1.51,1.5,1.54,1.62,1.64,1.67,1.71,1.73,1.79,1.77,1.8,1.78,1.81,1.72];
+
+function toPoints(years, vals) {
+  const pts = [];
+  years.forEach((y, i) => { if (vals[i] !== null) pts.push({ x: y, y: vals[i] }); });
+  return pts;
+}
+
+new chartXkcd.XY(document.getElementById('chart-tfr-ts'), {
+  xLabel: '',
+  yLabel: 'TFR',
+  data: {
+    datasets: [
+      { label: 'EU27', data: toPoints(yearsTS, tfrEU27ts) },
+      { label: 'Francia', data: toPoints(yearsTS, tfrFR) },
+      { label: 'Germania', data: toPoints(yearsTS, tfrDE) },
+      { label: 'Italia', data: toPoints(yearsTS, tfrIT) },
+      { label: 'Spagna', data: toPoints(yearsTS, tfrES) },
+      { label: 'Svezia', data: toPoints(yearsTS, tfrSE) },
+      { label: 'Polonia', data: toPoints(yearsTS, tfrPL) },
+      { label: 'Bulgaria', data: toPoints(yearsTS, tfrBG) },
+    ]
+  },
+  options: {
+    showLine: true,
+    dotSize: 0.3,
+    xTickCount: 6,
+    yTickCount: 4,
+    dataColors: ['#1a1a1a','#b02020','#1a6fa8','#27ae60','#e67e22','#8e44ad','#16a085','#666'],
+  }
+});
+
+// ── DATASET B: Occupazione femminile 2024 — ranking BarH ─────────────────────
+// Fonte: LFSI_EMP_A, sex=F, age=Y15-64, unit=PC_POP, ultimo anno (2024)
+const empLabels = ["ITALIA","GRECIA","ROMANIA","SPAGNA","BELGIO","CROAZIA","FRANCIA","LUSSEMBURGO","POLONIA","BULGARIA","SLOVACCHIA","REP. CECA","LETTONIA","SLOVENIA","PORTOGALLO","IRLANDA","AUSTRIA","CIPRO","UNGHERIA","MALTA","FINLANDIA","LITUANIA","GERMANIA","DANIMARCA","SVEZIA","ESTONIA","PAESI BASSI"];
+const empValues = [53.3,54.6,55.3,61.6,63.3,65.4,66.4,67.2,67.2,67.6,68.3,69.5,70.0,70.0,70.4,70.6,70.7,71.1,71.4,71.9,72.4,73.0,74.1,74.5,75.2,75.2,78.9];
+
+new roughViz.BarH({
+  element: '#chart-emp-rank',
+  data: { labels: empLabels, values: empValues },
+  title: 'Tasso di occupazione femminile (15–64 anni) — 2024',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  color: '#1a6fa8',
+  highlight: '#2980b9',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900,
+  height: 680,
+  margin: { top: 40, right: 100, bottom: 50, left: 170 },
+  xLabel: '% DONNE OCCUPATE (15–64 ANNI)',
+});
+
+// ── DATASET C: Copertura asili nido 2024 — ranking BarH ──────────────────────
+// Fonte: TPS00185, SC102+SC103, ultimo anno (2024)
+const careLabels = ["SLOVACCHIA","REP. CECA","ROMANIA","POLONIA","UNGHERIA","BULGARIA","IRLANDA","LETTONIA","GERMANIA","GRECIA","AUSTRIA","CROAZIA","ESTONIA","LITUANIA","ITALIA","CIPRO","MALTA","FINLANDIA","BELGIO","SPAGNA","LUSSEMBURGO","SVEZIA","SLOVENIA","FRANCIA","PORTOGALLO","DANIMARCA","PAESI BASSI"];
+const careValues = [5.1,7.3,11.4,15.1,16.6,21.2,24.4,24.9,25.1,28.9,30.2,30.2,36.8,36.9,39.4,40.1,44.1,48.2,52.3,55.0,56.6,57.7,57.8,59.3,59.4,62.9,78.9];
+
+new roughViz.BarH({
+  element: '#chart-care-rank',
+  data: { labels: careLabels, values: careValues },
+  title: 'Bambini <3 anni in cura formale (≥1 h/settimana) — 2024',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  color: '#27ae60',
+  highlight: '#2ecc71',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900,
+  height: 680,
+  margin: { top: 40, right: 100, bottom: 50, left: 170 },
+  xLabel: '% BAMBINI IN CURA FORMALE',
+});
+
+// ── DATASET D: Spesa famiglia % PIL 2022 — ranking BarH ──────────────────────
+// Fonte: SPR_EXP_FFA, spdep=SPR, spdepm=TOTAL, unit=PC_GDP, ultimo anno (2022)
+const expLabels = ["CIPRO","MALTA","IRLANDA","PAESI BASSI","PORTOGALLO","GRECIA","SPAGNA","ITALIA","BULGARIA","REP. CECA","UNGHERIA","SLOVENIA","CROAZIA","LITUANIA","ESTONIA","SLOVACCHIA","ROMANIA","LETTONIA","BELGIO","FRANCIA","AUSTRIA","SVEZIA","DANIMARCA","FINLANDIA","POLONIA","LUSSEMBURGO","GERMANIA"];
+const expValues = [0.87,0.87,1.03,1.19,1.25,1.34,1.46,1.5,1.58,1.64,1.73,1.78,1.87,1.91,1.92,1.92,1.93,1.95,2.03,2.24,2.7,2.78,2.92,3.02,3.21,3.23,3.39];
+
+new roughViz.BarH({
+  element: '#chart-exp-rank',
+  data: { labels: expLabels, values: expValues },
+  title: 'Spesa protezione sociale per famiglia — % del PIL (2022)',
+  titleFontSize: '1rem',
+  axisFontSize: '1rem',
+  roughness: 1.5,
+  stroke: '#333',
+  strokeWidth: 1,
+  fillStyle: 'hachure',
+  fillWeight: 0.7,
+  color: '#e67e22',
+  highlight: '#f39c12',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: 900,
+  height: 680,
+  margin: { top: 40, right: 100, bottom: 50, left: 170 },
+  xLabel: '% DEL PIL',
+});
+</script>
+</body>
+</html>

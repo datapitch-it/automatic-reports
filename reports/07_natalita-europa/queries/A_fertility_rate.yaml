@@ -1,0 +1,7 @@
+provider: eurostat
+dataset: DEMO_FIND
+filters:
+  indic_de: TOTFERRT
+start_period: "2000"
+end_period: "2024"
+format: SDMX-CSV

@@ -1,0 +1,55 @@
+id,name
+CASH,Cash benefits
+CASH_LUMP,Lump sum cash benefits
+CASH_LUMP_BRTH,Lump sum cash benefits - birth grant
+CASH_LUMP_CARE,Lump sum cash benefits - care allowance
+CASH_LUMP_DTH,Lump sum cash benefits - death grant
+CASH_LUMP_EH,Lump sum cash benefits - economic integration of the handicapped
+CASH_LUMP_OTH,Lump sum cash benefits - other
+CASH_LUMP_PARL,Lump sum cash benefits - parental leave
+CASH_LUMP_RED_COMP,Lump sum cash benefits - redundancy compensation
+CASH_LUMP_VT_ALL,Lump sum cash benefits - vocational training allowance
+CASH_P,Periodic cash benefits
+CASH_P_AOLD_PEN,Periodic cash benefits - anticipated old age pension
+CASH_P_CARE,Periodic cash benefits - care allowance
+CASH_P_DIS_PEN,Periodic cash benefits - disability pension
+CASH_P_EH,Periodic cash benefits - economic integration of the handicapped
+CASH_P_ERLM,Periodic cash benefits - early retirement benefit for labour market reasons
+CASH_P_ERRC,Periodic cash benefits - early retirement benefit due to reduced capacity to work
+CASH_P_FAM_ALL,Periodic cash benefits - family or child allowance
+CASH_P_INC,Periodic cash benefits - income support
+CASH_P_MNTCHB,Periodic cash benefits - income maintenance in the event of childbirth
+CASH_P_OLD_PEN,Periodic cash benefits - old age pension
+CASH_P_OTH,Periodic cash benefits - other
+CASH_P_PARL,Periodic cash benefits - parental leave
+CASH_P_PART_PEN,Periodic cash benefits - partial pension
+CASH_P_PSICK,Periodic cash benefits - paid sick leave
+CASH_P_SRV_PEN,Periodic cash benefits - survivors' pension
+CASH_P_UNE_FULL,Periodic cash benefits - full unemployment
+CASH_P_UNE_PART,Periodic cash benefits - partial unemployment
+CASH_P_VT_ALL,Periodic cash benefits - vocational training allowance
+KND,Benefits in kind
+KND_ACCOM,Benefits in kind - accommodation
+KND_ASS_DT,Benefits in kind - assistance in carrying out daily tasks
+KND_CHDC,Benefits in kind - child day care
+KND_FUNE,Benefits in kind - funeral expenses
+KND_HOM,Benefits in kind - home help
+KND_IN,Benefits in kind - in-patient care
+KND_IN_DPR,Benefits in kind - in-patient care direct provision
+KND_IN_REMB,Benefits in kind - in-patient care reimbursement
+KND_MOB,Benefits in kind - mobility and resettlement
+KND_OTH,Benefits in kind - other
+KND_OUT,Benefits in kind - out-patient care
+KND_OUT_DPR_OTH,Benefits in kind - out-patient care other direct provision
+KND_OUT_DPR_PHRM,Benefits in kind - out-patient care direct provision of pharmaceutical products
+KND_OUT_REMB_OTH,Benefits in kind - out-patient care other reimbursement
+KND_OUT_REMB_PHRM,Benefits in kind - out-patient care reimbursement of pharmaceutical products
+KND_OWN,Benefits in kind - benefit to owner-occupiers
+KND_PSJOB,Benefits in kind - placement services and job search assistance
+KND_REH,Benefits in kind - rehabilitation
+KND_REH_ABUS,Benefits on kind - rehabilitation of alcohol and drugs abusers
+KND_RENT,Benefits in kind - rent
+KND_RENT_OTH,Benefits in kind - rent - other
+KND_RENT_SHOU,Benefits in kind - rent - social housing
+KND_VT,Benefits in kind - vocational training
+SPR,Social protection benefits
