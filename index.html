@@ -61,87 +61,67 @@
     .method-step .label { color: var(--ink); }
     .method-step .desc { font-size: 1rem; display: block; }
 
-    .reports-grid { }
-
-    .report-card {
-      background: #fff;
-      border: 1px solid var(--rule);
-      text-decoration: none;
-      color: var(--ink);
+    .report-list {
       display: flex;
       flex-direction: column;
-      height: 100%;
-      transition: border-color 0.15s, box-shadow 0.15s;
-    }
-    .report-card:hover {
-      border-color: var(--ink);
-      box-shadow: 3px 3px 0 var(--rule);
-      color: var(--ink);
-      text-decoration: none;
     }
 
-    .report-card-preview {
-      background: var(--paper-warm);
+    .report-row {
+      display: flex;
+      align-items: baseline;
+      gap: 1.2rem;
+      padding: 1.1rem 0;
       border-bottom: 1px solid var(--rule);
-      overflow: hidden;
-      position: relative;
-      height: 180px;
+      text-decoration: none;
+      color: var(--ink);
+      transition: background 0.1s;
     }
-    .report-card-preview iframe {
-      width: 200%;
-      height: 400%;
-      transform: scale(0.5);
-      transform-origin: top left;
-      border: none;
-      pointer-events: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    .report-card-preview .preview-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, transparent 50%, rgba(250,250,247,0.3) 100%);
-      z-index: 1;
-    }
-    .report-card-preview .report-num {
-      position: absolute;
-      top: 0.6rem;
-      left: 0.7rem;
+    .report-row:first-child { border-top: 2px solid var(--ink); }
+    .report-row:hover { background: var(--paper-warm); }
+    .report-row:hover .report-row-cta { color: var(--accent); }
+
+    .report-row-num {
       font-family: var(--mono);
       font-size: 1rem;
       color: var(--ink-faint);
-      background: var(--paper);
-      border: 1px solid var(--rule);
-      padding: 1px 6px;
-      z-index: 2;
+      min-width: 2rem;
+      flex-shrink: 0;
+      padding-top: 0.1rem;
     }
 
-    .report-card-body {
-      padding: 1rem 1.1rem 1.1rem;
+    .report-row-body {
       flex: 1;
+      min-width: 0;
       display: flex;
       flex-direction: column;
+      gap: 0.3rem;
     }
-    .report-card-body h2 {
+
+    .report-row-title {
       font-size: 1.1rem;
-      font-weight: normal;
       line-height: 1.35;
-      margin-bottom: 0.5rem;
+      color: var(--ink);
     }
-    .report-card-body .desc {
+
+    .report-row-desc {
       font-size: 1rem;
       color: var(--ink-light);
-      line-height: 1.55;
-      flex: 1;
+      line-height: 1.5;
     }
-    .report-card-footer {
-      margin-top: 0.9rem;
-      padding-top: 0.6rem;
-      border-top: 1px dashed var(--rule);
+
+    .report-row-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 0.3rem;
+      margin-top: 0.2rem;
+    }
+
+    .report-row-cta {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--ink-faint);
+      flex-shrink: 0;
+      transition: color 0.1s;
     }
     .badge-sm {
       font-family: var(--mono);
@@ -417,187 +397,110 @@
   </div>
 </div>
 
-<!-- ═══ REPORTS GRID ═══ -->
+<!-- ═══ REPORTS LIST ═══ -->
 <main class="container py-5">
 
-  <p class="section-label mb-4">Ricerche pubblicate</p>
+  <p class="section-label mb-4">Ultimi report generati</p>
 
-  <div class="row row-cols-1 row-cols-md-2 g-4 reports-grid">
+  <div class="report-list">
 
-    <!-- 01 Gender Pay Gap -->
-    <div class="col">
-      <a class="report-card" href="reports/01_gender-pay-gap/index.html">
-        <div class="report-card-preview">
-          <span class="report-num">01</span>
-          <iframe src="reports/01_gender-pay-gap/index.html" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
-          <div class="preview-overlay"></div>
-        </div>
-        <div class="report-card-body">
-          <h2>Quanto guadagnano le donne rispetto agli uomini in Europa?</h2>
-          <p class="desc">
-            Il divario retributivo di genere non aggiustato nei paesi europei: chi guadagna meno,
-            dove il gap è aumentato e dove si è ridotto negli ultimi 15 anni.
-          </p>
-          <div class="report-card-footer">
-            <span class="badge-sm"><strong>Eurostat</strong> TESEM180</span>
-            <span class="badge-sm"><strong>Eurostat</strong> EARN_GR_GPGR2AG</span>
-            <span class="badge-sm"><strong>Periodo</strong> 2007–2024</span>
-            <span class="badge-sm"><strong>Paesi</strong> 30</span>
-          </div>
-          <span class="cta-link">Leggi il report →</span>
-        </div>
-      </a>
-    </div>
+    <a class="report-row" href="reports/07_natalita-europa/index.html">
+      <span class="report-row-num">07</span>
+      <span class="report-row-body">
+        <span class="report-row-title">Natalità in Europa: il crollo silenzioso</span>
+        <span class="report-row-desc">TFR EU27 a 1,34 nel 2024 — minimo storico. Relazione tra fecondità, occupazione femminile, asili nido e spesa pubblica per le famiglie.</span>
+        <span class="report-row-meta">
+          <span class="badge-sm"><strong>Eurostat</strong> DEMO_FIND · LFSI_EMP_A · TPS00185 · SPR_EXP_FFA</span>
+          <span class="badge-sm"><strong>Periodo</strong> 2003–2024</span>
+          <span class="badge-sm"><strong>Paesi</strong> EU27</span>
+        </span>
+      </span>
+      <span class="report-row-cta">→</span>
+    </a>
 
-    <!-- 02 Spesa Militare -->
-    <div class="col">
-      <a class="report-card" href="reports/02_spesa-militare/index.html">
-        <div class="report-card-preview">
-          <span class="report-num">02</span>
-          <iframe src="reports/02_spesa-militare/index.html" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
-          <div class="preview-overlay"></div>
-        </div>
-        <div class="report-card-body">
-          <h2>Spesa militare e industria della difesa</h2>
-          <p class="desc">
-            Analisi della spesa pubblica per la difesa militare in Europa e nel mondo,
-            confrontando bilanci nazionali in percentuale del PIL su dati Eurostat e OECD.
-          </p>
-          <div class="report-card-footer">
-            <span class="badge-sm"><strong>Eurostat</strong> GOV_10A_EXP</span>
-            <span class="badge-sm"><strong>OECD</strong> NASEC10</span>
-            <span class="badge-sm"><strong>Periodo</strong> 2000–2024</span>
-            <span class="badge-sm"><strong>Paesi</strong> 40+</span>
-          </div>
-          <span class="cta-link">Leggi il report →</span>
-        </div>
-      </a>
-    </div>
+    <a class="report-row" href="reports/06_petrolio-fossili/index.html">
+      <span class="report-row-num">06</span>
+      <span class="report-row-body">
+        <span class="report-row-title">Petrolio e combustibili fossili: produzione, importazioni, usi, riserve</span>
+        <span class="report-row-desc">Da dove arriva il greggio importato in Europa, giacimento per giacimento? Prezzi storici di Brent, gas e carbone, dipendenza dalla Russia prima e dopo il 2022.</span>
+        <span class="report-row-meta">
+          <span class="badge-sm"><strong>IMF</strong> PCPS</span>
+          <span class="badge-sm"><strong>Eurostat</strong> NRG_TI_COIFPM · NRG_TI_OIL · NRG_CB_COSM · NRG_CB_OIL · NRG_STK_OEM</span>
+          <span class="badge-sm"><strong>Periodo</strong> 2000–2024</span>
+          <span class="badge-sm"><strong>Paesi</strong> EU27 + Italia</span>
+        </span>
+      </span>
+      <span class="report-row-cta">→</span>
+    </a>
 
-    <!-- 03 Incidenti Stradali -->
-    <div class="col">
-      <a class="report-card" href="reports/03_incidenti-stradali/index.html">
-        <div class="report-card-preview">
-          <span class="report-num">03</span>
-          <iframe src="reports/03_incidenti-stradali/index.html" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
-          <div class="preview-overlay"></div>
-        </div>
-        <div class="report-card-body">
-          <h2>Incidenti stradali in Europa: la mappa della sicurezza</h2>
-          <p class="desc">
-            Mortalità stradale nei paesi europei: tassi di decessi per 100.000 abitanti
-            e l'evoluzione nell'ultimo decennio secondo gli indicatori SDG di Eurostat.
-          </p>
-          <div class="report-card-footer">
-            <span class="badge-sm"><strong>Eurostat</strong> SDG_11_40</span>
-            <span class="badge-sm"><strong>Periodo</strong> 2010–2024</span>
-            <span class="badge-sm"><strong>Paesi</strong> 27 UE + EFTA</span>
-          </div>
-          <span class="cta-link">Leggi il report →</span>
-        </div>
-      </a>
-    </div>
+    <a class="report-row" href="reports/05_media-giornalismo/index.html">
+      <span class="report-row-num">05</span>
+      <span class="report-row-body">
+        <span class="report-row-title">Due velocità nel settore media europeo</span>
+        <span class="report-row-desc">L'editoria tradizionale perde un terzo degli occupati in 13 anni, mentre la produzione audiovisiva cresce del 30%. Chi legge ancora i quotidiani di carta?</span>
+        <span class="report-row-meta">
+          <span class="badge-sm"><strong>Eurostat</strong> CULT_EMP_N2 · CULT_PCS_NWA/S/E</span>
+          <span class="badge-sm"><strong>Periodo</strong> 2011–2024</span>
+        </span>
+      </span>
+      <span class="report-row-cta">→</span>
+    </a>
 
-    <!-- 04 Stereotipi di Genere -->
-    <div class="col">
-      <a class="report-card" href="reports/04_stereotipi-genere/index.html">
-        <div class="report-card-preview">
-          <span class="report-num">04</span>
-          <iframe src="reports/04_stereotipi-genere/index.html" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
-          <div class="preview-overlay"></div>
-        </div>
-        <div class="report-card-body">
-          <h2>Stereotipi di genere nei dati europei</h2>
-          <p class="desc">
-            Segregazione occupazionale, divario nelle lauree STEM e asimmetria nel lavoro
-            part-time: tre proxy statistiche che misurano come gli stereotipi di genere
-            si riflettano nelle scelte lavorative e formative.
-          </p>
-          <div class="report-card-footer">
-            <span class="badge-sm"><strong>Eurostat</strong> TPS00217</span>
-            <span class="badge-sm"><strong>Eurostat</strong> LFSA_EGAN2</span>
-            <span class="badge-sm"><strong>Eurostat</strong> LFSA_EPPGA</span>
-            <span class="badge-sm"><strong>Periodo</strong> 2010–2023</span>
-          </div>
-          <span class="cta-link">Leggi il report →</span>
-        </div>
-      </a>
-    </div>
+    <a class="report-row" href="reports/04_stereotipi-genere/index.html">
+      <span class="report-row-num">04</span>
+      <span class="report-row-body">
+        <span class="report-row-title">Stereotipi di genere nei dati europei</span>
+        <span class="report-row-desc">Segregazione occupazionale, divario nelle lauree STEM e asimmetria nel lavoro part-time: tre proxy statistiche degli stereotipi di genere.</span>
+        <span class="report-row-meta">
+          <span class="badge-sm"><strong>Eurostat</strong> TPS00217 · LFSA_EGAN2 · LFSA_EPPGA</span>
+          <span class="badge-sm"><strong>Periodo</strong> 2010–2023</span>
+        </span>
+      </span>
+      <span class="report-row-cta">→</span>
+    </a>
 
-    <!-- 05 Media e Giornalismo -->
-    <div class="col">
-      <a class="report-card" href="reports/05_media-giornalismo/index.html">
-        <div class="report-card-preview">
-          <span class="report-num">05</span>
-          <iframe src="reports/05_media-giornalismo/index.html" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
-          <div class="preview-overlay"></div>
-        </div>
-        <div class="report-card-body">
-          <h2>Due velocità nel settore media europeo</h2>
-          <p class="desc">
-            L'editoria tradizionale perde un terzo degli occupati in 13 anni, mentre la produzione
-            audiovisiva cresce del 30%. E chi legge ancora i quotidiani di carta? Un'analisi del
-            profilo demografico del lettore: maschio, over 45, laureato.
-          </p>
-          <div class="report-card-footer">
-            <span class="badge-sm"><strong>Eurostat</strong> CULT_EMP_N2</span>
-            <span class="badge-sm"><strong>Eurostat</strong> CULT_PCS_NWA/S/E</span>
-            <span class="badge-sm"><strong>Periodo</strong> 2011–2024</span>
-          </div>
-          <span class="cta-link">Leggi il report →</span>
-        </div>
-      </a>
-    </div>
+    <a class="report-row" href="reports/03_incidenti-stradali/index.html">
+      <span class="report-row-num">03</span>
+      <span class="report-row-body">
+        <span class="report-row-title">Incidenti stradali in Europa: la mappa della sicurezza</span>
+        <span class="report-row-desc">Mortalità stradale nei paesi europei: tassi di decessi per 100.000 abitanti e l'evoluzione nell'ultimo decennio secondo gli indicatori SDG.</span>
+        <span class="report-row-meta">
+          <span class="badge-sm"><strong>Eurostat</strong> SDG_11_40</span>
+          <span class="badge-sm"><strong>Periodo</strong> 2010–2024</span>
+          <span class="badge-sm"><strong>Paesi</strong> 27 UE + EFTA</span>
+        </span>
+      </span>
+      <span class="report-row-cta">→</span>
+    </a>
 
-    <!-- 06 Petrolio e combustibili fossili -->
-    <div class="col">
-      <a class="report-card" href="reports/06_petrolio-fossili/index.html">
-        <div class="report-card-preview">
-          <span class="report-num">06</span>
-          <iframe src="reports/06_petrolio-fossili/index.html" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
-          <div class="preview-overlay"></div>
-        </div>
-        <div class="report-card-body">
-          <h2>Petrolio e combustibili fossili: produzione, importazioni, usi, riserve</h2>
-          <p class="desc">
-            Da dove arriva il greggio importato in Europa, giacimento per giacimento?
-            Prezzi storici di Brent, gas e carbone, dipendenza dalla Russia prima e dopo
-            il 2022, usi non energetici (nafta e petrolchimica) e riserve strategiche di
-            emergenza per tutti i 27 paesi UE.
-          </p>
-          <div class="report-card-footer">
-            <span class="badge-sm"><strong>IMF</strong> PCPS</span>
-            <span class="badge-sm"><strong>Eurostat</strong> NRG_TI_COIFPM · NRG_TI_OIL · NRG_CB_COSM · NRG_CB_OIL · NRG_STK_OEM</span>
-            <span class="badge-sm"><strong>Periodo</strong> 2000–2024</span>
-            <span class="badge-sm"><strong>Paesi</strong> EU27 + Italia</span>
-          </div>
-          <span class="cta-link">Leggi il report →</span>
-        </div>
-      </a>
+    <a class="report-row" href="reports/02_spesa-militare/index.html">
+      <span class="report-row-num">02</span>
+      <span class="report-row-body">
+        <span class="report-row-title">Spesa militare e industria della difesa</span>
+        <span class="report-row-desc">Analisi della spesa pubblica per la difesa militare in Europa e nel mondo, confrontando bilanci nazionali in percentuale del PIL su dati Eurostat e OECD.</span>
+        <span class="report-row-meta">
+          <span class="badge-sm"><strong>Eurostat</strong> GOV_10A_EXP</span>
+          <span class="badge-sm"><strong>OECD</strong> NASEC10</span>
+          <span class="badge-sm"><strong>Periodo</strong> 2000–2024</span>
+          <span class="badge-sm"><strong>Paesi</strong> 40+</span>
+        </span>
+      </span>
+      <span class="report-row-cta">→</span>
+    </a>
 
-      <a class="report-card" href="reports/07_natalita-europa/index.html">
-        <div class="report-card-preview">
-          <span class="report-num">07</span>
-          <iframe src="reports/07_natalita-europa/index.html" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
-          <div class="preview-overlay"></div>
-        </div>
-        <div class="report-card-body">
-          <h2>Natalità in Europa: il crollo silenzioso</h2>
-          <p class="desc">
-            Il tasso di fecondità totale EU27 ha raggiunto il minimo storico di 1,34 nel 2024.
-            Analisi del declino della natalità nei 27 paesi UE e della sua relazione con
-            l'occupazione femminile, la copertura degli asili nido e la spesa pubblica
-            per le politiche familiari.
-          </p>
-          <div class="report-card-footer">
-            <span class="badge-sm"><strong>Eurostat</strong> DEMO_FIND · LFSI_EMP_A · TPS00185 · SPR_EXP_FFA</span>
-            <span class="badge-sm"><strong>Periodo</strong> 2003–2024</span>
-            <span class="badge-sm"><strong>Paesi</strong> EU27</span>
-          </div>
-          <span class="cta-link">Leggi il report →</span>
-        </div>
-      </a>
-    </div>
+    <a class="report-row" href="reports/01_gender-pay-gap/index.html">
+      <span class="report-row-num">01</span>
+      <span class="report-row-body">
+        <span class="report-row-title">Quanto guadagnano le donne rispetto agli uomini in Europa?</span>
+        <span class="report-row-desc">Il divario retributivo di genere non aggiustato nei paesi europei: chi guadagna meno, dove il gap è aumentato e dove si è ridotto negli ultimi 15 anni.</span>
+        <span class="report-row-meta">
+          <span class="badge-sm"><strong>Eurostat</strong> TESEM180 · EARN_GR_GPGR2AG</span>
+          <span class="badge-sm"><strong>Periodo</strong> 2007–2024</span>
+          <span class="badge-sm"><strong>Paesi</strong> 30</span>
+        </span>
+      </span>
+      <span class="report-row-cta">→</span>
+    </a>
 
   </div>
 
