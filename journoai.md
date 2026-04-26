@@ -69,7 +69,7 @@ Prima di aprire il terminale, fissare per iscritto in `notes.md`:
 [Cosa i dati SDMX NON coprono — da dichiarare esplicitamente nella pagina]
 
 ## Provider candidati
-[Eurostat / OECD / ECB / World Bank / ISTAT / altro]
+[Da compilare dopo aver eseguito `opensdmx providers` — vedi Fase 1.1]
 ```
 
 ---
@@ -78,11 +78,23 @@ Prima di aprire il terminale, fissare per iscritto in `notes.md`:
 
 ### 1.1 Listare i provider disponibili
 
+> **Questo è il primo comando obbligatorio di ogni analisi.** La lista dei provider
+> cambia con gli aggiornamenti di opensdmx: eseguire sempre il check per avere la
+> versione corrente, non fidarsi di liste statiche.
+
 ```bash
-opensdmx providers
+opensdmx --output json providers
 ```
 
-Output: elenco di provider con ID (es. `estat` per Eurostat, `oecd` per OECD).
+Output: array JSON con `alias`, `name`, `agency_id`, `constraints_supported`, `last_n_supported`, `categories_supported`.
+
+Annotare in `notes.md` i provider candidati con le loro capacità, poi compilare la sezione
+**Provider candidati** nella Fase 0 con l'output reale.
+
+Colonne chiave e cosa implicano:
+- **`constraints_supported`**: se `false`, usare `opensdmx values` invece di `opensdmx constraints` per esplorare i codici validi.
+- **`last_n_supported`**: se `false`, non usare `--last-n` nelle query (es. World Bank).
+- **`categories_supported`**: se `false`, saltare `opensdmx tree` e usare direttamente `opensdmx search`.
 
 ### 1.2 Cercare dataset per parola chiave
 
