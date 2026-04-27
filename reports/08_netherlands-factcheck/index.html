@@ -113,13 +113,13 @@
   <div class="container">
     <div class="d-flex flex-wrap gap-1">
       <a class="nav-link" href="#intro">↓ Intro</a>
+      <a class="nav-link" href="#verdict">Verdetto</a>
       <a class="nav-link" href="#popolazione">Popolazione</a>
       <a class="nav-link" href="#salute">Anni di vita in salute</a>
       <a class="nav-link" href="#occupazione">Occupazione</a>
       <a class="nav-link" href="#pil">PIL</a>
       <a class="nav-link" href="#internet">Internet</a>
       <a class="nav-link" href="#weee">Riciclo WEEE</a>
-      <a class="nav-link" href="#verdict">Verdetto finale</a>
       <a class="nav-link" href="#dati">Dati grezzi</a>
       <a class="nav-link" href="#metodologia">Metodologia</a>
     </div>
@@ -201,6 +201,116 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ═══ VERDETTO FINALE ═══ -->
+  <section class="section py-5" id="verdict">
+    <p class="section-label mb-1">Sintesi</p>
+    <h2 class="mb-2">Verdetto finale: tutti i valori dell'infografica</h2>
+    <p class="subtitle mb-4">
+      8 valori verificati, dataset e anno di riferimento per ciascuno.
+    </p>
+
+    <div class="table-responsive mb-4">
+      <table class="verdict-table table table-bordered table-sm">
+        <thead>
+          <tr>
+            <th>Dato nell'immagine</th>
+            <th>Valore SDMX</th>
+            <th>Anno</th>
+            <th>Dataset</th>
+            <th>Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Popolazione NL 18,0 M</td>
+            <td>18.044.027</td>
+            <td>2025</td>
+            <td><code>TPS00001</code></td>
+            <td><span class="badge-ok">✅ CONFERMATO</span></td>
+          </tr>
+          <tr>
+            <td>4,0% della pop. UE</td>
+            <td>4,0%</td>
+            <td>2024–2025</td>
+            <td><code>TPS00005</code></td>
+            <td><span class="badge-ok">✅ CONFERMATO</span></td>
+          </tr>
+          <tr>
+            <td>Anni in salute NL = 59</td>
+            <td>59,0 anni</td>
+            <td>2023</td>
+            <td><code>TPS00150</code></td>
+            <td><span class="badge-ok">✅ CONFERMATO</span></td>
+          </tr>
+          <tr>
+            <td>Anni in salute UE = 63</td>
+            <td>63,1 anni (flag bep)</td>
+            <td>2023</td>
+            <td><code>TPS00150</code></td>
+            <td><span class="badge-ok">✅ CONFERMATO*</span></td>
+          </tr>
+          <tr>
+            <td>Occupazione NL = 83%</td>
+            <td>83,4%</td>
+            <td>2025</td>
+            <td><code>TESEM010</code></td>
+            <td><span class="badge-ok">✅ CONFERMATO</span></td>
+          </tr>
+          <tr>
+            <td>Occupazione UE = 76%</td>
+            <td>76,1%</td>
+            <td>2025</td>
+            <td><code>TESEM010</code></td>
+            <td><span class="badge-ok">✅ CONFERMATO</span></td>
+          </tr>
+          <tr>
+            <td>PIL pro capite €65.200</td>
+            <td>€65.210 (prov.)</td>
+            <td>2025</td>
+            <td><code>NAMA_10_PC</code></td>
+            <td><span class="badge-ok">✅ CONFERMATO</span></td>
+          </tr>
+          <tr>
+            <td>PIL 6,3% del PIL UE</td>
+            <td>6,27%</td>
+            <td>2025</td>
+            <td><code>NAMA_10_GDP</code></td>
+            <td><span class="badge-ok">✅ CONFERMATO</span></td>
+          </tr>
+          <tr>
+            <td>Internet NL = 98%</td>
+            <td>97,8% (H_BROAD 2017)<br>98,6% (H_BROAD 2021)</td>
+            <td><strong>2017</strong></td>
+            <td><code>ISOC_CI_IT_H</code></td>
+            <td><span class="badge-warn">⚠️ OBSOLETO</span></td>
+          </tr>
+          <tr>
+            <td>Internet UE = 83%</td>
+            <td>83,5% (H_BROAD 2017)<br>90,2% (H_BROAD 2021)<br>93,1% (totale 2023)</td>
+            <td><strong>2017</strong></td>
+            <td><code>ISOC_CI_IT_H</code></td>
+            <td><span class="badge-warn">⚠️ OBSOLETO</span></td>
+          </tr>
+          <tr>
+            <td>WEEE NL = 81%</td>
+            <td>80,5%</td>
+            <td>2023</td>
+            <td><code>CEI_WM060</code></td>
+            <td><span class="badge-warn">⚠️ APPROSSIMAZIONE</span></td>
+          </tr>
+          <tr>
+            <td>WEEE UE = 82%</td>
+            <td>82,2% (flag bi)</td>
+            <td>2023</td>
+            <td><code>CEI_WM060</code></td>
+            <td><span class="badge-ok">✅ CONFERMATO*</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:1rem;color:var(--ink-faint);">* Confermato con riserva: il dato porta flag che segnalano rottura di serie, stima o provvisorietà.</p>
   </section>
 
   <!-- ═══ SEZIONE 1: POPOLAZIONE ═══ -->
@@ -452,116 +562,6 @@
         <li>Nessuna aggregazione</li>
       </ul>
     </div>
-  </section>
-
-  <!-- ═══ SEZIONE VERDETTO FINALE ═══ -->
-  <section class="section py-5" id="verdict">
-    <p class="section-label mb-1">Sintesi</p>
-    <h2 class="mb-2">Verdetto finale: tutti i valori dell'infografica</h2>
-    <p class="subtitle mb-4">
-      8 valori verificati, dataset e anno di riferimento per ciascuno.
-    </p>
-
-    <div class="table-responsive mb-4">
-      <table class="verdict-table table table-bordered table-sm">
-        <thead>
-          <tr>
-            <th>Dato nell'immagine</th>
-            <th>Valore SDMX</th>
-            <th>Anno</th>
-            <th>Dataset</th>
-            <th>Verdict</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Popolazione NL 18,0 M</td>
-            <td>18.044.027</td>
-            <td>2025</td>
-            <td><code>TPS00001</code></td>
-            <td><span class="badge-ok">✅ CONFERMATO</span></td>
-          </tr>
-          <tr>
-            <td>4,0% della pop. UE</td>
-            <td>4,0%</td>
-            <td>2024–2025</td>
-            <td><code>TPS00005</code></td>
-            <td><span class="badge-ok">✅ CONFERMATO</span></td>
-          </tr>
-          <tr>
-            <td>Anni in salute NL = 59</td>
-            <td>59,0 anni</td>
-            <td>2023</td>
-            <td><code>TPS00150</code></td>
-            <td><span class="badge-ok">✅ CONFERMATO</span></td>
-          </tr>
-          <tr>
-            <td>Anni in salute UE = 63</td>
-            <td>63,1 anni (flag bep)</td>
-            <td>2023</td>
-            <td><code>TPS00150</code></td>
-            <td><span class="badge-ok">✅ CONFERMATO*</span></td>
-          </tr>
-          <tr>
-            <td>Occupazione NL = 83%</td>
-            <td>83,4%</td>
-            <td>2025</td>
-            <td><code>TESEM010</code></td>
-            <td><span class="badge-ok">✅ CONFERMATO</span></td>
-          </tr>
-          <tr>
-            <td>Occupazione UE = 76%</td>
-            <td>76,1%</td>
-            <td>2025</td>
-            <td><code>TESEM010</code></td>
-            <td><span class="badge-ok">✅ CONFERMATO</span></td>
-          </tr>
-          <tr>
-            <td>PIL pro capite €65.200</td>
-            <td>€65.210 (prov.)</td>
-            <td>2025</td>
-            <td><code>NAMA_10_PC</code></td>
-            <td><span class="badge-ok">✅ CONFERMATO</span></td>
-          </tr>
-          <tr>
-            <td>PIL 6,3% del PIL UE</td>
-            <td>6,27%</td>
-            <td>2025</td>
-            <td><code>NAMA_10_GDP</code></td>
-            <td><span class="badge-ok">✅ CONFERMATO</span></td>
-          </tr>
-          <tr>
-            <td>Internet NL = 98%</td>
-            <td>97,8% (H_BROAD 2017)<br>98,6% (H_BROAD 2021)</td>
-            <td><strong>2017</strong></td>
-            <td><code>ISOC_CI_IT_H</code></td>
-            <td><span class="badge-warn">⚠️ OBSOLETO</span></td>
-          </tr>
-          <tr>
-            <td>Internet UE = 83%</td>
-            <td>83,5% (H_BROAD 2017)<br>90,2% (H_BROAD 2021)<br>93,1% (totale 2023)</td>
-            <td><strong>2017</strong></td>
-            <td><code>ISOC_CI_IT_H</code></td>
-            <td><span class="badge-warn">⚠️ OBSOLETO</span></td>
-          </tr>
-          <tr>
-            <td>WEEE NL = 81%</td>
-            <td>80,5%</td>
-            <td>2023</td>
-            <td><code>CEI_WM060</code></td>
-            <td><span class="badge-warn">⚠️ APPROSSIMAZIONE</span></td>
-          </tr>
-          <tr>
-            <td>WEEE UE = 82%</td>
-            <td>82,2% (flag bi)</td>
-            <td>2023</td>
-            <td><code>CEI_WM060</code></td>
-            <td><span class="badge-ok">✅ CONFERMATO*</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <p style="font-size:1rem;color:var(--ink-faint);">* Confermato con riserva: il dato porta flag che segnalano rottura di serie, stima o provvisorietà.</p>
   </section>
 
   <!-- ═══ DATI GREZZI ═══ -->
