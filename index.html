@@ -37,7 +37,8 @@
       color: #888;
     }
     .site-header h1 { font-size: 2.2rem; font-weight: normal; line-height: 1.2; color: #fff; }
-    .lead-text { color: #ccc; line-height: 1.7; font-size: 1rem; max-width: 720px; }
+    .lead-text { color: #333; line-height: 1.7; font-size: 1rem; max-width: 720px; }
+    .site-header .lead-text { color: #ccc; }
 
     .method-strip {
       border-top: 1px solid var(--rule);
@@ -327,10 +328,11 @@
     <p class="eyebrow mb-2">JournAI · Ricerche SDMX · opensdmx CLI</p>
     <h1 class="mb-3">Dati statistici istituzionali,<br>analizzati con metodo</h1>
     <p class="lead-text mb-4">
-      Una raccolta di analisi giornalistiche costruite su dati aperti in formato SDMX —
-      Eurostat, OECD e altri provider istituzionali. Ogni ricerca parte da una domanda,
-      scarica i dati grezzi via API, documenta ogni trasformazione e produce
-      una pagina autosufficiente e verificabile da chiunque.
+      Analisi giornalistiche su dati aperti in formato SDMX — Eurostat, OECD e altri
+      provider istituzionali. Il metodo combina un'AI orchestratore con opensdmx CLI:
+      l'AI cerca i dataset pertinenti e costruisce il report; la libreria esegue i calcoli
+      garantendo correttezza e replicabilità. Ogni ricerca è verificabile passo-passo:
+      dati grezzi via API, query YAML riproducibili, log delle operazioni in <code style="font-size:1rem;background:rgba(255,255,255,0.08);padding:1px 5px;">notes.md</code>.
     </p>
   </div>
 </header>
@@ -520,8 +522,29 @@
     <p class="section-label mb-2">Metodologia</p>
     <h2 class="mb-1">Come funziona</h2>
     <p class="lead-text mb-5">
-      Esempio reale: ricerca della popolazione europea per paese via opensdmx CLI su Eurostat.
+      L'AI riceve una domanda in linguaggio naturale e pilota opensdmx CLI passo-passo.
+      I calcoli sono eseguiti dalla libreria — non dall'AI — garantendo che ogni
+      trasformazione sia corretta. Esempio: popolazione europea per paese via Eurostat.
     </p>
+
+    <!-- STEP 0 -->
+    <div class="step-v">
+      <div class="step-v-num">00</div>
+      <div class="step-v-body">
+        <div class="step-v-title">Input in linguaggio naturale · AI come orchestratore</div>
+        <p class="step-v-desc">
+          L'AI riceve la domanda di ricerca, deduce proxy statistiche e variabili esplicative
+          rilevanti, sceglie il provider e formalizza domanda, scope e ipotesi in
+          <code>notes.md</code> prima di aprire il terminale.
+          I passi successivi vengono pilotati dall'AI comando per comando; opensdmx CLI esegue.
+        </p>
+        <div class="cli-block">
+          <span class="cm">Input:</span> <span class="cv">"natalità nei paesi europei, variabili esplicative correlate"</span><br>
+          <span class="cm">AI deduce:</span> proxy → <span class="cf">TFR</span> · esplicative → <span class="cf">occupazione F · asili nido · spesa famiglia/PIL</span><br>
+          <span class="cm">Provider scelto:</span> <span class="cv">Eurostat</span> · massima copertura EU27
+        </div>
+      </div>
+    </div>
 
     <!-- STEP 1 -->
     <div class="step-v">
@@ -654,6 +677,28 @@
         </div>
         <div class="cli-block mt-2">
           <span class="cm">Risultato: </span><span class="cv">49 stati</span> · anno prevalente: <span class="cv">1 gennaio 2025</span> · pronti per la visualizzazione
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 7 -->
+    <div class="step-v">
+      <div class="step-v-num">07</div>
+      <div class="step-v-body">
+        <div class="step-v-title">Output · report HTML + artefatti di accountability</div>
+        <p class="step-v-desc">
+          L'AI assembla la pagina HTML autosufficiente con grafici inline, finding cards
+          e sezioni metodologiche. In parallelo salva tutti gli artefatti che rendono
+          l'analisi verificabile e riproducibile da chiunque in qualsiasi momento.
+        </p>
+        <div class="proc-rows">
+          <div class="proc-row-v"><span class="proc-icon" style="min-width:1.4rem">📄</span> <code>index.html</code> — pagina autosufficiente, grafici inline, nessun server necessario</div>
+          <div class="proc-row-v"><span class="proc-icon" style="min-width:1.4rem">📋</span> <code>queries/*.yaml</code> — query riproducibile per ogni dataset scaricato</div>
+          <div class="proc-row-v"><span class="proc-icon" style="min-width:1.4rem">🗂️</span> <code>metadata/*.csv</code> — codelist per ogni dimensione filtrata o visualizzata</div>
+          <div class="proc-row-v"><span class="proc-icon" style="min-width:1.4rem">📝</span> <code>notes.md</code> — log cronologico: comandi esatti, scelte, anomalie, trasformazioni</div>
+        </div>
+        <div class="cli-block mt-2">
+          <span class="cm">Per rigenerare i dati in futuro: </span><span class="cv">opensdmx run queries/A_nome.yaml --out output/A_nome.csv</span>
         </div>
       </div>
     </div>
