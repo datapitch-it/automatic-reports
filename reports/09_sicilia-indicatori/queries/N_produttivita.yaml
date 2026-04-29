@@ -1,0 +1,12 @@
+provider: oecd
+dataset: OECD.CFE.EDS,DSD_REG_ECO@DF_LPR
+filters:
+  TERRITORIAL_LEVEL: TL2
+  REF_AREA: ITG1
+  MEASURE: LAB_PROD
+  ACTIVITY: _T
+  PRICES: V
+  UNIT_MEASURE: USD_PPP_WR
+start_period: "2000"
+end_period: "2021"
+format: SDMX-CSV

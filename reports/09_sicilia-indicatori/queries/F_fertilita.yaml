@@ -1,0 +1,10 @@
+provider: eurostat
+dataset: DEMO_R_FIND2
+filters:
+  FREQ: A
+  indic_de: TOTFERRT
+  unit: NR
+  geo: ITG1
+start_period: "1990"
+end_period: "2024"
+format: SDMX-CSV

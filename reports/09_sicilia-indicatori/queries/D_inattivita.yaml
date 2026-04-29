@@ -1,0 +1,10 @@
+provider: istat
+dataset: 152_1196_DF_DCCV_TAXINATT1_UNT2020_3
+filters:
+  FREQ: A
+  REF_AREA: ITG1
+  SEX: "9"
+  AGE: Y15-64
+start_period: "2004"
+end_period: "2020"
+format: SDMX-CSV

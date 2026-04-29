@@ -56,7 +56,17 @@ sempre in inglese indipendentemente dalla lingua scelta.
 
 ## Fase 0 — Definizione della domanda
 
-Prima di aprire il terminale, fissare per iscritto in `notes.md`:
+Prima di fissare la domanda, **proporre all'utente una lista numerata di possibili domande di ricerca** derivate dal tema indicato. Esempio:
+
+> Ecco alcune domande di ricerca possibili per questo tema:
+>
+> 1. Come è cambiato il tasso di occupazione femminile in Europa negli ultimi 10 anni?
+> 2. Quali paesi UE hanno ridotto maggiormente il gender pay gap dal 2010?
+> 3. Esiste una correlazione tra spesa pubblica per l'infanzia e tasso di occupazione femminile?
+>
+> Quale ti interessa, o vuoi partire da una domanda diversa?
+
+Attendere la scelta dell'utente. Solo dopo, fissare per iscritto in `notes.md`:
 
 ```markdown
 ## Domanda di ricerca
@@ -189,7 +199,36 @@ L'ordine delle dimensioni nel path segue quello restituito da `opensdmx dimensio
 
 Per OECD il provider non espone un URL pubblico diretto: documentare il comando CLI.
 
-### 2.3 Salvare la query come YAML riproducibile
+### 2.3 Double check — ripetere ogni estrazione due volte
+
+**Regola obbligatoria**: ogni query `opensdmx get` va eseguita **due volte in modo indipendente** prima di usare i dati.
+
+La seconda esecuzione deve usare un approccio alternativo per costruire la stessa query:
+- prima volta: filtri espliciti via flag (`--geo NL --unit PC_GDP ...`)
+- seconda volta: URL API Eurostat diretto (Fase 2.2) via `curl` o browser
+
+I risultati sono considerati **validati** solo se il numero di righe, i valori e le dimensioni coincidono. Se divergono, investigare prima di proseguire (cache corrotta, codice ambiguo, aggregato vs individuale).
+
+Annotare in `notes.md`:
+
+```markdown
+## Double check — [DATASET_ID]
+- Run 1 (opensdmx get): [N righe], [checksum o valore campione]
+- Run 2 (URL diretto):  [N righe], [checksum o valore campione]
+- Risultato: MATCH ✓ / DIVERGENZA ✗ — [spiegazione se divergenza]
+```
+
+Nella pagina HTML, nella sezione **Metodologia**, aggiungere per ogni dataset validato:
+
+```html
+<p class="note pt-2 mb-2">
+  <strong>Double check passed</strong> — I dati di <code>[DATASET_ID]</code> sono stati
+  estratti due volte in modo indipendente (opensdmx CLI + URL API diretto) e i risultati
+  coincidono: [N righe], periodo [YYYY–YYYY], [N entità].
+</p>
+```
+
+### 2.4 Salvare la query come YAML riproducibile
 
 ```bash
 opensdmx run <query_file.yaml> --out output/A_nome.csv
@@ -721,6 +760,11 @@ Ogni analisi deve essere verificabile passo-passo da chiunque. Questo implica:
 - Output: [N righe], [N entità], [periodo]
 - Anomalie rilevate: [flag, valori mancanti, ecc.]
 
+## [DATA] — Double check
+- Run 1 (opensdmx get): [N righe], [valore campione]
+- Run 2 (URL diretto):  [N righe], [valore campione]
+- Risultato: MATCH ✓ / DIVERGENZA ✗
+
 ## [DATA] — Fase 4: trasformazioni
 - [operazione] → [risultato]
 
@@ -753,6 +797,7 @@ Ogni sezione dataset deve avere:
 
 ## Checklist pre-pubblicazione
 
+- [ ] Ogni dataset ha il blocco "Double check passed" in Metodologia (run 1 + run 2 coincidono)
 - [ ] `notes.md` contiene tutte le fasi con comandi esatti
 - [ ] Ogni CSV in `output/` ha il file YAML corrispondente in `queries/`
 - [ ] **Metadata**: La cartella `metadata/` contiene le codelist (CSV) per ogni dimensione filtrata o visualizzata

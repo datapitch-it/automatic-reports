@@ -1,0 +1,12 @@
+provider: eurostat
+dataset: LFST_R_LFU3RT
+filters:
+  FREQ: A
+  isced11: TOTAL
+  sex: T
+  age: Y15-74
+  unit: PC
+  geo: ITG1
+start_period: "1999"
+end_period: "2025"
+format: SDMX-CSV

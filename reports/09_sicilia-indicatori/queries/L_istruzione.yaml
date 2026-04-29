@@ -1,0 +1,12 @@
+provider: eurostat
+dataset: EDAT_LFSE_04
+filters:
+  FREQ: A
+  sex: T
+  isced11: ED5-8
+  age: Y25-64
+  unit: PC
+  geo: ITG1
+start_period: "2000"
+end_period: "2025"
+format: SDMX-CSV

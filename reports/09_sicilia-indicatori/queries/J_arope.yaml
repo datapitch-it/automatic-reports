@@ -1,0 +1,9 @@
+provider: eurostat
+dataset: ILC_PEPS11N
+filters:
+  FREQ: A
+  unit: PC
+  geo: ITG1
+start_period: "2015"
+end_period: "2025"
+format: SDMX-CSV

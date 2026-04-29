@@ -1,0 +1,88 @@
+id,name
+1,no educational degree
+22,illiterate
+23,literate but no formal educational attainment
+3,"primary school certificate, no educational degree"
+2,primary school certificate
+4,lower secondary school certificate
+12,primary and lower secondary school certificate
+13,"no educational degree, primary and lower secondary school certificate"
+5,upper secondary school certificate
+14,upper secondary school certificate with agricultural address
+15,upper secondary school certificate different from agricultural address
+29,diploma of lower secondary education
+6,post secondary school certificate
+16,post secondary school certificate with agricultural address
+30,diploma of upper secondary education (2-3 years)
+25,diploma of upper secondary education (scholastic and extrascholastic) which does not allow access to the university
+17,post secondary school certificate different from agricultural address
+7,upper and post secondary
+27,high school diploma or academic certificate
+31,diploma of upper secondary education (4-5 years)
+32,upper secondary school diploma
+67,upper secondary school certificate or diploma of upper secondary education (4-5 years)
+9,university degree
+24,secondary and post-secondary non tertiary certificate
+68,university qualification
+21,university degree or diploma
+18,university degree or diploma with agricultural address
+19,university degree or diploma with other type
+10,advanced research qualification ( e.g. a ph.d.)
+11,"tertiary (university, doctoral and specialization courses)"
+28,university degree or bachelor degree or master degree
+20,n.a.
+34,post graduate non-university diploma and afam diploma
+35,professional institute diploma
+36,teachers school diploma
+37,institute of arts diploma
+38,technical institute diploma
+39,teacher institute diploma
+40,"diploma of upper secondary education (classical studies, scientific studies, etc.)"
+41,"academy of fine arts diploma,  etc. music conservatory old programme"
+76,short university degree (old programme)/first degree
+42,short university degree (old programme)
+75,short university degree (old programme)/first degree
+43,afam first level academic diploma
+44,first degree (new programme)
+45,first degree or afam first level
+46,afam second level academic diploma
+47,second level degree or afam second level
+48,"long university degree (old programme), long degree (new programme), second degree (new programme)"
+49,research doctoral degree
+50,university degree
+57,with post-university specialization or  post-diploma AFAM
+58,without post-university specialization or  post-diploma AFAM
+59,first level master degree
+60,second level master degree
+61,specialisation degree
+62,research doctoral degree
+8,upper secondary school certificate and higher
+66,other qualifications
+69,other degree course
+70,first or second level master degree
+71,completion of a PhD programme
+72,first degree
+73,second degree
+99,total
+NED,no educational degree
+IL,illiterate
+LBNA,literate but no formal educational attainment
+PSE,final assessment (primary school)
+NP,"no educational degree, final assessment (Primary school)"
+LSE,diploma of lower secondary education
+NPL,"no educational degree, final assessment (Primary school), diploma of lower secondary education"
+USG,diploma of upper secondary education (4-5 years)
+USE_IF,diploma of upper secondary education and Certification of higher technical specialisation
+BL,bachelor's degree or first level academic diploma; Diploma of Higher Technical; University Diploma
+ML_RDD,master's degree or second level academic diploma and Research Doctorate (PhD)
+ML,master's degree or second level academic diploma (and Academy Conservatory old programme)
+CLF_ML,"university diploma, bachelor’s degree, master’s degree, academy Conservatory old programme"
+RDD,Research Doctorate (PhD)/ Advanced research academic diploma
+BL_ML_RDD,university or academic degree including post-master degree
+BMRD,bachelor’s degree or first level academic diploma; Diploma of Higher Technical; University Diploma; Master’s degree or second level academic diploma (and Academy Conservatory old programme); Research Doctorate (PhD)/ Advanced research academic diploma
+NRP,no response
+ALL,total
+UNAV,unavailable
+VQUAL,VET qualification
+OTH_TERED,other tertiary education
+OTH,other

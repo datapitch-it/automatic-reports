@@ -1,0 +1,9 @@
+provider: eurostat
+dataset: NAMA_10R_2GDP
+filters:
+  FREQ: A
+  unit: PPS_HAB_EU27_2020
+  geo: ITG1
+start_period: "2000"
+end_period: "2024"
+format: SDMX-CSV

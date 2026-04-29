@@ -1,0 +1,9 @@
+provider: eurostat
+dataset: ILC_DI11_R
+filters:
+  FREQ: A
+  unit: INX
+  geo: ITG1
+start_period: "2003"
+end_period: "2025"
+format: SDMX-CSV

@@ -1,0 +1,11 @@
+provider: eurostat
+dataset: LFST_R_LFE2EMPRT
+filters:
+  FREQ: A
+  unit: PC
+  sex: T
+  age: Y20-64
+  geo: ITG1
+start_period: "1999"
+end_period: "2025"
+format: SDMX-CSV

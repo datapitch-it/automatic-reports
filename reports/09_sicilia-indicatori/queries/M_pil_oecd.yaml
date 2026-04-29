@@ -1,0 +1,11 @@
+provider: oecd
+dataset: OECD.CFE.EDS,DSD_REG_ECO@DF_GDP
+filters:
+  TERRITORIAL_LEVEL: TL2
+  REF_AREA: ITG1
+  MEASURE: GDP
+  PRICES: V
+  UNIT_MEASURE: USD_PPP_PS
+start_period: "2000"
+end_period: "2024"
+format: SDMX-CSV

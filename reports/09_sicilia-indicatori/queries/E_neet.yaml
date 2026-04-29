@@ -1,0 +1,13 @@
+provider: eurostat
+dataset: EDAT_LFSE_22
+filters:
+  FREQ: A
+  sex: T
+  age: Y15-29
+  training: NO_FE_NO_NFE
+  wstatus: NEMP
+  unit: PC
+  geo: ITG1
+start_period: "2000"
+end_period: "2025"
+format: SDMX-CSV

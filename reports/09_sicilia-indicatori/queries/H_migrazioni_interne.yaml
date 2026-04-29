@@ -1,0 +1,12 @@
+provider: istat
+dataset: 28_185_DF_DCIS_MIGRAZIONI_1
+filters:
+  FREQ: A
+  REF_AREA: ITG1
+  SEX: "9"
+  DATA_TYPE: CORE
+  CITIZENSHIP: TOTAL
+  CHANGE_OF_RESIDENCE: ALL
+start_period: "2002"
+end_period: "2024"
+format: SDMX-CSV

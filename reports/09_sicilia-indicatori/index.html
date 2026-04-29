@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sicilia in numeri — Ricerca SDMX</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://unpkg.com/rough-viz@1.0.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+  <style>
+    :root {
+      --ink:        #1a1a1a;
+      --ink-light:  #333;
+      --ink-faint:  #666;
+      --paper:      #fafaf7;
+      --paper-warm: #f5f3ee;
+      --rule:       #999;
+      --accent:     #b02020;
+      --accent2:    #1a6fa8;
+      --serif:      'Georgia', 'Times New Roman', serif;
+      --mono:       'Courier New', Courier, monospace;
+      --bs-body-font-family:   var(--serif);
+      --bs-body-color:         var(--ink);
+      --bs-body-bg:            var(--paper);
+      --bs-border-color:       var(--rule);
+      --bs-card-border-radius: 0;
+      --bs-card-border-color:  var(--rule);
+    }
+    html { font-size: 19px; scroll-behavior: smooth; }
+    .container { max-width: 1060px; }
+
+    .site-header { background: #1a1a1a; border-bottom: 2px solid #000; }
+    .eyebrow { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; color: #888; }
+    .site-header h1 { font-size: 2rem; font-weight: normal; line-height: 1.2; color: #fff; }
+    .intro { color: #ccc; line-height: 1.7; }
+    .ds-badge { font-family: var(--mono); font-size: 1rem; background: #2a2a2a; border: 1px solid #444; padding: 2px 8px; color: #aaa; }
+    .ds-badge strong { color: #fff; }
+
+    .site-nav { background: #1a1a1a !important; border-bottom: 1px solid #333; z-index: 1020; }
+    .site-nav .nav-link { font-family: var(--mono); font-size: 1rem; color: #aaa; padding: 3px 10px; border: 1px solid transparent; border-radius: 0; transition: border-color 0.15s, color 0.15s; }
+    .site-nav .nav-link:hover { border-color: #555; color: #fff; }
+
+    .section { border-bottom: 1px solid var(--rule); }
+    .section:last-child { border-bottom: none; }
+    .section-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+    .section h2 { font-size: 1.5rem; font-weight: normal; }
+    .section .subtitle { color: var(--ink-light); line-height: 1.5; }
+    .subsection-title { font-size: 1rem; font-weight: normal; color: var(--ink); padding-bottom: 0.3rem; border-bottom: 1px dashed var(--rule); }
+
+    .indic-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.2rem; }
+    .indic-h3 { font-size: 1.15rem; font-weight: normal; margin-bottom: 0.3rem; }
+
+    .callout { background: var(--paper-warm); border-left: 3px solid var(--accent); border-top: none; border-right: none; border-bottom: none; border-radius: 0; color: var(--ink-light); }
+    .callout strong { color: var(--ink); }
+
+    .finding-card { background: #fff; border: 1px solid var(--rule); padding: 0.9rem 1rem; height: 100%; }
+    .big-num { font-size: 2rem; font-family: var(--mono); color: var(--accent); line-height: 1; }
+    .big-num.blue { color: var(--accent2); }
+    .big-num.green { color: #27ae60; }
+    .finding-card p { font-size: 1rem; color: var(--ink-light); line-height: 1.4; }
+    .finding-card strong { color: var(--ink); }
+
+    .chart-wrap { background: #fff; border: 1px solid var(--rule); padding: 1.2rem; overflow-x: auto; }
+    .chart-wrap svg { display: block; width: 100%; height: 280px; }
+
+    .transform { background: var(--paper-warm); border: 1px solid var(--rule); border-left: 3px solid var(--accent2); }
+    .transform h4 { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+    .transform ul { color: var(--ink-light); line-height: 1.7; }
+    .transform li code { font-family: var(--mono); font-size: 1rem; background: var(--paper); padding: 1px 4px; border: 1px solid var(--rule); }
+
+    .note { font-size: 1rem; color: var(--ink-faint); border-top: 1px dashed var(--rule); line-height: 1.6; }
+    .note code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; border: 1px solid var(--rule); }
+    .note a { color: var(--ink-faint); }
+
+    .query-url { background: #fff; border: 1px solid var(--rule); font-family: var(--mono); font-size: 1rem; color: var(--ink-light); word-break: break-all; line-height: 1.6; }
+    .query-url a { color: var(--accent2); }
+
+    .data-table { font-size: 1rem; }
+    .data-table thead th { background: var(--paper-warm); font-family: var(--mono); font-size: 1rem; font-weight: normal; letter-spacing: 0.05em; border-color: var(--rule); }
+    .data-table td { border-color: var(--rule); }
+    .data-table tbody tr:nth-child(even) td { background: var(--paper-warm); }
+    .data-table code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; color: var(--ink); }
+
+    .dl-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
+    .dl-title { color: var(--ink); font-size: 1rem; }
+    .dl-meta { font-family: var(--mono); font-size: 1rem; color: var(--ink-faint); }
+    a.dl-link { font-family: var(--mono); font-size: 1rem; color: var(--accent2); text-decoration: none; border: 1px solid var(--accent2); padding: 2px 8px; display: inline-block; }
+    a.dl-link:hover { background: var(--accent2); color: #fff; }
+
+    .site-footer { border-top: 2px solid var(--ink); font-size: 1rem; color: var(--ink-faint); font-family: var(--mono); }
+    .site-footer a { color: var(--ink-faint); }
+
+    .verdict-table td, .verdict-table th { font-size: 1rem; }
+    .trend-up { color: #27ae60; font-weight: bold; }
+    .trend-down { color: #b02020; font-weight: bold; }
+    .trend-neutral { color: var(--ink-faint); }
+
+    hr.indic-sep { border-color: var(--rule); opacity: 0.4; }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="site-nav navbar sticky-top py-2">
+  <div class="container">
+    <div class="d-flex flex-wrap gap-1">
+      <a class="nav-link" href="#intro">↓ Intro</a>
+      <a class="nav-link" href="#economia">Economia</a>
+      <a class="nav-link" href="#lavoro">Lavoro</a>
+      <a class="nav-link" href="#demografia">Demografia</a>
+      <a class="nav-link" href="#benessere">Benessere</a>
+      <a class="nav-link" href="#dati">Dati grezzi</a>
+      <a class="nav-link" href="#metodologia">Metodologia</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header py-5">
+  <div class="container">
+    <p class="eyebrow mb-2">Ricerca SDMX · 29 aprile 2026 · opensdmx CLI</p>
+    <h1 class="mb-3">Sicilia in numeri: 14 indicatori strutturali</h1>
+    <p class="intro mb-3" style="max-width:720px;">
+      Com'è cambiata la Sicilia negli ultimi vent'anni? Quattordici indicatori su economia,
+      mercato del lavoro, demografia e benessere sociale, estratti da Eurostat, ISTAT e OCSE
+      tramite API SDMX, con checkpoint ogni cinque anni dal 2000 al 2025.
+    </p>
+    <div class="d-flex flex-wrap gap-2">
+      <span class="ds-badge"><strong>Eurostat</strong> NUTS2 ITG1</span>
+      <span class="ds-badge"><strong>ISTAT</strong> ITG1</span>
+      <span class="ds-badge"><strong>OCSE</strong> TL2 ITG1</span>
+      <span class="ds-badge"><strong>Periodo</strong> 1990–2025</span>
+      <span class="ds-badge"><strong>Indicatori</strong> 14</span>
+    </div>
+  </div>
+</header>
+
+<main class="container py-2">
+
+  <!-- ═══ INTRO ═══ -->
+  <section class="section py-5" id="intro">
+    <p class="section-label mb-1">Contesto</p>
+    <h2 class="mb-2">Una fotografia statistica di lungo periodo</h2>
+    <p class="subtitle mb-4">
+      Quattro checkpoint ogni cinque anni per tracciare l'evoluzione della regione più popolosa del Sud Italia.
+    </p>
+
+    <div class="callout p-3 mb-4">
+      <strong>Limite di scope:</strong> Tutti i dati sono a livello NUTS2 (regione Sicilia nel suo insieme,
+      codice <code>ITG1</code>). Non coprono le differenze provinciali o comunali, né indicatori di qualità della
+      vita non standardizzati a livello SDMX (infrastrutture, criminalità, qualità della PA, accesso ai servizi).
+      La spesa pubblica regionale non è disaggregata a livello NUTS2 in Eurostat: l'indicatore <code>GOV_10A_EXP</code>
+      è disponibile solo per l'Italia nel complesso — è stato sostituito con gli investimenti fissi lordi regionali.
+    </div>
+
+    <!-- FINDING CARDS -->
+    <div class="row row-cols-2 row-cols-md-4 g-3 mb-5">
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2">61</div>
+          <p class="mb-0"><strong>PIL pro capite</strong> — Indice EU27=100 nel 2024. Era 77 nel 2000: la Sicilia si è allontanata dalla media europea.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num blue mb-2">12,2%</div>
+          <p class="mb-0"><strong>Disoccupazione</strong> — Tasso nel 2025: il livello più basso degli ultimi 27 anni. Il picco era 22,2% nel 2014.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num mb-2">22,8%</div>
+          <p class="mb-0"><strong>NEET 15–29 anni</strong> — Nel 2025, in calo di 17,5 punti dal picco del 2014 (40,3%). Miglioramento strutturale.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="finding-card">
+          <div class="big-num green mb-2">44%</div>
+          <p class="mb-0"><strong>A rischio povertà</strong> — AROPE 2025: quasi uno su due. In calo dal 50,7% del 2015, ma ancora tra i valori più alti UE.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VERDICT TABLE -->
+    <h3 class="subsection-title mb-3">Quadro di sintesi — tendenze per periodo</h3>
+    <div class="table-responsive mb-2">
+      <table class="verdict-table data-table table table-bordered table-sm">
+        <thead>
+          <tr>
+            <th>Indicatore</th>
+            <th>2000–2009</th>
+            <th>2010–2019</th>
+            <th>2020–2025</th>
+            <th>Tendenza complessiva</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>PIL pro capite (EU27=100)</td><td>77 → 70</td><td>67 → 58</td><td>57 → 61</td><td class="trend-down">↓ Peggioramento, lieve ripresa</td></tr>
+          <tr><td>Tasso occupazione 20–64 %</td><td>43,1 → 47,7</td><td>46,7 → 44,7</td><td>44,4 → 51,4</td><td class="trend-up">↑ Miglioramento recente</td></tr>
+          <tr><td>Tasso disoccupazione %</td><td>24,3 → 13,8</td><td>14,6 → 19,9</td><td>18,1 → 12,2</td><td class="trend-up">↑ In calo ai minimi storici</td></tr>
+          <tr><td>Tasso inattività 15–64 %</td><td>—</td><td>49,9 → 48,4</td><td>49,9 (2020)</td><td class="trend-neutral">→ Stabile (~49%)</td></tr>
+          <tr><td>NEET 15–29 %</td><td>39,7 → 32,0</td><td>33,2 → 38,0</td><td>38,3 → 22,8</td><td class="trend-up">↑ Forte calo recente</td></tr>
+          <tr><td>Fertilità TFR</td><td>1,41 → 1,44</td><td>1,42 → 1,33</td><td>1,33 → 1,27</td><td class="trend-down">↓ Declino costante</td></tr>
+          <tr><td>Saldo migratorio (netto)</td><td>−22.659 (2000)</td><td>−3.477 → −19.469</td><td>−23.522 → +9.121*</td><td class="trend-neutral">→ Dati lacunosi; inversione 2021*</td></tr>
+          <tr><td>Emigrazione interna</td><td>87.592 → 86.566</td><td>89.854 → 102.001</td><td>90.132 → 95.654</td><td class="trend-neutral">→ Stabile ~90–100 mila/anno</td></tr>
+          <tr><td>S80/S20 (disuguaglianza)</td><td>7,2 → 6,2</td><td>6,7 → 9,0</td><td>7,5 → 5,7</td><td class="trend-up">↑ Disuguaglianza in calo</td></tr>
+          <tr><td>Rischio povertà AROPE %</td><td>—</td><td>50,7 → 45,4</td><td>44,1 → 44,0</td><td class="trend-up">↑ In miglioramento (lento)</td></tr>
+          <tr><td>Investimenti fissi Mln EUR</td><td>15.275 → 17.069</td><td>17.539 → 14.434</td><td>13.163 → 24.161</td><td class="trend-up">↑ Ripresa post-2020</td></tr>
+          <tr><td>Istruzione terziaria 25–64 %</td><td>9,3 → 12,5</td><td>12,4 → 14,2</td><td>14,6 → 16,9</td><td class="trend-up">↑ Crescita lenta ma costante</td></tr>
+          <tr><td>PIL OCSE (USD PPP pro capite)</td><td>17.016 → 22.414</td><td>22.343 → 28.122</td><td>27.277 → 38.273</td><td class="trend-up">↑ Crescita in termini reali USD</td></tr>
+          <tr><td>Produttività lavoro (USD PPP)</td><td>50.597 → 62.893</td><td>63.602 → 80.974</td><td>79.366 → 88.347 (2021)</td><td class="trend-up">↑ In crescita</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note pt-2 mb-0">* Saldo migratorio Eurostat <code>DEMO_R_GIND3</code>: dati 2001–2011 non disponibili per NUTS2 ITG1. Il valore positivo dal 2021 è probabilmente riconducibile a una revisione metodologica del calcolo Eurostat; non va interpretato come un'inversione strutturale del fenomeno.</p>
+  </section>
+
+  <!-- ═══ SEZIONE ECONOMIA ═══ -->
+  <section class="section py-5" id="economia">
+    <p class="section-label mb-1">Economia · Eurostat / OCSE · NUTS2 ITG1</p>
+    <h2 class="mb-2">Quanto vale e quanto cresce l'economia siciliana</h2>
+    <p class="subtitle mb-5">
+      PIL pro capite (indice EU e valore assoluto OCSE), investimenti fissi lordi e produttività del lavoro
+      — quattro misure complementari dello stesso fenomeno.
+    </p>
+
+    <!-- A: PIL EUROSTAT -->
+    <hr class="indic-sep mb-4">
+    <p class="indic-label">Eurostat · NAMA_10R_2GDP · PPS_HAB_EU27_2020</p>
+    <h3 class="indic-h3 mb-3">PIL pro capite in standard di potere d'acquisto (EU27 = 100)</h3>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> L'indice EU27=100 indica quanto il PIL pro capite della Sicilia si avvicini
+      alla media europea. Un valore di 61 significa che la Sicilia produce per abitante il 61% di quanto produce
+      mediamente un abitante dell'UE. Checkpoint: 2000, 2009, 2014, 2019, 2024.
+      Fonte SDMX: <code>NAMA_10R_2GDP</code>, Eurostat.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <svg id="chart-a"></svg>
+    </div>
+    <div class="transform p-3 mb-5">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 25 righe (anni 2000–2024, una riga per anno)</li>
+        <li>Filtro: <code>unit=PPS_HAB_EU27_2020</code>, <code>geo=ITG1</code>, <code>freq=A</code></li>
+        <li>Nessuna aggregazione; tutti i valori usati direttamente come serie temporale</li>
+        <li>Dati finali nel grafico: 25 osservazioni (2000–2024)</li>
+      </ul>
+    </div>
+
+    <!-- M: PIL OCSE -->
+    <hr class="indic-sep mb-4">
+    <p class="indic-label">OCSE · DSD_REG_ECO@DF_GDP · USD PPP pro capite</p>
+    <h3 class="indic-h3 mb-3">PIL pro capite in dollari a parità di potere d'acquisto (OCSE)</h3>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Valore assoluto del PIL per abitante in USD a parità di potere d'acquisto,
+      base anno corrente. Permette confronti internazionali. A differenza dell'indice Eurostat, cresce
+      anche per effetto del deprezzamento del dollaro. Checkpoint: 2000, 2009, 2014, 2019, 2024.
+      Fonte SDMX: <code>DSD_REG_ECO@DF_GDP</code>, OCSE (TL2).
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <svg id="chart-m"></svg>
+    </div>
+    <div class="transform p-3 mb-5">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 25 righe (anni 2000–2024)</li>
+        <li>Filtro: <code>TERRITORIAL_LEVEL=TL2</code>, <code>REF_AREA=ITG1</code>, <code>MEASURE=GDP</code>, <code>PRICES=V</code>, <code>UNIT_MEASURE=USD_PPP_PS</code></li>
+        <li>Nessuna aggregazione</li>
+        <li>Dati finali nel grafico: 25 osservazioni (2000–2024)</li>
+      </ul>
+    </div>
+
+    <!-- K: INVESTIMENTI -->
+    <hr class="indic-sep mb-4">
+    <p class="indic-label">Eurostat · NAMA_10R_2GFCF · Milioni di euro</p>
+    <h3 class="indic-h3 mb-3">Investimenti fissi lordi (tutti i settori, prezzi correnti)</h3>
+    <div class="callout p-3 mb-4">
+      <strong>Perché questo indicatore:</strong> Gli investimenti fissi lordi (macchinari, infrastrutture,
+      costruzioni) misurano la capacità di accumulazione di capitale di una regione — proxy della fiducia
+      degli operatori economici e delle politiche pubbliche di sviluppo. Il dataset <code>GOV_10A_EXP</code>
+      (spesa PA) non è disaggregato a livello NUTS2 in Eurostat: è disponibile solo per l'Italia nel complesso.
+    </div>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Milioni di euro a prezzi correnti, economia totale (settore S1, tutti i settori
+      istituzionali). Il calo pronunciato 2009–2014 riflette la crisi del debito sovrano e i tagli alla spesa per
+      investimenti. Checkpoint: 2000, 2009, 2014, 2019, 2023 (ultimo disponibile).
+      Fonte SDMX: <code>NAMA_10R_2GFCF</code>, Eurostat.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <svg id="chart-k"></svg>
+    </div>
+    <div class="transform p-3 mb-5">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 361 righe (tutti i settori istituzionali × branche NACE)</li>
+        <li>Filtro: <code>nace_r2=TOTAL</code> (economia totale), <code>sector=S1</code>, <code>currency=MIO_EUR</code>, <code>geo=ITG1</code></li>
+        <li>Dopo filtro: 24 righe (anni 2000–2023; 2024 non ancora disponibile)</li>
+        <li>Dati finali nel grafico: 24 osservazioni (2000–2023)</li>
+      </ul>
+    </div>
+
+    <!-- N: PRODUTTIVITÀ -->
+    <hr class="indic-sep mb-4">
+    <p class="indic-label">OCSE · DSD_REG_ECO@DF_LPR · USD PPP per ora lavorata</p>
+    <h3 class="indic-h3 mb-3">Produttività del lavoro per ora lavorata (tutti i settori)</h3>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> PIL generato per ora lavorata in USD a parità di potere d'acquisto,
+      serie di attività totale (<code>ACTIVITY=_T</code>). Il dato è disponibile fino al 2021.
+      Checkpoint: 2000, 2006, 2011, 2016, 2021.
+      Fonte SDMX: <code>DSD_REG_ECO@DF_LPR</code>, OCSE (TL2).
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <svg id="chart-n"></svg>
+    </div>
+    <div class="transform p-3 mb-0">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 22 righe (anni 2000–2021)</li>
+        <li>Filtro: <code>TERRITORIAL_LEVEL=TL2</code>, <code>REF_AREA=ITG1</code>, <code>MEASURE=LAB_PROD</code>, <code>ACTIVITY=_T</code>, <code>UNIT_MEASURE=USD_PPP_WR</code></li>
+        <li>Dati finali nel grafico: 22 osservazioni (2000–2021)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE LAVORO ═══ -->
+  <section class="section py-5" id="lavoro">
+    <p class="section-label mb-1">Mercato del lavoro · Eurostat / ISTAT · NUTS2 ITG1</p>
+    <h2 class="mb-2">Occupazione, disoccupazione, inattività e giovani NEET</h2>
+    <p class="subtitle mb-5">
+      Quattro indicatori complementari che misurano il grado di utilizzo della forza lavoro siciliana —
+      ciascuno cattura una diversa dimensione del problema strutturale del Sud Italia.
+    </p>
+
+    <!-- B: OCCUPAZIONE -->
+    <hr class="indic-sep mb-4">
+    <p class="indic-label">Eurostat · LFST_R_LFE2EMPRT · % 20–64 anni</p>
+    <h3 class="indic-h3 mb-3">Tasso di occupazione 20–64 anni (totale, entrambi i sessi)</h3>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Percentuale di occupati tra la popolazione 20–64 anni. La media UE27 nel 2025
+      è circa 75%: la Sicilia a 51,4% resta la più distante in Europa. Checkpoint: 1999, 2009, 2014, 2019, 2025.
+      Fonte SDMX: <code>LFST_R_LFE2EMPRT</code>, Eurostat.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <svg id="chart-b"></svg>
+    </div>
+    <div class="transform p-3 mb-5">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 27 righe (anni 1999–2025)</li>
+        <li>Filtro: <code>sex=T</code>, <code>age=Y20-64</code>, <code>unit=PC</code>, <code>geo=ITG1</code></li>
+        <li>Nessuna aggregazione</li>
+        <li>Dati finali nel grafico: 27 osservazioni (1999–2025)</li>
+      </ul>
+    </div>
+
+    <!-- C: DISOCCUPAZIONE -->
+    <hr class="indic-sep mb-4">
+    <p class="indic-label">Eurostat · LFST_R_LFU3RT · % 15–74 anni</p>
+    <h3 class="indic-h3 mb-3">Tasso di disoccupazione 15–74 anni (totale, tutti i titoli di studio)</h3>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Percentuale di disoccupati sulla popolazione attiva 15–74 anni.
+      Il picco del 22,2% nel 2014 coincide con il massimo della crisi del debito sovrano; il 12,2% del 2025
+      è il valore più basso dall'inizio della serie (1999). Checkpoint: 1999, 2009, 2014, 2019, 2025.
+      Fonte SDMX: <code>LFST_R_LFU3RT</code>, Eurostat.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <svg id="chart-c"></svg>
+    </div>
+    <div class="transform p-3 mb-5">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 27 righe (anni 1999–2025)</li>
+        <li>Filtro: <code>isced11=TOTAL</code>, <code>sex=T</code>, <code>age=Y15-74</code>, <code>unit=PC</code>, <code>geo=ITG1</code></li>
+        <li>Dati finali nel grafico: 27 osservazioni (1999–2025)</li>
+      </ul>
+    </div>
+
+    <!-- D: INATTIVITÀ -->
+    <hr class="indic-sep mb-4">
+    <p class="indic-label">ISTAT · 152_1196_DF_DCCV_TAXINATT1_UNT2020_3 · % 15–64 anni</p>
+    <h3 class="indic-h3 mb-3">Tasso di inattività 15–64 anni (totale, entrambi i sessi)</h3>
+    <div class="callout p-3 mb-4">
+      <strong>Nota sulla fonte:</strong> Il dataset ISTAT <code>152_1196_DF_DCCV_TAXINATT1_UNT2020_3</code>
+      copre il periodo 2004–2020. La serie non è stata aggiornata a questa versione (denominata «UNT2020»);
+      le serie successive usano una metodologia rivista. Questo spiega l'interruzione della serie al 2020.
+    </div>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Percentuale di persone 15–64 anni che non lavorano e non cercano lavoro.
+      Un tasso di inattività vicino al 50% è strutturalmente tra i più alti d'Europa — gran parte è spiegato
+      dalla bassa partecipazione femminile. Checkpoint: 2004, 2010, 2015, 2020.
+      Fonte SDMX: <code>152_1196_DF_DCCV_TAXINATT1_UNT2020_3</code>, ISTAT.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <svg id="chart-d"></svg>
+    </div>
+    <div class="transform p-3 mb-5">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 85 righe (anni 2004–2020 × livelli di istruzione)</li>
+        <li>Filtro: <code>EDU_LEV_HIGHEST=99</code> (totale istruzione), <code>SEX=9</code> (totale sesso), <code>AGE=Y15-64</code>, <code>REF_AREA=ITG1</code></li>
+        <li>Dopo filtro: 17 righe (anni 2004–2020)</li>
+        <li>Dati finali nel grafico: 17 osservazioni (2004–2020)</li>
+      </ul>
+    </div>
+
+    <!-- E: NEET -->
+    <hr class="indic-sep mb-4">
+    <p class="indic-label">Eurostat · EDAT_LFSE_22 · % 15–29 anni</p>
+    <h3 class="indic-h3 mb-3">Tasso NEET 15–29 anni — giovani fuori da lavoro, istruzione e formazione</h3>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Percentuale di giovani 15–29 anni che non lavorano, non studiano e non
+      sono in formazione. Il picco 40,3% nel 2014 è uno dei valori più alti mai registrati in una regione UE.
+      La discesa al 22,8% nel 2025 è significativa ma ancora doppia rispetto alla media UE (~10%).
+      Checkpoint: 2000, 2009, 2014, 2019, 2025.
+      Fonte SDMX: <code>EDAT_LFSE_22</code>, Eurostat.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <svg id="chart-e"></svg>
+    </div>
+    <div class="transform p-3 mb-0">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 26 righe (anni 2000–2025)</li>
+        <li>Filtro: <code>sex=T</code>, <code>age=Y15-29</code>, <code>wstatus=NEMP</code>, <code>training=NO_FE_NO_NFE</code>, <code>unit=PC</code>, <code>geo=ITG1</code></li>
+        <li>Dati finali nel grafico: 26 osservazioni (2000–2025)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE DEMOGRAFIA ═══ -->
+  <section class="section py-5" id="demografia">
+    <p class="section-label mb-1">Popolazione e mobilità · Eurostat / ISTAT · NUTS2 ITG1</p>
+    <h2 class="mb-2">Fertilità, migrazioni e dinamica demografica</h2>
+    <p class="subtitle mb-5">
+      Tasso di fertilità totale, saldo migratorio netto e flussi di emigrazione interna —
+      tre dimensioni di una regione che cambia composizione e peso demografico.
+    </p>
+
+    <!-- F: FERTILITÀ -->
+    <hr class="indic-sep mb-4">
+    <p class="indic-label">Eurostat · DEMO_R_FIND2 · TFR (figli per donna)</p>
+    <h3 class="indic-h3 mb-3">Tasso di fertilità totale (TFR) — figli medi per donna</h3>
+    <div class="callout p-3 mb-4">
+      <strong>TFR:</strong> Il tasso di fertilità totale stima quanti figli avrebbe una donna nell'arco della
+      vita riproduttiva se applicassero i tassi di fecondità dell'anno in questione. Il valore di sostituzione
+      generazionale è 2,1. Sotto 1,5 si parla di "bassa fertilità".
+    </div>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> La Sicilia ha avuto un TFR costantemente sotto 1,5 dal 1994.
+      Il valore 1,27 del 2024 è il minimo storico della serie (che parte dal 1990). Checkpoint: 1990, 1999, 2009, 2014, 2019, 2024.
+      Fonte SDMX: <code>DEMO_R_FIND2</code>, Eurostat.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <svg id="chart-f"></svg>
+    </div>
+    <div class="transform p-3 mb-5">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 35 righe (anni 1990–2024)</li>
+        <li>Filtro: <code>indic_de=TOTFERRT</code>, <code>unit=NR</code>, <code>geo=ITG1</code></li>
+        <li>Dati finali nel grafico: 35 osservazioni (1990–2024)</li>
+      </ul>
+    </div>
+
+    <!-- G: SALDO MIGRATORIO -->
+    <hr class="indic-sep mb-4">
+    <p class="indic-label">Eurostat · DEMO_R_GIND3 · Numero persone</p>
+    <h3 class="indic-h3 mb-3">Saldo migratorio netto (iscrizioni meno cancellazioni per migrazione)</h3>
+    <div class="callout p-3 mb-4">
+      <strong>Nota dati mancanti:</strong> Il dataset <code>DEMO_R_GIND3</code> è tecnicamente a livello NUTS3
+      (province). L'aggregazione per NUTS2 (Sicilia) non è disponibile in Eurostat per gli anni 2001–2011.
+      I dati per quegli anni sono assenti e non sostituibili con interpolazione.
+      Il salto da −23.522 (2020) a +21.213 (2021) è quasi certamente di natura metodologica
+      (revisione del calcolo delle migrazioni internazionali incluse) e non riflette un'inversione reale del fenomeno.
+    </div>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Valori negativi = più emigranti che immigranti (perdita di popolazione
+      per migrazione). Il grafico mostra solo i punti disponibili; il gap 2001–2011 è strutturale del dataset.
+      Checkpoint disponibili: 2000, 2014, 2019, 2024.
+      Fonte SDMX: <code>DEMO_R_GIND3</code>, Eurostat.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <svg id="chart-g"></svg>
+    </div>
+    <div class="transform p-3 mb-5">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 14 righe (anni disponibili: 2000, poi 2012–2024)</li>
+        <li>Filtro: <code>indic_de=CNMIGRAT</code>, <code>geo=ITG1</code></li>
+        <li>Dati mancanti 2001–2011: assenza strutturale nel dataset Eurostat per aggregazione NUTS2</li>
+        <li>Anomalia 2021 (+21.213): probabile revisione metodologica, segnalata nella nota sopra</li>
+        <li>Dati finali nel grafico: 14 punti disponibili (non continui)</li>
+      </ul>
+    </div>
+
+    <!-- H: MIGRAZIONI INTERNE -->
+    <hr class="indic-sep mb-4">
+    <p class="indic-label">ISTAT · 28_185_DF_DCIS_MIGRAZIONI_1 · Numero persone</p>
+    <h3 class="indic-h3 mb-3">Emigrazione interna — siciliani che si trasferiscono in altre regioni italiane</h3>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Numero totale di persone che cancellano la residenza dalla Sicilia
+      per trasferirsi in un'altra regione italiana, ogni anno. Include italiani e stranieri residenti.
+      Non è un saldo: misura solo le uscite, non gli ingressi. Il picco 2012 (107.848) riflette la
+      crisi economica. Checkpoint: 2002, 2009, 2014, 2019, 2025.
+      Fonte SDMX: <code>28_185_DF_DCIS_MIGRAZIONI_1</code>, ISTAT.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <svg id="chart-h"></svg>
+    </div>
+    <div class="transform p-3 mb-0">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 720 righe (Sicilia come regione di origine × tutte le regioni di destinazione × anni 2002–2025)</li>
+        <li>Filtro: <code>REF_AREA=ITG1</code> (origine = Sicilia), <code>TERRITORY_NEXT_RESID=IT</code> (destinazione = Italia intera), <code>SEX=9</code> (totale), <code>CITIZENSHIP=TOTAL</code></li>
+        <li>Dopo filtro: 24 righe (anni 2002–2025)</li>
+        <li>Il valore <code>TERRITORY_NEXT_RESID=IT</code> rappresenta il totale dei trasferimenti verso tutte le regioni italiane (aggregato nazionale), non la somma delle singole regioni</li>
+        <li>Dati finali nel grafico: 24 osservazioni (2002–2025)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE BENESSERE ═══ -->
+  <section class="section py-5" id="benessere">
+    <p class="section-label mb-1">Benessere e istruzione · Eurostat / ISTAT · NUTS2 ITG1</p>
+    <h2 class="mb-2">Reddito, povertà, disuguaglianza e titoli di studio</h2>
+    <p class="subtitle mb-5">
+      S80/S20 (rapporto tra il 20% più ricco e il 20% più povero), rischio povertà AROPE
+      e quota di laureati — tre misure della coesione sociale e del capitale umano.
+    </p>
+
+    <!-- I: S80/S20 -->
+    <hr class="indic-sep mb-4">
+    <p class="indic-label">Eurostat · ILC_DI11_R · Rapporto S80/S20</p>
+    <h3 class="indic-h3 mb-3">Rapporto S80/S20 — disuguaglianza di reddito</h3>
+    <div class="callout p-3 mb-4">
+      <strong>Perché questo indicatore:</strong> Il rapporto S80/S20 misura quante volte il reddito equivalente
+      totale del 20% più ricco supera quello del 20% più povero. L'indice Gini regionale ISTAT
+      (<code>32_221_DF_DCCV_GINIREDD_1</code>) è disponibile solo dal 2020 (5 anni) — insufficiente
+      per l'analisi storica con checkpoint ogni cinque anni. L'S80/S20 Eurostat NUTS2 (<code>ILC_DI11_R</code>)
+      copre invece il periodo 2003–2025.
+    </div>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Un valore di 9,5 (2016) significa che il 20% più ricco disponeva di
+      9,5 volte il reddito del 20% più povero. La media UE è intorno a 5. Il calo a 5,7 (2025) è positivo
+      ma va letto con cautela: può riflettere impoverimento relativo dei più ricchi e non solo miglioramento
+      dei più poveri. Checkpoint: 2004, 2009, 2015, 2020, 2025.
+      Fonte SDMX: <code>ILC_DI11_R</code>, Eurostat.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <svg id="chart-i"></svg>
+    </div>
+    <div class="transform p-3 mb-5">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 22 righe (anni 2004–2025; 2003 non disponibile per ITG1)</li>
+        <li>Filtro: <code>unit=INX</code>, <code>geo=ITG1</code>, <code>freq=A</code></li>
+        <li>Nessuna aggregazione</li>
+        <li>Dati finali nel grafico: 22 osservazioni (2004–2025)</li>
+      </ul>
+    </div>
+
+    <!-- J: AROPE -->
+    <hr class="indic-sep mb-4">
+    <p class="indic-label">Eurostat · ILC_PEPS11N · % popolazione</p>
+    <h3 class="indic-h3 mb-3">Rischio povertà o esclusione sociale (AROPE) — % popolazione</h3>
+    <div class="callout p-3 mb-4">
+      <strong>AROPE:</strong> L'indicatore «At Risk Of Poverty or social Exclusion» è la misura UE ufficiale
+      di povertà. Combina tre componenti: (1) reddito sotto la soglia di povertà relativa (60% mediana nazionale),
+      (2) grave deprivazione materiale, (3) bassa intensità lavorativa del nucleo familiare.
+      La serie regionale NUTS2 è disponibile solo dal 2015.
+    </div>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Percentuale di residenti in almeno una delle tre condizioni di rischio.
+      Il 50,7% del 2015 significa che uno su due era a rischio. La media UE27 nel 2025 è circa 21%.
+      Checkpoint: 2015, 2020, 2025 (solo 2 intervalli quinquennali disponibili).
+      Fonte SDMX: <code>ILC_PEPS11N</code>, Eurostat.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <svg id="chart-j"></svg>
+    </div>
+    <div class="transform p-3 mb-5">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 11 righe (anni 2015–2025)</li>
+        <li>Filtro: <code>unit=PC</code>, <code>geo=ITG1</code>, <code>freq=A</code></li>
+        <li>Nessuna aggregazione; serie più corta del previsto (solo 11 anni)</li>
+        <li>Dati finali nel grafico: 11 osservazioni (2015–2025)</li>
+      </ul>
+    </div>
+
+    <!-- L: ISTRUZIONE -->
+    <hr class="indic-sep mb-4">
+    <p class="indic-label">Eurostat · EDAT_LFSE_04 · % 25–64 anni</p>
+    <h3 class="indic-h3 mb-3">Istruzione terziaria 25–64 anni — quota di laureati e post-laureati</h3>
+    <p class="note pt-3 mb-4">
+      <strong>Come leggere:</strong> Percentuale della popolazione 25–64 anni con titolo di istruzione terziaria
+      (ISCED 5–8: laurea, master, dottorato, istruzione tecnica superiore). Il 16,9% del 2025 è il valore
+      più alto della serie, ma resta nettamente sotto la media UE (~35%) e l'obiettivo europeo 2030 (45%).
+      Checkpoint: 2000, 2009, 2015, 2020, 2025.
+      Fonte SDMX: <code>EDAT_LFSE_04</code>, Eurostat.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+    </p>
+    <div class="chart-wrap mb-4">
+      <svg id="chart-l"></svg>
+    </div>
+    <div class="transform p-3 mb-0">
+      <h4 class="mb-2">Trasformazioni applicate</h4>
+      <ul class="mb-0">
+        <li>Dati sorgente: 26 righe (anni 2000–2025)</li>
+        <li>Filtro: <code>sex=T</code>, <code>isced11=ED5-8</code>, <code>age=Y25-64</code>, <code>unit=PC</code>, <code>geo=ITG1</code></li>
+        <li>Dati finali nel grafico: 26 osservazioni (2000–2025)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ DATI GREZZI ═══ -->
+  <section class="section py-5" id="dati">
+    <p class="section-label mb-1">Dati grezzi</p>
+    <h2 class="mb-2">Scarica i dati originali</h2>
+    <p class="subtitle mb-4">
+      Dati estratti da Eurostat, ISTAT e OCSE tramite API SDMX e usati per le analisi in questa pagina.
+    </p>
+    <div class="callout p-3 mb-4">
+      Questi sono i dati <strong>così come restituiti dall'API</strong> — nessuna aggregazione salvo i filtri
+      documentati nelle sezioni sopra.
+      Licenze: Eurostat CC BY 4.0 · ISTAT CC BY 4.0 · OCSE CC BY-NC-SA 3.0.
+      Data di estrazione: <strong>29 aprile 2026</strong>.
+    </div>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat NAMA_10R_2GDP</div>
+          <div class="dl-title mb-1">PIL pro capite PPS EU27=100</div>
+          <div class="dl-meta mb-2">25 righe · ITG1 · 2000–2024</div>
+          <a class="dl-link" href="output/A_pil_procapite.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat LFST_R_LFE2EMPRT</div>
+          <div class="dl-title mb-1">Tasso occupazione 20–64 anni</div>
+          <div class="dl-meta mb-2">27 righe · ITG1 · 1999–2025</div>
+          <a class="dl-link" href="output/B_occupazione.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat LFST_R_LFU3RT</div>
+          <div class="dl-title mb-1">Tasso disoccupazione 15–74 anni</div>
+          <div class="dl-meta mb-2">27 righe · ITG1 · 1999–2025</div>
+          <a class="dl-link" href="output/C_disoccupazione.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">ISTAT 152_1196 TAXINATT</div>
+          <div class="dl-title mb-1">Tasso inattività 15–64 anni</div>
+          <div class="dl-meta mb-2">85 righe · ITG1 · 2004–2020</div>
+          <a class="dl-link" href="output/D_inattivita.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat EDAT_LFSE_22</div>
+          <div class="dl-title mb-1">Tasso NEET 15–29 anni</div>
+          <div class="dl-meta mb-2">26 righe · ITG1 · 2000–2025</div>
+          <a class="dl-link" href="output/E_neet.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat DEMO_R_FIND2</div>
+          <div class="dl-title mb-1">Tasso fertilità totale (TFR)</div>
+          <div class="dl-meta mb-2">35 righe · ITG1 · 1990–2024</div>
+          <a class="dl-link" href="output/F_fertilita.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat DEMO_R_GIND3</div>
+          <div class="dl-title mb-1">Saldo migratorio netto</div>
+          <div class="dl-meta mb-2">14 righe · ITG1 · 2000, 2012–2024</div>
+          <a class="dl-link" href="output/G_saldo_migratorio.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">ISTAT 28_185 MIGRAZIONI</div>
+          <div class="dl-title mb-1">Emigrazione interna da Sicilia</div>
+          <div class="dl-meta mb-2">720 righe · ITG1 · 2002–2025</div>
+          <a class="dl-link" href="output/H_migrazioni_interne.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat ILC_DI11_R</div>
+          <div class="dl-title mb-1">Rapporto S80/S20 disuguaglianza</div>
+          <div class="dl-meta mb-2">22 righe · ITG1 · 2004–2025</div>
+          <a class="dl-link" href="output/I_s80s20.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat ILC_PEPS11N</div>
+          <div class="dl-title mb-1">Rischio povertà AROPE</div>
+          <div class="dl-meta mb-2">11 righe · ITG1 · 2015–2025</div>
+          <a class="dl-link" href="output/J_arope.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat NAMA_10R_2GFCF</div>
+          <div class="dl-title mb-1">Investimenti fissi lordi</div>
+          <div class="dl-meta mb-2">361 righe · ITG1 · 2000–2023</div>
+          <a class="dl-link" href="output/K_investimenti.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">Eurostat EDAT_LFSE_04</div>
+          <div class="dl-title mb-1">Istruzione terziaria 25–64 anni</div>
+          <div class="dl-meta mb-2">26 righe · ITG1 · 2000–2025</div>
+          <a class="dl-link" href="output/L_istruzione.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">OCSE DSD_REG_ECO@DF_GDP</div>
+          <div class="dl-title mb-1">PIL pro capite USD PPP (OCSE)</div>
+          <div class="dl-meta mb-2">25 righe · ITG1 · 2000–2024</div>
+          <a class="dl-link" href="output/M_pil_oecd.csv" download>↓ CSV</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
+          <div class="dl-label mb-1">OCSE DSD_REG_ECO@DF_LPR</div>
+          <div class="dl-title mb-1">Produttività lavoro USD PPP/ora</div>
+          <div class="dl-meta mb-2">22 righe · ITG1 · 2000–2021</div>
+          <a class="dl-link" href="output/N_produttivita.csv" download>↓ CSV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ METODOLOGIA ═══ -->
+  <section class="section py-5" id="metodologia">
+    <p class="section-label mb-1">Note metodologiche</p>
+    <h2 class="mb-2">Fonti, definizioni e riproducibilità</h2>
+    <p class="subtitle mb-4">Tutti i dati sono riproducibili tramite opensdmx CLI o URL API SDMX.</p>
+
+    <h3 class="subsection-title mt-4 mb-3">Indicatori scartati e motivazione</h3>
+    <div class="table-responsive mb-4">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>Dataset scartato</th><th>Provider</th><th>Motivo</th><th>Sostituito con</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>32_221_DF_DCCV_GINIREDD_1</code></td>
+            <td>ISTAT</td>
+            <td>Serie storica disponibile solo dal 2020 (5 anni): insufficiente per analisi con checkpoint ogni 5 anni</td>
+            <td><code>ILC_DI11_R</code> Eurostat (S80/S20, 2003–2025)</td>
+          </tr>
+          <tr>
+            <td><code>GOV_10A_EXP</code></td>
+            <td>Eurostat</td>
+            <td>Disponibile solo a livello nazionale (geo=IT): nessuna disaggregazione NUTS2 regionale</td>
+            <td><code>NAMA_10R_2GFCF</code> Eurostat (investimenti fissi lordi NUTS2, 2000–2024)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">Double check — dataset Eurostat</h3>
+    <p class="mb-3" style="color:var(--ink-light);">Ogni dataset Eurostat è stato estratto due volte in modo indipendente: via opensdmx CLI e via URL API diretto. I risultati coincidono per tutte le serie.</p>
+    <div class="table-responsive mb-4">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>Dataset</th><th>Righe CLI</th><th>Righe URL</th><th>Esito</th></tr></thead>
+        <tbody>
+          <tr><td><code>NAMA_10R_2GDP</code></td><td>26</td><td>26</td><td>✓ MATCH</td></tr>
+          <tr><td><code>LFST_R_LFE2EMPRT</code></td><td>28</td><td>28</td><td>✓ MATCH</td></tr>
+          <tr><td><code>LFST_R_LFU3RT</code></td><td>28</td><td>28</td><td>✓ MATCH</td></tr>
+          <tr><td><code>EDAT_LFSE_22</code></td><td>27</td><td>27</td><td>✓ MATCH</td></tr>
+          <tr><td><code>DEMO_R_FIND2</code></td><td>36</td><td>36</td><td>✓ MATCH</td></tr>
+          <tr><td><code>ILC_DI11_R</code></td><td>23</td><td>23</td><td>✓ MATCH</td></tr>
+          <tr><td><code>ILC_PEPS11N</code></td><td>12</td><td>12</td><td>✓ MATCH</td></tr>
+          <tr><td><code>EDAT_LFSE_04</code></td><td>27</td><td>27</td><td>✓ MATCH</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note pt-2 mb-4">ISTAT e OCSE non espongono URL pubblici diretti per il double check. La verifica per <code>152_1196</code>, <code>28_185</code> (ISTAT) e <code>DSD_REG_ECO@DF_GDP/LPR</code> (OCSE) è stata effettuata comparando il numero di righe con query ripetute tramite CLI.</p>
+
+    <h3 class="subsection-title mt-4 mb-3">URL API SDMX — dataset Eurostat</h3>
+    <p class="mb-2" style="color:var(--ink-light);">URL esatti usati per scaricare i dati. Cliccabili o incollabili in qualsiasi client HTTP.</p>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">NAMA_10R_2GDP — PIL pro capite NUTS2 ITG1</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/NAMA_10R_2GDP/A.PPS_HAB_EU27_2020.ITG1/?startPeriod=2000&endPeriod=2024&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/NAMA_10R_2GDP/A.PPS_HAB_EU27_2020.ITG1/?startPeriod=2000&endPeriod=2024&format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">LFST_R_LFE2EMPRT — Tasso occupazione NUTS2 ITG1</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFST_R_LFE2EMPRT/A.PC.T.Y20-64.ITG1/?startPeriod=1999&endPeriod=2025&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFST_R_LFE2EMPRT/A.PC.T.Y20-64.ITG1/?startPeriod=1999&endPeriod=2025&format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">LFST_R_LFU3RT — Tasso disoccupazione NUTS2 ITG1</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFST_R_LFU3RT/A.TOTAL.T.Y15-74.PC.ITG1/?startPeriod=1999&endPeriod=2025&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFST_R_LFU3RT/A.TOTAL.T.Y15-74.PC.ITG1/?startPeriod=1999&endPeriod=2025&format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">EDAT_LFSE_22 — NEET NUTS2 ITG1</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/EDAT_LFSE_22/A.T.Y15-29.NO_FE_NO_NFE.NEMP.PC.ITG1/?startPeriod=2000&endPeriod=2025&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/EDAT_LFSE_22/A.T.Y15-29.NO_FE_NO_NFE.NEMP.PC.ITG1/?startPeriod=2000&endPeriod=2025&format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">DEMO_R_FIND2 — TFR NUTS2 ITG1</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/DEMO_R_FIND2/A.TOTFERRT.NR.ITG1/?startPeriod=1990&endPeriod=2024&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/DEMO_R_FIND2/A.TOTFERRT.NR.ITG1/?startPeriod=1990&endPeriod=2024&format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">ILC_DI11_R — S80/S20 NUTS2 ITG1</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/ILC_DI11_R/A.INX.ITG1/?startPeriod=2003&endPeriod=2025&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/ILC_DI11_R/A.INX.ITG1/?startPeriod=2003&endPeriod=2025&format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">ILC_PEPS11N — AROPE NUTS2 ITG1</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/ILC_PEPS11N/A.PC.ITG1/?startPeriod=2015&endPeriod=2025&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/ILC_PEPS11N/A.PC.ITG1/?startPeriod=2015&endPeriod=2025&format=SDMX-CSV</a>
+    </div>
+
+    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">EDAT_LFSE_04 — Istruzione terziaria NUTS2 ITG1</p>
+    <div class="query-url p-2 mb-3">
+      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/EDAT_LFSE_04/A.T.ED5-8.Y25-64.PC.ITG1/?startPeriod=2000&endPeriod=2025&format=SDMX-CSV" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/EDAT_LFSE_04/A.T.ED5-8.Y25-64.PC.ITG1/?startPeriod=2000&endPeriod=2025&format=SDMX-CSV</a>
+    </div>
+
+    <h3 class="subsection-title mt-4 mb-3">Comandi CLI per riprodurre i dati</h3>
+    <div class="table-responsive mb-4">
+      <table class="data-table table table-bordered table-sm">
+        <thead><tr><th>File output</th><th>Comando</th></tr></thead>
+        <tbody>
+          <tr><td><code>A_pil_procapite.csv</code></td><td><code>opensdmx run queries/A_pil_procapite.yaml --out output/A_pil_procapite.csv</code></td></tr>
+          <tr><td><code>B_occupazione.csv</code></td><td><code>opensdmx run queries/B_occupazione.yaml --out output/B_occupazione.csv</code></td></tr>
+          <tr><td><code>C_disoccupazione.csv</code></td><td><code>opensdmx run queries/C_disoccupazione.yaml --out output/C_disoccupazione.csv</code></td></tr>
+          <tr><td><code>D_inattivita.csv</code></td><td><code>opensdmx run queries/D_inattivita.yaml --out output/D_inattivita.csv</code></td></tr>
+          <tr><td><code>E_neet.csv</code></td><td><code>opensdmx run queries/E_neet.yaml --out output/E_neet.csv</code></td></tr>
+          <tr><td><code>F_fertilita.csv</code></td><td><code>opensdmx run queries/F_fertilita.yaml --out output/F_fertilita.csv</code></td></tr>
+          <tr><td><code>G_saldo_migratorio.csv</code></td><td><code>opensdmx run queries/G_saldo_migratorio.yaml --out output/G_saldo_migratorio.csv</code></td></tr>
+          <tr><td><code>H_migrazioni_interne.csv</code></td><td><code>opensdmx run queries/H_migrazioni_interne.yaml --out output/H_migrazioni_interne.csv</code></td></tr>
+          <tr><td><code>I_s80s20.csv</code></td><td><code>opensdmx run queries/I_s80s20.yaml --out output/I_s80s20.csv</code></td></tr>
+          <tr><td><code>J_arope.csv</code></td><td><code>opensdmx run queries/J_arope.yaml --out output/J_arope.csv</code></td></tr>
+          <tr><td><code>K_investimenti.csv</code></td><td><code>opensdmx run queries/K_investimenti.yaml --out output/K_investimenti.csv</code></td></tr>
+          <tr><td><code>L_istruzione.csv</code></td><td><code>opensdmx run queries/L_istruzione.yaml --out output/L_istruzione.csv</code></td></tr>
+          <tr><td><code>M_pil_oecd.csv</code></td><td><code>opensdmx run queries/M_pil_oecd.yaml --out output/M_pil_oecd.csv</code></td></tr>
+          <tr><td><code>N_produttivita.csv</code></td><td><code>opensdmx run queries/N_produttivita.yaml --out output/N_produttivita.csv</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer py-4 mt-2">
+  <div class="container d-flex flex-wrap gap-4 justify-content-between">
+    <span>Dati: Eurostat · ISTAT · OCSE · Formato SDMX 2.1</span>
+    <span>Strumento: <a href="https://github.com/ondata/opensdmx/blob/main/docs/skill/README.md">opensdmx CLI</a></span>
+    <span>Grafici: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a></span>
+    <span>29 aprile 2026</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── DATI INLINE ────────────────────────────────────────────────────────────────
+// Tutti i valori sono estratti dai CSV in output/ senza modifiche.
+// Filtri documentati nelle sezioni Trasformazioni applicate.
+
+function pts(anni, valori) {
+  const p = [];
+  anni.forEach(function(a,i){ if (valori[i] !== null) p.push({x:a,y:valori[i]}); });
+  return p;
+}
+
+const opts = function(yLabel, color) {
+  return {
+    showLine: true, dotSize: 0.4, xTickCount: 5, yTickCount: 4,
+    dataColors: [color || '#b02020']
+  };
+};
+
+// ── A: PIL EUROSTAT (indice EU27=100) ─────────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-a'), {
+  xLabel: '', yLabel: 'INDICE EU27=100',
+  data: { datasets: [{ label: 'SICILIA (ITG1)', data: pts(
+    [2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],
+    [77,76,75,75,72,72,72,70,69,70,67,66,65,63,60,60,60,60,58,58,57,59,61,60,61]
+  )}]},
+  options: opts('INDICE EU27=100', '#b02020')
+});
+
+// ── M: PIL OCSE (USD PPP pro capite) ──────────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-m'), {
+  xLabel: '', yLabel: 'USD PPP PRO CAPITE',
+  data: { datasets: [{ label: 'SICILIA (ITG1)', data: pts(
+    [2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],
+    [17016,17802,18219,18648,18751,19526,21069,21813,22730,22414,22343,22775,23002,23071,22580,23081,24647,25688,26209,28122,27277,30928,35675,36885,38273]
+  )}]},
+  options: opts('USD PPP PRO CAPITE', '#1a6fa8')
+});
+
+// ── K: INVESTIMENTI FISSI LORDI (Mln EUR) ─────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-k'), {
+  xLabel: '', yLabel: 'MILIONI DI EURO',
+  data: { datasets: [{ label: 'SICILIA (ITG1)', data: pts(
+    [2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],
+    [15275,15539,15836,16387,17471,18261,20432,19072,18345,17069,17539,16935,14620,13144,12772,13292,13142,13181,13742,14434,13163,17512,20936,24161]
+  )}]},
+  options: opts('MILIONI DI EURO', '#8e44ad')
+});
+
+// ── N: PRODUTTIVITÀ LAVORO (USD PPP/ora) ──────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-n'), {
+  xLabel: '', yLabel: 'USD PPP PER ORA LAVORATA',
+  data: { datasets: [{ label: 'SICILIA (ITG1)', data: pts(
+    [2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021],
+    [50597,52647,52952,53977,53668,54554,56677,59293,62648,62893,63602,65375,66996,68778,67330,68387,71834,74658,76322,80974,79366,88347]
+  )}]},
+  options: opts('USD PPP PER ORA LAVORATA', '#16a085')
+});
+
+// ── B: OCCUPAZIONE (% 20-64) ──────────────────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-b'), {
+  xLabel: '', yLabel: '% OCCUPATI 20-64 ANNI',
+  data: { datasets: [{ label: 'SICILIA (ITG1)', data: pts(
+    [1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
+    [43.1,43.8,45.8,46.5,46.1,47.8,48.2,49.1,48.6,48.3,47.7,46.7,46.3,45.0,42.8,42.4,43.4,43.5,44.0,44.3,44.7,44.4,44.5,46.2,48.7,50.7,51.4]
+  )}]},
+  options: opts('% OCCUPATI 20-64 ANNI', '#b02020')
+});
+
+// ── C: DISOCCUPAZIONE (% 15-74) ───────────────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-c'), {
+  xLabel: '', yLabel: '% DISOCCUPATI 15-74 ANNI',
+  data: { datasets: [{ label: 'SICILIA (ITG1)', data: pts(
+    [1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
+    [24.3,23.9,21.0,20.7,20.8,17.2,16.1,13.4,12.9,13.7,13.8,14.6,14.3,18.4,21.0,22.2,21.4,22.1,21.5,21.3,19.9,18.1,18.7,16.6,15.8,13.0,12.2]
+  )}]},
+  options: opts('% DISOCCUPATI 15-74 ANNI', '#e67e22')
+});
+
+// ── D: INATTIVITÀ (% 15-64) ───────────────────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-d'), {
+  xLabel: '', yLabel: '% INATTIVI 15-64 ANNI',
+  data: { datasets: [{ label: 'SICILIA (ITG1)', data: pts(
+    [2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020],
+    [47.7,47.4,48.0,48.8,48.8,49.4,49.9,50.5,49.3,50.1,49.7,49.0,48.3,48.0,48.0,48.4,49.9]
+  )}]},
+  options: opts('% INATTIVI 15-64 ANNI', '#8e44ad')
+});
+
+// ── E: NEET (% 15-29) ─────────────────────────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-e'), {
+  xLabel: '', yLabel: '% NEET 15-29 ANNI',
+  data: { datasets: [{ label: 'SICILIA (ITG1)', data: pts(
+    [2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
+    [39.7,37.7,35.2,35.2,33.3,33.8,32.8,31.6,32.5,32.0,33.2,35.4,37.4,39.5,40.3,39.3,38.1,37.6,38.4,38.0,38.3,36.3,32.4,27.9,25.7,22.8]
+  )}]},
+  options: opts('% NEET 15-29 ANNI', '#1a6fa8')
+});
+
+// ── F: FERTILITÀ TFR ──────────────────────────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-f'), {
+  xLabel: '', yLabel: 'FIGLI PER DONNA (TFR)',
+  data: { datasets: [{ label: 'SICILIA (ITG1)', data: pts(
+    [1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],
+    [1.75,1.70,1.70,1.63,1.54,1.49,1.45,1.45,1.44,1.44,1.41,1.40,1.40,1.43,1.44,1.43,1.42,1.41,1.44,1.44,1.42,1.41,1.41,1.37,1.40,1.38,1.35,1.37,1.37,1.33,1.33,1.35,1.35,1.32,1.27]
+  )}]},
+  options: opts('FIGLI PER DONNA (TFR)', '#b02020')
+});
+
+// ── G: SALDO MIGRATORIO (dati lacunosi) ───────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-g'), {
+  xLabel: '', yLabel: 'PERSONE (SALDO NETTO)',
+  data: { datasets: [{ label: 'SICILIA (ITG1)', data: pts(
+    [2000,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],
+    [-22659,-3477,-6639,-8699,-14056,-18152,-22833,-22306,-19469,-23522,21213,3343,4640,9121]
+  )}]},
+  options: {showLine: true, dotSize: 0.6, xTickCount: 5, yTickCount: 5, dataColors: ['#e67e22']}
+});
+
+// ── H: EMIGRAZIONE INTERNA ────────────────────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-h'), {
+  xLabel: '', yLabel: 'PERSONE EMIGRATE',
+  data: { datasets: [{ label: 'SICILIA → ALTRE REGIONI', data: pts(
+    [2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
+    [87592,84739,89484,85536,87489,91214,93081,86566,89854,87328,107848,92755,88823,85613,90463,90622,94549,102001,90132,91274,100200,97695,93797,95654]
+  )}]},
+  options: opts('PERSONE EMIGRATE', '#1a6fa8')
+});
+
+// ── I: S80/S20 ────────────────────────────────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-i'), {
+  xLabel: '', yLabel: 'RAPPORTO S80/S20',
+  data: { datasets: [{ label: 'SICILIA (ITG1)', data: pts(
+    [2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
+    [7.2,7.0,7.0,6.7,5.7,6.2,6.7,7.7,6.7,8.7,9.4,8.7,9.5,7.4,8.5,9.0,7.5,7.3,6.2,5.4,6.9,5.7]
+  )}]},
+  options: opts('RAPPORTO S80/S20', '#8e44ad')
+});
+
+// ── J: AROPE ──────────────────────────────────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-j'), {
+  xLabel: '', yLabel: '% POPOLAZIONE A RISCHIO',
+  data: { datasets: [{ label: 'SICILIA (ITG1)', data: pts(
+    [2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
+    [50.7,50.1,48.9,49.5,45.4,44.1,42.5,41.4,41.4,40.9,44.0]
+  )}]},
+  options: opts('% POPOLAZIONE A RISCHIO', '#b02020')
+});
+
+// ── L: ISTRUZIONE TERZIARIA ───────────────────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-l'), {
+  xLabel: '', yLabel: '% LAUREATI 25-64 ANNI',
+  data: { datasets: [{ label: 'SICILIA (ITG1)', data: pts(
+    [2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
+    [9.3,9.0,9.2,9.5,9.8,10.3,10.9,11.5,11.9,12.5,12.4,12.1,13.0,13.4,13.3,13.2,13.1,13.6,14.0,14.2,14.6,14.8,15.2,16.8,17.8,16.9]
+  )}]},
+  options: opts('% LAUREATI 25-64 ANNI', '#27ae60')
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+provider: eurostat
+dataset: DEMO_R_GIND3
+filters:
+  FREQ: A
+  indic_de: CNMIGRAT
+  geo: ITG1
+start_period: "2000"
+end_period: "2025"
+format: SDMX-CSV

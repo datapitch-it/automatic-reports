@@ -1,0 +1,230 @@
+id,name
+GDP,Gross domestic product
+GVA,"Value added, gross"
+B5N,"Primary incomes, net"
+B6N,"Disposable income, net"
+B7G,"Adjusted disposable income, gross"
+B7N,"Adjusted disposable income, net"
+EMPW,Employment at place of work
+PPP_GDP,Purchasing Power Parities for GDP
+PPP_INC,Purchasing Power Parities for income
+EXC,"Exchange rates, period-average"
+LAB_PROD,Labour productivity
+X,Exports
+X1,Exports of domestic products
+X2,Re-exports
+M,Imports
+M1,Imports of foreign products
+M2,Re-imports
+TB,Trade balance
+TO,Trade openness
+LAND_AREA,Land area
+POP_DEN,Population density
+URB_AREA,Urbanised area
+LAU_POP,Mean local administrative unit population
+TERR_FRAG,Territorial fragmentation
+LAU_C,Number of local administrative units
+POP,Population
+DEPEND_RATIO,Dependency ratio
+FERT_RATIO,Fertility rate
+LIVE_BIRTHS,Live births
+CHILD_TO_W_RATIO,Child-to-woman ratio
+INMOB,New residents in the region coming from another region of the same country
+OUTMOB,Persons who left the region to reside in another region of the same country
+NETMOB,Net inter-regional mobility (inflows minus outflows)
+INMIG,New residents in the region coming from another country
+OUTMIG,Persons who left the region to reside in another country
+NETMIG,Net international migration (inflows minus outflows)
+PT_ACCESS,Access to public transport
+DOWN_SPEED,Downloading speed
+UP_SPEED,Uploading speed
+LF,Labour force
+EMP,Employment
+UNE,Unemployment
+LF_RATE,Labour force participation rate
+EMP_RATIO,Employment to population ratio
+UNE_RATE,Unemployment rate
+EMP_CFT,Fixed-term employment contracts
+EMP_PT,Part-time employment
+EMP_RATIO_SEXDIF,"Employment to population ratio, gender difference"
+LF_RATE_SEXDIF,"Labour force participation rate, gender difference"
+UNE_LT,Long-term unemployment
+UNE_LT_RATE,Long-term unemployment rate
+UNE_RATE_SEXDIF,"Long-term unemployment rate, gender difference"
+INA,Inactives
+INA_RATE,Inactives rate
+DOC,Active physicians
+NURSES_P,Practising nurses
+HB,Hospital beds
+HB_CURAT,Curative hospital beds
+H_DISCHARGE_T,Hospital discharges
+LFEXP,Life expectancy
+LFEXPDFM,Life expectancy difference (female-male)
+MORT,Deaths
+MORT_CRUDE_RATIO,Crude mortality rate
+MORT_STANDARD_RATIO,Age-adjusted mortality rate
+MORT_INFANT,Infant mortality rate
+MORT_INFANT_DFM,Infant mortality rate difference (female-male)
+MORT_ICDJ_CRUDE_RATIO,Respiratory system diseases mortality crude rate
+MORT_ICDI_CRUDE_RATIO,Circulatory system diseases mortality crude rate
+OBESITY,Obesity rate
+MWAS,Municipal waste generation
+MWAS_RECO,Municipal waste recovered
+MWAS_RECYCL,Municipal waste recycled
+MWAS_LANDF,Municipal waste disposed to landfills
+POP_WATER_2ND_TREAT,Population connected to at least secondary wastewater treatment
+ELEC_CARB_INTENS,Carbon intensity of electricity
+ELEC_TOT,Total gross electricity generation
+ELEC_FOSSIL,Gross electricity generation from fossil fuels
+ELEC_COAL,Gross electricity generation from coal
+ELEC_OIL,Gross electricity generation from oil
+ELEC_GAS,Gross electricity generation from gas
+ELEC_NUCL,Gross electricity generation from nuclear
+ELEC_RES,Gross electricity generation from renewable energy sources
+ELEC_HYDRO,Gross electricity generation from hydro power
+ELEC_WIND,Gross electricity generation from wind power
+ELEC_SOLAR,Gross electricity generation from solar power
+ELEC_OTHERRES,"Gross electricity generation from other renewable sources (biomass, geothermal, waste, wave and tidal)"
+ELEC_OTHER,Gross electricity generation from other sources
+GHG_CTRY_TOTAL,GHG emissions total country (incl. aviation and shipping)
+GHG_REG_TOTAL,GHG emissions total regions (excl. aviation and shipping)
+GHG_INDUSTRY,GHG emissions from industries
+GHG_MANUFACT,GHG emissions from manufacturing
+GHG_POWER,GHG emissions from power generation
+GHG_BUILDINGS,GHG emissions from buildings
+GHG_AGRICULTURE,GHG emissions from agriculture
+GHG_WASTE,GHG emissions from waste
+GHG_TRANSPORT,GHG emissions from ground transport
+GHG_ROAD_TRANSPORT,GHG emissions from road transport
+GHG_DOM_AVIATION,GHG emissions from domestic aviation
+GHG_DOM_SHIPPING,GHG emissions from domestic shipping
+GHG_INTL_AVIATION,GHG emissions from international aviation
+GHG_INTL_SHIPPING,GHG emissions from international shipping
+PM25_POP_EXP,Population exposure to PM2.5
+RF_LAND_EXP,Land exposure to river flooding
+RF_POP_EXP,Population exposure to river flooding
+RF_BUILT_EXP,Built-up area exposure to river flooding
+RF_CROP_EXP,Cropland exposure to river flooding
+CF_LAND_EXP,Land exposure to coastal flooding
+CF_POP_EXP,Population exposure to coastal flooding
+CF_BUILT_EXP,Built-up area exposure to coastal flooding
+CF_CROP_EXP,Cropland exposure to coastal flooding
+UHI,Urban heat island effect
+UTCI_POP_EXP,Mean population exposure to heat stress
+GREEN_AREA,Green area in FUAs' urban centres
+HDD,Heating degree days
+CDD,Cooling degree days
+HDD_DIFF_1981_2010,Heating degree degree days change compared to 1981-2010 average
+CDD_DIFF_1981_2010,Cooling degree days days change compared to 1981-2010 average
+HOMIC,Intentional homicides
+VEH_THEFT,Motor vehicle theft
+ASSAULT,Assault
+BURG_RESID,Burglary of private residential premises
+BURGLARLY,Burglary
+MORT_ICDV_CRUDE_RATIO,Mortality from transport accidents
+VOTERS_RATE,Voters turnout to general elections
+VEH_NEW_TOTAL,"New registered private vehicles, Total"
+VEH_NEW_ELECTRIC,"New registered vehicles, electric power engine"
+VEH_NEW_HYBRID,"New registered vehicles, hybrid power engine"
+VEH_STOCK_TOTAL,"Vehicles fleet, total"
+VEH_STOCK_ELECTRIC,"Vehicles fleet, electric power engine"
+VEH_STOCK_HYBRID,"Vehicles fleet, hybrid power engine"
+NEAC_SHARE_EA,Population educational attainment
+ENRL_RATE,Enrolment rate
+AL_FNFAET4,Participation in formal and/or non-formal training - 4-week reference period
+PIAAC_AL_FNFAET4,Participation in formal and/or non-formal training - 4-week reference period
+AL_FNFAET12,Participation in formal and/or non-formal training - 12-month reference period
+AES_AL_FNFAET12,Participation in formal and/or non-formal training - 12-month reference period
+TRANS_SHARE_EDULABOUR_NE_U_I,Population not in education and unemployed or inactive (NEET)
+EARLY_LEAVERS_RATE,Early leavers from education and training
+FIRE_POP_EXP,Population exposure to wildfires
+FIRE_LAND_EXP,Land exposure to wildfires
+FIRE_BUILT_EXP,Built-up area exposure to wildfires
+FIRE_CROP_EXP,Cropland area exposure to wildfires
+FIRE_FOR_EXP,Forest exposure to wildfires
+ENT,Enteprises
+EST,Establishments
+EMP_AVG,Average employment size
+SAL,Employees
+SAL_AVG,Average employees size
+CHURN_RA,Churn rate
+NETB,Net enterprises population growth/shrink
+HOUSE_COST,Cost of housing
+HOME_OWN,Homeowners
+HOME_OWN_OUTRIGHT,Outright homeowners (without a morgage)
+HOME_OWN_MORTGAGE,Homeowners with a morgage
+ROOMS,Number of rooms per capita
+BB_ACC,Share of households with internet broadband access
+PR_INC_DISP_PL_50,Relative poverty rate
+S80S20_INC_DISP,S80/S20 income ratio
+PM10_POP_EXP,Population exposure to PM10
+NO2_POP_EXP,Population exposure to nitrogen dioxide
+O3_POP_EXP,Population exposure to ozone
+AIR_TEMP2M,Air temperature
+AIR_TEMP2M_DIFF_1981_2010,Air temperature change compared to 1981-2010 average
+HOT_DAYS,Hot days
+HOT_DAYS_DIFF_1981_2010,Hot days change compared to 1981-2010 average
+TROP_NIGHTS,Tropical nights
+TROP_NIGHTS_DIFF_1981_2010,Tropical nights change compared to 1981-2010 average
+ICING_DAYS,Icing days
+ICING_DAYS_DIFF_1981_2010,Icing days change compared to 1981-2010 average
+PRECIP_SUM,Precipitation
+PRECIP_SUM_DIFF_1981_2010,Change in precipitation compared to 1981-2010 average
+AIR_TEMP2M_PROJ,Projected air temperature
+AIR_TEMP2M_PROJ_DIFF_1981_2010,Projected air temperature change compared to 1981-2010 average
+HOT_DAYS_PROJ,Projected number of hot days
+HOT_DAYS_PROJ_DIFF_1981_2010,Projected number of hot days change compared to 1981-2010 average
+TROP_NIGHTS_PROJ,Projected number of  tropical nights
+TROP_NIGHTS_PROJ_DIFF_1981_2010,Projected number of tropical nights change compared to 1981-2010 average
+ICING_DAYS_PROJ,Projected number of icing days
+ICING_DAYS_PROJ_DIFF_1981_2010,Projected number of icing days change compared to 1981-2010 average
+PRECIP_SUM_PROJ,Projected cummulated precipitation
+PRECIP_SUM_PROJ_DIFF_1981_2010,Projected cummulated precipitation change compared to 1981-2010 average
+EXT_PRECIP_DAYS_PROJ,Projected extreme precipitation days
+EXT_PRECIP_DAYS_PROJ_DIFF_1981_2010,Projected cummulated extrem precipitation change compared to 1981-2010 average
+EXT_PRECIP_DAYS,Extreme precipitation days
+EXT_PRECIP_DAYS_DIFF_1981_2010,Change in extreme precipitation days compared to 1981-2010 average
+DAY_LAND_TEMP_YEARLY,Daytime yearly land surface temperature
+DAY_LAND_TEMP_WINTER,Daytime winter land surface temperature
+DAY_LAND_TEMP_SUMMER,Daytime summer land surface temperature
+NIGHT_LAND_TEMP_YEARLY,Nighttime yearly land surface temperature
+NIGHT_LAND_TEMP_WINTER,Nighttime winter land surface temperature
+NIGHT_LAND_TEMP_SUMMER,Nighttime summer land surface temperature
+FIRE,Wildfires
+AREA,Area
+PROTECT_TERRESTRIAL,Protected terrestrial areas
+SOIL_MOISTURE,Soil moisture
+LAND_MOIST_ANOM,Land soil moisture anomaly
+CROP_MOIST_ANOM,Cropland soil moisture anomaly
+FOREST_MOIST_ANOM,Forest soil moisture anomaly
+PCT_PAT,"PCT Patent applications, fractional count"
+PCT_COPAT,"PCT co-patent applications, count"
+PCT_COPAT_WREGION,PCT co-patent applications within the region
+PCT_COPAT_WCOUNTRY,PCT co-patent applications within the country
+PCT_COPAT_FREGION,PCT co-patent applications with partners in foreign country
+GERD,Gross Domestic Expenditure on R&D (GERD)
+EMP_RD_T,R&D personnel
+EMP_RD_RSE,Researchers
+PROD_ELEC_CARBON_INTENSITY,Carbon intensity of electricity generation
+PROD_ELEC_T,"All source of energy, total electricity production"
+PROD_ELEC_FOSSIL,Fossil fuels
+PROD_ELEC_GAS,Natural gas
+PROD_ELEC_OIL,Oil
+PROD_ELEC_COAL,Coal
+PROD_ELEC_RENEWABLES,Renewables
+PROD_ELEC_HYDRO,Hydropower
+PROD_ELEC_BIO,Biofuels and waste
+PROD_ELEC_WIND,Wind
+PROD_ELEC_SOLAR,Solar
+PROD_ELEC_GEOTHERMAL,Geothermal
+PROD_ELEC_NUCLEAR,Nuclear
+PROD_ELEC_OTHER,Other sources
+ENE_CONS_T,"All fuels, total final energy consumption"
+ENE_CONS_ELEC,Electricity
+ENE_CONS_GAS,Natural gas
+ENE_CONS_OIL,Oil
+ENE_CONS_COAL,Coal
+ENE_CONS_BIO_WASTE,Biofuels and waste
+ENE_CONS_HEAT,District heating
+ENE_CONS_RENEW,Renewables
+ENE_CONS_OTHER,Other fuels
