@@ -305,7 +305,9 @@ non in file CSV separati. Questo garantisce che la pagina sia autosufficiente.
 - `roughViz.Line` ha un bug nel callback `d3.csv` (perde `this`): per serie temporali usare `chart.xkcd.XY` con dati inline.
 - `roughViz.BarH` e `roughViz.Bar` **non supportano valori negativi**: la scala x parte da 0 e un valore negativo produce `rect width < 0` con errore console. Se i dati contengono valori negativi, escludere quelle osservazioni dal grafico e documentarle nel blocco `.note` e nel blocco `.transform`.
 
-### Regole per le label dei grafici
+### Regole per i grafici
+
+- **Baseline a zero — OBBLIGATORIO**: l'asse Y deve sempre partire da zero. Non usare scale troncate che amplificano visivamente variazioni che sarebbero marginali su scala assoluta. Se il range naturale dei dati non include lo zero, l'asse va comunque esteso fino a zero. Per chart.xkcd XY: aggiungere un punto sintetico `{x: primoAnno, y: 0}` alla fine dell'array dati (verrà ignorato visivamente se lontano dal range, ma forza la scala); in alternativa, anteporre all'array dati un punto `{x: annoMinimo - 1, y: 0}` con `showLine: false` sul primo segmento — oppure scegliere una libreria che supporti `yMin: 0` esplicitamente. Questa regola si applica a tutti i tipi di grafico (XY, Bar, BarH). Non ci sono eccezioni: se la scala troncata è l'unico modo di leggere il grafico, il problema è nella scelta del tipo di grafico, non nella baseline.
 
 - **Font minimo 1rem**: impostare sempre `axisFontSize: '1rem'` e `titleFontSize: '1rem'` in ogni
   chiamata roughViz. Il CSS non può garantire questo limite perché roughViz scrive il font-size
@@ -792,6 +794,7 @@ Ogni sezione dataset deve avere:
 - Non usare dati interpolati senza dichiararlo esplicitamente
 - Non pubblicare URL API senza averli verificati cliccandoli
 - Non scegliere un tipo di grafico che distorce la percezione (es. area chart per dati non cumulativi)
+- **Non troncare la scala Y**: l'asse Y non può mai partire da un valore diverso da zero. Una scala troncata (es. Y da 40 a 55 invece di 0 a 55) è una distorsione visiva che ingigantisce variazioni marginali
 
 ---
 
@@ -811,4 +814,5 @@ Ogni sezione dataset deve avere:
 - [ ] La sezione Dati grezzi indica data di estrazione e licenza
 - [ ] Il callout "Limite di scope" nella sezione Intro è presente e accurato
 - [ ] Nessun `font-size` sotto `1rem` nel CSS
+- [ ] **Baseline a zero**: tutti i grafici hanno l'asse Y che parte da zero — nessuna scala troncata
 - [ ] Nessun `font-size` sotto `1rem` nelle configurazioni JS dei grafici (`axisFontSize`, `titleFontSize`, `labelFontSize`) — roughViz scrive questi valori come inline style sull'SVG, che il CSS non può sovrascrivere senza `!important`; il parametro JS è l'unico punto di controllo affidabile
