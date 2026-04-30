@@ -16,25 +16,31 @@ Ogni analisi vive in una propria cartella dentro `reports/`.
 Il nome della cartella è un numero progressivo a due cifre + slug descrittivo.
 
 ```
-reports/
-└── 01_slug-del-tema/
-    ├── index.html          ← pagina analitica finale (autosufficiente, no server)
-    ├── output/             ← CSV scaricati dall'API, mai modificati a mano
-    │   ├── A_nome.csv
-    │   ├── B_nome.csv
-    │   └── ...
-    ├── metadata/           ← codelist e metadati scaricati con opensdmx
-    ├── charts/             ← grafici standalone opzionali (se servono fuori dalla pagina)
-    ├── queries/            ← file YAML con le query riproducibili
-    │   ├── A_nome.yaml
-    │   └── ...
-    └── notes.md            ← log cronologico delle operazioni (vedi sezione Accountability)
-└── 02_slug-del-tema/
-    ...
+/
+├── assets/
+│   ├── style.css           ← CSS condiviso da tutti i report
+│   └── shell.js            ← funzione initShell()
+├── index.html              ← catalogo (legge reports.json via fetch)
+├── reports.json            ← manifest dei report
+└── reports/
+    └── 01_slug-del-tema/
+        ├── index.html      ← pagina analitica (~360 righe: sezioni dataset + config initShell)
+        ├── output/         ← CSV scaricati dall'API, mai modificati a mano
+        │   ├── A_nome.csv
+        │   ├── B_nome.csv
+        │   └── ...
+        ├── metadata/       ← codelist e metadati scaricati con opensdmx
+        ├── queries/        ← file YAML con le query riproducibili
+        │   ├── A_nome.yaml
+        │   └── ...
+        └── notes.md        ← log cronologico delle operazioni (vedi sezione Accountability)
+    └── 02_slug-del-tema/
+        ...
 ```
 
-**Regola**: tutto quello che serve per riprodurre l'analisi deve stare in questa cartella.
-`index.html` non deve dipendere da file esterni al server locale.
+**Regola**: tutto quello che serve per riprodurre l'analisi deve stare nel repository.
+`index.html` dipende da `../../assets/` (CSS e JS condivisi, nel repo) e dai CDN per
+Bootstrap, roughViz e chart.xkcd. Non dipendere da file fuori repository.
 
 ---
 
