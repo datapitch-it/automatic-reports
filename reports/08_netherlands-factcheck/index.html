@@ -5,203 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Netherlands in Numbers — Fact-check SDMX</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../assets/style.css">
   <script src="https://unpkg.com/rough-viz@1.0.6"></script>
   <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
-  <style>
-    :root {
-      --ink:        #1a1a1a;
-      --ink-light:  #333;
-      --ink-faint:  #666;
-      --paper:      #fafaf7;
-      --paper-warm: #f5f3ee;
-      --rule:       #999;
-      --accent:     #b02020;
-      --accent2:    #1a6fa8;
-      --green:      #27ae60;
-      --orange:     #e67e22;
-      --serif:      'Georgia', 'Times New Roman', serif;
-      --mono:       'Courier New', Courier, monospace;
-      --bs-body-font-family:   var(--serif);
-      --bs-body-color:         var(--ink);
-      --bs-body-bg:            var(--paper);
-      --bs-border-color:       var(--rule);
-      --bs-card-border-radius: 0;
-      --bs-card-border-color:  var(--rule);
-    }
-    html { font-size: 19px; scroll-behavior: smooth; }
-    .container { max-width: 1060px; }
-
-    .site-header { background: #1a1a1a; border-bottom: 2px solid #000; }
-    .eyebrow { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; color: #888; }
-    .site-header h1 { font-size: 2rem; font-weight: normal; line-height: 1.2; color: #fff; }
-    .intro { color: #ccc; line-height: 1.7; }
-    .ds-badge { font-family: var(--mono); font-size: 1rem; background: #2a2a2a; border: 1px solid #444; padding: 2px 8px; color: #aaa; }
-    .ds-badge strong { color: #fff; }
-
-    .site-nav { background: #1a1a1a !important; border-bottom: 1px solid #333; z-index: 1020; }
-    .site-nav .nav-link { font-family: var(--mono); font-size: 1rem; color: #aaa; padding: 3px 10px; border: 1px solid transparent; border-radius: 0; transition: border-color 0.15s, color 0.15s; }
-    .site-nav .nav-link:hover { border-color: #555; color: #fff; }
-
-    .section { border-bottom: 1px solid var(--rule); }
-    .section:last-child { border-bottom: none; }
-    .section-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
-    .section h2 { font-size: 1.5rem; font-weight: normal; }
-    .section .subtitle { color: var(--ink-light); line-height: 1.5; }
-    .subsection-title { font-size: 1rem; font-weight: normal; color: var(--ink); padding-bottom: 0.3rem; border-bottom: 1px dashed var(--rule); }
-
-    .callout { background: var(--paper-warm); border-left: 3px solid var(--accent); border-top: none; border-right: none; border-bottom: none; border-radius: 0; color: var(--ink-light); }
-    .callout strong { color: var(--ink); }
-    .callout-info { border-left-color: var(--accent2); }
-    .callout-ok { border-left-color: var(--green); }
-    .callout-warn { border-left-color: var(--orange); }
-
-    .finding-card { background: #fff; border: 1px solid var(--rule); padding: 0.9rem 1rem; height: 100%; }
-    .big-num { font-size: 2rem; font-family: var(--mono); color: var(--accent); line-height: 1; }
-    .big-num.blue { color: var(--accent2); }
-    .big-num.green { color: var(--green); }
-    .big-num.orange { color: var(--orange); }
-    .finding-card p { font-size: 1rem; color: var(--ink-light); line-height: 1.4; }
-    .finding-card strong { color: var(--ink); }
-
-    .chart-wrap { background: #fff; border: 1px solid var(--rule); padding: 1.2rem; overflow-x: auto; }
-    .chart-wrap svg { display: block; width: 100%; min-height: 380px; }
-
-    .verdict-table { font-size: 1rem; }
-    .verdict-table thead th { background: var(--paper-warm); font-family: var(--mono); font-size: 1rem; font-weight: normal; letter-spacing: 0.05em; border-color: var(--rule); }
-    .verdict-table td { border-color: var(--rule); vertical-align: middle; }
-    .verdict-table tbody tr:nth-child(even) td { background: var(--paper-warm); }
-    .verdict-table code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; color: var(--ink); }
-    .badge-ok   { background: #d4edda; color: #155724; font-family: var(--mono); font-size: 1rem; padding: 2px 7px; border-radius: 0; }
-    .badge-warn { background: #fff3cd; color: #856404; font-family: var(--mono); font-size: 1rem; padding: 2px 7px; border-radius: 0; }
-    .badge-err  { background: #f8d7da; color: #721c24; font-family: var(--mono); font-size: 1rem; padding: 2px 7px; border-radius: 0; }
-
-    .transform { background: var(--paper-warm); border: 1px solid var(--rule); border-left: 3px solid var(--accent2); }
-    .transform h4 { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
-    .transform ul { color: var(--ink-light); line-height: 1.7; }
-    .transform li code { font-family: var(--mono); font-size: 1rem; background: var(--paper); padding: 1px 4px; border: 1px solid var(--rule); }
-
-    .note { font-size: 1rem; color: var(--ink-faint); border-top: 1px dashed var(--rule); line-height: 1.6; }
-    .note code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; border: 1px solid var(--rule); }
-    .note a { color: var(--ink-faint); }
-
-    .query-url { background: #fff; border: 1px solid var(--rule); font-family: var(--mono); font-size: 1rem; color: var(--ink-light); word-break: break-all; line-height: 1.6; }
-    .query-url a { color: var(--accent2); }
-
-    .data-table { font-size: 1rem; }
-    .data-table thead th { background: var(--paper-warm); font-family: var(--mono); font-size: 1rem; font-weight: normal; letter-spacing: 0.05em; border-color: var(--rule); }
-    .data-table td { border-color: var(--rule); }
-    .data-table tbody tr:nth-child(even) td { background: var(--paper-warm); }
-    .data-table code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; color: var(--ink); }
-
-    .dl-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
-    .dl-title { color: var(--ink); font-size: 1rem; }
-    .dl-meta { font-family: var(--mono); font-size: 1rem; color: var(--ink-faint); }
-    a.dl-link { font-family: var(--mono); font-size: 1rem; color: var(--accent2); text-decoration: none; border: 1px solid var(--accent2); padding: 2px 8px; display: inline-block; }
-    a.dl-link:hover { background: var(--accent2); color: #fff; }
-
-    .site-footer { border-top: 2px solid var(--ink); font-size: 1rem; color: var(--ink-faint); font-family: var(--mono); }
-    .site-footer a { color: var(--ink-faint); }
-
-    .chart-title-label { font-family: var(--mono); font-size: 1rem; text-transform: uppercase; color: var(--ink-faint); letter-spacing: 0.08em; margin-bottom: 0.5rem; }
-  </style>
 </head>
 <body>
 
-<!-- ═══ NAV ═══ -->
-<nav class="site-nav navbar sticky-top py-2">
-  <div class="container">
-    <div class="d-flex flex-wrap gap-1">
-      <a class="nav-link" href="#intro">↓ Intro</a>
-      <a class="nav-link" href="#verdict">Verdetto</a>
-      <a class="nav-link" href="#popolazione">Popolazione</a>
-      <a class="nav-link" href="#salute">Anni di vita in salute</a>
-      <a class="nav-link" href="#occupazione">Occupazione</a>
-      <a class="nav-link" href="#pil">PIL</a>
-      <a class="nav-link" href="#internet">Internet</a>
-      <a class="nav-link" href="#weee">Riciclo WEEE</a>
-      <a class="nav-link" href="#dati">Dati grezzi</a>
-      <a class="nav-link" href="#metodologia">Metodologia</a>
-    </div>
-  </div>
-</nav>
+<!-- nav + header generati da initShell() -->
+<div id="shell-top"></div>
 
-<!-- ═══ HEADER ═══ -->
-<header class="site-header py-5">
-  <div class="container">
-    <p class="eyebrow mb-2">Ricerca SDMX · 27 aprile 2026 · opensdmx CLI</p>
-    <h1 class="mb-3">Fact-checking: Netherlands in Numbers</h1>
-    <p class="intro mb-3" style="max-width:720px;">
-      Verifica dei 6 indicatori statistici dell'infografica Eurostat
-      "Netherlands in Numbers" confrontando ciascun valore con i dati
-      SDMX più recenti disponibili attraverso l'API Eurostat.
-      8 valori dichiarati, 8 verdict.
-    </p>
-    <div class="d-flex flex-wrap gap-2">
-      <span class="ds-badge"><strong>Eurostat</strong> TPS00005 · TPS00001</span>
-      <span class="ds-badge"><strong>Eurostat</strong> TPS00150</span>
-      <span class="ds-badge"><strong>Eurostat</strong> TESEM010</span>
-      <span class="ds-badge"><strong>Eurostat</strong> NAMA_10_PC · NAMA_10_GDP</span>
-      <span class="ds-badge"><strong>Eurostat</strong> ISOC_CI_IT_H</span>
-      <span class="ds-badge"><strong>Eurostat</strong> CEI_WM060</span>
-    </div>
-  </div>
-</header>
+<!-- intro (finding cards + scope) generata da initShell() -->
+<div class="container">
+<div id="shell-intro"></div>
+</div>
 
 <main class="container py-2">
-
-  <!-- ═══ INTRO ═══ -->
-  <section class="section py-5" id="intro">
-    <p class="section-label mb-1">Contesto</p>
-    <h2 class="mb-2">Cosa si verifica e come</h2>
-    <p class="subtitle mb-4">
-      L'infografica originale mostra 6 indicatori per i Paesi Bassi (NL) confrontati con la media UE.
-      Per ciascuno viene cercato il dataset SDMX Eurostat corrispondente, scaricato tramite
-      opensdmx CLI e confrontato con il valore dichiarato.
-    </p>
-
-    <div class="callout callout-info p-3 mb-4">
-      <strong>Limite di scope:</strong> L'infografica Eurostat non indica l'anno di riferimento
-      di ogni dato. I valori SDMX qui riportati usano l'anno più recente disponibile per
-      ciascun indicatore. Laddove l'anno più recente non corrisponde al valore dell'immagine,
-      si documenta l'anno che produce la corrispondenza.
-    </div>
-
-    <!-- INFOGRAFICA ORIGINALE -->
-    <div class="mb-4">
-      <p class="chart-title-label mb-2">Infografica originale — Eurostat "Netherlands in Numbers"</p>
-      <div style="background:#fff;border:1px solid var(--rule);padding:1rem;display:inline-block;max-width:100%;">
-        <img src="statistiche.jpeg" alt="Netherlands in Numbers — infografica Eurostat originale" style="max-width:100%;height:auto;display:block;">
-      </div>
-    </div>
-
-    <div class="row row-cols-2 row-cols-md-4 g-3">
-      <div class="col">
-        <div class="finding-card">
-          <div class="big-num green mb-2">8/8</div>
-          <p class="mb-0"><strong>Valori verificabili</strong> — tutti i dati sono tracciabili su Eurostat SDMX</p>
-        </div>
-      </div>
-      <div class="col">
-        <div class="finding-card">
-          <div class="big-num green mb-2">6</div>
-          <p class="mb-0"><strong>Confermati</strong> — valori che corrispondono ai dati SDMX più recenti</p>
-        </div>
-      </div>
-      <div class="col">
-        <div class="finding-card">
-          <div class="big-num orange mb-2">2</div>
-          <p class="mb-0"><strong>Con caveat</strong> — un dato Internet obsoleto (2017), un WEEE con approssimazione</p>
-        </div>
-      </div>
-      <div class="col">
-        <div class="finding-card">
-          <div class="big-num blue mb-2">2025</div>
-          <p class="mb-0"><strong>Anno prevalente</strong> — la maggior parte dei dati fa riferimento al 2025 (provvisori)</p>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- ═══ VERDETTO FINALE ═══ -->
   <section class="section py-5" id="verdict">
@@ -416,7 +235,7 @@
 
     <div class="chart-wrap mb-4">
       <p class="chart-title-label">Tasso di occupazione 20–64 anni (%)</p>
-      <svg id="chart-emp"></svg>
+      <svg id="chart-emp" style="min-height:380px;"></svg>
     </div>
 
     <div class="transform p-3 mb-4">
@@ -505,7 +324,7 @@
 
     <div class="chart-wrap mb-4">
       <p class="chart-title-label">% famiglie con connessione broadband (H_BROAD) — NL vs EU27</p>
-      <svg id="chart-net"></svg>
+      <svg id="chart-net" style="min-height:380px;"></svg>
     </div>
 
     <div class="transform p-3 mb-4">
@@ -564,195 +383,105 @@
     </div>
   </section>
 
-  <!-- ═══ DATI GREZZI ═══ -->
-  <section class="section py-5" id="dati">
-    <p class="section-label mb-1">Dati grezzi</p>
-    <h2 class="mb-2">Scarica i dati originali</h2>
-    <p class="subtitle mb-4">
-      Dati estratti da Eurostat tramite API SDMX e usati per le analisi in questa pagina.
-    </p>
-    <div class="callout p-3 mb-4">
-      Questi sono i dati <strong>così come restituiti dall'API</strong> — nessuna aggregazione.
-      Licenza: Eurostat CC BY 4.0.
-      Data di estrazione: <strong>27 aprile 2026</strong>.
-    </div>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
-      <div class="col">
-        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
-          <div class="dl-label mb-1">Eurostat TPS00001</div>
-          <div class="dl-title mb-1">Popolazione totale NL al 1° gennaio</div>
-          <div class="dl-meta mb-2">3 righe · 1 paese · 2023–2025</div>
-          <a class="dl-link" href="output/A2_popolazione_totale.csv" download>↓ CSV</a>
-        </div>
-      </div>
-      <div class="col">
-        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
-          <div class="dl-label mb-1">Eurostat TPS00005</div>
-          <div class="dl-title mb-1">Quota % popolazione NL su EU27</div>
-          <div class="dl-meta mb-2">3 righe · 1 paese · 2023–2025</div>
-          <a class="dl-link" href="output/A_popolazione.csv" download>↓ CSV</a>
-        </div>
-      </div>
-      <div class="col">
-        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
-          <div class="dl-label mb-1">Eurostat TPS00150</div>
-          <div class="dl-title mb-1">Anni vita in salute alla nascita</div>
-          <div class="dl-meta mb-2">6 righe · 2 geo · 2021–2023</div>
-          <a class="dl-link" href="output/B_healthy_life_years.csv" download>↓ CSV</a>
-        </div>
-      </div>
-      <div class="col">
-        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
-          <div class="dl-label mb-1">Eurostat TESEM010</div>
-          <div class="dl-title mb-1">Tasso di occupazione 20–64 anni</div>
-          <div class="dl-meta mb-2">6 righe · 2 geo · 2023–2025</div>
-          <a class="dl-link" href="output/C_employment_rate.csv" download>↓ CSV</a>
-        </div>
-      </div>
-      <div class="col">
-        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
-          <div class="dl-label mb-1">Eurostat NAMA_10_PC</div>
-          <div class="dl-title mb-1">PIL pro capite (€ correnti)</div>
-          <div class="dl-meta mb-2">6 righe · 2 geo · 2023–2025</div>
-          <a class="dl-link" href="output/D_gdp_per_capita.csv" download>↓ CSV</a>
-        </div>
-      </div>
-      <div class="col">
-        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
-          <div class="dl-label mb-1">Eurostat NAMA_10_GDP</div>
-          <div class="dl-title mb-1">PIL totale in milioni di euro</div>
-          <div class="dl-meta mb-2">6 righe · 2 geo · 2023–2025</div>
-          <a class="dl-link" href="output/D3_gdp_totale_milioni.csv" download>↓ CSV</a>
-        </div>
-      </div>
-      <div class="col">
-        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
-          <div class="dl-label mb-1">Eurostat ISOC_CI_IT_H</div>
-          <div class="dl-title mb-1">Famiglie con internet broadband</div>
-          <div class="dl-meta mb-2">10 righe · 2 geo · 2017–2021</div>
-          <a class="dl-link" href="output/E3_high_speed_internet.csv" download>↓ CSV</a>
-        </div>
-      </div>
-      <div class="col">
-        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
-          <div class="dl-label mb-1">Eurostat ISOC_CI_IN_H</div>
-          <div class="dl-title mb-1">Famiglie con accesso internet (totale)</div>
-          <div class="dl-meta mb-2">6 righe · 2 geo · 2023–2025</div>
-          <a class="dl-link" href="output/E_internet_households.csv" download>↓ CSV</a>
-        </div>
-      </div>
-      <div class="col">
-        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
-          <div class="dl-label mb-1">Eurostat CEI_WM060</div>
-          <div class="dl-title mb-1">Tasso riciclo rifiuti elettronici (WEEE)</div>
-          <div class="dl-meta mb-2">6 righe · 2 geo · 2021–2023</div>
-          <a class="dl-link" href="output/F_weee_recycling.csv" download>↓ CSV</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ METODOLOGIA ═══ -->
-  <section class="section py-5" id="metodologia">
-    <p class="section-label mb-1">Note metodologiche</p>
-    <h2 class="mb-2">Fonti, definizioni e riproducibilità</h2>
-    <p class="subtitle mb-4">Tutti i dati sono riproducibili tramite opensdmx CLI.</p>
-    <p class="note pt-2 mb-4">Tutti i file di questo report sono disponibili su <a href="https://github.com/datapitch-it/automatic-reports/tree/main/reports/08_netherlands-factcheck" target="_blank">GitHub</a>.</p>
-
-    <h3 class="subsection-title mt-4 mb-3">Classificazioni usate</h3>
-    <div class="table-responsive mb-4">
-      <table class="data-table table table-bordered table-sm">
-        <thead><tr><th>Codice</th><th>Sistema</th><th>Significato</th></tr></thead>
-        <tbody>
-          <tr><td><code>HLY_0</code></td><td>Eurostat health indicators</td><td>Anni di vita in salute assoluti alla nascita</td></tr>
-          <tr><td><code>EMP_LFS</code></td><td>Labour Force Survey</td><td>Occupazione totale (concetto residenza, LFS)</td></tr>
-          <tr><td><code>B1GQ</code></td><td>ESA 2010</td><td>Prodotto interno lordo ai prezzi di mercato</td></tr>
-          <tr><td><code>CP_EUR_HAB</code></td><td>NAMA</td><td>Prezzi correnti, euro per abitante</td></tr>
-          <tr><td><code>H_BROAD</code></td><td>ICT household survey</td><td>Tipo connessione famiglie: banda larga (broadband)</td></tr>
-          <tr><td><code>POPSHARE_EU27_2020</code></td><td>Eurostat demographic</td><td>% popolazione su EU27 (da 2020)</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3 class="subsection-title mt-4 mb-3">URL API SDMX delle query originali</h3>
-    <p class="mb-2" style="color:var(--ink-light);">URL usati per scaricare i dati (Eurostat SDMX 2.1).</p>
-
-    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">TPS00001 — Popolazione NL</p>
-    <div class="query-url p-2 mb-3">
-      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00001/A.JAN.NL?format=SDMX-CSV&lastNObservations=3" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00001/A.JAN.NL?format=SDMX-CSV&lastNObservations=3</a>
-    </div>
-
-    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">TPS00005 — Quota % popolazione UE</p>
-    <div class="query-url p-2 mb-3">
-      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00005/A.POPSHARE_EU27_2020.NL?format=SDMX-CSV&lastNObservations=3" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00005/A.POPSHARE_EU27_2020.NL?format=SDMX-CSV&lastNObservations=3</a>
-    </div>
-
-    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">TPS00150 — Anni di vita in salute</p>
-    <div class="query-url p-2 mb-3">
-      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00150/A..T.HLY_0.NL+EU27_2020?format=SDMX-CSV&lastNObservations=3" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00150/A..T.HLY_0.NL+EU27_2020?format=SDMX-CSV&lastNObservations=3</a>
-    </div>
-
-    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">TESEM010 — Tasso di occupazione 20–64</p>
-    <div class="query-url p-2 mb-3">
-      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TESEM010/A.EMP_LFS.PC_POP.Y20-64.T.NL+EU27_2020?format=SDMX-CSV&lastNObservations=3" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TESEM010/A.EMP_LFS.PC_POP.Y20-64.T.NL+EU27_2020?format=SDMX-CSV&lastNObservations=3</a>
-    </div>
-
-    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">NAMA_10_PC — PIL pro capite</p>
-    <div class="query-url p-2 mb-3">
-      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/NAMA_10_PC/A.CP_EUR_HAB.B1GQ.NL+EU27_2020?format=SDMX-CSV&lastNObservations=3" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/NAMA_10_PC/A.CP_EUR_HAB.B1GQ.NL+EU27_2020?format=SDMX-CSV&lastNObservations=3</a>
-    </div>
-
-    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">ISOC_CI_IT_H — Broadband famiglie</p>
-    <div class="query-url p-2 mb-3">
-      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/ISOC_CI_IT_H/A.H_BROAD.PC_HH.TOTAL.NL+EU27_2020?format=SDMX-CSV&lastNObservations=5" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/ISOC_CI_IT_H/A.H_BROAD.PC_HH.TOTAL.NL+EU27_2020?format=SDMX-CSV&lastNObservations=5</a>
-    </div>
-
-    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">CEI_WM060 — Tasso riciclo WEEE</p>
-    <div class="query-url p-2 mb-3">
-      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/CEI_WM060/A.PC.NL+EU27_2020?format=SDMX-CSV&lastNObservations=3" target="_blank">https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/CEI_WM060/A.PC.NL+EU27_2020?format=SDMX-CSV&lastNObservations=3</a>
-    </div>
-
-    <h3 class="subsection-title mt-4 mb-3">Comandi CLI per riprodurre i dati</h3>
-    <div class="table-responsive mb-4">
-      <table class="data-table table table-bordered table-sm">
-        <thead><tr><th>File</th><th>Comando</th></tr></thead>
-        <tbody>
-          <tr><td>A2_popolazione_totale.csv</td><td><code>opensdmx get TPS00001 --provider eurostat --freq A --geo NL --last-n 3 --out output/A2_popolazione_totale.csv</code></td></tr>
-          <tr><td>A_popolazione.csv</td><td><code>opensdmx get TPS00005 --provider eurostat --freq A --indic_de POPSHARE_EU27_2020 --geo NL --last-n 3 --out output/A_popolazione.csv</code></td></tr>
-          <tr><td>B_healthy_life_years.csv</td><td><code>opensdmx get TPS00150 --provider eurostat --freq A --sex T --geo NL+EU27_2020 --last-n 3 --out output/B_healthy_life_years.csv</code></td></tr>
-          <tr><td>C_employment_rate.csv</td><td><code>opensdmx get TESEM010 --provider eurostat --freq A --age Y20-64 --sex T --geo NL+EU27_2020 --last-n 3 --out output/C_employment_rate.csv</code></td></tr>
-          <tr><td>D_gdp_per_capita.csv</td><td><code>opensdmx get NAMA_10_PC --provider eurostat --freq A --unit CP_EUR_HAB --na_item B1GQ --geo NL+EU27_2020 --last-n 3 --out output/D_gdp_per_capita.csv</code></td></tr>
-          <tr><td>D3_gdp_totale_milioni.csv</td><td><code>opensdmx get NAMA_10_GDP --provider eurostat --freq A --unit CP_MEUR --na_item B1GQ --geo NL+EU27_2020 --last-n 3 --out output/D3_gdp_totale_milioni.csv</code></td></tr>
-          <tr><td>E3_high_speed_internet.csv</td><td><code>opensdmx get ISOC_CI_IT_H --provider eurostat --freq A --indic_is H_BROAD --unit PC_HH --hhtyp TOTAL --geo NL+EU27_2020 --last-n 5 --out output/E3_high_speed_internet.csv</code></td></tr>
-          <tr><td>F_weee_recycling.csv</td><td><code>opensdmx get CEI_WM060 --provider eurostat --freq A --geo NL+EU27_2020 --last-n 3 --out output/F_weee_recycling.csv</code></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
 </main>
 
-<!-- ═══ FOOTER ═══ -->
-<footer class="site-footer py-4 mt-2">
-  <div class="container d-flex flex-wrap gap-4 justify-content-between">
-    <span>Dati: Eurostat · Formato SDMX 2.1</span>
-    <span>Strumento: <a href="https://github.com/ondata/opensdmx">opensdmx CLI</a></span>
-    <span>Grafici: <a href="https://github.com/jwilber/roughViz">roughViz</a> · <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a></span>
-    <span>27 aprile 2026</span>
-  </div>
-</footer>
+<!-- dati grezzi + metodologia generati da initShell() -->
+<div id="shell-bottom"></div>
 
+<!-- footer generato da initShell() -->
+<div class="container">
+<div id="shell-footer"></div>
+</div>
+
+<script src="../../assets/shell.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+// ── CONFIG SHELL ─────────────────────────────────────────────────────────────
+initShell({
+  title:  "Fact-checking: Netherlands in Numbers",
+  date:   "27 aprile 2026",
+  intro:  "Verifica dei 6 indicatori statistici dell'infografica Eurostat \"Netherlands in Numbers\" confrontando ciascun valore con i dati SDMX più recenti disponibili attraverso l'API Eurostat. 8 valori dichiarati, 8 verdict.",
+  badges: [
+    { label: "Eurostat", value: "TPS00005 · TPS00001" },
+    { label: "Eurostat", value: "TPS00150" },
+    { label: "Eurostat", value: "TESEM010" },
+    { label: "Eurostat", value: "NAMA_10_PC · NAMA_10_GDP" },
+    { label: "Eurostat", value: "ISOC_CI_IT_H" },
+    { label: "Eurostat", value: "CEI_WM060" }
+  ],
+  nav: [
+    { id: "verdict",     label: "Verdetto" },
+    { id: "popolazione", label: "Popolazione" },
+    { id: "salute",      label: "Anni di vita in salute" },
+    { id: "occupazione", label: "Occupazione" },
+    { id: "pil",         label: "PIL" },
+    { id: "internet",    label: "Internet" },
+    { id: "weee",        label: "Riciclo WEEE" }
+  ],
+  introTitle:    "Cosa si verifica e come",
+  introSubtitle: "L'infografica originale mostra 6 indicatori per i Paesi Bassi (NL) confrontati con la media UE. Per ciascuno viene cercato il dataset SDMX Eurostat corrispondente, scaricato tramite opensdmx CLI e confrontato con il valore dichiarato.",
+  scopeLimit: "L'infografica Eurostat non indica l'anno di riferimento di ogni dato. I valori SDMX qui riportati usano l'anno più recente disponibile per ciascun indicatore. Laddove l'anno più recente non corrisponde al valore dell'immagine, si documenta l'anno che produce la corrispondenza.",
+  introExtra: '<div class="mb-4"><p class="chart-title-label mb-2">Infografica originale — Eurostat "Netherlands in Numbers"</p><div style="background:#fff;border:1px solid var(--rule);padding:1rem;display:inline-block;max-width:100%;"><img src="statistiche.jpeg" alt="Netherlands in Numbers — infografica Eurostat originale" style="max-width:100%;height:auto;display:block;"></div></div>',
+  findingCards: [
+    { value: "8/8",  color: "green",  label: "<strong>Valori verificabili</strong> — tutti i dati sono tracciabili su Eurostat SDMX" },
+    { value: "6",    color: "green",  label: "<strong>Confermati</strong> — valori che corrispondono ai dati SDMX più recenti" },
+    { value: "2",    color: "orange", label: "<strong>Con caveat</strong> — un dato Internet obsoleto (2017), un WEEE con approssimazione" },
+    { value: "2025", color: "blue",   label: "<strong>Anno prevalente</strong> — la maggior parte dei dati fa riferimento al 2025 (provvisori)" }
+  ],
+  rawData: {
+    license: "Eurostat CC BY 4.0",
+    extractionDate: "27 aprile 2026",
+    files: [
+      { provider: "Eurostat", datasetId: "TPS00001",    desc: "Popolazione totale NL al 1° gennaio",      rows: 3,  period: "1 paese · 2023–2025",   file: "output/A2_popolazione_totale.csv" },
+      { provider: "Eurostat", datasetId: "TPS00005",    desc: "Quota % popolazione NL su EU27",           rows: 3,  period: "1 paese · 2023–2025",   file: "output/A_popolazione.csv" },
+      { provider: "Eurostat", datasetId: "TPS00150",    desc: "Anni vita in salute alla nascita",          rows: 6,  period: "2 geo · 2021–2023",     file: "output/B_healthy_life_years.csv" },
+      { provider: "Eurostat", datasetId: "TESEM010",    desc: "Tasso di occupazione 20–64 anni",          rows: 6,  period: "2 geo · 2023–2025",     file: "output/C_employment_rate.csv" },
+      { provider: "Eurostat", datasetId: "NAMA_10_PC",  desc: "PIL pro capite (€ correnti)",               rows: 6,  period: "2 geo · 2023–2025",     file: "output/D_gdp_per_capita.csv" },
+      { provider: "Eurostat", datasetId: "NAMA_10_GDP", desc: "PIL totale in milioni di euro",             rows: 6,  period: "2 geo · 2023–2025",     file: "output/D3_gdp_totale_milioni.csv" },
+      { provider: "Eurostat", datasetId: "ISOC_CI_IT_H",desc: "Famiglie con internet broadband",           rows: 10, period: "2 geo · 2017–2021",     file: "output/E3_high_speed_internet.csv" },
+      { provider: "Eurostat", datasetId: "ISOC_CI_IN_H",desc: "Famiglie con accesso internet (totale)",    rows: 6,  period: "2 geo · 2023–2025",     file: "output/E_internet_households.csv" },
+      { provider: "Eurostat", datasetId: "CEI_WM060",   desc: "Tasso riciclo rifiuti elettronici (WEEE)", rows: 6,  period: "2 geo · 2021–2023",     file: "output/F_weee_recycling.csv" }
+    ]
+  },
+  methodology: {
+    githubUrl: "https://github.com/datapitch-it/automatic-reports/tree/main/reports/08_netherlands-factcheck",
+    classifications: [
+      { code: "HLY_0",              system: "Eurostat health indicators", meaning: "Anni di vita in salute assoluti alla nascita" },
+      { code: "EMP_LFS",            system: "Labour Force Survey",         meaning: "Occupazione totale (concetto residenza, LFS)" },
+      { code: "B1GQ",               system: "ESA 2010",                    meaning: "Prodotto interno lordo ai prezzi di mercato" },
+      { code: "CP_EUR_HAB",         system: "NAMA",                        meaning: "Prezzi correnti, euro per abitante" },
+      { code: "H_BROAD",            system: "ICT household survey",        meaning: "Tipo connessione famiglie: banda larga (broadband)" },
+      { code: "POPSHARE_EU27_2020", system: "Eurostat demographic",        meaning: "% popolazione su EU27 (da 2020)" }
+    ],
+    apiUrls: [
+      { datasetId: "TPS00001",     provider: "Eurostat", desc: "Popolazione NL",              url: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00001/A.JAN.NL?format=SDMX-CSV&amp;lastNObservations=3" },
+      { datasetId: "TPS00005",     provider: "Eurostat", desc: "Quota % popolazione UE",      url: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00005/A.POPSHARE_EU27_2020.NL?format=SDMX-CSV&amp;lastNObservations=3" },
+      { datasetId: "TPS00150",     provider: "Eurostat", desc: "Anni di vita in salute",       url: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00150/A..T.HLY_0.NL+EU27_2020?format=SDMX-CSV&amp;lastNObservations=3" },
+      { datasetId: "TESEM010",     provider: "Eurostat", desc: "Tasso di occupazione 20–64",  url: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TESEM010/A.EMP_LFS.PC_POP.Y20-64.T.NL+EU27_2020?format=SDMX-CSV&amp;lastNObservations=3" },
+      { datasetId: "NAMA_10_PC",   provider: "Eurostat", desc: "PIL pro capite",               url: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/NAMA_10_PC/A.CP_EUR_HAB.B1GQ.NL+EU27_2020?format=SDMX-CSV&amp;lastNObservations=3" },
+      { datasetId: "ISOC_CI_IT_H", provider: "Eurostat", desc: "Broadband famiglie",           url: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/ISOC_CI_IT_H/A.H_BROAD.PC_HH.TOTAL.NL+EU27_2020?format=SDMX-CSV&amp;lastNObservations=5" },
+      { datasetId: "CEI_WM060",    provider: "Eurostat", desc: "Tasso riciclo WEEE",           url: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/CEI_WM060/A.PC.NL+EU27_2020?format=SDMX-CSV&amp;lastNObservations=3" }
+    ],
+    cliHeader: "File",
+    cliCommands: [
+      { dataset: "A2_popolazione_totale.csv",  command: "opensdmx get TPS00001 --provider eurostat --freq A --geo NL --last-n 3 --out output/A2_popolazione_totale.csv" },
+      { dataset: "A_popolazione.csv",          command: "opensdmx get TPS00005 --provider eurostat --freq A --indic_de POPSHARE_EU27_2020 --geo NL --last-n 3 --out output/A_popolazione.csv" },
+      { dataset: "B_healthy_life_years.csv",   command: "opensdmx get TPS00150 --provider eurostat --freq A --sex T --geo NL+EU27_2020 --last-n 3 --out output/B_healthy_life_years.csv" },
+      { dataset: "C_employment_rate.csv",      command: "opensdmx get TESEM010 --provider eurostat --freq A --age Y20-64 --sex T --geo NL+EU27_2020 --last-n 3 --out output/C_employment_rate.csv" },
+      { dataset: "D_gdp_per_capita.csv",       command: "opensdmx get NAMA_10_PC --provider eurostat --freq A --unit CP_EUR_HAB --na_item B1GQ --geo NL+EU27_2020 --last-n 3 --out output/D_gdp_per_capita.csv" },
+      { dataset: "D3_gdp_totale_milioni.csv",  command: "opensdmx get NAMA_10_GDP --provider eurostat --freq A --unit CP_MEUR --na_item B1GQ --geo NL+EU27_2020 --last-n 3 --out output/D3_gdp_totale_milioni.csv" },
+      { dataset: "E3_high_speed_internet.csv", command: "opensdmx get ISOC_CI_IT_H --provider eurostat --freq A --indic_is H_BROAD --unit PC_HH --hhtyp TOTAL --geo NL+EU27_2020 --last-n 5 --out output/E3_high_speed_internet.csv" },
+      { dataset: "F_weee_recycling.csv",       command: "opensdmx get CEI_WM060 --provider eurostat --freq A --geo NL+EU27_2020 --last-n 3 --out output/F_weee_recycling.csv" }
+    ]
+  },
+  providers: "Eurostat",
+  github: "https://github.com/datapitch-it/automatic-reports"
+});
 
-// ── GRAFICO 1: POPOLAZIONE NL ──────────────────────────────────────────────────
-// Dati TPS00001: popolazione NL al 1° gennaio 2023-2025 (in milioni)
+// ── CHART INIT ───────────────────────────────────────────────────────────────
 new roughViz.Bar({
   element: '#chart-pop',
-  data: {
-    labels: ['2023', '2024', '2025'],
-    values: [17.811, 17.943, 18.044]
-  },
+  data: { labels: ['2023', '2024', '2025'], values: [17.811, 17.943, 18.044] },
   title: 'POPOLAZIONE NL AL 1° GENNAIO (MILIONI)',
   titleFontSize: '1rem',
   axisFontSize: '1rem',
@@ -771,14 +500,9 @@ new roughViz.Bar({
   yLabel: 'MILIONI DI ABITANTI',
 });
 
-// ── GRAFICO 2: ANNI DI VITA IN SALUTE ─────────────────────────────────────────
-// Dati TPS00150: HLY_0, sex=T, 2023 — NL=59.0, EU27=63.1
 new roughViz.BarH({
   element: '#chart-hly',
-  data: {
-    labels: ['NL (PAESI BASSI)', 'UE27 MEDIA'],
-    values: [59.0, 63.1]
-  },
+  data: { labels: ['NL (PAESI BASSI)', 'UE27 MEDIA'], values: [59.0, 63.1] },
   title: 'ANNI DI VITA IN SALUTE ALLA NASCITA — 2023',
   titleFontSize: '1rem',
   axisFontSize: '1rem',
@@ -796,41 +520,21 @@ new roughViz.BarH({
   xLabel: 'ANNI',
 });
 
-// ── GRAFICO 3: OCCUPAZIONE 20-64 ANNI ─────────────────────────────────────────
-// Dati TESEM010: NL e EU27, 2023-2025
 const empAnni = [2023, 2024, 2025];
 const empNL = [83.5, 83.5, 83.4];
 const empEU = [75.3, 75.8, 76.1];
-
 const pointsNL = empAnni.map((a, i) => ({ x: a, y: empNL[i] }));
 const pointsEU = empAnni.map((a, i) => ({ x: a, y: empEU[i] }));
-
 new chartXkcd.XY(document.getElementById('chart-emp'), {
   xLabel: '',
   yLabel: 'PERCENTUALE (%)',
-  data: {
-    datasets: [
-      { label: 'NL (PAESI BASSI)', data: pointsNL },
-      { label: 'UE27 MEDIA', data: pointsEU }
-    ]
-  },
-  options: {
-    showLine: true,
-    dotSize: 0.6,
-    xTickCount: 3,
-    yTickCount: 4,
-    dataColors: ['#b02020', '#1a6fa8'],
-  }
+  data: { datasets: [{ label: 'NL (PAESI BASSI)', data: pointsNL }, { label: 'UE27 MEDIA', data: pointsEU }] },
+  options: { showLine: true, dotSize: 0.6, xTickCount: 3, yTickCount: 4, dataColors: ['#b02020', '#1a6fa8'] }
 });
 
-// ── GRAFICO 4: PIL PRO CAPITE ──────────────────────────────────────────────────
-// Dati NAMA_10_PC: NL e EU27, ultimo anno 2025
 new roughViz.BarH({
   element: '#chart-gdp',
-  data: {
-    labels: ['NL (PAESI BASSI)', 'UE27 MEDIA'],
-    values: [65210, 41620]
-  },
+  data: { labels: ['NL (PAESI BASSI)', 'UE27 MEDIA'], values: [65210, 41620] },
   title: 'PIL PRO CAPITE A PREZZI CORRENTI — 2025 (PROVV.)',
   titleFontSize: '1rem',
   axisFontSize: '1rem',
@@ -848,43 +552,22 @@ new roughViz.BarH({
   xLabel: 'EURO/ABITANTE',
 });
 
-// ── GRAFICO 5: INTERNET BROADBAND ─────────────────────────────────────────────
-// Dati ISOC_CI_IT_H: H_BROAD, NL e EU27, 2017-2021
 const netAnni = [2017, 2018, 2019, 2020, 2021];
 const netNL  = [97.8, 97.41, 97.92, 96.95, 98.56];
 const netEU  = [83.48, 84.91, 87.53, 89.36, 90.2];
-
 const ptNetNL = netAnni.map((a, i) => ({ x: a, y: netNL[i] }));
 const ptNetEU = netAnni.map((a, i) => ({ x: a, y: netEU[i] }));
-
 new chartXkcd.XY(document.getElementById('chart-net'), {
   xLabel: '',
   yLabel: '% FAMIGLIE CON BROADBAND',
-  data: {
-    datasets: [
-      { label: 'NL (PAESI BASSI)', data: ptNetNL },
-      { label: 'UE27 MEDIA', data: ptNetEU }
-    ]
-  },
-  options: {
-    showLine: true,
-    dotSize: 0.6,
-    xTickCount: 5,
-    yTickCount: 4,
-    dataColors: ['#b02020', '#1a6fa8'],
-  }
+  data: { datasets: [{ label: 'NL (PAESI BASSI)', data: ptNetNL }, { label: 'UE27 MEDIA', data: ptNetEU }] },
+  options: { showLine: true, dotSize: 0.6, xTickCount: 5, yTickCount: 4, dataColors: ['#b02020', '#1a6fa8'] }
 });
 
-// ── GRAFICO 6: WEEE RECYCLING ─────────────────────────────────────────────────
-// Dati CEI_WM060: NL e EU27, 2021-2023
 new roughViz.BarH({
   element: '#chart-weee',
   data: {
-    labels: [
-      'NL 2021', 'UE27 2021',
-      'NL 2022', 'UE27 2022',
-      'NL 2023', 'UE27 2023'
-    ],
+    labels: ['NL 2021', 'UE27 2021', 'NL 2022', 'UE27 2022', 'NL 2023', 'UE27 2023'],
     values: [71.1, 81.6, 72.6, 80.7, 80.5, 82.2]
   },
   title: 'TASSO DI RICICLO WEEE (%)',
@@ -903,7 +586,6 @@ new roughViz.BarH({
   margin: { top: 40, right: 100, bottom: 60, left: 130 },
   xLabel: 'PERCENTUALE (%)',
 });
-
 </script>
 </body>
 </html>

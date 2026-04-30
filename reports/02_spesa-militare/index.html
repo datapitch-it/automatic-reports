@@ -5,354 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Spesa militare e industria della difesa — Ricerca SDMX</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../assets/style.css">
   <script src="https://unpkg.com/rough-viz@1.0.6"></script>
   <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
-  <style>
-    /* ── BRAND TOKENS ── */
-    :root {
-      --ink:        #1a1a1a;
-      --ink-light:  #333;
-      --ink-faint:  #666;
-      --paper:      #fafaf7;
-      --paper-warm: #f5f3ee;
-      --rule:       #999;
-      --accent:     #b02020;
-      --accent2:    #1a6fa8;
-      --serif:      'Georgia', 'Times New Roman', serif;
-      --mono:       'Courier New', Courier, monospace;
-
-      /* Bootstrap overrides via its own custom props */
-      --bs-body-font-family:  var(--serif);
-      --bs-body-color:        var(--ink);
-      --bs-body-bg:           var(--paper);
-      --bs-border-color:      var(--rule);
-      --bs-card-border-radius: 0;
-      --bs-card-border-color: var(--rule);
-      --bs-table-striped-bg:  var(--paper-warm);
-      --bs-table-border-color: var(--rule);
-    }
-
-    html { font-size: 19px; scroll-behavior: smooth; }
-
-    /* ── CONTAINER ── */
-    .container { max-width: 1060px; }
-
-    /* ── HEADER ── */
-    .site-header {
-      background: var(--paper-warm);
-      border-bottom: 2px solid var(--ink);
-    }
-    .eyebrow {
-      font-family: var(--mono);
-      font-size: 1rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--ink-faint);
-    }
-    .site-header h1 {
-      font-size: 2rem;
-      font-weight: normal;
-      line-height: 1.2;
-    }
-    .intro { color: #ccc; line-height: 1.7; }
-
-    /* ── DATASET BADGES ── */
-    .ds-badge {
-      font-family: var(--mono);
-      font-size: 1rem;
-      background: var(--paper);
-      border: 1px solid var(--rule);
-      padding: 2px 8px;
-      color: var(--ink-light);
-    }
-    .ds-badge strong { color: #fff; }
-
-    /* ── STICKY NAV ── */
-    .site-nav {
-      background: var(--paper) !important;
-      border-bottom: 1px solid var(--rule);
-      z-index: 1020;
-    }
-    .site-nav .nav-link {
-      font-family: var(--mono);
-      font-size: 1rem;
-      color: var(--ink-light);
-      padding: 3px 10px;
-      border: 1px solid transparent;
-      border-radius: 0;
-      transition: border-color 0.15s, color 0.15s;
-    }
-    .site-nav .nav-link:hover { border-color: #555; color: #fff; }
-
-    /* ── SECTIONS ── */
-    .section { border-bottom: 1px solid var(--rule); }
-    .section:last-child { border-bottom: none; }
-
-    .section-label {
-      font-family: var(--mono);
-      font-size: 1rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--ink-faint);
-    }
-    .section h2 { font-size: 1.5rem; font-weight: normal; }
-    .section .subtitle { color: var(--ink-light); line-height: 1.5; }
-
-    .subsection-title {
-      font-size: 1rem;
-      font-weight: normal;
-      color: var(--ink);
-      padding-bottom: 0.3rem;
-      border-bottom: 1px dashed var(--rule);
-    }
-
-    /* ── CALLOUT ── */
-    .callout {
-      background: var(--paper-warm);
-      border-left: 3px solid var(--accent);
-      border-top: none; border-right: none; border-bottom: none;
-      border-radius: 0;
-      color: var(--ink-light);
-    }
-    .callout strong { color: var(--ink); }
-
-    /* ── FINDING CARDS ── */
-    .finding-card {
-      background: #fff;
-      border: 1px solid var(--rule);
-      padding: 0.9rem 1rem;
-      height: 100%;
-    }
-    .big-num {
-      font-size: 2rem;
-      font-family: var(--mono);
-      color: var(--accent);
-      line-height: 1;
-    }
-    .big-num.blue { color: var(--accent2); }
-    .finding-card p { font-size: 1rem; color: var(--ink-light); line-height: 1.4; }
-    .finding-card strong { color: var(--ink); }
-
-    /* ── CHART CONTAINERS ── */
-    .chart-wrap {
-      background: #fff;
-      border: 1px solid var(--rule);
-      padding: 1.2rem;
-      overflow-x: auto;
-    }
-    .chart-wrap svg { display: block; width: 100%; min-height: 380px; }
-
-    /* ── SMALL MULTIPLES ── */
-    .sm-card {
-      background: #fff;
-      border: 1px solid var(--rule);
-      padding: 0.6rem 0.6rem 0;
-    }
-    .sm-card h4 {
-      font-size: 1rem;
-      font-family: var(--mono);
-      color: var(--ink-light);
-      padding: 0 0.3rem 0.3rem;
-      border-bottom: 1px dashed var(--rule);
-      margin-bottom: 0.3rem;
-    }
-    .sm-card svg { width: 100%; height: 210px; display: block; }
-
-    /* ── LEGEND ── */
-    .legend-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      display: inline-block;
-    }
-
-    /* ── DATA TABLES ── */
-    .data-table { font-size: 1rem; }
-    .data-table thead th {
-      background: var(--paper-warm);
-      font-family: var(--mono);
-      font-size: 1rem;
-      font-weight: normal;
-      letter-spacing: 0.05em;
-      border-color: var(--rule);
-    }
-    .data-table td { border-color: var(--rule); }
-    .data-table tbody tr:nth-child(even) td { background: var(--paper-warm); }
-    .data-table code {
-      font-family: var(--mono);
-      font-size: 1rem;
-      background: var(--paper-warm);
-      padding: 1px 4px;
-      color: var(--ink);
-    }
-
-    /* ── NOTE ── */
-    .note {
-      font-size: 1rem;
-      color: var(--ink-faint);
-      border-top: 1px dashed var(--rule);
-      line-height: 1.6;
-    }
-    .note code {
-      font-family: var(--mono);
-      font-size: 1rem;
-      background: var(--paper-warm);
-      padding: 1px 4px;
-      border: 1px solid var(--rule);
-    }
-    .note a { color: #888; }
-
-    /* ── TRANSFORM BLOCK ── */
-    .transform {
-      background: var(--paper-warm);
-      border: 1px solid var(--rule);
-      border-left: 3px solid var(--accent2);
-    }
-    .transform h4 {
-      font-family: var(--mono);
-      font-size: 1rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--ink-faint);
-    }
-    .transform ul { color: var(--ink-light); line-height: 1.7; }
-    .transform li code {
-      font-family: var(--mono);
-      font-size: 1rem;
-      background: var(--paper);
-      padding: 1px 4px;
-      border: 1px solid var(--rule);
-    }
-
-    /* ── QUERY URL BLOCK ── */
-    .query-url {
-      background: #fff;
-      border: 1px solid var(--rule);
-      font-family: var(--mono);
-      font-size: 1rem;
-      color: var(--ink-light);
-      word-break: break-all;
-      line-height: 1.6;
-    }
-    .query-url a { color: var(--accent2); }
-
-    /* ── DOWNLOAD CARDS ── */
-    .dl-label {
-      font-family: var(--mono);
-      font-size: 1rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--ink-faint);
-    }
-    .dl-title { color: var(--ink); font-size: 1rem; }
-    .dl-meta { font-family: var(--mono); font-size: 1rem; color: #888; }
-    a.dl-link {
-      font-family: var(--mono);
-      font-size: 1rem;
-      color: var(--accent2);
-      text-decoration: none;
-      border: 1px solid var(--accent2);
-      padding: 2px 8px;
-      display: inline-block;
-    }
-    a.dl-link:hover { background: var(--accent2); color: #fff; }
-
-    /* ── FOOTER ── */
-    .site-footer {
-      border-top: 2px solid var(--ink);
-      font-size: 1rem;
-      color: var(--ink-faint);
-      font-family: var(--mono);
-    }
-    .site-footer a { color: #888; }
-  </style>
 </head>
 <body>
 
-<!-- ═══ NAV ═══ -->
-<nav class="site-nav navbar sticky-top py-2">
-  <div class="container">
-    <div class="d-flex flex-wrap gap-1">
-      <a class="nav-link" href="#intro">↓ Intro</a>
-      <a class="nav-link" href="#fase-a">A — Ranking EU</a>
-      <a class="nav-link" href="#fase-b">B — Serie storica</a>
-      <a class="nav-link" href="#fase-c">C — R&amp;D difesa</a>
-      <a class="nav-link" href="#fase-d">D — Confronto OECD</a>
-      <a class="nav-link" href="#dati">Dati grezzi</a>
-      <a class="nav-link" href="#metodologia">Metodologia</a>
-    </div>
-  </div>
-</nav>
-
-<!-- ═══ HEADER ═══ -->
-<header class="site-header py-5">
-  <div class="container">
-    <p class="eyebrow mb-2">Ricerca SDMX · 8 aprile 2026 · opensdmx CLI</p>
-    <h1 class="mb-3">Spesa militare e industria della difesa</h1>
-    <p class="intro mb-3" style="max-width:720px;">
-      Analisi della spesa pubblica per la difesa militare in Europa e nel mondo,
-      basata su dati statistici istituzionali (Eurostat e OECD) in formato SDMX.
-      I dati coprono la domanda pubblica di difesa — la proxy statistica più affidabile
-      disponibile in formato aperto per l'industria degli armamenti.
-    </p>
-    <div class="d-flex flex-wrap gap-2">
-      <span class="ds-badge"><strong>Eurostat</strong> GOV_10A_EXP</span>
-      <span class="ds-badge"><strong>Eurostat</strong> TSC00008</span>
-      <span class="ds-badge"><strong>OECD</strong> NASEC10 DF_TABLE11</span>
-      <span class="ds-badge"><strong>Periodo</strong> 2000–2024</span>
-      <span class="ds-badge"><strong>Paesi</strong> 40+</span>
-      <span class="ds-badge"><strong>Grafici</strong> roughViz · chart.xkcd</span>
-    </div>
-  </div>
-</header>
+<div id="shell-top"></div>
+<div id="shell-intro"></div>
 
 <main class="container py-2">
-
-  <!-- ═══ INTRO ═══ -->
-  <section class="section py-5" id="intro">
-    <p class="section-label mb-1">Contesto</p>
-    <h2 class="mb-2">Cosa misuriamo e perché</h2>
-    <p class="subtitle mb-4">
-      I provider SDMX pubblicano aggregati macroeconomici, non dati su singole aziende.
-      Queste analisi misurano la domanda pubblica di difesa.
-    </p>
-
-    <div class="callout p-3 mb-4">
-      <strong>Limite di scope:</strong> I dati SDMX (Eurostat, OECD) non contengono informazioni
-      su singole aziende produttrici di armi. Per dati su BAE Systems, Leonardo, Rheinmetall ecc.
-      la fonte è il <a href="https://www.sipri.org/databases/armsindustry">SIPRI Arms Industry Database</a>.
-      Questi grafici misurano la <strong>spesa governativa per la difesa</strong>, che rappresenta
-      la domanda pubblica a cui l'industria risponde.
-    </div>
-
-    <div class="row row-cols-2 row-cols-md-4 g-3">
-      <div class="col">
-        <div class="finding-card">
-          <div class="big-num mb-2">52%</div>
-          <p class="mb-0"><strong>USA</strong> — quota del budget R&amp;D governativo destinata alla difesa militare (2024)</p>
-        </div>
-      </div>
-      <div class="col">
-        <div class="finding-card">
-          <div class="big-num mb-2">3.6%</div>
-          <p class="mb-0"><strong>Estonia</strong> — record EU per spesa militare in % del PIL (2024), da 1.1% nel 2000</p>
-        </div>
-      </div>
-      <div class="col">
-        <div class="finding-card">
-          <div class="big-num blue mb-2">249</div>
-          <p class="mb-0"><strong>Svezia</strong> — indice spesa militare 2024 (base 2015=100): quasi triplicata in 9 anni</p>
-        </div>
-      </div>
-      <div class="col">
-        <div class="finding-card">
-          <div class="big-num blue mb-2">0.6%</div>
-          <p class="mb-0"><strong>Italia</strong> — % GBARD per R&amp;D militare, tra i più bassi d'Europa occidentale</p>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- ═══ FASE A ═══ -->
   <section class="section py-5" id="fase-a">
@@ -546,170 +209,95 @@
     </p>
   </section>
 
-  <!-- ═══ DATI GREZZI ═══ -->
-  <section class="section py-5" id="dati">
-    <p class="section-label mb-1">Dati grezzi</p>
-    <h2 class="mb-2">Scarica i dati originali</h2>
-    <p class="subtitle mb-4">
-      Qui puoi trovare i dati grezzi estratti da Eurostat e OECD tramite API SDMX
-      e usati per le analisi e i grafici in questa pagina.
-    </p>
-
-    <div class="callout p-3 mb-4">
-      Caro utente, questi sono i dati <strong>così come restituiti dall'API</strong> — nessuna aggregazione,
-      solo le colonne originali più eventuali label aggiuntive per i codici paese.
-      Puoi usarli liberamente: i dati Eurostat sono rilasciati con licenza
-      <a href="https://ec.europa.eu/eurostat/web/main/about/our-partner-organisations/legal-notice">CC BY 4.0</a>;
-      i dati OECD con licenza
-      <a href="https://www.oecd.org/termsandconditions/">CC BY-NC-SA 3.0</a>.
-      La data di estrazione è <strong>8 aprile 2026</strong>.
-    </div>
-
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
-      <div class="col">
-        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
-          <div class="dl-label mb-1">Dataset A · Eurostat GOV_10A_EXP</div>
-          <div class="dl-title mb-1">Spesa militare % PIL — EU</div>
-          <div class="dl-meta mb-2">660 righe · 27 paesi · 2000–2024</div>
-          <a class="dl-link" href="output/A_spesa_militare_pil_eu.csv" download>↓ CSV</a>
-        </div>
-      </div>
-      <div class="col">
-        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
-          <div class="dl-label mb-1">Dataset B · Eurostat GOV_10A_EXP (filtrato)</div>
-          <div class="dl-title mb-1">Paesi selezionati — serie storica</div>
-          <div class="dl-meta mb-2">7 paesi · IT PL ES SE EE EL NO · 2000–2024</div>
-          <a class="dl-link" href="output/B_spesa_militare_paesi_selezionati.csv" download>↓ CSV</a>
-        </div>
-      </div>
-      <div class="col">
-        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
-          <div class="dl-label mb-1">Dataset C · Eurostat TSC00008</div>
-          <div class="dl-title mb-1">R&amp;D difesa — % budget GBARD</div>
-          <div class="dl-meta mb-2">39 paesi · 2014–2025</div>
-          <a class="dl-link" href="output/C_rd_difesa.csv" download>↓ CSV</a>
-        </div>
-      </div>
-      <div class="col">
-        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
-          <div class="dl-label mb-1">Dataset D · OECD NASEC10 DF_TABLE11</div>
-          <div class="dl-title mb-1">Spesa militare — valuta locale</div>
-          <div class="dl-meta mb-2">198 righe · 9 paesi · 2005–2024</div>
-          <a class="dl-link" href="output/D_spesa_militare_oecd.csv" download>↓ CSV</a>
-        </div>
-      </div>
-      <div class="col">
-        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
-          <div class="dl-label mb-1">Metadati · Eurostat</div>
-          <div class="dl-title mb-1">Codelist COFOG 1999</div>
-          <div class="dl-meta mb-2">80 codici con label · classificazione spesa pubblica</div>
-          <a class="dl-link" href="metadata/cofog99_codes.csv" download>↓ CSV</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ METODOLOGIA ═══ -->
-  <section class="section py-5" id="metodologia">
-    <p class="section-label mb-1">Note metodologiche</p>
-    <h2 class="mb-2">Fonti, definizioni e riproducibilità</h2>
-    <p class="subtitle mb-4">
-      Tutti i dati sono scaricabili e riproducibili tramite opensdmx CLI.
-    </p>
-    <p class="note pt-2 mb-4">Tutti i file di questo report sono disponibili su <a href="https://github.com/datapitch-it/automatic-reports/tree/main/reports/02_spesa-militare" target="_blank">GitHub</a>.</p>
-
-    <h3 class="subsection-title mt-4 mb-3">Classificazioni usate</h3>
-    <div class="table-responsive mb-4">
-      <table class="data-table table table-bordered table-sm">
-        <thead><tr><th>Codice</th><th>Sistema</th><th>Significato</th></tr></thead>
-        <tbody>
-          <tr><td><code>GF0201</code></td><td>COFOG 1999</td><td>Difesa militare (esclude difesa civile e aiuti militari esteri)</td></tr>
-          <tr><td><code>S13</code></td><td>SEC 2010</td><td>Governo generale (centrale + locale + previdenziale)</td></tr>
-          <tr><td><code>PC_GDP</code></td><td>Eurostat</td><td>Percentuale del PIL — preferita per confronti internazionali</td></tr>
-          <tr><td><code>NABS14</code></td><td>NABS 2007</td><td>Difesa nel sistema di classificazione R&amp;D</td></tr>
-          <tr><td><code>PC_GBA</code></td><td>Eurostat</td><td>% del budget R&amp;D governativo totale (GBARD)</td></tr>
-          <tr><td><code>XDC</code></td><td>OECD</td><td>Valuta nazionale corrente (non confrontabile tra paesi)</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3 class="subsection-title mt-4 mb-3">URL API SDMX delle query originali</h3>
-    <p class="mb-2" style="color:var(--ink-light);">
-      Gli URL seguenti sono le query esatte usate per scaricare i dati.
-      Puoi incollarli direttamente nel browser o in qualsiasi client HTTP per ottenere gli stessi dati.
-    </p>
-
-    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">Dataset A &amp; B — Eurostat GOV_10A_EXP (spesa militare % PIL)</p>
-    <div class="query-url p-2 mb-3">
-      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/GOV_10A_EXP/A.PC_GDP.S13.GF0201.TE./ALL/?startPeriod=2000&endPeriod=2024&format=SDMX-CSV" target="_blank">
-        https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/GOV_10A_EXP/A.PC_GDP.S13.GF0201.TE./ALL/?startPeriod=2000&amp;endPeriod=2024&amp;format=SDMX-CSV
-      </a>
-    </div>
-
-    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">Dataset C — Eurostat TSC00008 (R&amp;D difesa % GBARD)</p>
-    <div class="query-url p-2 mb-3">
-      <a href="https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TSC00008/A.NABS14.PC_GBA./ALL/?startPeriod=2014&endPeriod=2025&format=SDMX-CSV" target="_blank">
-        https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TSC00008/A.NABS14.PC_GBA./ALL/?startPeriod=2014&amp;endPeriod=2025&amp;format=SDMX-CSV
-      </a>
-    </div>
-
-    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">Dataset D — OECD NASEC10 DF_TABLE11 (spesa militare valuta locale)</p>
-    <div class="query-url p-2 mb-4" style="color:var(--ink-faint);">
-      Non disponibile come URL diretto — il provider OECD SDMX 2.1 richiede autenticazione o CLI.<br>
-      <strong>Comando opensdmx:</strong><br>
-      opensdmx get "OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11" --provider oecd --FREQ A --REF_AREA "DEU+FRA+GBR+JPN+ITA+POL+ESP+SWE+NOR" --SECTOR S13 --EXPENDITURE GF0201 --TRANSACTION OTE --start-period 2005 --end-period 2024 --out output/D_spesa_militare_oecd.csv
-    </div>
-
-    <h3 class="subsection-title mt-4 mb-3">Comandi CLI per riprodurre i dati</h3>
-    <div class="table-responsive mb-4">
-      <table class="data-table table table-bordered table-sm">
-        <thead><tr><th>Fase</th><th>Comando</th></tr></thead>
-        <tbody>
-          <tr>
-            <td>A + B</td>
-            <td><code>opensdmx run spesa_militare_eu_pil.yaml --out output/A_refresh.csv</code></td>
-          </tr>
-          <tr>
-            <td>C</td>
-            <td><code>opensdmx run rd_difesa_eurostat.yaml --out output/C_refresh.csv</code></td>
-          </tr>
-          <tr>
-            <td>D</td>
-            <td><code>opensdmx get "OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11" --provider oecd --FREQ A --REF_AREA "DEU+FRA+GBR+JPN+ITA+POL+ESP+SWE+NOR" --SECTOR S13 --EXPENDITURE GF0201 --TRANSACTION OTE --start-period 2005 --end-period 2024 --out output/D_refresh.csv</code></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3 class="subsection-title mt-4 mb-3">File disponibili</h3>
-    <div class="table-responsive">
-      <table class="data-table table table-bordered table-sm">
-        <thead><tr><th>File</th><th>Contenuto</th></tr></thead>
-        <tbody>
-          <tr><td><code>output/A_spesa_militare_pil_eu.csv</code></td><td>660 righe · 27 paesi · % PIL · 2000–2024</td></tr>
-          <tr><td><code>output/B_spesa_militare_paesi_selezionati.csv</code></td><td>7 paesi · serie storica completa</td></tr>
-          <tr><td><code>output/C_rd_difesa.csv</code></td><td>39 paesi · % GBARD · 2014–2025</td></tr>
-          <tr><td><code>output/D_spesa_militare_oecd.csv</code></td><td>198 righe · 9 paesi · valuta locale · 2005–2024</td></tr>
-          <tr><td><code>metadata/cofog99_codes.csv</code></td><td>80 codici COFOG con label</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
 </main>
 
-<!-- ═══ FOOTER ═══ -->
-<footer class="site-footer py-4 mt-2">
-  <div class="container d-flex flex-wrap gap-4 justify-content-between">
-    <span>Dati: Eurostat · OECD · Formato SDMX 2.1</span>
-    <span>Strumento: <a href="https://github.com/ondata/opensdmx/blob/main/docs/skill/README.md">opensdmx CLI</a></span>
-    <span>Grafici: <a href="https://github.com/jwilber/roughViz">roughViz</a> · <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a></span>
-    <span>8 aprile 2026</span>
-  </div>
-</footer>
+<div id="shell-bottom"></div>
+<div id="shell-footer"></div>
 
+<script src="../../assets/shell.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+initShell({
+  title:  "Spesa militare e industria della difesa",
+  date:   "8 aprile 2026",
+  intro:  "Analisi della spesa pubblica per la difesa militare in Europa e nel mondo, basata su dati statistici istituzionali (Eurostat e OECD) in formato SDMX. I dati coprono la domanda pubblica di difesa — la proxy statistica più affidabile disponibile in formato aperto per l'industria degli armamenti.",
+  badges: [
+    { label: "Eurostat", value: "GOV_10A_EXP" },
+    { label: "Eurostat", value: "TSC00008" },
+    { label: "OECD", value: "NASEC10 DF_TABLE11" },
+    { label: "Periodo", value: "2000–2024" },
+    { label: "Paesi", value: "40+" },
+    { label: "Grafici", value: "roughViz · chart.xkcd" }
+  ],
+  nav: [
+    { id: "fase-a", label: "A — Ranking EU" },
+    { id: "fase-b", label: "B — Serie storica" },
+    { id: "fase-c", label: "C — R&amp;D difesa" },
+    { id: "fase-d", label: "D — Confronto OECD" }
+  ],
+  introTitle:    "Cosa misuriamo e perché",
+  introSubtitle: "I provider SDMX pubblicano aggregati macroeconomici, non dati su singole aziende. Queste analisi misurano la domanda pubblica di difesa.",
+  scopeLimit:    'I dati SDMX (Eurostat, OECD) non contengono informazioni su singole aziende produttrici di armi. Per dati su BAE Systems, Leonardo, Rheinmetall ecc. la fonte è il <a href="https://www.sipri.org/databases/armsindustry">SIPRI Arms Industry Database</a>. Questi grafici misurano la <strong>spesa governativa per la difesa</strong>, che rappresenta la domanda pubblica a cui l\'industria risponde.',
+  findingCards: [
+    { value: "52%",  color: "default", label: "<strong>USA</strong> — quota del budget R&amp;D governativo destinata alla difesa militare (2024)" },
+    { value: "3.6%", color: "default", label: "<strong>Estonia</strong> — record EU per spesa militare in % del PIL (2024), da 1.1% nel 2000" },
+    { value: "249",  color: "blue",    label: "<strong>Svezia</strong> — indice spesa militare 2024 (base 2015=100): quasi triplicata in 9 anni" },
+    { value: "0.6%", color: "blue",    label: "<strong>Italia</strong> — % GBARD per R&amp;D militare, tra i più bassi d'Europa occidentale" }
+  ],
+  rawData: {
+    license:        '<a href="https://ec.europa.eu/eurostat/web/main/about/our-partner-organisations/legal-notice">CC BY 4.0</a> (Eurostat); <a href="https://www.oecd.org/termsandconditions/">CC BY-NC-SA 3.0</a> (OECD)',
+    extractionDate: "8 aprile 2026",
+    files: [
+      { provider: "Dataset A · Eurostat", datasetId: "GOV_10A_EXP",             desc: "Spesa militare % PIL — EU",            rows: 660,    period: "27 paesi · 2000–2024",          file: "output/A_spesa_militare_pil_eu.csv" },
+      { provider: "Dataset B · Eurostat", datasetId: "GOV_10A_EXP (filtrato)",  desc: "Paesi selezionati — serie storica",    rows: 7,      period: "IT PL ES SE EE EL NO · 2000–2024", file: "output/B_spesa_militare_paesi_selezionati.csv" },
+      { provider: "Dataset C · Eurostat", datasetId: "TSC00008",                desc: "R&amp;D difesa — % budget GBARD",      rows: 39,     period: "2014–2025",                     file: "output/C_rd_difesa.csv" },
+      { provider: "Dataset D · OECD",     datasetId: "NASEC10 DF_TABLE11",      desc: "Spesa militare — valuta locale",       rows: 198,    period: "9 paesi · 2005–2024",           file: "output/D_spesa_militare_oecd.csv" },
+      { provider: "Metadati · Eurostat",  datasetId: "",                         desc: "Codelist COFOG 1999",                  rows: 80,     period: "classificazione spesa pubblica", file: "metadata/cofog99_codes.csv" }
+    ]
+  },
+  methodology: {
+    githubUrl: "https://github.com/datapitch-it/automatic-reports/tree/main/reports/02_spesa-militare",
+    classifications: [
+      { code: "GF0201",  system: "COFOG 1999",  meaning: "Difesa militare (esclude difesa civile e aiuti militari esteri)" },
+      { code: "S13",     system: "SEC 2010",    meaning: "Governo generale (centrale + locale + previdenziale)" },
+      { code: "PC_GDP",  system: "Eurostat",    meaning: "Percentuale del PIL — preferita per confronti internazionali" },
+      { code: "NABS14",  system: "NABS 2007",   meaning: "Difesa nel sistema di classificazione R&amp;D" },
+      { code: "PC_GBA",  system: "Eurostat",    meaning: "% del budget R&amp;D governativo totale (GBARD)" },
+      { code: "XDC",     system: "OECD",        meaning: "Valuta nazionale corrente (non confrontabile tra paesi)" }
+    ],
+    apiUrls: [
+      {
+        datasetId: "Dataset A &amp; B",
+        provider:  "Eurostat GOV_10A_EXP (spesa militare % PIL)",
+        desc:      "spesa militare % PIL",
+        url:       "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/GOV_10A_EXP/A.PC_GDP.S13.GF0201.TE./ALL/?startPeriod=2000&amp;endPeriod=2024&amp;format=SDMX-CSV"
+      },
+      {
+        datasetId: "Dataset C",
+        provider:  "Eurostat TSC00008 (R&amp;D difesa % GBARD)",
+        desc:      "R&amp;D difesa % GBARD",
+        url:       "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TSC00008/A.NABS14.PC_GBA./ALL/?startPeriod=2014&amp;endPeriod=2025&amp;format=SDMX-CSV"
+      }
+    ],
+    extra: '  <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">Dataset D — OECD NASEC10 DF_TABLE11 (spesa militare valuta locale)</p>\n  <div class="query-url p-2 mb-4" style="color:var(--ink-faint);">\n    Non disponibile come URL diretto — il provider OECD SDMX 2.1 richiede autenticazione o CLI.<br>\n    <strong>Comando opensdmx:</strong><br>\n    opensdmx get "OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11" --provider oecd --FREQ A --REF_AREA "DEU+FRA+GBR+JPN+ITA+POL+ESP+SWE+NOR" --SECTOR S13 --EXPENDITURE GF0201 --TRANSACTION OTE --start-period 2005 --end-period 2024 --out output/D_spesa_militare_oecd.csv\n  </div>',
+    cliHeader: "Fase",
+    cliCommands: [
+      { dataset: "A + B", command: "opensdmx run spesa_militare_eu_pil.yaml --out output/A_refresh.csv" },
+      { dataset: "C",     command: "opensdmx run rd_difesa_eurostat.yaml --out output/C_refresh.csv" },
+      { dataset: "D",     command: 'opensdmx get "OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11" --provider oecd --FREQ A --REF_AREA "DEU+FRA+GBR+JPN+ITA+POL+ESP+SWE+NOR" --SECTOR S13 --EXPENDITURE GF0201 --TRANSACTION OTE --start-period 2005 --end-period 2024 --out output/D_refresh.csv' }
+    ],
+    files: [
+      { file: "output/A_spesa_militare_pil_eu.csv",             desc: "660 righe · 27 paesi · % PIL · 2000–2024" },
+      { file: "output/B_spesa_militare_paesi_selezionati.csv",  desc: "7 paesi · serie storica completa" },
+      { file: "output/C_rd_difesa.csv",                         desc: "39 paesi · % GBARD · 2014–2025" },
+      { file: "output/D_spesa_militare_oecd.csv",               desc: "198 righe · 9 paesi · valuta locale · 2005–2024" },
+      { file: "metadata/cofog99_codes.csv",                     desc: "80 codici COFOG con label" }
+    ]
+  },
+  providers: "Eurostat · OECD",
+  github: "https://github.com/datapitch-it/automatic-reports"
+});
+
 // ── FASE A — BarH ranking EU ──────────────────────────────────────────────
 // Slovacchia esclusa: valore -0.1 causato da rettifiche contabili, non renderizzabile in BarH
 const labelsA = ['Islanda','Irlanda','Lussemburgo','Malta','Austria','Svizzera','Spagna','Portogallo','Belgio','Cechia','Paesi Bassi','Slovenia','Italia','Danimarca','Finlandia','Bulgaria','Croazia','Romania','Svezia','Norvegia','Polonia','Ungheria','Grecia','Lituania','Lettonia','Estonia'];
