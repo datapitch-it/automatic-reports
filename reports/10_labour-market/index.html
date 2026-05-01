@@ -270,6 +270,41 @@ initShell({
     { id: "job-vacancies",  label: "Job Vacancies"  }
   ],
   introTitle: "Key findings",
+  introExtra: `
+    <div class="summary mb-5">
+      <h3 class="mb-3">What the data says</h3>
+      <p>
+        The EU-27 unemployment rate reached <strong>5.9% in 2024</strong> — roughly half the 2013 peak of 11.5% —
+        and youth unemployment fell from 25.2% to 14.9% over the same eleven years
+        (→ <a href="#unemployment">charts A1–A3</a>). Yet the headline obscures a sharp country-level split:
+        Czechia reached 2.6% in 2024 while Spain remained at 11.4%, a 4.4× gap that persisted
+        through the entire post-crisis recovery. Tight aggregate numbers coexist with structural
+        divergences that monetary union alone cannot resolve.
+      </p>
+      <p>
+        Women drove the structural shift in European labour markets. Since 2010, female labour
+        force participation in the EU-27 rose from 63.7% to 70.7% (+7pp), while male participation
+        rose by just 3pp (→ <a href="#participation">chart B2</a>). Yet convergence varies
+        dramatically by border: France entered 2024 at 71.6% female LFPR; Italy at 57.6% — a
+        14-point gap that existed in 2000 and remains almost unchanged today
+        (→ <a href="#participation">chart B1</a>). The sectors with the highest job vacancy
+        pressure in 2024 — admin &amp; support at 4.0%, accommodation &amp; food at 3.2%
+        (→ <a href="#job-vacancies">chart G1</a>) — are precisely those with high female
+        employment, yet the gender wage gap still exceeds 15% across most of Eastern Europe
+        (→ <a href="#wages">chart F1</a>). Labour scarcity has not translated into equal pay.
+      </p>
+      <p>
+        The least expected finding cuts across the employment–wages divide. Italy cut its
+        unemployment rate from 12.4% (2013) to 6.5% (2024) — a genuine recovery by any
+        headline measure. But over the same period, Italian average annual wages in PPP terms
+        fell from USD 54,924 (2010) to USD 51,019 (2024), a loss of roughly USD 4,000 per
+        worker per year (→ <a href="#wages">chart E2</a>). Poland — starting from a lower base —
+        added USD 12,000 per worker since 2010 (+38%). More people in work does not mean
+        workers are better off: job volume and job quality have decoupled across the continent
+        (→ <a href="#wages">chart E1</a>).
+      </p>
+    </div>
+  `,
   scopeLimit: "Informal employment (ILO source) is not available via SDMX providers and is excluded. Wage data covers OECD members only (38 countries). The gender wage gap is unadjusted — it does not control for occupation, hours, or seniority.",
   findingCards: [
     { value: "5.9%",   label: "EU27 unemployment rate 2024",       color: "default" },

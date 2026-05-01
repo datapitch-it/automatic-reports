@@ -662,6 +662,119 @@ Ogni sezione dataset deve avere:
 
 ---
 
+## Fase 7 — Executive Summary narrativo
+
+### Quando eseguire questa fase
+
+Solo dopo che sono stati completati:
+- Fase 5 (pagina HTML con tutte le sezioni e i grafici renderizzati)
+- Fase 6 (checklist pre-pubblicazione superata)
+
+Il summary viene scritto per **ultimo** e posizionato per **primo** nella pagina,
+dentro il campo `introExtra` del config `initShell()`.
+
+---
+
+### Step 1 — Inventario dei pattern (annotare in `notes.md`)
+
+Prima di scrivere una sola parola, identificare sistematicamente i pattern
+disponibili. Per ognuno, scrivere il valore esatto ricavato dai dati.
+
+**Asse temporale** — disponibile se il report contiene almeno un grafico
+`chart.xkcd.XY` con 5+ anni di dati:
+- Qual è il delta tra anno iniziale e anno finale per la serie principale?
+- Esiste un punto di picco o di minimo? In quale anno?
+- Il trend è monotono o ha avuto inversioni rilevanti?
+- Fonte: array JS dei grafici XY, blocchi `.transform` nelle sezioni HTML.
+
+**Confronto tra paesi** — disponibile se il report contiene almeno un
+`roughViz.BarH` con 5+ entità:
+- Qual è il range tra il valore più alto e il più basso (anno più recente)?
+- Qual è il rapporto tra il primo e l'ultimo? (es. "4× più alto")
+- Esistono outlier che sorprendono per posizione geografica o reputazione?
+- Fonte: array JS dei grafici BarH (primo e ultimo elemento per valore).
+
+**Finding 'sorpresa'** — identificarlo attivamente:
+- Esiste un risultato che contraddice l'assunzione comune sul tema?
+- Esiste una correlazione inattesa tra due sezioni diverse del report?
+- Un paese si comporta in modo opposto alla sua reputazione?
+- Il gruppo "svantaggiato" atteso risulta invece favorito (o viceversa)?
+- Fonte: confronto incrociato tra sezioni, non una singola sezione.
+
+Annotare i 3–5 pattern più forti trovati in `notes.md`:
+
+```markdown
+## [DATA] — Fase 7: pattern per executive summary
+- Temporale: [descrizione + valore con anno]
+- Paese: [range + outlier]
+- Sorpresa: [finding con due valori da sezioni diverse]
+```
+
+---
+
+### Step 2 — Regole di scrittura
+
+- **3–4 paragrafi** di 4–6 righe ciascuno. Non più.
+- Ogni paragrafo deve integrare **almeno 2 angoli** tra: temporale,
+  confronto tra paesi, sorpresa. Non scrivere paragrafi mono-tematici.
+- **Ogni claim deve citare un numero esatto** con anno e unità, ricavato
+  dai dati scaricati. Zero valori inventati o approssimati a memoria.
+- **Ogni sezione citata deve avere un link** `<a href="#id-sezione">` alla
+  sezione HTML corrispondente. Non citare dati senza indicare dove trovarli.
+- Non ripetere i valori già presenti nelle `findingCards`.
+- La lingua del summary segue la lingua scelta in Fase 0.
+
+**Adattamento in base ai dati disponibili**
+
+Non tutti i report hanno serie storiche, confronti internazionali o finding
+sorpresa. Prima di scrivere, verificare la disponibilità di ciascun angolo:
+
+| Angolo | Disponibile se... | Se non disponibile |
+|---|---|---|
+| Temporale | almeno un grafico XY con 5+ anni | compensare con più profondità sugli altri due angoli |
+| Confronto paesi | almeno un BarH con 5+ entità | compensare con granularità interna (es. per età, settore) |
+| Sorpresa | esiste un risultato che inverte un'assunzione — identificarlo attivamente | se genuinamente assente, non inventarne uno; usare due paragrafi temporali e due di confronto |
+
+Non scrivere paragrafi generici per "riempire" uno schema.
+
+---
+
+### Step 3 — Template HTML per `introExtra`
+
+Inserire il summary nel campo `introExtra` di `initShell()`.
+Il titolo della sezione è nella lingua del report (es. "What the data says",
+"Cosa dicono i dati", "Ce que disent les données").
+
+```js
+introExtra: `
+  <div class="summary mb-5">
+    <h3 class="mb-3">[Titolo in lingua del report]</h3>
+    <p>
+      [Paragrafo 1: apre con il finding principale o con il trend più forte.
+      Integra almeno un valore con anno e almeno un confronto tra paesi o gruppi.
+      Chiude con una tensione non risolta che invita a leggere oltre.]
+      → <a href="#[id-sezione]">chart [ID]</a>
+    </p>
+    <p>
+      [Paragrafo 2: introduce una seconda dimensione (genere, età, settore,
+      area geografica). Mostra dove il pattern cambia tra paesi o nel tempo.
+      Cita almeno due valori concreti da sezioni diverse.]
+      → <a href="#[id-sezione]">chart [ID]</a>
+    </p>
+    <p>
+      [Paragrafo 3: il finding 'sorpresa'. Un risultato che contraddice
+      l'assunzione prevalente sul tema. Supportato da almeno due valori
+      concreti da sezioni diverse, con link a entrambe le sezioni.]
+      → <a href="#[id-sezione-1]">chart [ID1]</a>,
+         <a href="#[id-sezione-2]">chart [ID2]</a>
+    </p>
+    <!-- Paragrafo 4 opzionale: implicazioni o domanda aperta -->
+  </div>
+`,
+```
+
+---
+
 ## Checklist pre-pubblicazione
 
 - [ ] `reports.json` aggiornato con la nuova entry (order, path, date, title, desc, badges)
@@ -680,3 +793,4 @@ Ogni sezione dataset deve avere:
 - [ ] Il callout "Limite di scope" nella sezione Intro è presente e accurato
 - [ ] **Baseline a zero**: tutti i grafici hanno l'asse Y che parte da zero — nessuna scala troncata
 - [ ] Nessun `font-size` sotto `1rem` nelle configurazioni JS dei grafici (`axisFontSize`, `titleFontSize`, `labelFontSize`) — roughViz scrive questi valori come inline style sull'SVG, che il CSS non può sovrascrivere senza `!important`; il parametro JS è l'unico punto di controllo affidabile
+- [ ] **Executive Summary**: `introExtra` compilato con 3–4 paragrafi, ogni claim cita un valore esatto con anno, ogni sezione citata ha un `<a href>` funzionante
