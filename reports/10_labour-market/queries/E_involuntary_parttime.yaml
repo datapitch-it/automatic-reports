@@ -1,0 +1,8 @@
+provider: eurostat
+dataset: LFSA_EPPGAI
+filters:
+  freq: A
+  unit: PC
+  sex: T+M+F
+start_period: "2000"
+end_period: "2024"

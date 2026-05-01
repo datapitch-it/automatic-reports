@@ -1,0 +1,9 @@
+provider: eurostat
+dataset: UNE_RT_A
+filters:
+  freq: A
+  age: Y15-74+Y15-24+Y25-54+Y55-74
+  unit: PC_ACT
+  sex: T+M+F
+start_period: "2000"
+end_period: "2024"

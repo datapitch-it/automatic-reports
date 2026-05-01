@@ -1,5 +1,18 @@
 [
   {
+    "order": 10,
+    "path":  "reports/10_labour-market/index.html",
+    "date":  "1 May 2026",
+    "title": "Labour Market Indicators: jobs, wages, and security across Europe",
+    "desc":  "A cross-country analysis of European and OECD labour markets from the worker's perspective: unemployment by age and sex, labour force participation gaps, precarious work, average wages, gender wage gap, and job vacancy rates — with historical trends from 2000 to 2024.",
+    "badges": [
+      { "label": "Eurostat", "value": "UNE_RT_A · LFSA series · JVS" },
+      { "label": "OECD",     "value": "DSD_EARNINGS" },
+      { "label": "Period",   "value": "2000–2024" },
+      { "label": "Countries","value": "38 OECD + EU27" }
+    ]
+  },
+  {
     "order": 9,
     "path":  "reports/09_sicilia-indicatori/index.html",
     "date":  "29 aprile 2026",

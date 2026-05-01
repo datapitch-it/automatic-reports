@@ -1,0 +1,10 @@
+provider: eurostat
+dataset: LFSA_ERGAN
+filters:
+  freq: A
+  unit: PC
+  sex: T+M+F
+  age: Y15-64+Y15-74+Y20-64
+  citizen: TOTAL
+start_period: "2000"
+end_period: "2024"
