@@ -1,0 +1,10 @@
+provider: oecd
+dataset: OECD.ELS.SAE,DSD_EARNINGS@AV_AN_WAGE
+filters:
+  UNIT_MEASURE: USD_PPP
+  PAY_PERIOD: A
+  PRICE_BASE: Q
+  AGGREGATION_OPERATION: MEAN
+  SEX: _Z
+start_period: "2000"
+end_period: "2024"

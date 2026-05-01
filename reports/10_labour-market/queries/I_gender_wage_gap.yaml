@@ -1,0 +1,6 @@
+provider: oecd
+dataset: OECD.ELS.SAE,DSD_EARNINGS@GENDER_WAGE_GAP
+filters:
+  AGGREGATION_OPERATION: MEAN
+start_period: "2000"
+end_period: "2024"

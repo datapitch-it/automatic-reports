@@ -16,25 +16,31 @@ Ogni analisi vive in una propria cartella dentro `reports/`.
 Il nome della cartella è un numero progressivo a due cifre + slug descrittivo.
 
 ```
-reports/
-└── 01_slug-del-tema/
-    ├── index.html          ← pagina analitica finale (autosufficiente, no server)
-    ├── output/             ← CSV scaricati dall'API, mai modificati a mano
-    │   ├── A_nome.csv
-    │   ├── B_nome.csv
-    │   └── ...
-    ├── metadata/           ← codelist e metadati scaricati con opensdmx
-    ├── charts/             ← grafici standalone opzionali (se servono fuori dalla pagina)
-    ├── queries/            ← file YAML con le query riproducibili
-    │   ├── A_nome.yaml
-    │   └── ...
-    └── notes.md            ← log cronologico delle operazioni (vedi sezione Accountability)
-└── 02_slug-del-tema/
-    ...
+/
+├── assets/
+│   ├── style.css           ← CSS condiviso da tutti i report
+│   └── shell.js            ← funzione initShell()
+├── index.html              ← catalogo (legge reports.json via fetch)
+├── reports.json            ← manifest dei report
+└── reports/
+    └── 01_slug-del-tema/
+        ├── index.html      ← pagina analitica (~360 righe: sezioni dataset + config initShell)
+        ├── output/         ← CSV scaricati dall'API, mai modificati a mano
+        │   ├── A_nome.csv
+        │   ├── B_nome.csv
+        │   └── ...
+        ├── metadata/       ← codelist e metadati scaricati con opensdmx
+        ├── queries/        ← file YAML con le query riproducibili
+        │   ├── A_nome.yaml
+        │   └── ...
+        └── notes.md        ← log cronologico delle operazioni (vedi sezione Accountability)
+    └── 02_slug-del-tema/
+        ...
 ```
 
-**Regola**: tutto quello che serve per riprodurre l'analisi deve stare in questa cartella.
-`index.html` non deve dipendere da file esterni al server locale.
+**Regola**: tutto quello che serve per riprodurre l'analisi deve stare nel repository.
+`index.html` dipende da `../../assets/` (CSS e JS condivisi, nel repo) e dai CDN per
+Bootstrap, roughViz e chart.xkcd. Non dipendere da file fuori repository.
 
 ---
 
@@ -324,6 +330,21 @@ non in file CSV separati. Questo garantisce che la pagina sia autosufficiente.
   Regola pratica: `left = lunghezza_label_più_lunga_in_px + 10`.
   Per BarH con label ~10 caratteri: `left: 160`; con label ~15 caratteri: `left: 190`.
 
+- **Larghezza dal contenitore proprio — OBBLIGATORIO**: ogni libreria che riceve una larghezza in
+  pixel (roughViz, D3, Vega-Lite, ecc.) deve misurarla dal contenitore diretto del grafico al
+  momento dell'istanziazione — mai da un valore condiviso catturato in anticipo o riusato tra
+  grafici diversi. Usare `getComputedStyle` per sottrarre i padding effettivi:
+  ```javascript
+  const wrap = document.querySelector('#chart-X').closest('.chart-wrap');
+  const s    = window.getComputedStyle(wrap);
+  const w    = Math.floor(wrap.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight));
+  ```
+  Inoltre, il wrapper del grafico non deve avere `overflow-y: auto` o `overflow: auto`: path SVG
+  che sconfinano verticalmente oltre i bounds dell'SVG (es. barre con valori estremi, rough-fill
+  paths) genererebbero una scrollbar che riduce la larghezza disponibile *dopo* che la larghezza
+  è già stata misurata, causando clipping sul lato destro dell'SVG. Impostare esplicitamente
+  `overflow-y: hidden` sul wrapper.
+
 ### Template roughViz.BarH (ranking orizzontale)
 
 ```javascript
@@ -416,7 +437,14 @@ La pagina `index.html` deve contenere nell'ordine:
 
 La data corrisponde al giorno in cui i dati sono stati scaricati dall'API. Non usare formati ISO (`2026-04-08`) né mesi senza giorno (`Aprile 2026`).
 
-### 5.2 Template HTML completo
+### 5.2 Template `index.html` — struttura con `initShell()`
+
+Non scrivere CSS, nav, header, footer, sezione intro, dati grezzi o metodologia: queste parti
+sono generate da `initShell()`. Scrivere solo le sezioni dataset e il config JS.
+
+Dopo ogni nuovo report, aggiornare `reports.json` nella root del repository con una nuova entry
+(order, path, date, title, desc, badges). Il catalogo `index.html` legge questo file via
+`fetch()` — nessuna modifica all'HTML del catalogo è necessaria.
 
 ```html
 <!DOCTYPE html>
@@ -426,311 +454,147 @@ La data corrisponde al giorno in cui i dati sono stati scaricati dall'API. Non u
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>[TITOLO] — Ricerca SDMX</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../assets/style.css">
   <script src="https://unpkg.com/rough-viz@1.0.6"></script>
   <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
-  <style>
-    :root {
-      --ink:        #1a1a1a;
-      --ink-light:  #333;
-      --ink-faint:  #666;
-      --paper:      #fafaf7;
-      --paper-warm: #f5f3ee;
-      --rule:       #999;
-      --accent:     #b02020;
-      --accent2:    #1a6fa8;
-      --serif:      'Georgia', 'Times New Roman', serif;
-      --mono:       'Courier New', Courier, monospace;
-      --bs-body-font-family:   var(--serif);
-      --bs-body-color:         var(--ink);
-      --bs-body-bg:            var(--paper);
-      --bs-border-color:       var(--rule);
-      --bs-card-border-radius: 0;
-      --bs-card-border-color:  var(--rule);
-    }
-    html { font-size: 19px; scroll-behavior: smooth; }
-    .container { max-width: 1060px; }
-
-    /* ── HEADER (dark) ── */
-    .site-header { background: #1a1a1a; border-bottom: 2px solid #000; }
-    .eyebrow { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; color: #888; }
-    .site-header h1 { font-size: 2rem; font-weight: normal; line-height: 1.2; color: #fff; }
-    .intro { color: #ccc; line-height: 1.7; }
-    .ds-badge { font-family: var(--mono); font-size: 1rem; background: #2a2a2a; border: 1px solid #444; padding: 2px 8px; color: #aaa; }
-    .ds-badge strong { color: #fff; }
-
-    /* ── NAV (dark) ── */
-    .site-nav { background: #1a1a1a !important; border-bottom: 1px solid #333; z-index: 1020; }
-    .site-nav .nav-link { font-family: var(--mono); font-size: 1rem; color: #aaa; padding: 3px 10px; border: 1px solid transparent; border-radius: 0; transition: border-color 0.15s, color 0.15s; }
-    .site-nav .nav-link:hover { border-color: #555; color: #fff; }
-
-    /* ── SECTIONS ── */
-    .section { border-bottom: 1px solid var(--rule); }
-    .section:last-child { border-bottom: none; }
-    .section-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
-    .section h2 { font-size: 1.5rem; font-weight: normal; }
-    .section .subtitle { color: var(--ink-light); line-height: 1.5; }
-    .subsection-title { font-size: 1rem; font-weight: normal; color: var(--ink); padding-bottom: 0.3rem; border-bottom: 1px dashed var(--rule); }
-
-    /* ── COMPONENTS ── */
-    .callout { background: var(--paper-warm); border-left: 3px solid var(--accent); border-top: none; border-right: none; border-bottom: none; border-radius: 0; color: var(--ink-light); }
-    .callout strong { color: var(--ink); }
-
-    .finding-card { background: #fff; border: 1px solid var(--rule); padding: 0.9rem 1rem; height: 100%; }
-    .big-num { font-size: 2rem; font-family: var(--mono); color: var(--accent); line-height: 1; }
-    .big-num.blue { color: var(--accent2); }
-    .big-num.green { color: #27ae60; }
-    .finding-card p { font-size: 1rem; color: var(--ink-light); line-height: 1.4; }
-    .finding-card strong { color: var(--ink); }
-
-    .chart-wrap { background: #fff; border: 1px solid var(--rule); padding: 1.2rem; overflow-x: auto; }
-    .chart-wrap svg { display: block; width: 100%; min-height: 380px; }
-
-    .sm-card { background: #fff; border: 1px solid var(--rule); padding: 0.6rem 0.6rem 0; }
-    .sm-card h4 { font-size: 1rem; font-family: var(--mono); color: var(--ink-light); padding: 0 0.3rem 0.3rem; border-bottom: 1px dashed var(--rule); margin-bottom: 0.3rem; }
-    .sm-card svg { width: 100%; height: 210px; display: block; }
-    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
-
-    /* Titolo testuale sopra un grafico, alternativo a quello inline roughViz/xkcd */
-    .chart-title-label {
-      font-family: var(--mono);
-      font-size: 1rem;
-      text-transform: uppercase;
-      color: var(--ink-faint);
-      letter-spacing: 0.08em;
-      margin-bottom: 0.5rem;
-    }
-
-    .transform { background: var(--paper-warm); border: 1px solid var(--rule); border-left: 3px solid var(--accent2); }
-    .transform h4 { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
-    .transform ul { color: var(--ink-light); line-height: 1.7; }
-    .transform li code { font-family: var(--mono); font-size: 1rem; background: var(--paper); padding: 1px 4px; border: 1px solid var(--rule); }
-
-    .note { font-size: 1rem; color: var(--ink-faint); border-top: 1px dashed var(--rule); line-height: 1.6; }
-    .note code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; border: 1px solid var(--rule); }
-    .note a { color: var(--ink-faint); }
-
-    .query-url { background: #fff; border: 1px solid var(--rule); font-family: var(--mono); font-size: 1rem; color: var(--ink-light); word-break: break-all; line-height: 1.6; }
-    .query-url a { color: var(--accent2); }
-
-    .data-table { font-size: 1rem; }
-    .data-table thead th { background: var(--paper-warm); font-family: var(--mono); font-size: 1rem; font-weight: normal; letter-spacing: 0.05em; border-color: var(--rule); }
-    .data-table td { border-color: var(--rule); }
-    .data-table tbody tr:nth-child(even) td { background: var(--paper-warm); }
-    .data-table code { font-family: var(--mono); font-size: 1rem; background: var(--paper-warm); padding: 1px 4px; color: var(--ink); }
-
-    .dl-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
-    .dl-title { color: var(--ink); font-size: 1rem; }
-    .dl-meta { font-family: var(--mono); font-size: 1rem; color: var(--ink-faint); }
-    a.dl-link { font-family: var(--mono); font-size: 1rem; color: var(--accent2); text-decoration: none; border: 1px solid var(--accent2); padding: 2px 8px; display: inline-block; }
-    a.dl-link:hover { background: var(--accent2); color: #fff; }
-
-    .site-footer { border-top: 2px solid var(--ink); font-size: 1rem; color: var(--ink-faint); font-family: var(--mono); }
-    .site-footer a { color: var(--ink-faint); }
-  </style>
 </head>
 <body>
 
-<!-- ═══ NAV ═══ -->
-<nav class="site-nav navbar sticky-top py-2">
-  <div class="container">
-    <div class="d-flex flex-wrap gap-1">
-      <a class="nav-link" href="#intro">↓ Intro</a>
-      <!-- aggiungere un link per ogni sezione dataset -->
-      <a class="nav-link" href="#[FASE-ID]">[LABEL SEZIONE]</a>
-      <a class="nav-link" href="#dati">Dati grezzi</a>
-      <a class="nav-link" href="#metodologia">Metodologia</a>
-    </div>
-  </div>
-</nav>
+<!-- nav + header generati da initShell() -->
+<div id="shell-top"></div>
 
-<!-- ═══ HEADER ═══ -->
-<header class="site-header py-5">
-  <div class="container">
-    <p class="eyebrow mb-2">Ricerca SDMX · [DATA] · opensdmx CLI</p>
-    <h1 class="mb-3">[TITOLO PRINCIPALE]</h1>
-    <p class="intro mb-3" style="max-width:720px;">
-      [Descrizione in 2-3 frasi: cosa si analizza, con quali dati, perché è rilevante.]
-    </p>
-    <div class="d-flex flex-wrap gap-2">
-      <span class="ds-badge"><strong>[Provider]</strong> [Dataset ID]</span>
-      <!-- ripetere per ogni dataset -->
-      <span class="ds-badge"><strong>Periodo</strong> [YYYY–YYYY]</span>
-      <span class="ds-badge"><strong>Paesi</strong> [N]</span>
-    </div>
-  </div>
-</header>
+<!-- intro (finding cards + scope) generata da initShell() -->
+<div class="container">
+<div id="shell-intro"></div>
+</div>
 
 <main class="container py-2">
 
-  <!-- ═══ INTRO ═══ -->
-  <section class="section py-5" id="intro">
-    <p class="section-label mb-1">Contesto</p>
-    <h2 class="mb-2">[Titolo sezione intro]</h2>
-    <p class="subtitle mb-4">[Sottotitolo: cosa si misura in una riga]</p>
+  <!-- ═══ SEZIONI DATASET — scritte dall'AI ═══ -->
 
-    <!-- CALLOUT: limiti di scope — OBBLIGATORIO -->
-    <div class="callout p-3 mb-4">
-      <strong>Limite di scope:</strong> [Cosa questi dati NON coprono e perché.
-      Indicare fonti alternative per i dati esclusi.]
-    </div>
-
-    <!-- FINDING CARDS: 4 numeri chiave dall'analisi -->
-    <div class="row row-cols-2 row-cols-md-4 g-3">
-      <div class="col">
-        <div class="finding-card">
-          <div class="big-num mb-2">[VALORE]</div>
-          <p class="mb-0"><strong>[Entità]</strong> — [spiegazione del dato in una riga]</p>
-        </div>
-      </div>
-      <!-- ripetere per ogni finding; usare .blue per accent2 -->
-    </div>
-  </section>
-
-  <!-- ═══ SEZIONE DATASET (ripetere per ogni dataset) ═══ -->
-  <section class="section py-5" id="[fase-id]">
+  <section class="section py-5" id="[id]">
     <p class="section-label mb-1">[Fase X] · [Provider] [Dataset ID] · [dimensione chiave]</p>
     <h2 class="mb-2">[Titolo descrittivo del grafico]</h2>
-    <p class="subtitle mb-4">
-      [Unità di misura] · [filtri principali] · [numero entità] [tipo entità]
-    </p>
-
-    <!-- CALLOUT opzionale: spiega un concetto tecnico necessario per leggere il grafico -->
-    <div class="callout p-3 mb-4">
-      <strong>[Termine tecnico]:</strong> [spiegazione in linguaggio semplice]
-    </div>
-
-    <!-- NOTE "COME LEGGERE" — OBBLIGATORIO, PRIMA DEL GRAFICO -->
-    <!-- Posizione: dopo il callout, prima del chart-wrap -->
-    <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> [Spiegazione operativa del grafico in 1-2 frasi.]
-      [Avvertenze su dati mancanti, flag, anomalie.]
-      Fonte SDMX: <code>[DATASET_ID]</code>, [Provider].
-      Grafico: <a href="[URL libreria]">[roughViz / chart.xkcd]</a>.
-    </p>
-
-    <!-- GRAFICO -->
+    <p class="subtitle mb-4">[Unità] · [filtri] · [N entità]</p>
+    <!-- callout opzionale, note "come leggere", chart-wrap, transform: scritti dall'AI -->
     <div class="chart-wrap mb-4">
-      <div id="chart-[ID]"></div>
-      <!-- oppure per small multiples: usare .sm-card dentro row Bootstrap -->
+      <div id="chart-[id]"></div>   <!-- oppure <svg> per chart.xkcd -->
     </div>
-
-    <!-- BLOCCO TRASFORMAZIONI — OBBLIGATORIO -->
-    <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
-        <li>Dati sorgente: [N righe] ([descrizione copertura grezza])</li>
-        <li>[Operazione 1]: es. "selezionato l'ultimo anno disponibile per entità"</li>
-        <li>[Operazione 2]: es. "escluso [X] perché [motivo]"</li>
-        <li>[Operazione 3 se calcolo]: es. "calcolato indice base=[anno]: <code>valore/base×100</code>"</li>
-        <li>Nessuna aggregazione / [tipo di aggregazione applicata]</li>
-      </ul>
-    </div>
+    <div class="transform p-3 mb-4">...</div>
   </section>
 
-  <!-- ═══ DATI GREZZI ═══ -->
-  <section class="section py-5" id="dati">
-    <p class="section-label mb-1">Dati grezzi</p>
-    <h2 class="mb-2">Scarica i dati originali</h2>
-    <p class="subtitle mb-4">
-      Dati estratti da [Provider/i] tramite API SDMX e usati per le analisi in questa pagina.
-    </p>
-    <div class="callout p-3 mb-4">
-      Questi sono i dati <strong>così come restituiti dall'API</strong> — nessuna aggregazione.
-      Licenza: [es. Eurostat CC BY 4.0 / OECD CC BY-NC-SA 3.0].
-      Data di estrazione: <strong>[DATA]</strong>.
-    </div>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
-      <!-- ripetere per ogni file CSV -->
-      <div class="col">
-        <div class="h-100 p-3" style="background:#fff;border:1px solid var(--rule);">
-          <div class="dl-label mb-1">[Provider] [Dataset ID]</div>
-          <div class="dl-title mb-1">[Descrizione breve]</div>
-          <div class="dl-meta mb-2">[N righe] · [N entità] · [periodo]</div>
-          <a class="dl-link" href="output/[FILENAME].csv" download>↓ CSV</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ METODOLOGIA ═══ -->
-  <section class="section py-5" id="metodologia">
-    <p class="section-label mb-1">Note metodologiche</p>
-    <h2 class="mb-2">Fonti, definizioni e riproducibilità</h2>
-    <p class="subtitle mb-4">Tutti i dati sono riproducibili tramite opensdmx CLI.</p>
-
-    <!-- Tabella classificazioni usate -->
-    <h3 class="subsection-title mt-4 mb-3">Classificazioni usate</h3>
-    <div class="table-responsive mb-4">
-      <table class="data-table table table-bordered table-sm">
-        <thead><tr><th>Codice</th><th>Sistema</th><th>Significato</th></tr></thead>
-        <tbody>
-          <tr><td><code>[CODICE]</code></td><td>[Sistema classificatorio]</td><td>[Descrizione]</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- URL API per ogni query Eurostat -->
-    <h3 class="subsection-title mt-4 mb-3">URL API SDMX delle query originali</h3>
-    <p class="mb-2" style="color:var(--ink-light);">
-      URL esatti usati per scaricare i dati. Cliccabili o incollabili in qualsiasi client HTTP.
-    </p>
-    <!-- ripetere per ogni dataset Eurostat -->
-    <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">[Dataset ID] — [Provider] ([descrizione])</p>
-    <div class="query-url p-2 mb-3">
-      <a href="[URL_COMPLETO]" target="_blank">[URL_COMPLETO]</a>
-    </div>
-
-    <!-- Comandi CLI -->
-    <h3 class="subsection-title mt-4 mb-3">Comandi CLI per riprodurre i dati</h3>
-    <div class="table-responsive mb-4">
-      <table class="data-table table table-bordered table-sm">
-        <thead><tr><th>Dataset</th><th>Comando</th></tr></thead>
-        <tbody>
-          <tr>
-            <td>[ID]</td>
-            <td><code>opensdmx run queries/[NOME].yaml --out output/[NOME].csv</code></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- File disponibili -->
-    <h3 class="subsection-title mt-4 mb-3">File disponibili</h3>
-    <div class="table-responsive">
-      <table class="data-table table table-bordered table-sm">
-        <thead><tr><th>File</th><th>Contenuto</th></tr></thead>
-        <tbody>
-          <tr><td><code>output/[NOME].csv</code></td><td>[N righe] · [descrizione]</td></tr>
-          <tr><td><code>queries/[NOME].yaml</code></td><td>Query riproducibile per [dataset]</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <!-- ═══ FINE SEZIONI DATASET ═══ -->
 
 </main>
 
-<!-- ═══ FOOTER ═══ -->
-<footer class="site-footer py-4 mt-2">
-  <div class="container d-flex flex-wrap gap-4 justify-content-between">
-    <span>Dati: [Provider/i] · Formato SDMX 2.1</span>
-    <span>Strumento: <a href="https://github.com/ondata/opensdmx/blob/main/docs/skill/README.md">opensdmx CLI</a></span>
-    <span>Grafici: <a href="https://github.com/jwilber/roughViz">roughViz</a> · <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a></span>
-    <span>[DATA]</span>
-  </div>
-</footer>
+<!-- dati grezzi + metodologia generati da initShell() -->
+<div id="shell-bottom"></div>
 
+<!-- footer generato da initShell() -->
+<div class="container">
+<div id="shell-footer"></div>
+</div>
+
+<script src="../../assets/shell.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// ── SEZIONE [ID] ───────────────────────────────────────────────────────────
-// [Commento: quale dataset, quale trasformazione è stata applicata per ottenere questi valori]
-const labels[ID] = [/* array valori etichette */];
-const values[ID] = [/* array valori numerici */];
+// ── CONFIG SHELL ─────────────────────────────────────────────────────────────
+initShell({ /* oggetto config — vedi schema 5.3 */ });
 
-new roughViz.BarH({ /* oppure chart.xkcd.XY, ecc. */ });
+// ── CHART INIT ───────────────────────────────────────────────────────────────
+// I container esistono nel DOM (sezioni sopra). roughViz usa <div>, chart.xkcd usa <svg>.
+new roughViz.BarH({ element: '#chart-[id]', data: { labels: [...], values: [...] }, ... });
+new chartXkcd.XY(document.getElementById('chart-[id2]'), { ... });
 </script>
 </body>
 </html>
+```
+
+### 5.3 Schema `initShell(config)`
+
+```js
+initShell({
+  // ── HEADER ──────────────────────────────────────────────────────────────
+  title:   "Titolo del report",
+  date:    "29 aprile 2026",
+  intro:   "Descrizione in 2-3 frasi: cosa si analizza, perché è rilevante.",
+  badges: [
+    { label: "Eurostat",    value: "DATASET_ID" },
+    { label: "Periodo",     value: "2000–2024"  },
+    { label: "Paesi",       value: "27"         }
+  ],
+
+  // ── NAV ─────────────────────────────────────────────────────────────────
+  // "← Home", "↓ Intro", "Dati grezzi" e "Metodologia" aggiunti automaticamente.
+  nav: [
+    { id: "economia",   label: "Economia"   },
+    { id: "lavoro",     label: "Lavoro"     }
+  ],
+
+  // ── INTRO ────────────────────────────────────────────────────────────────
+  introTitle:    "Contesto e risultati",           // opzionale, default se omesso
+  introSubtitle: "Una frase di contesto",          // opzionale
+  introExtra:    `<h3>...</h3><table>...</table>`, // HTML aggiuntivo prima delle finding cards
+  scopeLimit:    "Cosa questi dati NON coprono.",  // testo del callout scope
+  findingCards: [
+    { value: "14",   label: "indicatori analizzati",  color: "default" },
+    { value: "−8pp", label: "calo occupazione 2008",  color: "accent"  },
+    { value: "1,18", label: "TFR Sicilia 2022",        color: "blue"    },
+    { value: "35%",  label: "NEET under 30",           color: "green"   }
+  ],
+  // color: omesso o "default" → rosso accent; "blue" → accent2; "green" → verde
+
+  // ── DATI GREZZI ──────────────────────────────────────────────────────────
+  rawData: {
+    license:        "Eurostat CC BY 4.0",
+    extractionDate: "29 aprile 2026",  // default: cfg.date se omesso
+    files: [
+      {
+        provider:  "Eurostat",
+        datasetId: "LFST_R_LFE2EMPRT",
+        desc:      "Tasso di occupazione NUTS2",
+        rows:      312,
+        period:    "2000–2023",
+        file:      "output/A_occupazione.csv"
+      }
+    ]
+  },
+
+  // ── METODOLOGIA ──────────────────────────────────────────────────────────
+  methodology: {
+    githubUrl: "https://github.com/datapitch-it/automatic-reports/reports/09_sicilia-indicatori",
+    classifications: [                  // opzionale
+      { code: "ITG1",  system: "NUTS2",  meaning: "Sicilia"      },
+      { code: "TOTAL", system: "age",    meaning: "Tutte le età" }
+    ],
+    extra: `<p class="note pt-2 mb-4">...</p>`,  // HTML aggiuntivo (double-check, tabelle) — opzionale
+    apiUrls: [                          // omettere per OECD/ISTAT (non espongono URL pubblici)
+      {
+        datasetId: "LFST_R_LFE2EMPRT",
+        provider:  "Eurostat",
+        desc:      "Tasso di occupazione NUTS2",
+        url:       "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/..."
+      }
+    ],
+    cliHdr:      "Dataset",   // intestazione colonna 1 nella tabella CLI (default "Dataset")
+    cliCommands: [
+      {
+        dataset: "LFST_R_LFE2EMPRT",
+        command: "opensdmx run queries/A_occupazione.yaml --out output/A_occupazione.csv"
+      }
+    ],
+    files: [
+      { file: "output/A_occupazione.csv",   desc: "312 righe · NUTS2 · 2000–2023"  },
+      { file: "queries/A_occupazione.yaml", desc: "Query riproducibile"             },
+      { file: "notes.md",                   desc: "Log cronologico delle operazioni" }
+    ]
+  },
+
+  // ── FOOTER ───────────────────────────────────────────────────────────────
+  providers: "Eurostat · ISTAT",
+  github:    "https://github.com/datapitch-it/automatic-reports"
+});
 ```
 
 ---
@@ -800,6 +664,7 @@ Ogni sezione dataset deve avere:
 
 ## Checklist pre-pubblicazione
 
+- [ ] `reports.json` aggiornato con la nuova entry (order, path, date, title, desc, badges)
 - [ ] Ogni dataset ha il blocco "Double check passed" in Metodologia (run 1 + run 2 coincidono)
 - [ ] `notes.md` contiene tutte le fasi con comandi esatti
 - [ ] Ogni CSV in `output/` ha il file YAML corrispondente in `queries/`
@@ -810,9 +675,8 @@ Ogni sezione dataset deve avere:
 - [ ] **Link reali**: Sostituiti tutti i placeholder `[URL...]` con link effettivi (es. GitHub delle librerie)
 - [ ] Gli URL API Eurostat nella sezione Metodologia restituiscono dati se cliccati
 - [ ] Il blocco `.transform` è presente in ogni sezione dataset
-- [ ] **Data di generazione**: presente in formato `GG mese AAAA` (italiano) in tutti e tre i punti obbligatori: eyebrow header, callout Dati grezzi, footer
+- [ ] **Data di generazione**: presente in formato `GG mese AAAA` (italiano) in tutti e tre i punti: `initShell({ date })`, callout Dati grezzi, footer
 - [ ] La sezione Dati grezzi indica data di estrazione e licenza
 - [ ] Il callout "Limite di scope" nella sezione Intro è presente e accurato
-- [ ] Nessun `font-size` sotto `1rem` nel CSS
 - [ ] **Baseline a zero**: tutti i grafici hanno l'asse Y che parte da zero — nessuna scala troncata
 - [ ] Nessun `font-size` sotto `1rem` nelle configurazioni JS dei grafici (`axisFontSize`, `titleFontSize`, `labelFontSize`) — roughViz scrive questi valori come inline style sull'SVG, che il CSS non può sovrascrivere senza `!important`; il parametro JS è l'unico punto di controllo affidabile

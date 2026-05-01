@@ -1,0 +1,9 @@
+provider: eurostat
+dataset: LFSA_ETPGAN
+filters:
+  freq: A
+  unit: PC
+  sex: T+M+F
+  citizen: TOTAL
+start_period: "2000"
+end_period: "2024"

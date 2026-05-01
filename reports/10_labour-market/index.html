@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Labour Market Indicators — SDMX Research</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../assets/style.css">
+  <script src="https://unpkg.com/rough-viz@1.0.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+</head>
+<body>
+
+<div id="shell-top"></div>
+<div class="container"><div id="shell-intro"></div></div>
+
+<main class="container py-2">
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION A — UNEMPLOYMENT
+══════════════════════════════════════════════════════ -->
+<section class="section py-5" id="unemployment">
+  <p class="section-label mb-1">Eurostat · UNE_RT_A · sex × age × geo</p>
+  <h2 class="mb-2">Unemployment rate across European countries</h2>
+  <p class="subtitle mb-4">% of labour force · annual · 2024 (latest available) · 35 countries</p>
+
+  <div class="callout mb-4">
+    <strong>How to read:</strong> The unemployment rate measures the share of active workers (employed + job-seeking) who cannot find work. A high rate signals a slack labour market; a low rate signals tight conditions. Values below 4% are generally considered full employment.
+  </div>
+
+  <h4 class="mt-4 mb-2">A1 — Unemployment rate by country, latest year (total, ages 15–74)</h4>
+  <div class="chart-wrap mb-4" style="overflow-y:hidden">
+    <div id="chart-a1"></div>
+  </div>
+  <div class="transform p-3 mb-4">
+    <strong>Dataset A — Transformations</strong><br>
+    Raw data: 7,169 observations · 35 countries · ages Y15-74, Y15-24, Y25-54, Y55-74 · sex T/M/F · 2000–2024.<br>
+    Chart A1: filtered to sex=T, age=Y15-74 (working-age total), latest available year per country.<br>
+    Sorted ascending (lowest at bottom). 3 aggregates (EU27, EA21, EA20) excluded from ranking.
+  </div>
+
+  <h4 class="mt-4 mb-2">A2 — Unemployment rate trend, EU27 average by sex (ages 15–74, 2003–2024)</h4>
+  <div class="chart-wrap mb-4" style="overflow-y:hidden">
+    <svg id="chart-a2"></svg>
+  </div>
+  <div class="note p-3 mb-4">
+    Source: Eurostat UNE_RT_A · chart.xkcd XY · EU27 aggregate · 2008 and 2020 shocks visible.
+    The female unemployment rate historically tracked above male; the gap closed after 2013.
+  </div>
+
+  <h4 class="mt-4 mb-2">A3 — Youth unemployment (ages 15–24) by country, latest year</h4>
+  <div class="chart-wrap mb-4" style="overflow-y:hidden">
+    <div id="chart-a3"></div>
+  </div>
+  <div class="transform p-3 mb-4">
+    <strong>Dataset A — Transformations (A3)</strong><br>
+    Filtered to sex=T, age=Y15-24, latest year per country. Youth unemployment is systematically
+    2–3× higher than the headline rate; the structural gap reflects early-career barriers
+    (lack of experience, short-term contracts) rather than cyclical conditions alone.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION B — LABOUR FORCE PARTICIPATION
+══════════════════════════════════════════════════════ -->
+<section class="section py-5" id="participation">
+  <p class="section-label mb-1">Eurostat · LFSA_ARGAN · sex × age × geo</p>
+  <h2 class="mb-2">Labour force participation: who is in the game?</h2>
+  <p class="subtitle mb-4">% of working-age population (15–64) · annual · 2024 · 36 countries</p>
+
+  <div class="callout mb-4">
+    <strong>What is the LFPR?</strong> The Labour Force Participation Rate measures the share of the population aged 15–64 that is either employed or actively seeking work. A lower rate means more people have dropped out of the job market entirely — not counted as unemployed.
+  </div>
+
+  <h4 class="mt-4 mb-2">B1 — Female labour force participation by country, latest year</h4>
+  <div class="chart-wrap mb-4" style="overflow-y:hidden">
+    <div id="chart-b1f"></div>
+  </div>
+
+  <h4 class="mt-4 mb-2">B1b — Male labour force participation by country, latest year</h4>
+  <div class="chart-wrap mb-4" style="overflow-y:hidden">
+    <div id="chart-b1m"></div>
+  </div>
+  <div class="transform p-3 mb-4">
+    <strong>Dataset B — Transformations</strong><br>
+    Raw data: 7,929 observations · 36 countries · ages Y15-64, Y15-74, Y20-64 · citizen=TOTAL · 2000–2024.<br>
+    Charts B1/B1b: filtered to age=Y15-64, citizen=TOTAL, sex=F/M, latest year per country. Sorted ascending.<br>
+    The Italy M–F gap of 18pp is the largest among EU-27 members.
+  </div>
+
+  <h4 class="mt-4 mb-2">B2 — LFPR trend, EU27 average by sex (2000–2024)</h4>
+  <div class="chart-wrap mb-4" style="overflow-y:hidden">
+    <svg id="chart-b2"></svg>
+  </div>
+  <div class="note p-3 mb-4">
+    Source: Eurostat LFSA_ARGAN · chart.xkcd XY · EU27, age 15–64, citizen=TOTAL.
+    Female participation rose steadily from ~63% to ~74% over 24 years; the M–F gap narrowed by ~6pp.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION C — EMPLOYMENT BY AGE AND SECTOR
+══════════════════════════════════════════════════════ -->
+<section class="section py-5" id="employment">
+  <p class="section-label mb-1">Eurostat · LFSA_ERGAN + LFSA_EGAN2 · age × sex × NACE</p>
+  <h2 class="mb-2">Who works — and where?</h2>
+  <p class="subtitle mb-4">Employment rates (%) and sector shares (M persons) · EU27 · 2024</p>
+
+  <h4 class="mt-4 mb-2">C1 — Employment rate by age group and sex, EU27 (2024)</h4>
+  <div class="chart-wrap mb-4" style="overflow-y:hidden">
+    <svg id="chart-c1"></svg>
+  </div>
+  <div class="transform p-3 mb-4">
+    <strong>Dataset C — Transformations</strong><br>
+    Raw data: LFSA_ERGAN (employment rates by citizenship) · filtered geo=EU27_2020, citizen=TOTAL,
+    age in Y15-24/Y25-54/Y55-64, latest year. The youth employment rate (37% M, 33% F) vs
+    prime-age (87% M, 78% F) illustrates the structural difficulty of labour market entry.
+  </div>
+
+  <h4 class="mt-4 mb-2">C2 — Employed persons by sector, EU27 (latest year, millions)</h4>
+  <div class="chart-wrap mb-4" style="overflow-y:hidden">
+    <div id="chart-c2"></div>
+  </div>
+  <div class="transform p-3 mb-4">
+    <strong>Dataset G — Transformations</strong><br>
+    Raw data: LFSA_EGAN2, 4,380 obs · sex=T, age=Y_GE15, NACE Rev.2 individual letters · EU27_2020 · 2015–2024.<br>
+    Values in thousands of persons converted to millions (÷1000). TOTAL excluded from chart.
+    Wholesale &amp; retail (G) and health &amp; social work (Q) are the two largest employers.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION D — JOB SECURITY
+══════════════════════════════════════════════════════ -->
+<section class="section py-5" id="job-security">
+  <p class="section-label mb-1">Eurostat · LFSA_ETPGAN + LFSA_EPPGAI · sex × age × geo</p>
+  <h2 class="mb-2">Job security: temporary contracts and involuntary part-time</h2>
+  <p class="subtitle mb-4">% of total employees · annual · 2024 (latest) · 36 countries</p>
+
+  <div class="callout mb-4">
+    <strong>Precarious work indicators:</strong> Temporary employment measures workers on fixed-term contracts. Involuntary part-time measures workers who want more hours but cannot get them — a proxy for underemployment and demand-side weakness.
+  </div>
+
+  <h4 class="mt-4 mb-2">D1 — Temporary employment as % of total employees, by country (ages 15–64)</h4>
+  <div class="chart-wrap mb-4" style="overflow-y:hidden">
+    <div id="chart-d1"></div>
+  </div>
+  <div class="transform p-3 mb-4">
+    <strong>Dataset D — Transformations</strong><br>
+    Raw data: LFSA_ETPGAN, 26,430 obs · citizen=TOTAL · sex T/M/F · multiple age groups.<br>
+    Chart D1: filtered sex=T, age=Y15-64, citizen=TOTAL, latest year per country. Sorted ascending.<br>
+    Netherlands (26.3%) leads EU countries. Lithuania (1.6%) and Romania (1.8%) are at the other extreme —
+    low share may reflect prevalence of self-employment rather than job security.
+  </div>
+
+  <h4 class="mt-4 mb-2">D2 — Involuntary part-time (% of all part-time), EU27 by sex (2000–2024)</h4>
+  <div class="chart-wrap mb-4" style="overflow-y:hidden">
+    <svg id="chart-d2"></svg>
+  </div>
+  <div class="note p-3 mb-4">
+    Source: Eurostat LFSA_EPPGAI · chart.xkcd XY · EU27, age=Y15-64.
+    Involuntary part-time surged after 2008 and peaked around 2013–2014, then declined.
+    Women are consistently more affected than men.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION E — WAGES
+══════════════════════════════════════════════════════ -->
+<section class="section py-5" id="wages">
+  <p class="section-label mb-1">OECD · DSD_EARNINGS@AV_AN_WAGE + GENDER_WAGE_GAP · OECD members</p>
+  <h2 class="mb-2">Wages: who earns what — and how wide is the gender gap?</h2>
+  <p class="subtitle mb-4">Average annual wages in current USD PPP · OECD 38 members · 2024 (latest)</p>
+
+  <div class="callout mb-4">
+    <strong>Note on wage data:</strong> Values are in current USD adjusted for Purchasing Power Parity (PPP), meaning the figures are comparable across countries. These are <em>nominal</em> wages (not inflation-adjusted over time). For cross-country ranking they are reliable; for tracking real wage growth over time, see the indexed chart below.
+  </div>
+
+  <h4 class="mt-4 mb-2">E1 — Average annual wages by country, latest year (USD PPP)</h4>
+  <div class="chart-wrap mb-4" style="overflow-y:hidden">
+    <div id="chart-e1"></div>
+  </div>
+  <div class="transform p-3 mb-4">
+    <strong>Dataset H — Transformations</strong><br>
+    Raw data: OECD AV_AN_WAGE · 966 obs · UNIT_MEASURE=USD_PPP, PRICE_BASE=Q, AGGREGATION_OPERATION=MEAN.<br>
+    OECD aggregate excluded from ranking. Latest year per country. Sorted ascending.
+    Luxembourg and Iceland top the ranking; Colombia, India, and Brazil are at the bottom.
+  </div>
+
+  <h4 class="mt-4 mb-2">E2 — Wage index 2010=100: selected countries (nominal USD PPP)</h4>
+  <div class="chart-wrap mb-4" style="overflow-y:hidden">
+    <svg id="chart-e2"></svg>
+  </div>
+  <div class="note p-3 mb-4">
+    Source: OECD AV_AN_WAGE · chart.xkcd XY · 2010=100 base index.
+    Index computed as (value_year / value_2010) × 100. Nominal USD PPP — includes both real wage changes
+    and relative inflation/exchange-rate effects. Korea and Poland show the steepest nominal gains.
+  </div>
+
+  <h4 class="mt-4 mb-2">F1 — Gender wage gap by country, latest year (unadjusted, % below male median)</h4>
+  <div class="chart-wrap mb-4" style="overflow-y:hidden">
+    <div id="chart-f1"></div>
+  </div>
+  <div class="transform p-3 mb-4">
+    <strong>Dataset I — Transformations</strong><br>
+    Raw data: OECD GENDER_WAGE_GAP · 802 obs · AGGREGATION_OPERATION=MEAN · 50 countries · 2000–2024.<br>
+    Unadjusted gap = (median male wage − median female wage) / median male wage × 100.
+    Countries with recognised ISO-3 names retained. Sorted ascending (smallest gap at bottom).
+    Belgium (0.8%) and Colombia (0.3%) report near-zero gaps; Korea (29%) is highest.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION F — JOB VACANCIES
+══════════════════════════════════════════════════════ -->
+<section class="section py-5" id="job-vacancies">
+  <p class="section-label mb-1">Eurostat · JVS_A_RATE_R2 · NACE Rev.2 × geo</p>
+  <h2 class="mb-2">Labour demand: job vacancy rates by sector</h2>
+  <p class="subtitle mb-4">% of total posts (filled + vacant) · EU27 · 2024 annual average</p>
+
+  <div class="callout mb-4">
+    <strong>What the vacancy rate signals:</strong> A high vacancy rate in a sector means employers are struggling to fill positions — indicating either skill shortages, low wage attractiveness, or structural mismatches. A rising vacancy rate across all sectors is a leading indicator of labour market tightening.
+  </div>
+
+  <div class="chart-wrap mb-4" style="overflow-y:hidden">
+    <div id="chart-g1"></div>
+  </div>
+  <div class="transform p-3 mb-4">
+    <strong>Dataset F — Transformations</strong><br>
+    Raw data: JVS_A_RATE_R2 · 49,175 obs · sizeclas=TOTAL, unit=AVG_A (annual average), geo=EU27_2020.<br>
+    Individual NACE sectors (single-letter codes) selected. Latest year per sector.
+    Admin &amp; support services (N) and accommodation &amp; food (I) show the highest vacancy pressure.
+  </div>
+</section>
+
+</main>
+
+<div id="shell-bottom"></div>
+<div class="container"><div id="shell-footer"></div></div>
+
+<script src="../../assets/shell.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+// ── HELPER ────────────────────────────────────────────────────────────────────
+function cw(id) {
+  const wrap = document.getElementById(id).closest('.chart-wrap');
+  const s = window.getComputedStyle(wrap);
+  return Math.floor(wrap.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight));
+}
+
+// ── CONFIG SHELL ──────────────────────────────────────────────────────────────
+initShell({
+  title:   "Labour Market Indicators",
+  date:    "1 May 2026",
+  intro:   "A cross-country analysis of European and OECD labour markets from the worker's perspective: unemployment, participation, wages, job security, and sector composition — with historical trends from 2000 to 2024.",
+  badges: [
+    { label: "Eurostat", value: "UNE_RT_A · LFSA series · JVS" },
+    { label: "OECD", value: "DSD_EARNINGS" },
+    { label: "Period", value: "2000–2024" },
+    { label: "Countries", value: "38 OECD + EU27" }
+  ],
+  nav: [
+    { id: "unemployment",   label: "Unemployment"   },
+    { id: "participation",  label: "Participation"  },
+    { id: "employment",     label: "Employment"     },
+    { id: "job-security",   label: "Job Security"   },
+    { id: "wages",          label: "Wages"          },
+    { id: "job-vacancies",  label: "Job Vacancies"  }
+  ],
+  introTitle: "Key findings",
+  scopeLimit: "Informal employment (ILO source) is not available via SDMX providers and is excluded. Wage data covers OECD members only (38 countries). The gender wage gap is unadjusted — it does not control for occupation, hours, or seniority.",
+  findingCards: [
+    { value: "5.9%",   label: "EU27 unemployment rate 2024",       color: "default" },
+    { value: "14.9%",  label: "EU27 youth unemployment (15–24)",   color: "accent"  },
+    { value: "18pp",   label: "Italy M–F participation gap",        color: "blue"    },
+    { value: "19.5%",  label: "EU27 involuntary part-time (2023)", color: "green"   }
+  ],
+  rawData: {
+    license:        "Eurostat CC BY 4.0 · OECD open data",
+    extractionDate: "1 May 2026",
+    files: [
+      { provider:"Eurostat", datasetId:"UNE_RT_A",          desc:"Unemployment by sex and age",            rows:7169, period:"2000–2024", file:"output/A_unemployment.csv" },
+      { provider:"Eurostat", datasetId:"LFSA_ARGAN",        desc:"Labour force participation rates",       rows:7929, period:"2000–2024", file:"output/B_lfpr.csv" },
+      { provider:"Eurostat", datasetId:"LFSA_ERGAN",        desc:"Employment rates (broad age groups)",    rows:7929, period:"2000–2024", file:"output/C_employment_rate.csv" },
+      { provider:"Eurostat", datasetId:"LFSA_ERGAN",        desc:"Employment rates (granular age groups)", rows:null, period:"2000–2024", file:"output/C_employment_rate_age.csv" },
+      { provider:"Eurostat", datasetId:"LFSA_ETPGAN",       desc:"Temporary employees %",                  rows:26430, period:"2000–2024", file:"output/D_temporary_pct.csv" },
+      { provider:"Eurostat", datasetId:"LFSA_EPPGAI",       desc:"Involuntary part-time %",                rows:62532, period:"2000–2024", file:"output/E_involuntary_parttime.csv" },
+      { provider:"Eurostat", datasetId:"JVS_A_RATE_R2",     desc:"Job vacancy rate by NACE",               rows:49175, period:"2010–2024", file:"output/F_job_vacancy.csv" },
+      { provider:"Eurostat", datasetId:"LFSA_EGAN2",        desc:"Employed persons by NACE sector",        rows:4380, period:"2015–2024", file:"output/G_employment_sector.csv" },
+      { provider:"OECD",     datasetId:"DSD_EARNINGS@AV_AN_WAGE",       desc:"Average annual wages USD PPP",  rows:966, period:"2000–2024", file:"output/H_avg_wages.csv" },
+      { provider:"OECD",     datasetId:"DSD_EARNINGS@GENDER_WAGE_GAP",  desc:"Gender wage gap",               rows:802, period:"2000–2024", file:"output/I_gender_wage_gap.csv" }
+    ]
+  },
+  methodology: {
+    githubUrl: "https://github.com/datapitch-it/automatic-reports/tree/main/reports/10_labour-market",
+    classifications: [
+      { code:"Y15-74",    system:"Eurostat age",  meaning:"Total working age (15 to 74 years)" },
+      { code:"Y15-24",    system:"Eurostat age",  meaning:"Youth (15 to 24 years)" },
+      { code:"Y15-64",    system:"Eurostat age",  meaning:"Prime working age (15 to 64 years)" },
+      { code:"EU27_2020", system:"Eurostat geo",  meaning:"EU-27 member states (as of 2020)" },
+      { code:"PC_ACT",    system:"Eurostat unit", meaning:"% of labour force (active population)" },
+      { code:"USD_PPP",   system:"OECD unit",     meaning:"US dollars, Purchasing Power Parity adjusted" },
+      { code:"PRICE_BASE Q", system:"OECD price", meaning:"Current prices (nominal, not inflation-adjusted)" }
+    ],
+    extra: `<p class="note pt-2 mb-2"><strong>Double check passed</strong> — UNE_RT_A: opensdmx CLI returned 7,169 data rows; direct Eurostat API URL returned identical count. LFSA_ARGAN: CLI 7,929 rows; direct API 7,929 rows. OECD data: no public URL endpoint; documented via CLI only.</p>`,
+    apiUrls: [
+      { datasetId:"UNE_RT_A",      provider:"Eurostat", desc:"Unemployment by sex and age", url:"https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/UNE_RT_A/A.Y15-74+Y15-24+Y25-54+Y55-74.PC_ACT.T+M+F.?format=SDMX-CSV&startPeriod=2000&endPeriod=2024" },
+      { datasetId:"LFSA_ARGAN",    provider:"Eurostat", desc:"Labour force participation rates", url:"https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFSA_ARGAN/A.PC.T+M+F.Y15-64+Y15-74+Y20-64.TOTAL.?format=SDMX-CSV&startPeriod=2000&endPeriod=2024" },
+      { datasetId:"LFSA_ERGAN",    provider:"Eurostat", desc:"Employment rates by age", url:"https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFSA_ERGAN/A.PC.T+M+F.Y15-24+Y25-54+Y55-64.TOTAL.?format=SDMX-CSV&startPeriod=2000&endPeriod=2024" },
+      { datasetId:"LFSA_ETPGAN",   provider:"Eurostat", desc:"Temporary employment %", url:"https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFSA_ETPGAN/A.PC.T+M+F..TOTAL.?format=SDMX-CSV&startPeriod=2000&endPeriod=2024" },
+      { datasetId:"LFSA_EPPGAI",   provider:"Eurostat", desc:"Involuntary part-time", url:"https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFSA_EPPGAI/A.PC.T+M+F..?format=SDMX-CSV&startPeriod=2000&endPeriod=2024" },
+      { datasetId:"JVS_A_RATE_R2", provider:"Eurostat", desc:"Job vacancy rate", url:"https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/JVS_A_RATE_R2/A...?format=SDMX-CSV&startPeriod=2010&endPeriod=2024" },
+      { datasetId:"LFSA_EGAN2",    provider:"Eurostat", desc:"Employment by sector", url:"https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFSA_EGAN2/A.THS_PER.T.Y_GE15.TOTAL+A+C+F+G+H+I+J+K+O+P+Q.?format=SDMX-CSV&startPeriod=2015&endPeriod=2024" }
+    ],
+    cliHdr: "Dataset",
+    cliCommands: [
+      { dataset:"UNE_RT_A",      command:"opensdmx run queries/A_unemployment.yaml --out output/A_unemployment.csv" },
+      { dataset:"LFSA_ARGAN",    command:"opensdmx run queries/B_lfpr.yaml --out output/B_lfpr.csv" },
+      { dataset:"LFSA_ERGAN",    command:"opensdmx run queries/C_employment_rate_age.yaml --out output/C_employment_rate_age.csv" },
+      { dataset:"LFSA_ETPGAN",   command:"opensdmx run queries/D_temporary_pct.yaml --out output/D_temporary_pct.csv" },
+      { dataset:"LFSA_EPPGAI",   command:"opensdmx run queries/E_involuntary_parttime.yaml --out output/E_involuntary_parttime.csv" },
+      { dataset:"JVS_A_RATE_R2", command:"opensdmx run queries/F_job_vacancy.yaml --out output/F_job_vacancy.csv" },
+      { dataset:"LFSA_EGAN2",    command:"opensdmx run queries/G_employment_sector.yaml --out output/G_employment_sector.csv" },
+      { dataset:"OECD AV_AN_WAGE",      command:"opensdmx run queries/H_avg_wages.yaml --out output/H_avg_wages.csv" },
+      { dataset:"OECD GENDER_WAGE_GAP", command:"opensdmx run queries/I_gender_wage_gap.yaml --out output/I_gender_wage_gap.csv" }
+    ],
+    files: [
+      { file:"output/A_unemployment.csv",          desc:"7,169 rows · unemployment · sex × age × geo · 2000–2024" },
+      { file:"output/B_lfpr.csv",                  desc:"7,929 rows · LFPR · sex × age · 2000–2024" },
+      { file:"output/C_employment_rate_age.csv",   desc:"employment rate · Y15-24/Y25-54/Y55-64 · 2000–2024" },
+      { file:"output/D_temporary_pct.csv",         desc:"26,430 rows · temp employment % · 2000–2024" },
+      { file:"output/E_involuntary_parttime.csv",  desc:"62,532 rows · involuntary part-time % · 2000–2024" },
+      { file:"output/F_job_vacancy.csv",           desc:"49,175 rows · job vacancy rate by NACE · 2010–2024" },
+      { file:"output/G_employment_sector.csv",     desc:"4,380 rows · employed persons by NACE · 2015–2024" },
+      { file:"output/H_avg_wages.csv",             desc:"966 rows · avg annual wages USD PPP · 2000–2024" },
+      { file:"output/I_gender_wage_gap.csv",       desc:"802 rows · gender wage gap · 2000–2024" },
+      { file:"queries/A_unemployment.yaml",        desc:"Reproducible query" },
+      { file:"queries/B_lfpr.yaml",                desc:"Reproducible query" },
+      { file:"queries/G_employment_sector.yaml",   desc:"Reproducible query" },
+      { file:"notes.md",                           desc:"Chronological log of all operations" }
+    ]
+  },
+  providers: "Eurostat · OECD",
+  github:    "https://github.com/datapitch-it/automatic-reports"
+});
+
+// ── CHART DATA ────────────────────────────────────────────────────────────────
+
+const a1Labels  = ["CZECH REP.", "POLAND", "MALTA", "GERMANY", "ICELAND", "NETHERLANDS", "SLOVENIA", "NORWAY", "BULGARIA", "IRELAND", "SWITZERLAND", "HUNGARY", "CYPRUS", "CROATIA", "AUSTRIA", "SLOVAKIA", "ROMANIA", "BELGIUM", "DENMARK", "LUXEMBOURG", "ITALY", "PORTUGAL", "LATVIA", "LITHUANIA", "FRANCE", "ESTONIA", "SWEDEN", "FINLAND", "SERBIA", "TURKEY", "GREECE", "SPAIN", "NORTH MACEDONIA", "BOSNIA", "MONTENEGRO"];
+const a1Values  = [2.6, 2.9, 3.2, 3.4, 3.6, 3.7, 3.7, 4.0, 4.2, 4.3, 4.4, 4.5, 4.9, 5.0, 5.2, 5.3, 5.4, 5.7, 6.2, 6.4, 6.5, 6.5, 6.9, 7.1, 7.4, 7.6, 8.4, 8.4, 8.6, 8.8, 10.1, 11.4, 12.3, 12.6, 17.9];
+const a3Labels  = ["GERMANY", "SWITZERLAND", "NETHERLANDS", "CZECH REP.", "ICELAND", "MALTA", "AUSTRIA", "IRELAND", "POLAND", "SLOVENIA", "NORWAY", "BULGARIA", "CYPRUS", "LATVIA", "DENMARK", "HUNGARY", "LITHUANIA", "TURKEY", "CROATIA", "BELGIUM", "FRANCE", "FINLAND", "ESTONIA", "SLOVAKIA", "ITALY", "LUXEMBOURG", "PORTUGAL", "GREECE", "SERBIA", "ROMANIA", "SWEDEN", "SPAIN", "NORTH MACEDONIA", "BOSNIA", "MONTENEGRO"];
+const a3Values  = [6.5, 8.2, 8.7, 9.1, 9.1, 9.2, 10.3, 10.6, 10.8, 10.9, 12.1, 12.3, 13.0, 13.6, 14.6, 15.2, 16.2, 16.4, 16.8, 17.4, 18.7, 18.8, 19.1, 19.2, 20.3, 21.6, 21.6, 22.5, 23.0, 23.9, 24.3, 26.5, 28.9, 30.2, 36.0];
+const b1Labels  = ["TURKEY", "MONTENEGRO", "BOSNIA", "NORTH MACEDONIA", "ITALY", "ROMANIA", "GREECE", "BELGIUM", "CROATIA", "SERBIA", "BULGARIA", "LUXEMBOURG", "FRANCE", "SPAIN", "POLAND", "SLOVENIA", "SLOVAKIA", "LATVIA", "CZECH REP.", "IRELAND", "PORTUGAL", "AUSTRIA", "UNITED KINGDOM", "HUNGARY", "FINLAND", "LITHUANIA", "CYPRUS", "GERMANY", "NORWAY", "MALTA", "ESTONIA", "DENMARK", "SWEDEN", "SWITZERLAND", "NETHERLANDS", "ICELAND"];
+const b1Male    = [78.9, 68.3, 74.0, 76.2, 75.6, 76.3, 78.3, 74.8, 74.9, 78.6, 77.6, 77.2, 77.5, 78.6, 80.1, 78.7, 80.4, 78.9, 83.1, 82.0, 80.4, 82.1, 82.5, 82.5, 80.3, 80.7, 84.3, 83.8, 82.6, 88.1, 82.7, 85.1, 85.3, 87.4, 88.9, 91.8];
+const b1Female  = [42.0, 54.7, 49.3, 55.7, 57.6, 58.3, 62.7, 66.8, 68.8, 66.9, 70.4, 71.7, 71.6, 70.6, 69.4, 72.8, 72.7, 74.6, 71.7, 73.9, 75.7, 74.2, 73.8, 74.7, 78.4, 78.3, 75.0, 76.6, 78.1, 74.2, 81.7, 79.7, 82.3, 80.8, 82.1, 85.1];
+const c1Labels  = ["15\u201324 YRS", "25\u201354 YRS", "55\u201364 YRS"];
+const c1Male    = [37.1, 87.3, 71.4];
+const c1Female  = [32.7, 77.7, 59.3];
+const c2Labels  = ["MANUFACTURING", "WHOLESALE & RETAIL", "HEALTH & SOCIAL WORK", "EDUCATION", "PUBLIC ADMIN", "CONSTRUCTION", "TRANSPORT", "ACCOMMODATION & FOOD", "IT & COMMUNICATION", "AGRICULTURE", "FINANCE & INSURANCE"];
+const c2Values  = [31.7, 27.7, 23.3, 15.5, 14.4, 14.2, 11.1, 9.9, 8.0, 6.9, 5.6];
+const d1Labels  = ["LITHUANIA", "ROMANIA", "LATVIA", "BULGARIA", "SLOVAKIA", "ESTONIA", "HUNGARY", "UNITED KINGDOM", "IRELAND", "CZECH REP.", "NORWAY", "AUSTRIA", "CROATIA", "GREECE", "LUXEMBOURG", "MALTA", "BELGIUM", "SLOVENIA", "ICELAND", "BOSNIA", "GERMANY", "TURKEY", "DENMARK", "SWEDEN", "SWITZERLAND", "CYPRUS", "ITALY", "POLAND", "FINLAND", "FRANCE", "SPAIN", "PORTUGAL", "NORTH MACEDONIA", "SERBIA", "NETHERLANDS", "MONTENEGRO"];
+const d1Values  = [1.6, 1.8, 2.3, 2.8, 3.8, 3.9, 4.7, 5.1, 7.4, 7.6, 8.3, 8.4, 9.0, 9.5, 9.5, 9.6, 9.7, 10.6, 10.9, 11.2, 11.4, 11.6, 12.6, 12.6, 12.8, 14.1, 14.8, 14.9, 15.2, 15.3, 16.0, 16.0, 18.9, 19.2, 26.3, 30.7];
+const e1Labels  = ["MEXICO", "COLOMBIA", "GREECE", "HUNGARY", "SLOVAKIA", "CHILE", "CZE", "ESTONIA", "PORTUGAL", "COSTA RICA", "POLAND", "LATVIA", "TURKEY", "JAPAN", "KOREA", "ITALY", "LITHUANIA", "SPAIN", "ISRAEL", "FINLAND", "SWEDEN", "IRELAND", "FRANCE", "SLOVENIA", "NEW ZEALAND", "UNITED KINGDOM", "CANADA", "GERMANY", "AUSTRALIA", "DENMARK", "NORWAY", "NETHERLANDS", "AUSTRIA", "BELGIUM", "UNITED STATES", "SWITZERLAND", "ICELAND", "LUXEMBOURG"];
+const e1Values  = [20423.0, 28838.0, 32257.0, 34996.0, 36105.0, 38130.0, 38489.0, 38975.0, 40002.0, 41010.0, 44211.0, 45567.0, 47253.0, 49446.0, 50947.0, 51019.0, 52898.0, 54564.0, 54736.0, 59597.0, 60415.0, 60431.0, 60608.0, 61776.0, 62437.0, 63691.0, 69417.0, 69433.0, 70736.0, 74022.0, 74864.0, 75370.0, 75767.0, 76109.0, 82933.0, 87468.0, 89947.0, 94447.0];
+const f1Labels  = ["SWITZERLAND", "COLOMBIA", "BELGIUM", "TURKEY", "SPAIN", "BRAZIL", "LUXEMBOURG", "COSTA RICA", "NETHERLANDS", "DENMARK", "POLAND", "SLOVENIA", "NEW ZEALAND", "NORWAY", "ITALY", "SWEDEN", "AUSTRALIA", "ARGENTINA", "FRANCE", "MEXICO", "OECD AVERAGE", "LITHUANIA", "ICELAND", "FINLAND", "AUSTRIA", "GREECE", "CANADA", "SLOVAKIA", "UNITED KINGDOM", "IRELAND", "PORTUGAL", "GERMANY", "CHILE", "HUNGARY", "UNITED STATES", "ESTONIA", "INDIA", "LATVIA", "JAPAN", "ISRAEL", "KOREA"];
+const f1Values  = [0.0, 0.3, 0.8, 1.8, 4.8, 5.3, 6.1, 6.9, 7.6, 7.9, 7.9, 8.4, 8.9, 10.0, 10.1, 10.3, 11.4, 11.6, 12.0, 12.5, 13.1, 14.1, 14.2, 14.4, 15.0, 15.2, 15.7, 16.0, 16.1, 16.1, 16.6, 17.2, 18.9, 19.0, 19.4, 19.8, 20.3, 20.7, 24.2, 25.8, 29.0];
+const g1Labels  = ["MINING", "WATER & WASTE", "ELECTRICITY", "MANUFACTURING", "FINANCE & INSURANCE", "WHOLESALE & RETAIL", "TRANSPORT", "REAL ESTATE", "IT & COMMUNICATION", "PROFESSIONAL SERVICES", "CONSTRUCTION", "ACCOMMODATION & FOOD", "ADMIN & SUPPORT"];
+const g1Values  = [0.9, 1.6, 1.7, 1.8, 1.8, 2.1, 2.2, 2.2, 2.9, 2.9, 3.1, 3.2, 4.0];
+
+const a2Total  = [{"x": 2009, "y": 9.3}, {"x": 2010, "y": 10.1}, {"x": 2011, "y": 10.1}, {"x": 2012, "y": 11.1}, {"x": 2013, "y": 11.6}, {"x": 2014, "y": 11.0}, {"x": 2015, "y": 10.2}, {"x": 2016, "y": 9.3}, {"x": 2017, "y": 8.3}, {"x": 2018, "y": 7.4}, {"x": 2019, "y": 6.8}, {"x": 2020, "y": 7.2}, {"x": 2021, "y": 7.1}, {"x": 2022, "y": 6.2}, {"x": 2023, "y": 6.1}, {"x": 2024, "y": 5.9}];
+const a2Male   = [{"x": 2009, "y": 9.2}, {"x": 2010, "y": 10.0}, {"x": 2011, "y": 9.9}, {"x": 2012, "y": 11.0}, {"x": 2013, "y": 11.5}, {"x": 2014, "y": 10.9}, {"x": 2015, "y": 10.1}, {"x": 2016, "y": 9.0}, {"x": 2017, "y": 8.0}, {"x": 2018, "y": 7.1}, {"x": 2019, "y": 6.5}, {"x": 2020, "y": 7.0}, {"x": 2021, "y": 6.8}, {"x": 2022, "y": 5.9}, {"x": 2023, "y": 5.8}, {"x": 2024, "y": 5.7}];
+const a2Female = [{"x": 2009, "y": 9.5}, {"x": 2010, "y": 10.2}, {"x": 2011, "y": 10.3}, {"x": 2012, "y": 11.2}, {"x": 2013, "y": 11.7}, {"x": 2014, "y": 11.2}, {"x": 2015, "y": 10.3}, {"x": 2016, "y": 9.5}, {"x": 2017, "y": 8.6}, {"x": 2018, "y": 7.7}, {"x": 2019, "y": 7.2}, {"x": 2020, "y": 7.5}, {"x": 2021, "y": 7.4}, {"x": 2022, "y": 6.5}, {"x": 2023, "y": 6.4}, {"x": 2024, "y": 6.2}];
+const b2Total  = [{"x": 2002, "y": 67.7}, {"x": 2003, "y": 68.1}, {"x": 2004, "y": 68.4}, {"x": 2005, "y": 68.8}, {"x": 2006, "y": 69.3}, {"x": 2007, "y": 69.6}, {"x": 2008, "y": 70.0}, {"x": 2009, "y": 70.1}, {"x": 2010, "y": 70.3}, {"x": 2011, "y": 70.5}, {"x": 2012, "y": 71.0}, {"x": 2013, "y": 71.3}, {"x": 2014, "y": 71.6}, {"x": 2015, "y": 71.9}, {"x": 2016, "y": 72.3}, {"x": 2017, "y": 72.7}, {"x": 2018, "y": 73.1}, {"x": 2019, "y": 73.4}, {"x": 2020, "y": 72.8}, {"x": 2021, "y": 73.6}, {"x": 2022, "y": 74.5}, {"x": 2023, "y": 75.0}, {"x": 2024, "y": 75.3}];
+const b2Male   = [{"x": 2002, "y": 76.1}, {"x": 2003, "y": 76.1}, {"x": 2004, "y": 76.2}, {"x": 2005, "y": 76.5}, {"x": 2006, "y": 76.7}, {"x": 2007, "y": 76.9}, {"x": 2008, "y": 77.1}, {"x": 2009, "y": 77.0}, {"x": 2010, "y": 77.0}, {"x": 2011, "y": 76.9}, {"x": 2012, "y": 77.2}, {"x": 2013, "y": 77.3}, {"x": 2014, "y": 77.5}, {"x": 2015, "y": 77.7}, {"x": 2016, "y": 77.9}, {"x": 2017, "y": 78.3}, {"x": 2018, "y": 78.7}, {"x": 2019, "y": 78.9}, {"x": 2020, "y": 78.2}, {"x": 2021, "y": 78.7}, {"x": 2022, "y": 79.4}, {"x": 2023, "y": 79.8}, {"x": 2024, "y": 80.0}];
+const b2Female = [{"x": 2002, "y": 59.4}, {"x": 2003, "y": 60.1}, {"x": 2004, "y": 60.6}, {"x": 2005, "y": 61.2}, {"x": 2006, "y": 61.8}, {"x": 2007, "y": 62.3}, {"x": 2008, "y": 62.8}, {"x": 2009, "y": 63.2}, {"x": 2010, "y": 63.7}, {"x": 2011, "y": 64.1}, {"x": 2012, "y": 64.9}, {"x": 2013, "y": 65.3}, {"x": 2014, "y": 65.8}, {"x": 2015, "y": 66.1}, {"x": 2016, "y": 66.6}, {"x": 2017, "y": 67.1}, {"x": 2018, "y": 67.5}, {"x": 2019, "y": 67.9}, {"x": 2020, "y": 67.3}, {"x": 2021, "y": 68.5}, {"x": 2022, "y": 69.5}, {"x": 2023, "y": 70.2}, {"x": 2024, "y": 70.7}];
+const d2Total  = [{"x": 2002, "y": 19.5}, {"x": 2003, "y": 21.1}, {"x": 2004, "y": 22.7}, {"x": 2006, "y": 25.7}, {"x": 2007, "y": 24.9}, {"x": 2008, "y": 25.7}, {"x": 2009, "y": 26.9}, {"x": 2010, "y": 28.2}, {"x": 2011, "y": 28.0}, {"x": 2012, "y": 29.7}, {"x": 2013, "y": 31.2}, {"x": 2014, "y": 32.0}, {"x": 2015, "y": 31.6}, {"x": 2016, "y": 30.2}, {"x": 2017, "y": 29.0}, {"x": 2018, "y": 27.1}, {"x": 2019, "y": 25.7}, {"x": 2020, "y": 24.4}, {"x": 2021, "y": 23.4}, {"x": 2022, "y": 21.0}, {"x": 2023, "y": 19.5}, {"x": 2024, "y": 18.3}];
+const d2Male   = [{"x": 2002, "y": 28.4}, {"x": 2003, "y": 28.9}, {"x": 2004, "y": 31.0}, {"x": 2006, "y": 33.8}, {"x": 2007, "y": 32.4}, {"x": 2008, "y": 32.8}, {"x": 2009, "y": 35.1}, {"x": 2010, "y": 36.8}, {"x": 2011, "y": 36.9}, {"x": 2012, "y": 38.8}, {"x": 2013, "y": 40.2}, {"x": 2014, "y": 41.3}, {"x": 2015, "y": 41.5}, {"x": 2016, "y": 39.5}, {"x": 2017, "y": 38.2}, {"x": 2018, "y": 34.9}, {"x": 2019, "y": 32.8}, {"x": 2020, "y": 31.3}, {"x": 2021, "y": 29.8}, {"x": 2022, "y": 26.4}, {"x": 2023, "y": 24.3}, {"x": 2024, "y": 22.6}];
+const d2Female = [{"x": 2002, "y": 17.1}, {"x": 2003, "y": 19.0}, {"x": 2004, "y": 20.5}, {"x": 2006, "y": 23.4}, {"x": 2007, "y": 22.9}, {"x": 2008, "y": 23.7}, {"x": 2009, "y": 24.6}, {"x": 2010, "y": 25.8}, {"x": 2011, "y": 25.5}, {"x": 2012, "y": 26.9}, {"x": 2013, "y": 28.5}, {"x": 2014, "y": 29.0}, {"x": 2015, "y": 28.4}, {"x": 2016, "y": 27.3}, {"x": 2017, "y": 26.0}, {"x": 2018, "y": 24.7}, {"x": 2019, "y": 23.4}, {"x": 2020, "y": 22.2}, {"x": 2021, "y": 21.3}, {"x": 2022, "y": 19.1}, {"x": 2023, "y": 17.8}, {"x": 2024, "y": 16.8}];
+const e2Series = {"DEU": [{"x": 2000, "y": 97.0}, {"x": 2001, "y": 97.7}, {"x": 2002, "y": 98.3}, {"x": 2003, "y": 98.6}, {"x": 2004, "y": 98.6}, {"x": 2005, "y": 99.0}, {"x": 2006, "y": 99.0}, {"x": 2007, "y": 98.7}, {"x": 2008, "y": 99.1}, {"x": 2009, "y": 99.1}, {"x": 2010, "y": 100.0}, {"x": 2011, "y": 102.0}, {"x": 2012, "y": 103.4}, {"x": 2013, "y": 104.4}, {"x": 2014, "y": 106.1}, {"x": 2015, "y": 108.5}, {"x": 2016, "y": 110.2}, {"x": 2017, "y": 111.4}, {"x": 2018, "y": 112.9}, {"x": 2019, "y": 114.8}, {"x": 2020, "y": 114.0}, {"x": 2021, "y": 114.2}, {"x": 2022, "y": 111.5}, {"x": 2023, "y": 111.3}, {"x": 2024, "y": 113.5}], "ITA": [{"x": 2000, "y": 95.1}, {"x": 2001, "y": 95.8}, {"x": 2002, "y": 95.1}, {"x": 2003, "y": 94.8}, {"x": 2004, "y": 96.6}, {"x": 2005, "y": 98.0}, {"x": 2006, "y": 98.6}, {"x": 2007, "y": 98.5}, {"x": 2008, "y": 98.4}, {"x": 2009, "y": 99.2}, {"x": 2010, "y": 100.0}, {"x": 2011, "y": 98.4}, {"x": 2012, "y": 95.3}, {"x": 2013, "y": 95.6}, {"x": 2014, "y": 96.0}, {"x": 2015, "y": 96.8}, {"x": 2016, "y": 97.6}, {"x": 2017, "y": 96.9}, {"x": 2018, "y": 97.1}, {"x": 2019, "y": 97.5}, {"x": 2020, "y": 92.9}, {"x": 2021, "y": 97.1}, {"x": 2022, "y": 94.6}, {"x": 2023, "y": 92.0}, {"x": 2024, "y": 92.9}], "JPN": [{"x": 2000, "y": 101.5}, {"x": 2001, "y": 100.2}, {"x": 2002, "y": 98.1}, {"x": 2003, "y": 98.4}, {"x": 2004, "y": 99.6}, {"x": 2005, "y": 102.1}, {"x": 2006, "y": 101.7}, {"x": 2007, "y": 102.1}, {"x": 2008, "y": 101.6}, {"x": 2009, "y": 100.3}, {"x": 2010, "y": 100.0}, {"x": 2011, "y": 100.5}, {"x": 2012, "y": 100.5}, {"x": 2013, "y": 101.1}, {"x": 2014, "y": 100.2}, {"x": 2015, "y": 99.7}, {"x": 2016, "y": 100.7}, {"x": 2017, "y": 100.8}, {"x": 2018, "y": 102.5}, {"x": 2019, "y": 103.5}, {"x": 2020, "y": 102.7}, {"x": 2021, "y": 103.6}, {"x": 2022, "y": 102.2}, {"x": 2023, "y": 99.6}, {"x": 2024, "y": 100.1}], "KOR": [{"x": 2000, "y": 81.2}, {"x": 2001, "y": 84.0}, {"x": 2002, "y": 86.9}, {"x": 2003, "y": 90.1}, {"x": 2004, "y": 92.1}, {"x": 2005, "y": 94.9}, {"x": 2006, "y": 96.2}, {"x": 2007, "y": 98.2}, {"x": 2008, "y": 97.9}, {"x": 2009, "y": 98.5}, {"x": 2010, "y": 100.0}, {"x": 2011, "y": 101.3}, {"x": 2012, "y": 99.8}, {"x": 2013, "y": 102.3}, {"x": 2014, "y": 102.6}, {"x": 2015, "y": 105.4}, {"x": 2016, "y": 108.5}, {"x": 2017, "y": 111.0}, {"x": 2018, "y": 114.9}, {"x": 2019, "y": 118.8}, {"x": 2020, "y": 121.6}, {"x": 2021, "y": 121.8}, {"x": 2022, "y": 117.8}, {"x": 2023, "y": 116.9}, {"x": 2024, "y": 118.4}], "POL": [{"x": 2000, "y": 84.6}, {"x": 2001, "y": 89.4}, {"x": 2002, "y": 89.1}, {"x": 2003, "y": 90.2}, {"x": 2004, "y": 88.2}, {"x": 2005, "y": 87.9}, {"x": 2006, "y": 88.5}, {"x": 2007, "y": 91.4}, {"x": 2008, "y": 96.2}, {"x": 2009, "y": 96.1}, {"x": 2010, "y": 100.0}, {"x": 2011, "y": 100.6}, {"x": 2012, "y": 99.6}, {"x": 2013, "y": 100.6}, {"x": 2014, "y": 102.9}, {"x": 2015, "y": 105.5}, {"x": 2016, "y": 111.1}, {"x": 2017, "y": 115.6}, {"x": 2018, "y": 123.0}, {"x": 2019, "y": 130.6}, {"x": 2020, "y": 132.9}, {"x": 2021, "y": 132.2}, {"x": 2022, "y": 126.4}, {"x": 2023, "y": 129.7}, {"x": 2024, "y": 137.9}], "ESP": [{"x": 2000, "y": 92.5}, {"x": 2001, "y": 92.0}, {"x": 2002, "y": 92.4}, {"x": 2003, "y": 92.0}, {"x": 2004, "y": 90.8}, {"x": 2005, "y": 91.2}, {"x": 2006, "y": 90.8}, {"x": 2007, "y": 91.7}, {"x": 2008, "y": 95.0}, {"x": 2009, "y": 101.0}, {"x": 2010, "y": 100.0}, {"x": 2011, "y": 98.2}, {"x": 2012, "y": 95.5}, {"x": 2013, "y": 95.5}, {"x": 2014, "y": 95.2}, {"x": 2015, "y": 96.6}, {"x": 2016, "y": 96.1}, {"x": 2017, "y": 94.8}, {"x": 2018, "y": 94.6}, {"x": 2019, "y": 95.7}, {"x": 2020, "y": 95.2}, {"x": 2021, "y": 98.6}, {"x": 2022, "y": 96.1}, {"x": 2023, "y": 97.0}, {"x": 2024, "y": 97.2}], "USA": [{"x": 2000, "y": 90.9}, {"x": 2001, "y": 91.6}, {"x": 2002, "y": 92.3}, {"x": 2003, "y": 93.3}, {"x": 2004, "y": 95.0}, {"x": 2005, "y": 95.1}, {"x": 2006, "y": 96.6}, {"x": 2007, "y": 98.4}, {"x": 2008, "y": 98.1}, {"x": 2009, "y": 99.1}, {"x": 2010, "y": 100.0}, {"x": 2011, "y": 100.1}, {"x": 2012, "y": 101.0}, {"x": 2013, "y": 100.5}, {"x": 2014, "y": 102.1}, {"x": 2015, "y": 104.7}, {"x": 2016, "y": 104.9}, {"x": 2017, "y": 106.1}, {"x": 2018, "y": 107.3}, {"x": 2019, "y": 109.2}, {"x": 2020, "y": 115.9}, {"x": 2021, "y": 117.9}, {"x": 2022, "y": 114.6}, {"x": 2023, "y": 114.9}, {"x": 2024, "y": 116.1}]};
+
+// ── A1: Unemployment ranking ──────────────────────────────────────────────────
+new roughViz.BarH({
+  element: '#chart-a1',
+  data: { labels: a1Labels, values: a1Values },
+  title: 'Unemployment rate by country — latest year (%)',
+  titleFontSize: '1rem', axisFontSize: '1rem',
+  roughness: 1.5, stroke: '#333', strokeWidth: 1,
+  fillStyle: 'hachure', fillWeight: 0.7,
+  color: '#b02020', highlight: '#c0392b',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: cw('chart-a1'),
+  height: 840,
+  margin: { top: 40, right: 80, bottom: 40, left: 160 },
+  xLabel: '% OF LABOUR FORCE',
+});
+
+// ── A2: Unemployment time series ──────────────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-a2'), {
+  xLabel: '', yLabel: '% OF LABOUR FORCE',
+  data: {
+    datasets: [
+      { label: 'TOTAL', data: a2Total },
+      { label: 'MEN',   data: a2Male  },
+      { label: 'WOMEN', data: a2Female }
+    ]
+  },
+  options: {
+    showLine: true, dotSize: 0.4,
+    xTickCount: 6, yTickCount: 4,
+    dataColors: ['#b02020','#1a6fa8','#e67e22']
+  }
+});
+
+// ── A3: Youth unemployment ranking ───────────────────────────────────────────
+new roughViz.BarH({
+  element: '#chart-a3',
+  data: { labels: a3Labels, values: a3Values },
+  title: 'Youth unemployment (15–24) by country — latest year (%)',
+  titleFontSize: '1rem', axisFontSize: '1rem',
+  roughness: 1.5, stroke: '#333', strokeWidth: 1,
+  fillStyle: 'hachure', fillWeight: 0.7,
+  color: '#e67e22', highlight: '#d35400',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: cw('chart-a3'),
+  height: 840,
+  margin: { top: 40, right: 80, bottom: 40, left: 160 },
+  xLabel: '% OF YOUTH LABOUR FORCE',
+});
+
+// ── B1F: LFPR female ranking ──────────────────────────────────────────────────
+new roughViz.BarH({
+  element: '#chart-b1f',
+  data: { labels: b1Labels, values: b1Female },
+  title: 'Female LFPR by country — ages 15–64, latest year (%)',
+  titleFontSize: '1rem', axisFontSize: '1rem',
+  roughness: 1.5, stroke: '#333', strokeWidth: 1,
+  fillStyle: 'hachure', fillWeight: 0.7,
+  color: '#e67e22', highlight: '#d35400',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: cw('chart-b1f'),
+  height: 862,
+  margin: { top: 40, right: 80, bottom: 40, left: 170 },
+  xLabel: '% OF FEMALE WORKING-AGE POPULATION',
+});
+
+// ── B1M: LFPR male ranking ────────────────────────────────────────────────────
+new roughViz.BarH({
+  element: '#chart-b1m',
+  data: { labels: b1Labels, values: b1Male },
+  title: 'Male LFPR by country — ages 15–64, latest year (%)',
+  titleFontSize: '1rem', axisFontSize: '1rem',
+  roughness: 1.5, stroke: '#333', strokeWidth: 1,
+  fillStyle: 'hachure', fillWeight: 0.7,
+  color: '#1a6fa8', highlight: '#2980b9',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: cw('chart-b1m'),
+  height: 862,
+  margin: { top: 40, right: 80, bottom: 40, left: 170 },
+  xLabel: '% OF MALE WORKING-AGE POPULATION',
+});
+
+// ── B2: LFPR time series ──────────────────────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-b2'), {
+  xLabel: '', yLabel: 'LFPR (%)',
+  data: {
+    datasets: [
+      { label: 'TOTAL',  data: b2Total  },
+      { label: 'MEN',    data: b2Male   },
+      { label: 'WOMEN',  data: b2Female }
+    ]
+  },
+  options: {
+    showLine: true, dotSize: 0.4,
+    xTickCount: 6, yTickCount: 4,
+    dataColors: ['#b02020','#1a6fa8','#e67e22']
+  }
+});
+
+// ── C1: Employment rate by age group M/F ─────────────────────────────────────
+new chartXkcd.Bar(document.getElementById('chart-c1'), {
+  xLabel: 'AGE GROUP', yLabel: 'EMPLOYMENT RATE (%)',
+  data: {
+    labels: c1Labels,
+    datasets: [
+      { label: 'MEN',   data: c1Male   },
+      { label: 'WOMEN', data: c1Female }
+    ]
+  },
+  options: {
+    dataColors: ['#1a6fa8','#e67e22'],
+    legendPosition: chartXkcd.config.positionType.upRight
+  }
+});
+
+// ── C2: Employment by sector ──────────────────────────────────────────────────
+new roughViz.BarH({
+  element: '#chart-c2',
+  data: { labels: c2Labels, values: c2Values },
+  title: 'Employed persons by NACE sector — EU27 latest year (millions)',
+  titleFontSize: '1rem', axisFontSize: '1rem',
+  roughness: 1.5, stroke: '#333', strokeWidth: 1,
+  fillStyle: 'hachure', fillWeight: 0.7,
+  color: '#27ae60', highlight: '#2ecc71',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: cw('chart-c2'),
+  height: 312,
+  margin: { top: 40, right: 100, bottom: 40, left: 220 },
+  xLabel: 'MILLIONS OF PERSONS',
+});
+
+// ── D1: Temporary employment ranking ─────────────────────────────────────────
+new roughViz.BarH({
+  element: '#chart-d1',
+  data: { labels: d1Labels, values: d1Values },
+  title: 'Temporary employees as % of total — ages 15–64, latest year',
+  titleFontSize: '1rem', axisFontSize: '1rem',
+  roughness: 1.5, stroke: '#333', strokeWidth: 1,
+  fillStyle: 'hachure', fillWeight: 0.7,
+  color: '#8e44ad', highlight: '#9b59b6',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: cw('chart-d1'),
+  height: 862,
+  margin: { top: 40, right: 80, bottom: 40, left: 170 },
+  xLabel: '% OF TOTAL EMPLOYEES',
+});
+
+// ── D2: Involuntary part-time trend ──────────────────────────────────────────
+new chartXkcd.XY(document.getElementById('chart-d2'), {
+  xLabel: '', yLabel: '% OF TOTAL PART-TIME',
+  data: {
+    datasets: [
+      { label: 'TOTAL',  data: d2Total  },
+      { label: 'MEN',    data: d2Male   },
+      { label: 'WOMEN',  data: d2Female }
+    ]
+  },
+  options: {
+    showLine: true, dotSize: 0.4,
+    xTickCount: 6, yTickCount: 4,
+    dataColors: ['#b02020','#1a6fa8','#e67e22']
+  }
+});
+
+// ── E1: Average wages ranking ─────────────────────────────────────────────────
+new roughViz.BarH({
+  element: '#chart-e1',
+  data: { labels: e1Labels, values: e1Values },
+  title: 'Average annual wages by country — latest year (current USD PPP)',
+  titleFontSize: '1rem', axisFontSize: '1rem',
+  roughness: 1.5, stroke: '#333', strokeWidth: 1,
+  fillStyle: 'hachure', fillWeight: 0.7,
+  color: '#b02020', highlight: '#c0392b',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: cw('chart-e1'),
+  height: 906,
+  margin: { top: 40, right: 100, bottom: 40, left: 190 },
+  xLabel: 'USD PPP (CURRENT PRICES)',
+});
+
+// ── E2: Wage index time series ────────────────────────────────────────────────
+const e2Datasets = Object.entries(e2Series).map(([country, pts]) => ({
+  label: country, data: pts
+}));
+new chartXkcd.XY(document.getElementById('chart-e2'), {
+  xLabel: '', yLabel: 'INDEX (2010 = 100)',
+  data: { datasets: e2Datasets },
+  options: {
+    showLine: true, dotSize: 0.3,
+    xTickCount: 6, yTickCount: 5,
+    dataColors: ['#b02020','#1a6fa8','#e67e22','#27ae60','#8e44ad','#16a085','#e74c3c']
+  }
+});
+
+// ── F1: Gender wage gap ranking ───────────────────────────────────────────────
+new roughViz.BarH({
+  element: '#chart-f1',
+  data: { labels: f1Labels, values: f1Values },
+  title: 'Gender wage gap by country — latest year (unadjusted, %)',
+  titleFontSize: '1rem', axisFontSize: '1rem',
+  roughness: 1.5, stroke: '#333', strokeWidth: 1,
+  fillStyle: 'hachure', fillWeight: 0.7,
+  color: '#16a085', highlight: '#1abc9c',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: cw('chart-f1'),
+  height: 972,
+  margin: { top: 40, right: 80, bottom: 40, left: 190 },
+  xLabel: '% BELOW MALE MEDIAN WAGE',
+});
+
+// ── G1: Job vacancy rate by sector ────────────────────────────────────────────
+new roughViz.BarH({
+  element: '#chart-g1',
+  data: { labels: g1Labels, values: g1Values },
+  title: 'Job vacancy rate by NACE sector — EU27 latest year (%)',
+  titleFontSize: '1rem', axisFontSize: '1rem',
+  roughness: 1.5, stroke: '#333', strokeWidth: 1,
+  fillStyle: 'hachure', fillWeight: 0.7,
+  color: '#1a6fa8', highlight: '#2980b9',
+  tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+  width: cw('chart-g1'),
+  height: 356,
+  margin: { top: 40, right: 80, bottom: 40, left: 230 },
+  xLabel: '% OF TOTAL POSTS',
+});
+
+</script>
+</body>
+</html>

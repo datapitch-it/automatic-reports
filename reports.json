@@ -1,0 +1,124 @@
+[
+  {
+    "order": 10,
+    "path":  "reports/10_labour-market/index.html",
+    "date":  "1 May 2026",
+    "title": "Labour Market Indicators: jobs, wages, and security across Europe",
+    "desc":  "A cross-country analysis of European and OECD labour markets from the worker's perspective: unemployment by age and sex, labour force participation gaps, precarious work, average wages, gender wage gap, and job vacancy rates — with historical trends from 2000 to 2024.",
+    "badges": [
+      { "label": "Eurostat", "value": "UNE_RT_A · LFSA series · JVS" },
+      { "label": "OECD",     "value": "DSD_EARNINGS" },
+      { "label": "Period",   "value": "2000–2024" },
+      { "label": "Countries","value": "38 OECD + EU27" }
+    ]
+  },
+  {
+    "order": 9,
+    "path":  "reports/09_sicilia-indicatori/index.html",
+    "date":  "29 aprile 2026",
+    "title": "Sicilia in numeri: 14 indicatori strutturali",
+    "desc":  "Com'è cambiata la Sicilia negli ultimi vent'anni? Quattordici indicatori su economia, mercato del lavoro, demografia e benessere sociale, estratti da Eurostat, ISTAT e OCSE tramite API SDMX, con checkpoint ogni cinque anni dal 2000 al 2025.",
+    "badges": [
+      { "label": "Eurostat",   "value": "NUTS2 ITG1" },
+      { "label": "ISTAT",      "value": "ITG1" },
+      { "label": "OCSE",       "value": "TL2 ITG1" },
+      { "label": "Periodo",    "value": "1990–2025" },
+      { "label": "Indicatori", "value": "14" }
+    ]
+  },
+  {
+    "order": 8,
+    "path":  "reports/08_netherlands-factcheck/index.html",
+    "date":  "27 aprile 2026",
+    "title": "Netherlands in Numbers: fact-checking dell'infografica Eurostat",
+    "desc":  "8 valori verificati via SDMX: 6 confermati, 1 dato internet obsoleto (riferito al 2017), 1 approssimazione sul riciclo WEEE. PIL, occupazione e popolazione risultano aggiornati al 2025.",
+    "badges": [
+      { "label": "Eurostat", "value": "TPS00001 · TPS00005 · TPS00150 · TESEM010 · NAMA_10_PC · NAMA_10_GDP · ISOC_CI_IT_H · CEI_WM060" },
+      { "label": "Paesi",    "value": "NL · EU27" }
+    ]
+  },
+  {
+    "order": 7,
+    "path":  "reports/07_natalita-europa/index.html",
+    "date":  "24 aprile 2026",
+    "title": "Natalità in Europa: il crollo silenzioso",
+    "desc":  "TFR EU27 a 1,34 nel 2024 — minimo storico. Relazione tra fecondità, occupazione femminile, asili nido e spesa pubblica per le famiglie.",
+    "badges": [
+      { "label": "Eurostat", "value": "DEMO_FIND · LFSI_EMP_A · TPS00185 · SPR_EXP_FFA" },
+      { "label": "Periodo",  "value": "2003–2024" },
+      { "label": "Paesi",    "value": "EU27" }
+    ]
+  },
+  {
+    "order": 6,
+    "path":  "reports/06_petrolio-fossili/index.html",
+    "date":  "22 aprile 2026",
+    "title": "Petrolio e combustibili fossili: produzione, importazioni, usi, riserve",
+    "desc":  "Da dove arriva il greggio importato in Europa, giacimento per giacimento? Prezzi storici di Brent, gas e carbone, dipendenza dalla Russia prima e dopo il 2022.",
+    "badges": [
+      { "label": "IMF",     "value": "PCPS" },
+      { "label": "Eurostat","value": "NRG_TI_COIFPM · NRG_TI_OIL · NRG_CB_COSM · NRG_CB_OIL · NRG_STK_OEM" },
+      { "label": "Periodo", "value": "2000–2024" },
+      { "label": "Paesi",   "value": "EU27 + Italia" }
+    ]
+  },
+  {
+    "order": 5,
+    "path":  "reports/05_media-giornalismo/index.html",
+    "date":  "21 aprile 2026",
+    "title": "Due velocità nel settore media europeo",
+    "desc":  "L'editoria tradizionale perde un terzo degli occupati in 13 anni, mentre la produzione audiovisiva cresce del 30%. Chi legge ancora i quotidiani di carta?",
+    "badges": [
+      { "label": "Eurostat", "value": "CULT_EMP_N2 · CULT_PCS_NWA/S/E" },
+      { "label": "Periodo",  "value": "2011–2024" }
+    ]
+  },
+  {
+    "order": 3,
+    "path":  "reports/03_incidenti-stradali/index.html",
+    "date":  "17 aprile 2026",
+    "title": "Incidenti stradali in Europa: la mappa della sicurezza",
+    "desc":  "Mortalità stradale nei paesi europei: tassi di decessi per 100.000 abitanti e l'evoluzione nell'ultimo decennio secondo gli indicatori SDG.",
+    "badges": [
+      { "label": "Eurostat", "value": "SDG_11_40" },
+      { "label": "Periodo",  "value": "2010–2024" },
+      { "label": "Paesi",    "value": "27 UE + EFTA" }
+    ]
+  },
+  {
+    "order": 4,
+    "path":  "reports/04_stereotipi-genere/index.html",
+    "date":  "9 aprile 2026",
+    "title": "Stereotipi di genere nei dati europei",
+    "desc":  "Segregazione occupazionale, divario nelle lauree STEM e asimmetria nel lavoro part-time: tre proxy statistiche degli stereotipi di genere.",
+    "badges": [
+      { "label": "Eurostat", "value": "TPS00217 · LFSA_EGAN2 · LFSA_EPPGA" },
+      { "label": "Periodo",  "value": "2010–2023" }
+    ]
+  },
+  {
+    "order": 1,
+    "path":  "reports/01_gender-pay-gap/index.html",
+    "date":  "9 aprile 2026",
+    "title": "Quanto guadagnano le donne rispetto agli uomini in Europa?",
+    "desc":  "Il divario retributivo di genere non aggiustato nei paesi europei: chi guadagna meno, dove il gap è aumentato e dove si è ridotto negli ultimi 15 anni.",
+    "badges": [
+      { "label": "Eurostat", "value": "TESEM180 · EARN_GR_GPGR2AG" },
+      { "label": "Periodo",  "value": "2007–2024" },
+      { "label": "Paesi",    "value": "30" }
+    ]
+  },
+  {
+    "order": 2,
+    "path":  "reports/02_spesa-militare/index.html",
+    "date":  "8 aprile 2026",
+    "title": "Spesa militare e industria della difesa",
+    "desc":  "Analisi della spesa pubblica per la difesa militare in Europa e nel mondo, confrontando bilanci nazionali in percentuale del PIL su dati Eurostat e OECD.",
+    "badges": [
+      { "label": "Eurostat", "value": "GOV_10A_EXP" },
+      { "label": "OECD",     "value": "NASEC10" },
+      { "label": "Periodo",  "value": "2000–2024" },
+      { "label": "Paesi",    "value": "40+" }
+    ]
+  }
+]

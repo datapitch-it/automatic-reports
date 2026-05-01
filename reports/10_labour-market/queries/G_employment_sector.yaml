@@ -1,0 +1,10 @@
+provider: eurostat
+dataset: LFSA_EGAN2
+filters:
+  freq: A
+  unit: THS_PER
+  sex: T
+  age: Y_GE15
+  nace_r2: TOTAL+A+C+F+G+H+I+J+K+O+P+Q
+start_period: "2015"
+end_period: "2024"
