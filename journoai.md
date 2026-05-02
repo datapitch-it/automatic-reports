@@ -304,6 +304,7 @@ non in file CSV separati. Questo garantisce che la pagina sia autosufficiente.
 |----------|--------------------|-----------------------|---------------|
 | roughViz 1.0.6 | BarH, Bar, Line, Scatter, Pie | `<div>` | Ranking, confronti puntuali |
 | chart.xkcd 1.1 | XY, Bar, StackedBar, Pie, Radar | `<svg>` | Serie temporali, multi-serie |
+| matplotlib (xkcd mode) | qualsiasi tipo | `<img src="...">` | Grafici Python generati offline o in notebook, esportati come PNG/SVG |
 
 **Note tecniche fondamentali**:
 - **roughViz 1.0.6**: Deve puntare a un contenitore **`<div>`**. La libreria crea l'elemento `<svg>` al suo interno. Se puntata a un `<svg>`, il rendering fallisce o produce sovrapposizioni.
@@ -402,6 +403,69 @@ new chartXkcd.XY(document.getElementById('chart-[ID]'), {
 
 Per small multiples (un grafico per entità), usare un `<svg id="chart-[CODICE]">` per ciascuna
 e iterare con `Object.entries(seriesData).forEach(...)`.
+
+### Template matplotlib (xkcd mode)
+
+Usare quando il grafico è generato in Python (notebook o script offline) ed esportato come immagine
+statica. Il file va in `output/` e referenziato via `<img src="output/nome-grafico.png">`.
+
+**Regola UPPERCASE**: tutte le label (asse X, asse Y, titolo, tick labels) devono essere uppercase.
+
+```python
+import matplotlib
+matplotlib.use('Agg')          # backend non-interattivo per export
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+
+with plt.xkcd():
+    fig, ax = plt.subplots(figsize=(9, 4))
+
+    # --- dati ---
+    anni  = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022]
+    valori = [23.1, 24.0, 25.3, 26.1, 27.4, 25.0, 26.8, 28.2]
+
+    ax.plot(anni, valori, color='#b02020', linewidth=2, marker='o', markersize=5)
+
+    # --- UPPERCASE obbligatorio per tutte le label ---
+    ax.set_xlabel('ANNO', fontsize=12)
+    ax.set_ylabel('VALORE (%)', fontsize=12)
+    ax.set_title('TITOLO DEL GRAFICO', fontsize=14)
+
+    # tick labels uppercase (se le label sono stringhe)
+    ax.set_xticks(anni)
+    ax.set_xticklabels([str(a).upper() for a in anni], fontsize=10)
+
+    # baseline a zero — obbligatorio
+    ax.set_ylim(bottom=0)
+
+    # griglia leggera
+    ax.yaxis.set_major_formatter(mticker.FormatStrFormatter('%.1f'))
+    ax.grid(axis='y', linestyle='--', alpha=0.4)
+
+    plt.tight_layout()
+    plt.savefig('output/nome-grafico.png', dpi=150, bbox_inches='tight')
+    plt.close()
+```
+
+**Embedding nell'HTML**:
+
+```html
+<div class="chart-wrap mb-4">
+  <p class="chart-title-label">TITOLO DEL GRAFICO</p>
+  <img src="output/nome-grafico.png" alt="TITOLO DEL GRAFICO"
+       style="width:100%; max-width:720px; display:block;">
+</div>
+```
+
+**Quando usarlo vs roughViz / chart.xkcd**:
+
+| Situazione | Libreria consigliata |
+|---|---|
+| Dati inline nel browser, interattività base | roughViz o chart.xkcd |
+| Script Python già esistente, dati in CSV/DataFrame | **matplotlib xkcd** |
+| Grafico con layout complesso (subplots, annotazioni) | **matplotlib xkcd** |
+| Small multiples con molte serie | **matplotlib xkcd** |
+| Report interamente nel browser, zero Python | roughViz / chart.xkcd |
 
 ### Palette colori
 

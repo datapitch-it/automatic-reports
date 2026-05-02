@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JournAI — Analisi dati statistici con SDMX</title>
+  <title>JournAI — Statistical data analysis with SDMX</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <style>
     :root {
@@ -318,6 +318,17 @@
     .prov-table .p-check { text-align: center; font-family: var(--mono); font-size: 1rem; }
     .prov-table .yes { color: #27ae60; }
     .prov-table .no  { color: var(--rule); }
+
+    /* ── LANGUAGE TOGGLE ── */
+    #lang-toggle { position: fixed; top: 0.9rem; right: 1.2rem; z-index: 1050; font-family: var(--mono); font-size: 0.8rem; background: rgba(20,20,20,0.92); border: 1px solid #444; padding: 3px 10px; display: flex; align-items: center; gap: 4px; }
+    .lang-btn { background: none; border: none; color: #888; font-family: var(--mono); font-size: 0.8rem; cursor: pointer; padding: 0; letter-spacing: 0.06em; }
+    .lang-btn.lang-active { color: #fff; font-weight: bold; }
+    .lang-sep { color: #444; }
+
+    /* ── LANGUAGE VISIBILITY ── */
+    .it { display: none }
+    body.lang-it .it { display: revert }
+    body.lang-it .en { display: none }
   </style>
 </head>
 <body>
@@ -325,14 +336,22 @@
 <!-- ═══ HEADER ═══ -->
 <header class="site-header py-5">
   <div class="container">
-    <p class="eyebrow mb-2">JournAI · Ricerche SDMX · opensdmx CLI</p>
-    <h1 class="mb-3">Dati statistici istituzionali,<br>analizzati con metodo</h1>
+    <p class="eyebrow mb-2">JournAI · <span class="en">SDMX Research</span><span class="it">Ricerche SDMX</span> · opensdmx CLI</p>
+    <h1 class="mb-3">
+      <span class="en">Institutional statistical data,<br>analysed with method</span>
+      <span class="it">Dati statistici istituzionali,<br>analizzati con metodo</span>
+    </h1>
     <p class="lead-text mb-4">
-      Analisi giornalistiche su dati aperti in formato SDMX — Eurostat, OECD e altri
+      <span class="en">Journalistic analyses of open data in SDMX format — Eurostat, OECD and other
+      institutional providers. The method combines an AI orchestrator with opensdmx CLI:
+      the AI searches relevant datasets and builds the report; the library runs the calculations,
+      ensuring correctness and reproducibility. Every research is verifiable step-by-step:
+      raw data via API, reproducible YAML queries, operation logs in <code style="font-size:1rem;background:rgba(255,255,255,0.08);padding:1px 5px;">notes.md</code>.</span>
+      <span class="it">Analisi giornalistiche su dati aperti in formato SDMX — Eurostat, OECD e altri
       provider istituzionali. Il metodo combina un'AI orchestratore con opensdmx CLI:
       l'AI cerca i dataset pertinenti e costruisce il report; la libreria esegue i calcoli
       garantendo correttezza e replicabilità. Ogni ricerca è verificabile passo-passo:
-      dati grezzi via API, query YAML riproducibili, log delle operazioni in <code style="font-size:1rem;background:rgba(255,255,255,0.08);padding:1px 5px;">notes.md</code>.
+      dati grezzi via API, query YAML riproducibili, log delle operazioni in <code style="font-size:1rem;background:rgba(255,255,255,0.08);padding:1px 5px;">notes.md</code>.</span>
     </p>
   </div>
 </header>
@@ -345,8 +364,8 @@
         <div class="method-step">
           <span class="num">01</span>
           <div>
-            <span class="label">Domanda</span>
-            <span class="desc">cosa si vuole misurare</span>
+            <span class="label"><span class="en">Question</span><span class="it">Domanda</span></span>
+            <span class="desc"><span class="en">what we want to measure</span><span class="it">cosa si vuole misurare</span></span>
           </div>
         </div>
       </div>
@@ -355,7 +374,7 @@
           <span class="num">02</span>
           <div>
             <span class="label">Dataset</span>
-            <span class="desc">ricerca con opensdmx</span>
+            <span class="desc"><span class="en">search with opensdmx</span><span class="it">ricerca con opensdmx</span></span>
           </div>
         </div>
       </div>
@@ -364,7 +383,7 @@
           <span class="num">03</span>
           <div>
             <span class="label">Download</span>
-            <span class="desc">API SDMX, CSV grezzo</span>
+            <span class="desc"><span class="en">SDMX API, raw CSV</span><span class="it">API SDMX, CSV grezzo</span></span>
           </div>
         </div>
       </div>
@@ -372,8 +391,8 @@
         <div class="method-step">
           <span class="num">04</span>
           <div>
-            <span class="label">Trasformazioni</span>
-            <span class="desc">documentate passo-passo</span>
+            <span class="label"><span class="en">Transforms</span><span class="it">Trasformazioni</span></span>
+            <span class="desc"><span class="en">documented step-by-step</span><span class="it">documentate passo-passo</span></span>
           </div>
         </div>
       </div>
@@ -381,7 +400,7 @@
         <div class="method-step">
           <span class="num">05</span>
           <div>
-            <span class="label">Grafici</span>
+            <span class="label"><span class="en">Charts</span><span class="it">Grafici</span></span>
             <span class="desc">roughViz · chart.xkcd</span>
           </div>
         </div>
@@ -391,7 +410,7 @@
           <span class="num">06</span>
           <div>
             <span class="label">Accountability</span>
-            <span class="desc">riproducibile da chiunque</span>
+            <span class="desc"><span class="en">reproducible by anyone</span><span class="it">riproducibile da chiunque</span></span>
           </div>
         </div>
       </div>
@@ -402,46 +421,60 @@
 <!-- ═══ REPORTS LIST ═══ -->
 <main class="container py-5">
 
-  <p class="section-label mb-4">Ultimi report generati</p>
+  <p class="section-label mb-4"><span class="en">Latest generated reports</span><span class="it">Ultimi report generati</span></p>
 
   <div class="report-list" id="report-list"></div>
 
   <!-- NOTE METODOLOGICHE -->
   <div class="callout p-3 mt-5">
-    <strong>Riproducibilità:</strong> ogni report contiene i dati grezzi scaricati via API SDMX,
+    <span class="en"><strong>Reproducibility:</strong> each report contains the raw data downloaded via SDMX API,
+    the exact CLI commands to re-download them, and a chronological log of operations in <code>notes.md</code>.
+    No data is manually modified. The YAML files in <code>queries/</code> allow re-generating
+    each dataset at any time.</span>
+    <span class="it"><strong>Riproducibilità:</strong> ogni report contiene i dati grezzi scaricati via API SDMX,
     i comandi CLI esatti per riscaricarli, e un log cronologico delle operazioni in <code>notes.md</code>.
     Nessun dato è modificato a mano. I file YAML in <code>queries/</code> permettono di rigenerare
-    ogni dataset in qualsiasi momento.
+    ogni dataset in qualsiasi momento.</span>
   </div>
 
 </main>
 
-<!-- ═══ COME FUNZIONA ═══ -->
+<!-- ═══ COME FUNZIONA / HOW IT WORKS ═══ -->
 <div class="how-section py-5">
   <div class="container">
-    <p class="section-label mb-2">Metodologia</p>
-    <h2 class="mb-1">Come funziona</h2>
+    <p class="section-label mb-2"><span class="en">Methodology</span><span class="it">Metodologia</span></p>
+    <h2 class="mb-1"><span class="en">How it works</span><span class="it">Come funziona</span></h2>
     <p class="lead-text mb-5">
-      L'AI riceve una domanda in linguaggio naturale e pilota opensdmx CLI passo-passo.
+      <span class="en">The AI receives a natural language question and drives opensdmx CLI step-by-step.
+      Calculations are performed by the library — not the AI — ensuring that every
+      transformation is correct. Example: European population by country via Eurostat.</span>
+      <span class="it">L'AI riceve una domanda in linguaggio naturale e pilota opensdmx CLI passo-passo.
       I calcoli sono eseguiti dalla libreria — non dall'AI — garantendo che ogni
-      trasformazione sia corretta. Esempio: popolazione europea per paese via Eurostat.
+      trasformazione sia corretta. Esempio: popolazione europea per paese via Eurostat.</span>
     </p>
 
     <!-- STEP 0 -->
     <div class="step-v">
       <div class="step-v-num">00</div>
       <div class="step-v-body">
-        <div class="step-v-title">Input in linguaggio naturale · AI come orchestratore</div>
+        <div class="step-v-title">
+          <span class="en">Natural language input · AI as orchestrator</span>
+          <span class="it">Input in linguaggio naturale · AI come orchestratore</span>
+        </div>
         <p class="step-v-desc">
-          L'AI riceve la domanda di ricerca, deduce proxy statistiche e variabili esplicative
+          <span class="en">The AI receives the research question, deduces relevant statistical proxies
+          and explanatory variables, chooses the provider and formalises the question, scope
+          and hypotheses in <code>notes.md</code> before opening the terminal.
+          The subsequent steps are driven by the AI command by command; opensdmx CLI executes.</span>
+          <span class="it">L'AI riceve la domanda di ricerca, deduce proxy statistiche e variabili esplicative
           rilevanti, sceglie il provider e formalizza domanda, scope e ipotesi in
           <code>notes.md</code> prima di aprire il terminale.
-          I passi successivi vengono pilotati dall'AI comando per comando; opensdmx CLI esegue.
+          I passi successivi vengono pilotati dall'AI comando per comando; opensdmx CLI esegue.</span>
         </p>
         <div class="cli-block">
-          <span class="cm">Input:</span> <span class="cv">"natalità nei paesi europei, variabili esplicative correlate"</span><br>
-          <span class="cm">AI deduce:</span> proxy → <span class="cf">TFR</span> · esplicative → <span class="cf">occupazione F · asili nido · spesa famiglia/PIL</span><br>
-          <span class="cm">Provider scelto:</span> <span class="cv">Eurostat</span> · massima copertura EU27
+          <span class="cm"><span class="en">Input:</span><span class="it">Input:</span></span> <span class="cv"><span class="en">"birth rates in European countries, related explanatory variables"</span><span class="it">"natalità nei paesi europei, variabili esplicative correlate"</span></span><br>
+          <span class="cm"><span class="en">AI deduces:</span><span class="it">AI deduce:</span></span> proxy → <span class="cf">TFR</span> · <span class="en">explanatory →</span><span class="it">esplicative →</span> <span class="cf"><span class="en">female employment · nurseries · family spending/GDP</span><span class="it">occupazione F · asili nido · spesa famiglia/PIL</span></span><br>
+          <span class="cm"><span class="en">Provider chosen:</span><span class="it">Provider scelto:</span></span> <span class="cv">Eurostat</span> · <span class="en">maximum EU27 coverage</span><span class="it">massima copertura EU27</span>
         </div>
       </div>
     </div>
@@ -450,13 +483,17 @@
     <div class="step-v">
       <div class="step-v-num">01</div>
       <div class="step-v-body">
-        <div class="step-v-title">Analisi della richiesta</div>
+        <div class="step-v-title">
+          <span class="en">Request analysis</span>
+          <span class="it">Analisi della richiesta</span>
+        </div>
         <p class="step-v-desc">
-          La richiesta viene scomposta in parole chiave, dimensioni attese e provider.
+          <span class="en">The request is broken down into keywords, expected dimensions and provider.</span>
+          <span class="it">La richiesta viene scomposta in parole chiave, dimensioni attese e provider.</span>
         </p>
         <div class="cli-block">
-          <span class="cm">Parole chiave:</span> <span class="cv">population</span> · <span class="cv">Europe</span><br>
-          <span class="cm">Dimensioni attese:</span> <span class="cf">geo</span> · <span class="cf">time</span><br>
+          <span class="cm"><span class="en">Keywords:</span><span class="it">Parole chiave:</span></span> <span class="cv">population</span> · <span class="cv">Europe</span><br>
+          <span class="cm"><span class="en">Expected dimensions:</span><span class="it">Dimensioni attese:</span></span> <span class="cf">geo</span> · <span class="cf">time</span><br>
           <span class="cm">Provider:</span> <span class="cv">Eurostat · default</span>
         </div>
       </div>
@@ -466,14 +503,19 @@
     <div class="step-v">
       <div class="step-v-num">02</div>
       <div class="step-v-body">
-        <div class="step-v-title">Ricerca dataset</div>
+        <div class="step-v-title">
+          <span class="en">Dataset search</span>
+          <span class="it">Ricerca dataset</span>
+        </div>
         <p class="step-v-desc">
-          Ricerca full-text sull'indice del provider. Su Eurostat restituisce centinaia di dataset;
-          vengono selezionati i candidati rilevanti per la verifica successiva.
+          <span class="en">Full-text search on the provider's index. On Eurostat this returns hundreds of datasets;
+          the relevant candidates are selected for subsequent verification.</span>
+          <span class="it">Ricerca full-text sull'indice del provider. Su Eurostat restituisce centinaia di dataset;
+          vengono selezionati i candidati rilevanti per la verifica successiva.</span>
         </p>
         <div class="cli-block">
           <span class="cp">$ </span><span class="cc">opensdmx</span> search <span class="cv">"population"</span> <span class="cf">--n</span> <span class="cv">50</span><br>
-          <span class="cm">  ↳ 514 dataset trovati · seleziono i candidati rilevanti</span>
+          <span class="cm">  ↳ <span class="en">514 datasets found · selecting relevant candidates</span><span class="it">514 dataset trovati · seleziono i candidati rilevanti</span></span>
         </div>
       </div>
     </div>
@@ -482,32 +524,38 @@
     <div class="step-v">
       <div class="step-v-num">03</div>
       <div class="step-v-body">
-        <div class="step-v-title">Valutazione candidati · 3 chiamate info in parallelo</div>
+        <div class="step-v-title">
+          <span class="en">Candidate evaluation · 3 parallel info calls</span>
+          <span class="it">Valutazione candidati · 3 chiamate info in parallelo</span>
+        </div>
         <p class="step-v-desc">
-          Per ogni candidato viene interrogato lo structure endpoint per verificare
+          <span class="en">For each candidate the structure endpoint is queried to verify
+          temporal coverage, geographic granularity and available dimensions.
+          Unsuitable datasets are excluded with explicit justification.</span>
+          <span class="it">Per ogni candidato viene interrogato lo structure endpoint per verificare
           copertura temporale, granularità geografica e dimensioni disponibili.
-          I dataset non adatti vengono esclusi con motivazione esplicita.
+          I dataset non adatti vengono esclusi con motivazione esplicita.</span>
         </p>
         <div class="cli-block">
           <span class="cp">$ </span><span class="cc">opensdmx</span> info <span class="cv">DEMO_PJAN</span>  <span class="cm">→ freq · unit · age · sex · geo · 1960–2025 ✓</span><br>
-          <span class="cp">$ </span><span class="cc">opensdmx</span> info <span class="cv">TPS00001</span>  <span class="cm">→ freq · indic_de · geo · solo 12 anni ↗</span><br>
-          <span class="cp">$ </span><span class="cc">opensdmx</span> info <span class="cv">TGS00096</span>  <span class="cm">→ geo NUTS2, non nazionale ✗</span>
+          <span class="cp">$ </span><span class="cc">opensdmx</span> info <span class="cv">TPS00001</span>  <span class="cm">→ freq · indic_de · geo · <span class="en">only 12 years</span><span class="it">solo 12 anni</span> ↗</span><br>
+          <span class="cp">$ </span><span class="cc">opensdmx</span> info <span class="cv">TGS00096</span>  <span class="cm">→ geo NUTS2, <span class="en">not national</span><span class="it">non nazionale</span> ✗</span>
         </div>
         <div class="result-rows">
           <div class="result-row sel">
             <span class="r-id">DEMO_PJAN</span>
-            <span class="r-verdict ok">✓ selezionato</span>
+            <span class="r-verdict ok">✓ <span class="en">selected</span><span class="it">selezionato</span></span>
             <span class="r-note">Population on 1 January by age and sex</span>
           </div>
           <div class="result-row">
             <span class="r-id">TPS00001</span>
-            <span class="r-verdict skip">↗ parziale</span>
-            <span class="r-note">solo 2014–2025</span>
+            <span class="r-verdict skip">↗ <span class="en">partial</span><span class="it">parziale</span></span>
+            <span class="r-note"><span class="en">only 2014–2025</span><span class="it">solo 2014–2025</span></span>
           </div>
           <div class="result-row">
             <span class="r-id">TGS00096</span>
-            <span class="r-verdict no">✗ escluso</span>
-            <span class="r-note">livello regionale NUTS2 — non nazionale</span>
+            <span class="r-verdict no">✗ <span class="en">excluded</span><span class="it">escluso</span></span>
+            <span class="r-note"><span class="en">regional level NUTS2 — not national</span><span class="it">livello regionale NUTS2 — non nazionale</span></span>
           </div>
         </div>
       </div>
@@ -517,22 +565,32 @@
     <div class="step-v">
       <div class="step-v-num">04</div>
       <div class="step-v-body">
-        <div class="step-v-title">Verifica codici reali · constraint endpoint</div>
+        <div class="step-v-title">
+          <span class="en">Real code verification · constraint endpoint</span>
+          <span class="it">Verifica codici reali · constraint endpoint</span>
+        </div>
         <p class="step-v-desc">
-          Prima di scaricare i dati, vengono interrogati i constraint reali del dataset:
+          <span class="en">Before downloading data, the real constraints of the dataset are queried:
+          how many values exist for each dimension and which codes are actually
+          available. This prevents building queries with non-existent codes.</span>
+          <span class="it">Prima di scaricare i dati, vengono interrogati i constraint reali del dataset:
           quanti valori esistono per ogni dimensione e quali codici sono effettivamente
-          disponibili. Questo impedisce di costruire query con codici inesistenti.
+          disponibili. Questo impedisce di costruire query con codici inesistenti.</span>
         </p>
         <div class="cli-block">
           <span class="cp">$ </span><span class="cc">opensdmx</span> constraints <span class="cv">DEMO_PJAN</span><br>
-          <span class="cm">  ↳ availableconstraint · verifica codici reali</span>
+          <span class="cm">  ↳ availableconstraint · <span class="en">verifying real codes</span><span class="it">verifica codici reali</span></span>
         </div>
         <div style="background:#fff;border:1px solid var(--rule);overflow-x:auto;">
           <table class="ct-mini">
-            <thead><tr><th>Dimensione</th><th>n valori</th><th>Campione</th></tr></thead>
+            <thead><tr>
+              <th><span class="en">Dimension</span><span class="it">Dimensione</span></th>
+              <th><span class="en">n values</span><span class="it">n valori</span></th>
+              <th><span class="en">Sample</span><span class="it">Campione</span></th>
+            </tr></thead>
             <tbody>
-              <tr><td>freq</td><td>1</td><td>A — annuale</td></tr>
-              <tr><td>unit</td><td>1</td><td>NR — numero assoluto</td></tr>
+              <tr><td>freq</td><td>1</td><td><span class="en">A — annual</span><span class="it">A — annuale</span></td></tr>
+              <tr><td>unit</td><td>1</td><td><span class="en">NR — absolute number</span><span class="it">NR — numero assoluto</span></td></tr>
               <tr><td>age</td><td>103</td><td>TOTAL, Y_LT1, Y1, Y2 …</td></tr>
               <tr><td>sex</td><td>3</td><td>T · M · F</td></tr>
               <tr><td>geo</td><td>59</td><td>EU27_2020, EU28, IT, DE …</td></tr>
@@ -547,15 +605,21 @@
     <div class="step-v">
       <div class="step-v-num">05</div>
       <div class="step-v-body">
-        <div class="step-v-title">Download con filtri precisi</div>
+        <div class="step-v-title">
+          <span class="en">Download with precise filters</span>
+          <span class="it">Download con filtri precisi</span>
+        </div>
         <p class="step-v-desc">
-          La query viene costruita con i codici verificati al passo precedente.
+          <span class="en">The query is built with the codes verified in the previous step.
+          <code>--last-n 1</code> selects the most recent observation for each series,
+          avoiding downloading the entire time series when not needed.</span>
+          <span class="it">La query viene costruita con i codici verificati al passo precedente.
           <code>--last-n 1</code> seleziona l'osservazione più recente per ogni serie,
-          evitando di scaricare l'intera serie storica quando non serve.
+          evitando di scaricare l'intera serie storica quando non serve.</span>
         </p>
         <div class="cli-block">
           <span class="cp">$ </span><span class="cc">opensdmx</span> get <span class="cv">DEMO_PJAN</span> <span class="cf">--age</span> <span class="cv">TOTAL</span> <span class="cf">--sex</span> <span class="cv">T</span> <span class="cf">--last-n</span> <span class="cv">1</span><br>
-          <span class="cm">  ↳ osservazione più recente per serie · tutti i paesi · 59 righe raw</span>
+          <span class="cm">  ↳ <span class="en">most recent observation per series · all countries · 59 raw rows</span><span class="it">osservazione più recente per serie · tutti i paesi · 59 righe raw</span></span>
         </div>
       </div>
     </div>
@@ -564,19 +628,25 @@
     <div class="step-v">
       <div class="step-v-num">06</div>
       <div class="step-v-body">
-        <div class="step-v-title">Elaborazione · filtra, decodifica, ordina</div>
+        <div class="step-v-title">
+          <span class="en">Processing · filter, decode, sort</span>
+          <span class="it">Elaborazione · filtra, decodifica, ordina</span>
+        </div>
         <p class="step-v-desc">
-          I dati grezzi contengono codici aggregati (EU27, EA20, EEA…) che vanno rimossi
+          <span class="en">Raw data contains aggregated codes (EU27, EA20, EEA…) that must be removed
+          before visualisation. ISO codes are replaced with country names.
+          Each operation is documented and declared in the report.</span>
+          <span class="it">I dati grezzi contengono codici aggregati (EU27, EA20, EEA…) che vanno rimossi
           prima della visualizzazione. I codici ISO vengono sostituiti con i nomi paese.
-          Ogni operazione è documentata e dichiarata nel report.
+          Ogni operazione è documentata e dichiarata nel report.</span>
         </p>
         <div class="proc-rows">
-          <div class="proc-row-v"><span class="proc-icon">🗑️</span> Filtro aggregati EU/EA/EEA/EFTA — rimossi 10 codici</div>
-          <div class="proc-row-v"><span class="proc-icon">🏷️</span> Decodifica codici ISO → nomi paese — 49 stati</div>
-          <div class="proc-row-v"><span class="proc-icon">↕️</span> Ordinamento DESC per OBS_VALUE</div>
+          <div class="proc-row-v"><span class="proc-icon">🗑️</span> <span class="en">Filter EU/EA/EEA/EFTA aggregates — 10 codes removed</span><span class="it">Filtro aggregati EU/EA/EEA/EFTA — rimossi 10 codici</span></div>
+          <div class="proc-row-v"><span class="proc-icon">🏷️</span> <span class="en">Decode ISO codes → country names — 49 states</span><span class="it">Decodifica codici ISO → nomi paese — 49 stati</span></div>
+          <div class="proc-row-v"><span class="proc-icon">↕️</span> <span class="en">Sort DESC by OBS_VALUE</span><span class="it">Ordinamento DESC per OBS_VALUE</span></div>
         </div>
         <div class="cli-block mt-2">
-          <span class="cm">Risultato: </span><span class="cv">49 stati</span> · anno prevalente: <span class="cv">1 gennaio 2025</span> · pronti per la visualizzazione
+          <span class="cm"><span class="en">Result: </span><span class="it">Risultato: </span></span><span class="cv">49 <span class="en">states</span><span class="it">stati</span></span> · <span class="en">prevalent year: </span><span class="it">anno prevalente: </span><span class="cv"><span class="en">1 January 2025</span><span class="it">1 gennaio 2025</span></span> · <span class="en">ready for visualisation</span><span class="it">pronti per la visualizzazione</span>
         </div>
       </div>
     </div>
@@ -585,20 +655,26 @@
     <div class="step-v">
       <div class="step-v-num">07</div>
       <div class="step-v-body">
-        <div class="step-v-title">Output · report HTML + artefatti di accountability</div>
+        <div class="step-v-title">
+          <span class="en">Output · HTML report + accountability artefacts</span>
+          <span class="it">Output · report HTML + artefatti di accountability</span>
+        </div>
         <p class="step-v-desc">
-          L'AI assembla la pagina HTML autosufficiente con grafici inline, finding cards
+          <span class="en">The AI assembles the self-contained HTML page with inline charts, finding cards
+          and methodological sections. In parallel it saves all the artefacts that make
+          the analysis verifiable and reproducible by anyone at any time.</span>
+          <span class="it">L'AI assembla la pagina HTML autosufficiente con grafici inline, finding cards
           e sezioni metodologiche. In parallelo salva tutti gli artefatti che rendono
-          l'analisi verificabile e riproducibile da chiunque in qualsiasi momento.
+          l'analisi verificabile e riproducibile da chiunque in qualsiasi momento.</span>
         </p>
         <div class="proc-rows">
-          <div class="proc-row-v"><span class="proc-icon" style="min-width:1.4rem">📄</span> <code>index.html</code> — pagina autosufficiente, grafici inline, nessun server necessario</div>
-          <div class="proc-row-v"><span class="proc-icon" style="min-width:1.4rem">📋</span> <code>queries/*.yaml</code> — query riproducibile per ogni dataset scaricato</div>
-          <div class="proc-row-v"><span class="proc-icon" style="min-width:1.4rem">🗂️</span> <code>metadata/*.csv</code> — codelist per ogni dimensione filtrata o visualizzata</div>
-          <div class="proc-row-v"><span class="proc-icon" style="min-width:1.4rem">📝</span> <code>notes.md</code> — log cronologico: comandi esatti, scelte, anomalie, trasformazioni</div>
+          <div class="proc-row-v"><span class="proc-icon" style="min-width:1.4rem">📄</span> <code>index.html</code> — <span class="en">self-contained page, inline charts, no server required</span><span class="it">pagina autosufficiente, grafici inline, nessun server necessario</span></div>
+          <div class="proc-row-v"><span class="proc-icon" style="min-width:1.4rem">📋</span> <code>queries/*.yaml</code> — <span class="en">reproducible query for each downloaded dataset</span><span class="it">query riproducibile per ogni dataset scaricato</span></div>
+          <div class="proc-row-v"><span class="proc-icon" style="min-width:1.4rem">🗂️</span> <code>metadata/*.csv</code> — <span class="en">codelist for each filtered or visualised dimension</span><span class="it">codelist per ogni dimensione filtrata o visualizzata</span></div>
+          <div class="proc-row-v"><span class="proc-icon" style="min-width:1.4rem">📝</span> <code>notes.md</code> — <span class="en">chronological log: exact commands, choices, anomalies, transformations</span><span class="it">log cronologico: comandi esatti, scelte, anomalie, trasformazioni</span></div>
         </div>
         <div class="cli-block mt-2">
-          <span class="cm">Per rigenerare i dati in futuro: </span><span class="cv">opensdmx run queries/A_nome.yaml --out output/A_nome.csv</span>
+          <span class="cm"><span class="en">To regenerate data in future: </span><span class="it">Per rigenerare i dati in futuro: </span></span><span class="cv">opensdmx run queries/A_nome.yaml --out output/A_nome.csv</span>
         </div>
       </div>
     </div>
@@ -609,22 +685,24 @@
 <!-- ═══ PROVIDER ═══ -->
 <div class="providers-section py-5">
   <div class="container">
-    <p class="section-label mb-2">Fonti</p>
-    <h2 class="mb-2">Provider disponibili</h2>
+    <p class="section-label mb-2"><span class="en">Sources</span><span class="it">Fonti</span></p>
+    <h2 class="mb-2"><span class="en">Available providers</span><span class="it">Provider disponibili</span></h2>
     <p class="prov-note mb-4">
-      I provider elencati sono esempi curati. opensdmx funziona con qualsiasi endpoint
-      SDMX 2.1 REST — usa <code>--provider &lt;URL&gt;</code> per connetterti a provider non elencati.
+      <span class="en">The listed providers are curated examples. opensdmx works with any SDMX 2.1 REST
+      endpoint — use <code>--provider &lt;URL&gt;</code> to connect to unlisted providers.</span>
+      <span class="it">I provider elencati sono esempi curati. opensdmx funziona con qualsiasi endpoint
+      SDMX 2.1 REST — usa <code>--provider &lt;URL&gt;</code> per connetterti a provider non elencati.</span>
     </p>
     <div class="table-responsive">
       <table class="prov-table">
         <thead>
           <tr>
             <th>Alias</th>
-            <th>Nome</th>
-            <th>Descrizione</th>
+            <th><span class="en">Name</span><span class="it">Nome</span></th>
+            <th><span class="en">Description</span><span class="it">Descrizione</span></th>
             <th>Agency</th>
-            <th title="Supporta constraints endpoint">Constraints</th>
-            <th title="Supporta --last-n">last-n</th>
+            <th title="Supports constraints endpoint">Constraints</th>
+            <th title="Supports --last-n">last-n</th>
           </tr>
         </thead>
         <tbody>
@@ -725,35 +803,49 @@
 <!-- ═══ FOOTER ═══ -->
 <footer class="site-footer py-4 mt-2">
   <div class="container d-flex flex-wrap gap-4 justify-content-between">
-    <span>Dati: Eurostat · OECD · Formato SDMX 2.1</span>
-    <span>Strumento: <a href="https://github.com/ondata/opensdmx">opensdmx CLI</a></span>
-    <span>Grafici: <a href="https://github.com/jwilber/roughViz">roughViz</a> · <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a></span>
-    <span>Aprile 2026</span>
+    <span><span class="en">Data:</span><span class="it">Dati:</span> Eurostat · OECD · <span class="en">SDMX 2.1 format</span><span class="it">Formato SDMX 2.1</span></span>
+    <span><span class="en">Tool:</span><span class="it">Strumento:</span> <a href="https://github.com/ondata/opensdmx">opensdmx CLI</a></span>
+    <span><span class="en">Charts:</span><span class="it">Grafici:</span> <a href="https://github.com/jwilber/roughViz">roughViz</a> · <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a></span>
+    <span><span class="en">April 2026</span><span class="it">Aprile 2026</span></span>
   </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+var _reportsData = null;
+
+function renderReports(reports) {
+  var isIt = document.body.classList.contains('lang-it');
+  var html = reports.map(function(r) {
+    var title = isIt ? r.title : (r.title_en || r.title);
+    var desc  = isIt ? r.desc  : (r.desc_en  || r.desc);
+    var badgesHtml = r.badges.map(function(b) {
+      var lbl = isIt ? (b.label_it || b.label) : b.label;
+      return '<span class="badge-sm"><strong>' + lbl + '</strong> ' + b.value + '</span>';
+    }).join('\n          ');
+    return '<a class="report-row" href="' + r.path + '">\n' +
+      '      <span class="report-row-body">\n' +
+      '        <span class="report-row-date">' + r.date + '</span>\n' +
+      '        <span class="report-row-title">' + title + '</span>\n' +
+      '        <span class="report-row-desc">' + desc + '</span>\n' +
+      '        <span class="report-row-meta">\n          ' + badgesHtml + '\n        </span>\n' +
+      '      </span>\n' +
+      '      <span class="report-row-cta">→</span>\n' +
+      '    </a>';
+  }).join('\n\n    ');
+  document.getElementById('report-list').innerHTML = html;
+}
+
+window._reRenderReports = function() { if (_reportsData) renderReports(_reportsData); };
+
 fetch('reports.json')
   .then(function(r) { return r.json(); })
   .then(function(reports) {
     reports.sort(function(a, b) { return b.order - a.order; });
-    var html = reports.map(function(r) {
-      var badgesHtml = r.badges.map(function(b) {
-        return '<span class="badge-sm"><strong>' + b.label + '</strong> ' + b.value + '</span>';
-      }).join('\n          ');
-      return '<a class="report-row" href="' + r.path + '">\n' +
-        '      <span class="report-row-body">\n' +
-        '        <span class="report-row-date">' + r.date + '</span>\n' +
-        '        <span class="report-row-title">' + r.title + '</span>\n' +
-        '        <span class="report-row-desc">' + r.desc + '</span>\n' +
-        '        <span class="report-row-meta">\n          ' + badgesHtml + '\n        </span>\n' +
-        '      </span>\n' +
-        '      <span class="report-row-cta">→</span>\n' +
-        '    </a>';
-    }).join('\n\n    ');
-    document.getElementById('report-list').innerHTML = html;
+    _reportsData = reports;
+    renderReports(reports);
   });
 </script>
+<script src="assets/lang.js"></script>
 </body>
 </html>

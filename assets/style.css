@@ -122,3 +122,14 @@ a.dl-link:hover { background: var(--accent2); color: #fff; }
 /* ── FOOTER ── */
 .site-footer { border-top: 2px solid var(--ink); font-size: 1rem; color: var(--ink-faint); font-family: var(--mono); }
 .site-footer a { color: var(--ink-faint); }
+
+/* ── LANGUAGE TOGGLE ── */
+#lang-toggle { position: fixed; top: 0.9rem; right: 1.2rem; z-index: 1050; font-family: var(--mono); font-size: 0.8rem; background: rgba(20,20,20,0.92); border: 1px solid #444; padding: 3px 10px; display: flex; align-items: center; gap: 4px; }
+.lang-btn { background: none; border: none; color: #888; font-family: var(--mono); font-size: 0.8rem; cursor: pointer; padding: 0; letter-spacing: 0.06em; }
+.lang-btn.lang-active { color: #fff; font-weight: bold; }
+.lang-sep { color: #444; }
+
+/* ── LANGUAGE VISIBILITY ── */
+.it { display: none }
+body.lang-it .it { display: revert }
+body.lang-it .en { display: none }

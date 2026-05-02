@@ -68,7 +68,15 @@
       "Bash(python3 -m http.server 8765)",
       "Bash(echo \"PID: $!\")",
       "Bash(kill 26337)",
-      "mcp__playwright__browser_resize"
+      "mcp__playwright__browser_resize",
+      "Bash(pkill -f \"http.server 8766\")",
+      "Bash(python3 -m http.server 8766 --directory .)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8766/reports/09_sicilia-indicatori/index.html)",
+      "Read(//home/nelsonmau/.playwright-mcp/**)",
+      "Read(//home/nelsonmau/**)",
+      "Bash(xargs cat *)",
+      "Bash(curl -s \"https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/UNE_RT_A/A.Y15-74+Y15-24+Y25-54+Y55-74.PC_ACT.T+M+F.?format=SDMX-CSV&startPeriod=2000&endPeriod=2024\")",
+      "Bash(curl -s \"https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFSA_ARGAN/A.PC.T+M+F.Y15-64+Y15-74+Y20-64.TOTAL.?format=SDMX-CSV&startPeriod=2000&endPeriod=2024\")"
     ]
   }
 }

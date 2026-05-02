@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,13 +24,16 @@
 
   <!-- ═══ SEZIONE A: RANKING ═══ -->
   <section class="section py-5" id="ranking">
-    <p class="section-label mb-1">Fase A · Eurostat TESEM180 · nace_r2=B-S_X_O · anno 2024</p>
-    <h2 class="mb-2">Chi ha il divario maggiore? Classifica europea 2024</h2>
+    <p class="section-label mb-1"><span class="en">Phase A · Eurostat TESEM180 · nace_r2=B-S_X_O · year 2024</span><span class="it">Fase A · Eurostat TESEM180 · nace_r2=B-S_X_O · anno 2024</span></p>
+    <h2 class="mb-2"><span class="en">Who has the largest gap? European ranking 2024</span><span class="it">Chi ha il divario maggiore? Classifica europea 2024</span></h2>
     <p class="subtitle mb-4">
-      % · industria, costruzioni e servizi (esclusa pubblica amministrazione) · 30 paesi
+      <span class="en">% · industry, construction and services (excl. public administration) · 30 countries</span><span class="it">% · industria, costruzioni e servizi (esclusa pubblica amministrazione) · 30 paesi</span>
     </p>
 
-    <div class="callout p-3 mb-4">
+    <div class="callout p-3 mb-4 en">
+      <strong>Unadjusted gender pay gap (GPG):</strong> percentage difference between the average gross hourly earnings of men and women, expressed as a percentage of male earnings. Formula: <em>(earnings_men − earnings_women) / earnings_men × 100</em>. A negative value (as in Luxembourg) means women earn on average more than men in that country and sector.
+    </div>
+    <div class="callout p-3 mb-4 it">
       <strong>Divario retributivo di genere non aggiustato (GPG):</strong> differenza percentuale
       tra la retribuzione oraria lorda media degli uomini e quella delle donne, espressa in
       percentuale della retribuzione maschile. Formula: <em>(retribuzione_uomini − retribuzione_donne)
@@ -39,13 +42,14 @@
     </div>
 
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> ogni barra rappresenta il divario retributivo in un paese nel 2024.
+      <span class="en"><strong>How to read:</strong> each bar represents the pay gap in a country in 2024. A value of 15% means that, on average, for every euro earned by a man in that country, a woman earns €0.85. Almost all 2024 data is still provisional (flag <code>p</code>). <strong>Luxembourg (−0.8%) does not appear in the chart</strong>: roughViz.BarH does not support negative values (scale starts at zero); the figure is shown in the finding card at the top of the page. SDMX source: <code>TESEM180</code>, Eurostat. Chart: <a href="https://github.com/jwilber/roughViz">roughViz 1.0.6</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> ogni barra rappresenta il divario retributivo in un paese nel 2024.
       Un valore di 15% significa che, in media, per ogni euro guadagnato da un uomo in quel paese,
       una donna ne guadagna 0,85. La quasi totalità dei dati 2024 è ancora provvisoria (flag <code>p</code>).
       <strong>Lussemburgo (−0,8%) non appare nel grafico</strong>: roughViz.BarH non supporta valori
       negativi (la scala parte da zero); il dato è riportato nella finding card in cima alla pagina.
       Fonte SDMX: <code>TESEM180</code>, Eurostat.
-      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz 1.0.6</a>.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz 1.0.6</a>.</span>
     </p>
 
     <div class="chart-wrap mb-4">
@@ -53,8 +57,17 @@
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 584 rows (39 geographic entities × 18 years, 2007–2024)</li>
+        <li>Selected most recent year available per entity: 2024 for 30 countries, earlier years for non-EU candidates (UK, TR, ME, MK, AL, RS) — the latter excluded from the ranking</li>
+        <li>Excluded statistical aggregates: <code>EU27_2020</code>, <code>EA20</code>, <code>EA21</code>, <code>EA19</code></li>
+        <li>Retained 30 countries with 2024 data: the 27 EU member states + Iceland (IS), Norway (NO), Switzerland (CH)</li>
+        <li>Sort order: from smallest gap (Belgium) to largest (Estonia)</li>
+        <li>Luxembourg (−0.8%) excluded from chart: roughViz.BarH builds the x scale from 0 to max and produces a negative <code>rect width</code> for values below zero; the figure is shown in the finding card</li>
+        <li>No aggregation or interpolation applied; 1 observation with flag <code>dp</code> (different definition + provisional): CZ</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 584 righe (39 entità geografiche × 18 anni, 2007–2024)</li>
         <li>Selezionato l'ultimo anno disponibile per ogni entità geografica: 2024 per 30 paesi, anni precedenti per candidati non-UE (UK, TR, ME, MK, AL, RS) — questi ultimi esclusi dalla classifica</li>
         <li>Esclusi gli aggregati statistici: <code>EU27_2020</code>, <code>EA20</code>, <code>EA21</code>, <code>EA19</code></li>
@@ -68,26 +81,30 @@
 
   <!-- ═══ SEZIONE B: TREND ═══ -->
   <section class="section py-5" id="trend">
-    <p class="section-label mb-1">Fase B · Eurostat TESEM180 · nace_r2=B-S_X_O · 2007–2024</p>
-    <h2 class="mb-2">Il divario si sta riducendo? Evoluzione storica 2007–2024</h2>
+    <p class="section-label mb-1"><span class="en">Phase B · Eurostat TESEM180 · nace_r2=B-S_X_O · 2007–2024</span><span class="it">Fase B · Eurostat TESEM180 · nace_r2=B-S_X_O · 2007–2024</span></p>
+    <h2 class="mb-2"><span class="en">Is the gap narrowing? Historical trend 2007–2024</span><span class="it">Il divario si sta riducendo? Evoluzione storica 2007–2024</span></h2>
     <p class="subtitle mb-4">
-      % · cinque paesi selezionati + media UE27 · dati annuali
+      <span class="en">% · five selected countries + EU27 average · annual data</span><span class="it">% · cinque paesi selezionati + media UE27 · dati annuali</span>
     </p>
 
-    <div class="callout p-3 mb-4">
+    <div class="callout p-3 mb-4 en">
+      <strong>Note on missing data:</strong> the <strong>EU27_2020</strong> average is available from Eurostat only from 2010 onwards. Data for 2023 and 2024 are provisional for all countries.
+    </div>
+    <div class="callout p-3 mb-4 it">
       <strong>Nota sui dati mancanti:</strong> la media <strong>EU27_2020</strong> è disponibile
       da Eurostat solo dal 2010 in poi. I dati 2023 e 2024 sono provvisori per tutti i paesi.
     </div>
 
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> ogni linea mostra l'andamento del GPG in un paese.
+      <span class="en"><strong>How to read:</strong> each line shows the GPG trend in a country. A declining line means the gap is narrowing. The EU27 average fell from 15.8% in 2010 to 11.1% in 2024. Italy stands out for a historically low and stable gap. Estonia shows the largest absolute reduction: from 30.9% in 2007 to 18.8% in 2024, but remains the country with the highest gap in the EU. SDMX source: <code>TESEM180</code>, Eurostat. Chart: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd 1.1</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> ogni linea mostra l'andamento del GPG in un paese.
       Una linea in discesa indica che il divario si sta riducendo.
       La media UE27 è scesa dal 15,8% del 2010 all'11,1% del 2024.
       L'Italia si distingue per un divario storicamente basso e stabile.
       L'Estonia mostra la riduzione assoluta più ampia: da 30,9% nel 2007 a 18,8% nel 2024,
       ma rimane il paese con il divario più alto nell'UE.
       Fonte SDMX: <code>TESEM180</code>, Eurostat.
-      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd 1.1</a>.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd 1.1</a>.</span>
     </p>
 
     <div class="chart-wrap mb-4">
@@ -95,8 +112,15 @@
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 584 rows from dataset TESEM180 (2007–2024, all countries)</li>
+        <li>Selected 5 representative countries + EU27 aggregate: Italy (IT), Germany (DE), France (FR), Spain (ES), Estonia (EE), EU27 average (EU27_2020)</li>
+        <li>Selection motivated by variety: country with stable low gap (IT), country with high but declining gap (EE), two large economies (DE, FR), one Mediterranean country (ES) and the EU average</li>
+        <li><code>null</code> values for missing years excluded from series (not interpolated)</li>
+        <li>No aggregation; total: 6 series × max 18 points = 104 observations used</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 584 righe dal dataset TESEM180 (2007–2024, tutti i paesi)</li>
         <li>Selezionati 5 paesi rappresentativi + aggregato UE27: Italia (IT), Germania (DE), Francia (FR), Spagna (ES), Estonia (EE), media UE27 (EU27_2020)</li>
         <li>Scelta motivata dalla varietà: paese con divario stabile e basso (IT), paese con divario alto in calo (EE), due grandi economie (DE, FR), un paese mediterraneo (ES) e la media comunitaria</li>
@@ -108,13 +132,16 @@
 
   <!-- ═══ SEZIONE C: ETÀ ═══ -->
   <section class="section py-5" id="eta">
-    <p class="section-label mb-1">Fase C · Eurostat EARN_GR_GPGR2AG · 2022 · media 29 paesi</p>
-    <h2 class="mb-2">Il divario cresce con l'età: GPG per fascia d'età</h2>
+    <p class="section-label mb-1"><span class="en">Phase C · Eurostat EARN_GR_GPGR2AG · 2022 · average 29 countries</span><span class="it">Fase C · Eurostat EARN_GR_GPGR2AG · 2022 · media 29 paesi</span></p>
+    <h2 class="mb-2"><span class="en">The gap grows with age: GPG by age group</span><span class="it">Il divario cresce con l'età: GPG per fascia d'età</span></h2>
     <p class="subtitle mb-4">
-      % · media di 29 paesi europei · anno 2022 · settore B-S (esclusa pubblica amministrazione)
+      <span class="en">% · average of 29 European countries · year 2022 · sector B-S (excl. public administration)</span><span class="it">% · media di 29 paesi europei · anno 2022 · settore B-S (esclusa pubblica amministrazione)</span>
     </p>
 
-    <div class="callout p-3 mb-4">
+    <div class="callout p-3 mb-4 en">
+      <strong>Career effect:</strong> the gender pay gap is not uniform across working life. Among younger workers (under 25) the gap is minimal because entry wages are similar for men and women. The gap widens significantly in the central career brackets (35–54), often coinciding with maternity, career breaks and slower progression into senior roles.
+    </div>
+    <div class="callout p-3 mb-4 it">
       <strong>Effetto carriera:</strong> il divario retributivo di genere non è uniforme lungo la vita lavorativa.
       Tra i lavoratori più giovani (sotto i 25 anni) il divario è minimo perché le retribuzioni
       di ingresso sono simili per uomini e donne. Il divario si allarga significativamente
@@ -123,12 +150,13 @@
     </div>
 
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> ogni barra rappresenta il divario retributivo medio in quella
+      <span class="en"><strong>How to read:</strong> each bar represents the average pay gap in that age group, calculated across 29 European countries in 2022. This is not a single-country figure but an unweighted average. Variation between countries is substantial: in some (e.g. Estonia) the gap in central age brackets exceeds 25%, while in others (e.g. Luxembourg) it is negative. SDMX source: <code>EARN_GR_GPGR2AG</code>, Eurostat. Chart: <a href="https://github.com/jwilber/roughViz">roughViz 1.0.6</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> ogni barra rappresenta il divario retributivo medio in quella
       fascia d'età, calcolato su 29 paesi europei nel 2022. Non si tratta di un dato per singolo paese
       ma di una media non ponderata. Le variazioni tra paesi sono sostanziali: in alcuni paesi (es. Estonia)
       il divario nelle fasce centrali supera il 25%, mentre in altri (es. Lussemburgo) è negativo.
       Fonte SDMX: <code>EARN_GR_GPGR2AG</code>, Eurostat.
-      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz 1.0.6</a>.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz 1.0.6</a>.</span>
     </p>
 
     <div class="chart-wrap mb-4">
@@ -136,8 +164,17 @@
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 2,099 rows (EARN_GR_GPGR2AG, 2010–2022, 36 geographic entities × 6 age groups × NACE sectors)</li>
+        <li>Filtered to aggregate sector (<code>B-S_X_O</code>: industry + services, excl. public administration) and year 2022</li>
+        <li>Excluded geographic aggregates (<code>EU27_2020</code>, <code>EA20</code>, etc.) and non-EU/EEA countries (AL, MK, ME, RS, TR)</li>
+        <li>Calculated simple mean GPG by age group across 29 countries with data available in 2022</li>
+        <li>Formula: <code>mean = sum(GPG_country) / n_countries</code> — no population weighting</li>
+        <li>Excluded age bracket <code>Y_GE65</code> (65+) due to poor coverage (few countries)</li>
+        <li>Final data: 5 observations (one per age group)</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 2099 righe (EARN_GR_GPGR2AG, 2010–2022, 36 entità geo × 6 fasce d'età × settori NACE)</li>
         <li>Filtrato per settore aggregato (<code>B-S_X_O</code>: industria + servizi, esclusa P.A.) e anno 2022</li>
         <li>Esclusi aggregati geografici (<code>EU27_2020</code>, <code>EA20</code>, ecc.) e paesi non-UE/SEE (AL, MK, ME, RS, TR)</li>
@@ -165,8 +202,11 @@
 // ── CONFIG SHELL ─────────────────────────────────────────────────────────────
 initShell({
   title:  "Quanto guadagnano le donne rispetto agli uomini in Europa?",
+  title_en: "How much do women earn compared to men in Europe?",
   date:   "9 aprile 2026",
+  date_en: "9 April 2026",
   intro:  "In tutta l'Unione Europea le donne guadagnano in media meno degli uomini per ogni ora lavorata. Questo report misura il divario retributivo di genere non aggiustato nei paesi europei, la sua evoluzione dal 2007 al 2024 e come cambia lungo l'arco della vita lavorativa, usando dati ufficiali Eurostat in formato SDMX.",
+  intro_en: "Across the European Union, women earn on average less than men for every hour worked. This report measures the unadjusted gender pay gap in European countries, its evolution from 2007 to 2024, and how it changes over the course of working life, using official Eurostat data in SDMX format.",
   badges: [
     { label: "Eurostat", value: "TESEM180" },
     { label: "Eurostat", value: "EARN_GR_GPGR2AG" },
@@ -174,37 +214,40 @@ initShell({
     { label: "Paesi",    value: "30 (UE + IS, NO, CH)" }
   ],
   nav: [
-    { id: "ranking", label: "Classifica 2024" },
-    { id: "trend",   label: "Evoluzione storica" },
-    { id: "eta",     label: "Per fascia d'età" }
+    { id: "ranking", label: "Classifica 2024",    label_en: "Ranking 2024" },
+    { id: "trend",   label: "Evoluzione storica",  label_en: "Historical trend" },
+    { id: "eta",     label: "Per fascia d'età",    label_en: "By age group" }
   ],
   introTitle:    "Il divario retributivo di genere in Europa",
+  introTitle_en: "The gender pay gap in Europe",
   introSubtitle: "Differenza percentuale tra la retribuzione oraria lorda media degli uomini e quella delle donne",
+  introSubtitle_en: "Percentage difference between the average gross hourly earnings of men and women",
   scopeLimit: "Questi dati misurano il <em>divario non aggiustato</em> — cioè la differenza grezza tra retribuzioni orarie medie, senza tener conto di settore, orario, anzianità o livello di istruzione. Non coprono il lavoro sommerso, il lavoro di cura non retribuito (principalmente svolto da donne), né le differenze nel numero di ore lavorate su base annua. Il divario <em>aggiustato</em> (a parità di mansione e caratteristiche) è in genere inferiore, ma non è disponibile con la stessa copertura geografica e temporale. Fonte per approfondire: Eurostat, <em>Adjusted gender pay gap</em> (EARN_GR_GPGR2CT).",
+  scopeLimit_en: "These data measure the <em>unadjusted gap</em> — the raw difference between average hourly earnings, without accounting for sector, hours worked, seniority or education level. They do not cover undeclared work, unpaid care work (predominantly done by women), or differences in annual hours worked. The <em>adjusted</em> gap (controlling for occupation and characteristics) is generally smaller, but is not available with the same geographic and temporal coverage. For further reading: Eurostat, <em>Adjusted gender pay gap</em> (EARN_GR_GPGR2CT).",
   findingCards: [
-    { value: "11,1%", color: "default", label: "<strong>Media UE27 2024</strong> — le donne guadagnano in media l'11,1% in meno degli uomini per ogni ora lavorata (dato provvisorio)" },
-    { value: "18,8%", color: "default", label: "<strong>Estonia</strong> — il divario più alto nell'UE nel 2024; in calo rispetto al 30,9% del 2007" },
-    { value: "5,3%",  color: "blue",    label: "<strong>Italia</strong> — divario inferiore alla media UE e sostanzialmente stabile dal 2007 (era 5,1%); tra i più bassi d'Europa" },
-    { value: "−0,8%", color: "blue",    label: "<strong>Lussemburgo</strong> — unico paese in cui le donne guadagnano (leggermente) più degli uomini; in Belgio il divario è quasi azzerato (0,7%)" }
+    { value: "11,1%", color: "default", label: "<strong>Media UE27 2024</strong> — le donne guadagnano in media l'11,1% in meno degli uomini per ogni ora lavorata (dato provvisorio)", label_en: "<strong>EU27 2024 average</strong> — women earn on average 11.1% less than men per hour worked (provisional data)" },
+    { value: "18,8%", color: "default", label: "<strong>Estonia</strong> — il divario più alto nell'UE nel 2024; in calo rispetto al 30,9% del 2007", label_en: "<strong>Estonia</strong> — highest gap in the EU in 2024; down from 30.9% in 2007" },
+    { value: "5,3%",  color: "blue",    label: "<strong>Italia</strong> — divario inferiore alla media UE e sostanzialmente stabile dal 2007 (era 5,1%); tra i più bassi d'Europa", label_en: "<strong>Italy</strong> — gap below EU average and substantially stable since 2007 (was 5.1%); among the lowest in Europe" },
+    { value: "−0,8%", color: "blue",    label: "<strong>Lussemburgo</strong> — unico paese in cui le donne guadagnano (leggermente) più degli uomini; in Belgio il divario è quasi azzerato (0,7%)", label_en: "<strong>Luxembourg</strong> — only country where women earn (slightly) more than men; in Belgium the gap is almost zero (0.7%)" }
   ],
   rawData: {
     license: "Eurostat CC BY 4.0",
     extractionDate: "9 aprile 2026",
     files: [
-      { provider: "Eurostat", datasetId: "TESEM180",        desc: "Gender pay gap non aggiustato — tutti i paesi 2007–2024",          rows: 584,  period: "39 paesi/aggregati · 2007–2024",              file: "output/A_tesem180_gpg_overall.csv" },
-      { provider: "Eurostat", datasetId: "EARN_GR_GPGR2AG", desc: "GPG per fascia d'età e settore NACE Rev.2 — 2010–2022",             rows: 2099, period: "36 paesi · 6 fasce d'età · 2010–2022",         file: "output/B_earn_gpg_age.csv" },
-      { provider: "Eurostat", datasetId: "EARN_GR_GPGR2WT", desc: "GPG per tipo di orario (part-time / full-time) — 2010–2022",        rows: 602,  period: "36 paesi · 2 categorie orario · 2010–2022",     file: "output/C_earn_gpg_worktime.csv" }
+      { provider: "Eurostat", datasetId: "TESEM180",        desc: "Gender pay gap non aggiustato — tutti i paesi 2007–2024",          desc_en: "Unadjusted gender pay gap — all countries 2007–2024",          rows: 584,  period: "39 paesi/aggregati · 2007–2024",              file: "output/A_tesem180_gpg_overall.csv" },
+      { provider: "Eurostat", datasetId: "EARN_GR_GPGR2AG", desc: "GPG per fascia d'età e settore NACE Rev.2 — 2010–2022",             desc_en: "GPG by age group and NACE Rev.2 sector — 2010–2022",             rows: 2099, period: "36 paesi · 6 fasce d'età · 2010–2022",         file: "output/B_earn_gpg_age.csv" },
+      { provider: "Eurostat", datasetId: "EARN_GR_GPGR2WT", desc: "GPG per tipo di orario (part-time / full-time) — 2010–2022",        desc_en: "GPG by working hours (part-time / full-time) — 2010–2022",        rows: 602,  period: "36 paesi · 2 categorie orario · 2010–2022",     file: "output/C_earn_gpg_worktime.csv" }
     ]
   },
   methodology: {
     githubUrl: "https://github.com/datapitch-it/automatic-reports/tree/main/reports/01_gender-pay-gap",
     classifications: [
-      { code: "B-S_X_O",   system: "NACE Rev. 2",    meaning: "Industria, costruzioni e servizi — esclusa sezione O (Pubblica Amministrazione e Difesa)" },
-      { code: "PC",        system: "Unità di misura", meaning: "Percentuale (punti percentuali)" },
-      { code: "p",         system: "Flag OBS_FLAG",   meaning: "Dato provvisorio (provisional)" },
-      { code: "d",         system: "Flag OBS_FLAG",   meaning: "Definizione diversa (definition differs)" },
-      { code: "dp",        system: "Flag OBS_FLAG",   meaning: "Definizione diversa + provvisorio (combinato)" },
-      { code: "EU27_2020", system: "GEO",             meaning: "Aggregato UE a 27 stati (composizione dal 2020)" }
+      { code: "B-S_X_O",   system: "NACE Rev. 2",    meaning: "Industria, costruzioni e servizi — esclusa sezione O (Pubblica Amministrazione e Difesa)", meaning_en: "Industry, construction and services — excl. section O (Public Administration and Defence)" },
+      { code: "PC",        system: "Unità di misura", meaning: "Percentuale (punti percentuali)", meaning_en: "Percentage (percentage points)" },
+      { code: "p",         system: "Flag OBS_FLAG",   meaning: "Dato provvisorio (provisional)", meaning_en: "Provisional data" },
+      { code: "d",         system: "Flag OBS_FLAG",   meaning: "Definizione diversa (definition differs)", meaning_en: "Definition differs" },
+      { code: "dp",        system: "Flag OBS_FLAG",   meaning: "Definizione diversa + provvisorio (combinato)", meaning_en: "Definition differs + provisional (combined)" },
+      { code: "EU27_2020", system: "GEO",             meaning: "Aggregato UE a 27 stati (composizione dal 2020)", meaning_en: "EU aggregate of 27 member states (composition from 2020)" }
     ],
     apiUrls: [
       { datasetId: "TESEM180",        provider: "Eurostat", desc: "GPG non aggiustato, tutti i paesi, 2007–2024", url: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TESEM180/A.PC.B-S_X_O./ALL/?startPeriod=2007&amp;endPeriod=2024&amp;format=SDMX-CSV" },
@@ -310,5 +353,6 @@ new roughViz.BarH({
   xLabel: 'Divario retributivo di genere (%)',
 });
 </script>
+<script src="../../assets/lang.js"></script>
 </body>
 </html>

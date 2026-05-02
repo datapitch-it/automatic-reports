@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,12 +25,15 @@
   <!-- ═══ SEZIONE A — TFR ═══ -->
   <section class="section py-5" id="tfr">
     <p class="section-label mb-1">Fase A · Eurostat DEMO_FIND · indic_de=TOTFERRT</p>
-    <h2 class="mb-2">Tasso di fecondità totale per paese (2024)</h2>
+    <h2 class="mb-2"><span class="en">Total fertility rate by country (2024)</span><span class="it">Tasso di fecondità totale per paese (2024)</span></h2>
     <p class="subtitle mb-4">
-      Numero medio di figli per donna · dati annuali · 27 paesi EU27
+      <span class="en">Average number of children per woman · annual data · 27 EU countries</span><span class="it">Numero medio di figli per donna · dati annuali · 27 paesi EU27</span>
     </p>
 
-    <div class="callout p-3 mb-4">
+    <div class="callout p-3 mb-4 en">
+      <strong>Total fertility rate (TFR):</strong> the estimated average number of children a woman gives birth to over her lifetime, calculated from age-specific fertility rates for a given year. It is not biographical data (it does not follow real women), but a period indicator that summarises the reproductive behaviour of a population in a specific year. The demographic replacement threshold — beyond which the population remains stable without immigration — is conventionally set at 2.1.
+    </div>
+    <div class="callout p-3 mb-4 it">
       <strong>Tasso di fecondità totale (TFR):</strong> stima del numero medio di figli
       che una donna partorisce nell'arco della vita, calcolata sui tassi di fecondità per
       età di un dato anno. Non è un dato biografico (non segue donne reali), ma un
@@ -40,13 +43,17 @@
     </div>
 
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> ogni barra rappresenta il TFR di un paese nel 2024
+      <span class="en"><strong>How to read:</strong> each bar represents a country's TFR in 2024 (most recent available year). Countries are sorted from the lowest TFR (Malta, 1.01) to the highest (Bulgaria, 1.72). The implicit red vertical line at 2.1 is the replacement threshold — no EU country reaches it.
+      Flag <code>p</code> = provisional data (present in multiple countries for 2024).
+      SDMX source: <code>DEMO_FIND</code>, Eurostat.
+      Chart: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> ogni barra rappresenta il TFR di un paese nel 2024
       (anno più recente disponibile). I paesi sono ordinati dal TFR più basso (Malta, 1,01)
       al più alto (Bulgaria, 1,72). La linea verticale rossa implicita a 2,1 è la soglia
       di rimpiazzo — nessun paese UE la raggiunge.
       Flag <code>p</code> = dato provvisorio (presente in più paesi per il 2024).
       Fonte SDMX: <code>DEMO_FIND</code>, Eurostat.
-      Grafico: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.
+      Grafico: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.</span>
     </p>
 
     <div class="chart-wrap mb-4">
@@ -54,8 +61,16 @@
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 1,159 rows (all DEMO_FIND countries with TOTFERRT, 2000–2024)</li>
+        <li>Filtered to the 27 EU27 countries only (excluded aggregates EU27_2020, EA20, candidate countries, etc.)</li>
+        <li>For each country: selected the most recent year with available data (2024 for all 27 countries)</li>
+        <li>Flag <code>p</code> (provisional) present for most countries in year 2024 — documented in the note</li>
+        <li>Ascending sort by TFR value (horizontal bars, lowest at top)</li>
+        <li>Final data used in chart: 27 observations</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 1.159 righe (tutti i paesi DEMO_FIND con TOTFERRT, 2000–2024)</li>
         <li>Filtrati solo i 27 paesi EU27 (esclusi aggregati EU27_2020, EA20, paesi candidati, ecc.)</li>
         <li>Per ogni paese: selezionato l'anno più recente con dato disponibile (2024 per tutti i 27 paesi)</li>
@@ -66,16 +81,18 @@
     </div>
 
     <!-- Time series EU27 -->
-    <h3 class="subsection-title mt-5 mb-3">Andamento EU27 e paesi selezionati (2003–2024)</h3>
+    <h3 class="subsection-title mt-5 mb-3"><span class="en">EU27 trend and selected countries (2003–2024)</span><span class="it">Andamento EU27 e paesi selezionati (2003–2024)</span></h3>
 
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> la serie EU27 (media ponderata) mostra il picco del 2008
+      <span class="en"><strong>How to read:</strong> the EU27 series (weighted average) shows the 2008 peak (1.57) followed by a double contraction: the first post-financial crisis (2008–2013), the second, more acute, from 2019 onwards. The individual series show very different trajectories: France maintains a systematically higher TFR; Italy and Spain are in structural decline; Bulgaria is a positive outlier (high fertility despite low childcare coverage).
+      SDMX source: <code>DEMO_FIND</code>, Eurostat. Chart: <a href="https://github.com/timqian/chart.xkcd" target="_blank">chart.xkcd 1.1</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> la serie EU27 (media ponderata) mostra il picco del 2008
       (1,57) seguito da una doppia contrazione: la prima post-crisi finanziaria (2008–2013),
       la seconda, più acuta, a partire dal 2019. Le singole serie mostrano traiettorie molto
       diverse: la Francia mantiene un TFR sistematicamente più alto; l'Italia e la Spagna
       sono in declino strutturale; la Bulgaria è un'anomalia positiva (alta fecondità
       nonostante bassa copertura asili).
-      Fonte SDMX: <code>DEMO_FIND</code>, Eurostat. Grafico: <a href="https://github.com/timqian/chart.xkcd" target="_blank">chart.xkcd 1.1</a>.
+      Fonte SDMX: <code>DEMO_FIND</code>, Eurostat. Grafico: <a href="https://github.com/timqian/chart.xkcd" target="_blank">chart.xkcd 1.1</a>.</span>
     </p>
 
     <div class="chart-wrap mb-4">
@@ -93,8 +110,15 @@
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 1,159 rows</li>
+        <li>EU27 series: extracted from aggregate code <code>EU27_2020</code> (Eurostat weighted average)</li>
+        <li>Country series: extracted from individual country codes for FR, DE, IT, ES, SE, PL, BG</li>
+        <li>Common period: 2003–2024 (22 years); no missing values for these countries/years</li>
+        <li>No additional aggregation</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 1.159 righe</li>
         <li>Serie EU27: estratta dal codice aggregato <code>EU27_2020</code> (media ponderata Eurostat)</li>
         <li>Serie paese: estratte dai codici paese singolo per FR, DE, IT, ES, SE, PL, BG</li>
@@ -107,12 +131,15 @@
   <!-- ═══ SEZIONE B — OCCUPAZIONE FEMMINILE ═══ -->
   <section class="section py-5" id="occupazione">
     <p class="section-label mb-1">Fase B · Eurostat LFSI_EMP_A · sex=F · age=Y15-64</p>
-    <h2 class="mb-2">Tasso di occupazione femminile per paese (2024)</h2>
+    <h2 class="mb-2"><span class="en">Female employment rate by country (2024)</span><span class="it">Tasso di occupazione femminile per paese (2024)</span></h2>
     <p class="subtitle mb-4">
-      % donne occupate sulla popolazione femminile 15–64 anni · dati LFS annuali · 27 paesi EU27
+      <span class="en">% women employed in the female population aged 15–64 · annual LFS data · 27 EU countries</span><span class="it">% donne occupate sulla popolazione femminile 15–64 anni · dati LFS annuali · 27 paesi EU27</span>
     </p>
 
-    <div class="callout p-3 mb-4">
+    <div class="callout p-3 mb-4 en">
+      <strong>Female employment and fertility:</strong> the economic literature has documented a reversal of the relationship between these two indicators. Until the 1980s, countries with high female employment tended to have low fertility (work-family conflict). Since 2000, the correlation has reversed in high-income countries: where work-life balance policies (childcare, parental leave, part-time) are more developed, both the female employment rate and the TFR tend to be higher.
+    </div>
+    <div class="callout p-3 mb-4 it">
       <strong>Occupazione femminile e fecondità:</strong> la letteratura economica
       ha documentato un'inversione del rapporto tra questi due indicatori.
       Fino agli anni '80, i paesi con alta occupazione femminile tendevano ad avere
@@ -123,13 +150,17 @@
     </div>
 
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> ogni barra è la percentuale di donne occupate
+      <span class="en"><strong>How to read:</strong> each bar is the percentage of women employed in the working-age population (15–64 years) in 2024.
+      The Netherlands leads (78.9%), Italy is last (53.3%) — a gap of 25 points that reflects not only the structure of the labour market but also the different availability of care services.
+      SDMX source: <code>LFSI_EMP_A</code>, Eurostat.
+      Chart: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> ogni barra è la percentuale di donne occupate
       sulla popolazione femminile in età lavorativa (15–64 anni) nel 2024.
       I Paesi Bassi guidano (78,9%), l'Italia è ultima (53,3%) — un divario di 25 punti
       che riflette non solo la struttura del mercato del lavoro ma anche la diversa
       disponibilità di servizi di cura.
       Fonte SDMX: <code>LFSI_EMP_A</code>, Eurostat.
-      Grafico: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.
+      Grafico: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.</span>
     </p>
 
     <div class="chart-wrap mb-4">
@@ -137,8 +168,15 @@
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 598 rows (LFSI_EMP_A, sex=F, age=Y15-64, unit=PC_POP, 2003–2024)</li>
+        <li>Filtered to the 27 EU27 countries only (excluded aggregates EU27_2020, EA20, candidate countries)</li>
+        <li>For each country: selected the most recent available year (2024 for all 27 countries)</li>
+        <li>Ascending sort by value (Italy lowest, Netherlands highest)</li>
+        <li>Final data used in chart: 27 observations</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 598 righe (LFSI_EMP_A, sex=F, age=Y15-64, unit=PC_POP, 2003–2024)</li>
         <li>Filtrati solo i 27 paesi EU27 (esclusi aggregati EU27_2020, EA20, paesi candidati)</li>
         <li>Per ogni paese: selezionato l'anno più recente disponibile (2024 per tutti i 27 paesi)</li>
@@ -151,12 +189,15 @@
   <!-- ═══ SEZIONE C — ASILI NIDO ═══ -->
   <section class="section py-5" id="asili">
     <p class="section-label mb-1">Fase C · Eurostat TPS00185 · bambini &lt; 3 anni</p>
-    <h2 class="mb-2">Copertura degli asili nido formali (2024)</h2>
+    <h2 class="mb-2"><span class="en">Coverage of formal childcare (2024)</span><span class="it">Copertura degli asili nido formali (2024)</span></h2>
     <p class="subtitle mb-4">
-      % bambini sotto i 3 anni in strutture di cura formale (almeno 1 ora/settimana) · 27 paesi EU27
+      <span class="en">% children under 3 in formal care facilities (at least 1 hour/week) · 27 EU countries</span><span class="it">% bambini sotto i 3 anni in strutture di cura formale (almeno 1 ora/settimana) · 27 paesi EU27</span>
     </p>
 
-    <div class="callout p-3 mb-4">
+    <div class="callout p-3 mb-4 en">
+      <strong>Formal care:</strong> includes public and private nurseries, playgroups, toy libraries with qualified staff. Does not include informal care (grandparents, babysitters, family members). The 2002 Barcelona European objective set a minimum coverage of 33% by 2010; in 2022 the new European Care Strategy raised the target to 45% by 2030. The data shown here sum SC102 (1–29 hours/week) and SC103 (30+ hours/week).
+    </div>
+    <div class="callout p-3 mb-4 it">
       <strong>Cura formale:</strong> include asili nido pubblici e privati, centri
       gioco, ludoteche con personale qualificato. Non include la cura informale
       (nonni, babysitter, familiari). L'obiettivo europeo di Barcellona del 2002
@@ -166,14 +207,21 @@
     </div>
 
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> ogni barra è la percentuale di bambini sotto i 3 anni
+      <span class="en"><strong>How to read:</strong> each bar is the percentage of children under 3 who attend formal care facilities for at least 1 hour per week in 2024.
+      Slovakia (5.1%) and Czech Republic (7.3%) have near-zero coverage;
+      the Netherlands (78.9%), Denmark (62.9%) and Portugal (59.4%) lead the ranking.
+      Flag <code>b</code> = series break (present in some countries due to methodological changes);
+      <code>p</code> = provisional data.
+      SDMX source: <code>TPS00185</code>, Eurostat.
+      Chart: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> ogni barra è la percentuale di bambini sotto i 3 anni
       che frequentano strutture di cura formale per almeno 1 ora a settimana nel 2024.
       La Slovacchia (5,1%) e la Rep. Ceca (7,3%) hanno una copertura quasi nulla;
       i Paesi Bassi (78,9%), la Danimarca (62,9%) e il Portogallo (59,4%) guidano la classifica.
       Flag <code>b</code> = rottura di serie (presente in alcuni paesi per cambiamenti metodologici);
       <code>p</code> = dato provvisorio.
       Fonte SDMX: <code>TPS00185</code>, Eurostat.
-      Grafico: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.
+      Grafico: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.</span>
     </p>
 
     <div class="chart-wrap mb-4">
@@ -181,8 +229,16 @@
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 792 rows (TPS00185, indic_il=SC102+SC103, 2014–2024)</li>
+        <li>Filtered to the 27 EU27 countries only; excluded aggregates and candidates</li>
+        <li>For each country/year: summed the two categories <code>SC102</code> (1–29 h/week) and <code>SC103</code> (30+ h/week) to get total coverage of children with at least 1 hour of formal care</li>
+        <li>For each country: selected the most recent available year (2024 for all 27 countries)</li>
+        <li>Ascending sort by value</li>
+        <li>Final data used in chart: 27 observations</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 792 righe (TPS00185, indic_il=SC102+SC103, 2014–2024)</li>
         <li>Filtrati solo i 27 paesi EU27; esclusi aggregati e candidati</li>
         <li>Per ogni paese/anno: sommate le due categorie <code>SC102</code> (1–29 h/settimana) e <code>SC103</code> (30+ h/settimana) per ottenere la copertura totale dei bambini con almeno 1 ora di cura formale</li>
@@ -196,12 +252,15 @@
   <!-- ═══ SEZIONE D — SPESA FAMIGLIA ═══ -->
   <section class="section py-5" id="spesa">
     <p class="section-label mb-1">Fase D · Eurostat SPR_EXP_FFA · spdep=SPR · unit=PC_GDP</p>
-    <h2 class="mb-2">Spesa pubblica per la famiglia in % del PIL (2022)</h2>
+    <h2 class="mb-2"><span class="en">Public spending on family as % of GDP (2022)</span><span class="it">Spesa pubblica per la famiglia in % del PIL (2022)</span></h2>
     <p class="subtitle mb-4">
-      Protezione sociale funzione famiglia/bambini · % del PIL · 27 paesi EU27 · ultimo anno disponibile: 2022
+      <span class="en">Social protection — family/children function · % of GDP · 27 EU countries · latest available year: 2022</span><span class="it">Protezione sociale funzione famiglia/bambini · % del PIL · 27 paesi EU27 · ultimo anno disponibile: 2022</span>
     </p>
 
-    <div class="callout p-3 mb-4">
+    <div class="callout p-3 mb-4 en">
+      <strong>Social protection spending — family function:</strong> includes all public transfers designed to support families with children: child benefits, maternity and paternity allowances, paid parental leave, subsidised care services (public nurseries), support for single-parent families. The ESSPROS classification (European System of integrated Social PROtection Statistics) ensures comparability across countries.
+    </div>
+    <div class="callout p-3 mb-4 it">
       <strong>Spesa per la protezione sociale — funzione famiglia:</strong> include tutti
       i trasferimenti pubblici destinati a sostenere le famiglie con figli: assegni
       familiari, indennità di maternità e paternità, congedi parentali retribuiti,
@@ -211,12 +270,17 @@
     </div>
 
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> ogni barra è la spesa pubblica per la funzione
+      <span class="en"><strong>How to read:</strong> each bar is public spending on the family/children function as a percentage of GDP in 2022 (most recent available data).
+      Germany spends 3.39% of GDP — the highest in EU27 — but has a TFR of 1.36.
+      Cyprus and Malta spend less than 0.9%. Italy is at 1.5%, among the bottom ten.
+      SDMX source: <code>SPR_EXP_FFA</code>, Eurostat.
+      Chart: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> ogni barra è la spesa pubblica per la funzione
       famiglia/bambini come percentuale del PIL nel 2022 (dato più recente disponibile).
       La Germania spende il 3,39% del PIL — il più alto in EU27 — ma ha un TFR di 1,36.
       Cipro e Malta spendono meno dello 0,9%. L'Italia è al 1,5%, tra gli ultimi dieci.
       Fonte SDMX: <code>SPR_EXP_FFA</code>, Eurostat.
-      Grafico: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.
+      Grafico: <a href="https://github.com/jwilber/roughViz" target="_blank">roughViz 1.0.6</a>.</span>
     </p>
 
     <div class="chart-wrap mb-4">
@@ -224,8 +288,15 @@
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 734 rows (SPR_EXP_FFA, spdep=SPR, spdepm=TOTAL, unit=PC_GDP, 2003–2022)</li>
+        <li>Filtered to the 27 EU27 countries only; excluded aggregates and candidates</li>
+        <li>For each country: selected the most recent available year (2022 for all 27 countries — last year published by Eurostat for this series)</li>
+        <li>Ascending sort by value</li>
+        <li>Final data used in chart: 27 observations</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 734 righe (SPR_EXP_FFA, spdep=SPR, spdepm=TOTAL, unit=PC_GDP, 2003–2022)</li>
         <li>Filtrati solo i 27 paesi EU27; esclusi aggregati e candidati</li>
         <li>Per ogni paese: selezionato l'anno più recente disponibile (2022 per tutti i 27 paesi — ultimo anno pubblicato da Eurostat per questa serie)</li>
@@ -250,53 +321,59 @@
 <script>
 // ── CONFIG SHELL ─────────────────────────────────────────────────────────────
 initShell({
-  title:  "Natalità in Europa: il crollo silenzioso",
-  date:   "24 aprile 2026",
-  intro:  "Il tasso di fecondità totale nell'Unione Europea ha raggiunto nel 2024 il minimo storico di 1,34 figli per donna — meno della metà della soglia di rimpiazzo demografico. Questa analisi esplora l'andamento della natalità nei 27 paesi UE e la sua relazione con l'occupazione femminile, la disponibilità di asili nido e la spesa pubblica per le politiche familiari, usando dati Eurostat estratti via API SDMX.",
+  title:    "Natalità in Europa: il crollo silenzioso",
+  title_en: "Birth rates in Europe: the silent collapse",
+  date:     "24 aprile 2026",
+  date_en:  "24 April 2026",
+  intro:    "Il tasso di fecondità totale nell'Unione Europea ha raggiunto nel 2024 il minimo storico di 1,34 figli per donna — meno della metà della soglia di rimpiazzo demografico. Questa analisi esplora l'andamento della natalità nei 27 paesi UE e la sua relazione con l'occupazione femminile, la disponibilità di asili nido e la spesa pubblica per le politiche familiari, usando dati Eurostat estratti via API SDMX.",
+  intro_en: "The total fertility rate in the European Union reached a historic low of 1.34 children per woman in 2024 — less than half the demographic replacement threshold. This analysis explores birth rate trends across 27 EU countries and their relationship with female employment, availability of childcare and public spending on family policies, using Eurostat data extracted via SDMX API.",
   badges: [
     { label: "Eurostat", value: "DEMO_FIND" },
     { label: "Eurostat", value: "LFSI_EMP_A" },
     { label: "Eurostat", value: "TPS00185" },
     { label: "Eurostat", value: "SPR_EXP_FFA" },
-    { label: "Periodo",  value: "2003–2024" },
-    { label: "Paesi",    value: "27 (EU27)" }
+    { label: "Period",   value: "2003–2024" },
+    { label: "Countries", value: "27 (EU27)" }
   ],
   nav: [
-    { id: "tfr",        label: "TFR" },
-    { id: "occupazione", label: "Occupazione" },
-    { id: "asili",      label: "Asili nido" },
-    { id: "spesa",      label: "Spesa famiglia" }
+    { id: "tfr",        label: "TFR",             label_en: "TFR" },
+    { id: "occupazione", label: "Occupazione",    label_en: "Employment" },
+    { id: "asili",      label: "Asili nido",      label_en: "Childcare" },
+    { id: "spesa",      label: "Spesa famiglia",  label_en: "Family Spending" }
   ],
-  introTitle:    "Un'Europa che non si riproduce",
-  introSubtitle: "Il tasso di fecondità totale (TFR) misura quanti figli partorisce in media una donna nel corso della vita. La soglia di rimpiazzo demografico è 2,1.",
-  scopeLimit: "questi dati misurano la fecondità delle residenti nei paesi UE indipendentemente dalla cittadinanza. Non includono: migrazione e suo impatto sul TFR complessivo, politiche fiscali (detrazioni, crediti d'imposta per figli), costo della vita e accesso all'abitazione, welfare informale (nonni, reti familiari). Per i dati sulle nascite per cittadinanza della madre: Eurostat <code>DEMO_FACZC</code>.",
+  introTitle:       "Un'Europa che non si riproduce",
+  introTitle_en:    "A Europe that is not reproducing",
+  introSubtitle:    "Il tasso di fecondità totale (TFR) misura quanti figli partorisce in media una donna nel corso della vita. La soglia di rimpiazzo demografico è 2,1.",
+  introSubtitle_en: "The total fertility rate (TFR) measures how many children a woman gives birth to on average over her lifetime. The demographic replacement threshold is 2.1.",
+  scopeLimit:    "questi dati misurano la fecondità delle residenti nei paesi UE indipendentemente dalla cittadinanza. Non includono: migrazione e suo impatto sul TFR complessivo, politiche fiscali (detrazioni, crediti d'imposta per figli), costo della vita e accesso all'abitazione, welfare informale (nonni, reti familiari). Per i dati sulle nascite per cittadinanza della madre: Eurostat <code>DEMO_FACZC</code>.",
+  scopeLimit_en: "These data measure the fertility of residents in EU countries regardless of nationality. They do not include: migration and its impact on overall TFR, tax policies (deductions, tax credits for children), cost of living and access to housing, informal welfare (grandparents, family networks). For data on births by mother's nationality: Eurostat <code>DEMO_FACZC</code>.",
   findingCards: [
-    { value: "1,34",   label: "<strong>TFR EU27 nel 2024</strong> — minimo storico dall'inizio delle rilevazioni; era 1,57 nel 2008" },
-    { value: "24/27",  color: "orange", label: "<strong>Paesi sotto 1,5</strong> — solo Bulgaria (1,72), Francia (1,61) e Slovenia (1,52) restano sopra questa soglia critica" },
-    { value: "1,01",   color: "blue",   label: "<strong>TFR di Malta</strong> — il più basso in EU27 nel 2024; Spagna a 1,10 e Lituania a 1,11" },
-    { value: "78,9%",  color: "green",  label: "<strong>Bambini in asilo nido</strong> nei Paesi Bassi (sotto i 3 anni) — contro il 5,1% della Slovacchia" }
+    { value: "1,34",  label: "<strong>TFR EU27 nel 2024</strong> — minimo storico dall'inizio delle rilevazioni; era 1,57 nel 2008",                                                     label_en: "<strong>EU27 TFR in 2024</strong> — historic low since records began; it was 1.57 in 2008" },
+    { value: "24/27", color: "orange", label: "<strong>Paesi sotto 1,5</strong> — solo Bulgaria (1,72), Francia (1,61) e Slovenia (1,52) restano sopra questa soglia critica",          label_en: "<strong>Countries below 1.5</strong> — only Bulgaria (1.72), France (1.61) and Slovenia (1.52) remain above this critical threshold" },
+    { value: "1,01",  color: "blue",   label: "<strong>TFR di Malta</strong> — il più basso in EU27 nel 2024; Spagna a 1,10 e Lituania a 1,11",                                        label_en: "<strong>Malta's TFR</strong> — the lowest in EU27 in 2024; Spain at 1.10 and Lithuania at 1.11" },
+    { value: "78,9%", color: "green",  label: "<strong>Bambini in asilo nido</strong> nei Paesi Bassi (sotto i 3 anni) — contro il 5,1% della Slovacchia",                             label_en: "<strong>Children in childcare</strong> in the Netherlands (under 3 years) — against 5.1% in Slovakia" }
   ],
   rawData: {
     license: "Eurostat CC BY 4.0",
     extractionDate: "24 aprile 2026",
     files: [
-      { provider: "Eurostat", datasetId: "DEMO_FIND",    desc: "Indicatori di fecondità — Tasso di fecondità totale",                         rows: 1159, period: "60 aree geografiche · 2000–2024",              file: "output/A_fertility_rate.csv" },
-      { provider: "Eurostat", datasetId: "LFSI_EMP_A",   desc: "Occupazione per sesso ed età — Donne 15–64 anni",                             rows: 598,  period: "38 aree geografiche · 2003–2024",              file: "output/B_female_employment.csv" },
-      { provider: "Eurostat", datasetId: "TPS00185",     desc: "Cura formale dei bambini &lt; 3 anni (1–29h e 30+h/settimana)",               rows: 792,  period: "41 aree geografiche · 2014–2024",              file: "output/C_childcare.csv" },
-      { provider: "Eurostat", datasetId: "SPR_EXP_FFA",  desc: "Spesa protezione sociale — funzione famiglia/bambini, % PIL",                 rows: 734,  period: "46 aree geografiche · 2003–2022",              file: "output/D_family_expenditure.csv" }
+      { provider: "Eurostat", datasetId: "DEMO_FIND",   desc: "Indicatori di fecondità — Tasso di fecondità totale",                         desc_en: "Fertility indicators — Total fertility rate",                       rows: 1159, period: "60 aree geografiche · 2000–2024",  file: "output/A_fertility_rate.csv" },
+      { provider: "Eurostat", datasetId: "LFSI_EMP_A",  desc: "Occupazione per sesso ed età — Donne 15–64 anni",                             desc_en: "Employment by sex and age — Women aged 15–64",                    rows: 598,  period: "38 aree geografiche · 2003–2024",  file: "output/B_female_employment.csv" },
+      { provider: "Eurostat", datasetId: "TPS00185",    desc: "Cura formale dei bambini &lt;3 anni (1–29h e 30+h/settimana)",               desc_en: "Formal childcare for children under 3 (1–29h and 30+h/week)",     rows: 792,  period: "41 aree geografiche · 2014–2024",  file: "output/C_childcare.csv" },
+      { provider: "Eurostat", datasetId: "SPR_EXP_FFA", desc: "Spesa protezione sociale — funzione famiglia/bambini, % PIL",                 desc_en: "Social protection expenditure — family/children function, % GDP",  rows: 734,  period: "46 aree geografiche · 2003–2022",  file: "output/D_family_expenditure.csv" }
     ]
   },
   methodology: {
     githubUrl: "https://github.com/datapitch-it/automatic-reports/tree/main/reports/07_natalita-europa",
     classifications: [
-      { code: "TOTFERRT", system: "DEMO_FIND / indic_de",  meaning: "Tasso di fecondità totale (figli per donna)" },
-      { code: "EMP_LFS",  system: "LFSI_EMP_A / indic_em", meaning: "Persone occupate — definizione Labour Force Survey" },
-      { code: "Y15-64",   system: "LFSI_EMP_A / age",      meaning: "Fascia d'età 15–64 anni (età lavorativa principale)" },
-      { code: "PC_POP",   system: "LFSI_EMP_A / unit",     meaning: "Percentuale della popolazione (tasso di occupazione)" },
-      { code: "SC102",    system: "TPS00185 / indic_il",    meaning: "Bambini &lt;3 anni in cura formale 1–29 ore/settimana" },
-      { code: "SC103",    system: "TPS00185 / indic_il",    meaning: "Bambini &lt;3 anni in cura formale 30+ ore/settimana" },
-      { code: "SPR",      system: "SPR_EXP_FFA / spdep",   meaning: "Totale protezione sociale (prestazioni in denaro + in natura)" },
-      { code: "PC_GDP",   system: "SPR_EXP_FFA / unit",    meaning: "Percentuale del PIL — classificazione ESSPROS" }
+      { code: "TOTFERRT", system: "DEMO_FIND / indic_de",  system_en: "DEMO_FIND / indic_de",  meaning: "Tasso di fecondità totale (figli per donna)",                         meaning_en: "Total fertility rate (children per woman)" },
+      { code: "EMP_LFS",  system: "LFSI_EMP_A / indic_em", system_en: "LFSI_EMP_A / indic_em", meaning: "Persone occupate — definizione Labour Force Survey",                 meaning_en: "Employed persons — Labour Force Survey definition" },
+      { code: "Y15-64",   system: "LFSI_EMP_A / age",      system_en: "LFSI_EMP_A / age",      meaning: "Fascia d'età 15–64 anni (età lavorativa principale)",                meaning_en: "Age group 15–64 (main working age)" },
+      { code: "PC_POP",   system: "LFSI_EMP_A / unit",     system_en: "LFSI_EMP_A / unit",     meaning: "Percentuale della popolazione (tasso di occupazione)",               meaning_en: "Percentage of population (employment rate)" },
+      { code: "SC102",    system: "TPS00185 / indic_il",   system_en: "TPS00185 / indic_il",   meaning: "Bambini &lt;3 anni in cura formale 1–29 ore/settimana",              meaning_en: "Children <3 years in formal care 1–29 hours/week" },
+      { code: "SC103",    system: "TPS00185 / indic_il",   system_en: "TPS00185 / indic_il",   meaning: "Bambini &lt;3 anni in cura formale 30+ ore/settimana",               meaning_en: "Children <3 years in formal care 30+ hours/week" },
+      { code: "SPR",      system: "SPR_EXP_FFA / spdep",  system_en: "SPR_EXP_FFA / spdep",  meaning: "Totale protezione sociale (prestazioni in denaro + in natura)",       meaning_en: "Total social protection (cash benefits + benefits in kind)" },
+      { code: "PC_GDP",   system: "SPR_EXP_FFA / unit",   system_en: "SPR_EXP_FFA / unit",   meaning: "Percentuale del PIL — classificazione ESSPROS",                       meaning_en: "Percentage of GDP — ESSPROS classification" }
     ],
     apiUrls: [
       { datasetId: "DEMO_FIND",   provider: "Eurostat", desc: "tasso di fecondità totale, 2000–2024",           url: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/DEMO_FIND/A.TOTFERRT./ALL/?startPeriod=2000&amp;endPeriod=2024&amp;format=SDMX-CSV" },
@@ -311,18 +388,18 @@ initShell({
       { dataset: "SPR_EXP_FFA", command: "opensdmx run queries/D_family_expenditure.yaml --out output/D_family_expenditure.csv" }
     ],
     files: [
-      { file: "output/A_fertility_rate.csv",                       desc: "1.159 righe · TFR per tutte le aree geografiche DEMO_FIND, 2000–2024" },
-      { file: "output/B_female_employment.csv",                    desc: "598 righe · tasso occupazione femminile 15–64, 2003–2024" },
-      { file: "output/C_childcare.csv",                            desc: "792 righe · copertura asili nido formali per bambini &lt;3 anni, 2014–2024" },
-      { file: "output/D_family_expenditure.csv",                   desc: "734 righe · spesa protezione sociale funzione famiglia % PIL, 2003–2022" },
-      { file: "queries/A_fertility_rate.yaml",                     desc: "Query riproducibile per DEMO_FIND" },
-      { file: "queries/B_female_employment.yaml",                  desc: "Query riproducibile per LFSI_EMP_A" },
-      { file: "queries/C_childcare.yaml",                          desc: "Query riproducibile per TPS00185" },
-      { file: "queries/D_family_expenditure.yaml",                 desc: "Query riproducibile per SPR_EXP_FFA" },
-      { file: "metadata/A_fertility_rate-meta-indic_de.csv",       desc: "Codelist dimensione indic_de (DEMO_FIND)" },
-      { file: "metadata/A_fertility_rate-meta-geo.csv",            desc: "Codelist dimensione geo (DEMO_FIND)" },
-      { file: "metadata/C_childcare-meta-indic_il.csv",            desc: "Codelist dimensione indic_il (TPS00185)" },
-      { file: "metadata/D_family_expenditure-meta-spdep.csv",      desc: "Codelist dimensione spdep (SPR_EXP_FFA)" }
+      { file: "output/A_fertility_rate.csv",                  desc: "1.159 righe · TFR per tutte le aree geografiche DEMO_FIND, 2000–2024" },
+      { file: "output/B_female_employment.csv",               desc: "598 righe · tasso occupazione femminile 15–64, 2003–2024" },
+      { file: "output/C_childcare.csv",                       desc: "792 righe · copertura asili nido formali per bambini &lt;3 anni, 2014–2024" },
+      { file: "output/D_family_expenditure.csv",              desc: "734 righe · spesa protezione sociale funzione famiglia % PIL, 2003–2022" },
+      { file: "queries/A_fertility_rate.yaml",                desc: "Query riproducibile per DEMO_FIND" },
+      { file: "queries/B_female_employment.yaml",             desc: "Query riproducibile per LFSI_EMP_A" },
+      { file: "queries/C_childcare.yaml",                     desc: "Query riproducibile per TPS00185" },
+      { file: "queries/D_family_expenditure.yaml",            desc: "Query riproducibile per SPR_EXP_FFA" },
+      { file: "metadata/A_fertility_rate-meta-indic_de.csv",  desc: "Codelist dimensione indic_de (DEMO_FIND)" },
+      { file: "metadata/A_fertility_rate-meta-geo.csv",       desc: "Codelist dimensione geo (DEMO_FIND)" },
+      { file: "metadata/C_childcare-meta-indic_il.csv",       desc: "Codelist dimensione indic_il (TPS00185)" },
+      { file: "metadata/D_family_expenditure-meta-spdep.csv", desc: "Codelist dimensione spdep (SPR_EXP_FFA)" }
     ]
   },
   providers: "Eurostat",
@@ -462,5 +539,6 @@ new roughViz.BarH({
   xLabel: '% DEL PIL',
 });
 </script>
+<script src="../../assets/lang.js"></script>
 </body>
 </html>

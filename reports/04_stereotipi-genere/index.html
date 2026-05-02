@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,16 +20,23 @@
   <!-- ═══ SEZIONE A: STEM ═══ -->
   <section class="section py-5" id="stem">
     <p class="section-label mb-1">Dataset A · TPS00217 · Eurostat</p>
-    <h2 class="mb-2">Laureate STEM: quante donne nell'istruzione superiore scientifica?</h2>
-    <p class="subtitle mb-4">Percentuale di donne tra i laureati di livello terziario (bachelor, master, dottorato) in ambiti STEM — scienze naturali, matematica, ICT, ingegneria e costruzioni.</p>
+    <h2 class="mb-2"><span class="en">STEM graduates: how many women in higher scientific education?</span><span class="it">Laureate STEM: quante donne nell'istruzione superiore scientifica?</span></h2>
+    <p class="subtitle mb-4"><span class="en">Percentage of women among tertiary-level graduates (bachelor, master, doctorate) in STEM fields — natural sciences, mathematics, ICT, engineering and construction.</span><span class="it">Percentuale di donne tra i laureati di livello terziario (bachelor, master, dottorato) in ambiti STEM — scienze naturali, matematica, ICT, ingegneria e costruzioni.</span></p>
 
     <div class="chart-wrap mb-3">
       <div id="chart-stem-ranking" style="min-height:820px;"></div>
     </div>
 
     <div class="transform p-3 mb-3">
-      <h4 class="mb-2">Trasformazioni Dataset A</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations — Dataset A</span><span class="it">Trasformazioni Dataset A</span></h4>
+      <ul class="mb-0 en">
+        <li>Raw data: 333 rows, 39 countries/territories, years 2015–2023</li>
+        <li>Filtered: retained EU27 countries + CH, NO, IS, TR and candidates (RS, ME, BA, MK, AL); excluded LI (Liechtenstein: outlier 70% with small demographic sample)</li>
+        <li>Selected the latest available year per country (2023 for all countries shown here)</li>
+        <li>Ascending sort by value</li>
+        <li>Final data in chart: 35 observations</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati grezzi: 333 righe, 39 paesi/territori, anni 2015–2023</li>
         <li>Filtrato: mantenuti paesi EU27 + CH, NO, IS, TR e candidati (RS, ME, BA, MK, AL); escluso LI (Liechtenstein: outlier 70% con campione demografico ridotto)</li>
         <li>Selezionato l'ultimo anno disponibile per paese (2023 per tutti i paesi qui mostrati)</li>
@@ -39,32 +46,33 @@
     </div>
 
     <p class="note pt-3">
-      <strong>Come leggere il grafico.</strong> La soglia di parità sarebbe 50%. Nessun paese europeo la raggiunge in STEM. I paesi dell'Europa sudorientale (Albania, Bosnia, Macedonia del Nord) presentano valori più alti — probabile effetto di una diversa distribuzione delle famiglie di corsi rispetto all'UE occidentale. I paesi UE occidentali (Germania, Svizzera, Belgio) si attestano tra il 26% e il 29%. Fonte: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/TPS00217">Eurostat TPS00217</a>, iscedf13=<code>F05_06_07</code>, isced11=<code>ED5-8</code>.
+      <span class="en"><strong>How to read the chart.</strong> The parity threshold would be 50%. No European country reaches it in STEM. South-eastern European countries (Albania, Bosnia, North Macedonia) show higher values — likely due to a different distribution of course families compared to Western EU. Western EU countries (Germany, Switzerland, Belgium) range between 26% and 29%. Source: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/TPS00217">Eurostat TPS00217</a>, iscedf13=<code>F05_06_07</code>, isced11=<code>ED5-8</code>.</span>
+      <span class="it"><strong>Come leggere il grafico.</strong> La soglia di parità sarebbe 50%. Nessun paese europeo la raggiunge in STEM. I paesi dell'Europa sudorientale (Albania, Bosnia, Macedonia del Nord) presentano valori più alti — probabile effetto di una diversa distribuzione delle famiglie di corsi rispetto all'UE occidentale. I paesi UE occidentali (Germania, Svizzera, Belgio) si attestano tra il 26% e il 29%. Fonte: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/TPS00217">Eurostat TPS00217</a>, iscedf13=<code>F05_06_07</code>, isced11=<code>ED5-8</code>.</span>
     </p>
   </section>
 
   <!-- ═══ SEZIONE B: SEGREGAZIONE SETTORIALE ═══ -->
   <section class="section py-5" id="settori">
     <p class="section-label mb-1">Dataset B · LFSA_EGAN2 · Eurostat</p>
-    <h2 class="mb-2">Segregazione occupazionale: chi lavora dove in Europa?</h2>
-    <p class="subtitle mb-4">Quota percentuale di donne tra gli occupati 15–74 anni nei cinque settori NACE Rev.2 più emblematici per la segregazione di genere, EU27, 2010–2023.</p>
+    <h2 class="mb-2"><span class="en">Occupational segregation: who works where in Europe?</span><span class="it">Segregazione occupazionale: chi lavora dove in Europa?</span></h2>
+    <p class="subtitle mb-4"><span class="en">Percentage share of women among employed persons aged 15–74 in the five NACE Rev.2 sectors most emblematic of gender segregation, EU27, 2010–2023.</span><span class="it">Quota percentuale di donne tra gli occupati 15–74 anni nei cinque settori NACE Rev.2 più emblematici per la segregazione di genere, EU27, 2010–2023.</span></p>
 
-    <h3 class="subsection-title mb-3">Quota femminile per settore — EU27 2023</h3>
+    <h3 class="subsection-title mb-3"><span class="en">Female share by sector — EU27 2023</span><span class="it">Quota femminile per settore — EU27 2023</span></h3>
     <div class="chart-wrap mb-3">
       <div id="chart-settori-2023" style="min-height:320px;"></div>
     </div>
 
-    <h3 class="subsection-title mb-3 mt-4">Evoluzione temporale della quota femminile per settore — EU27 2010–2023</h3>
+    <h3 class="subsection-title mb-3 mt-4"><span class="en">Time evolution of female share by sector — EU27 2010–2023</span><span class="it">Evoluzione temporale della quota femminile per settore — EU27 2010–2023</span></h3>
     <div class="row g-2 mb-3">
       <div class="col-md-6 col-lg-4">
         <div style="background:#fff;border:1px solid var(--rule);padding:0.6rem 0.6rem 0;">
-          <p style="font-family:var(--mono);font-size:1rem;color:var(--ink-light);padding:0 0.3rem 0.3rem;border-bottom:1px dashed var(--rule);margin-bottom:0.3rem;">SANITÀ (Q)</p>
+          <p style="font-family:var(--mono);font-size:1rem;color:var(--ink-light);padding:0 0.3rem 0.3rem;border-bottom:1px dashed var(--rule);margin-bottom:0.3rem;"><span class="en">HEALTHCARE (Q)</span><span class="it">SANITÀ (Q)</span></p>
           <svg id="chart-ts-Q" style="width:100%;height:210px;display:block;"></svg>
         </div>
       </div>
       <div class="col-md-6 col-lg-4">
         <div style="background:#fff;border:1px solid var(--rule);padding:0.6rem 0.6rem 0;">
-          <p style="font-family:var(--mono);font-size:1rem;color:var(--ink-light);padding:0 0.3rem 0.3rem;border-bottom:1px dashed var(--rule);margin-bottom:0.3rem;">ISTRUZIONE (P)</p>
+          <p style="font-family:var(--mono);font-size:1rem;color:var(--ink-light);padding:0 0.3rem 0.3rem;border-bottom:1px dashed var(--rule);margin-bottom:0.3rem;"><span class="en">EDUCATION (P)</span><span class="it">ISTRUZIONE (P)</span></p>
           <svg id="chart-ts-P" style="width:100%;height:210px;display:block;"></svg>
         </div>
       </div>
@@ -76,21 +84,28 @@
       </div>
       <div class="col-md-6 col-lg-4">
         <div style="background:#fff;border:1px solid var(--rule);padding:0.6rem 0.6rem 0;">
-          <p style="font-family:var(--mono);font-size:1rem;color:var(--ink-light);padding:0 0.3rem 0.3rem;border-bottom:1px dashed var(--rule);margin-bottom:0.3rem;">MANIFATTURA (C)</p>
+          <p style="font-family:var(--mono);font-size:1rem;color:var(--ink-light);padding:0 0.3rem 0.3rem;border-bottom:1px dashed var(--rule);margin-bottom:0.3rem;"><span class="en">MANUFACTURING (C)</span><span class="it">MANIFATTURA (C)</span></p>
           <svg id="chart-ts-C" style="width:100%;height:210px;display:block;"></svg>
         </div>
       </div>
       <div class="col-md-6 col-lg-4">
         <div style="background:#fff;border:1px solid var(--rule);padding:0.6rem 0.6rem 0;">
-          <p style="font-family:var(--mono);font-size:1rem;color:var(--ink-light);padding:0 0.3rem 0.3rem;border-bottom:1px dashed var(--rule);margin-bottom:0.3rem;">COSTRUZIONI (F)</p>
+          <p style="font-family:var(--mono);font-size:1rem;color:var(--ink-light);padding:0 0.3rem 0.3rem;border-bottom:1px dashed var(--rule);margin-bottom:0.3rem;"><span class="en">CONSTRUCTION (F)</span><span class="it">COSTRUZIONI (F)</span></p>
           <svg id="chart-ts-F" style="width:100%;height:210px;display:block;"></svg>
         </div>
       </div>
     </div>
 
     <div class="transform p-3 mb-3">
-      <h4 class="mb-2">Trasformazioni Dataset B</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations — Dataset B</span><span class="it">Trasformazioni Dataset B</span></h4>
+      <ul class="mb-0 en">
+        <li>Raw data: 140 rows, EU27 aggregate, 5 NACE sectors × 2 sexes × 14 years (2010–2023)</li>
+        <li>Calculated female share by sector and year: <code>F / (F + M) × 100</code></li>
+        <li>2023: Healthcare 78.1%, Education 72.7%, Manufacturing 30.5%, ICT 30.2%, Construction 10.5%</li>
+        <li>Note: female share in ICT is in slight decline from 2010 (32.4%) to 2023 (30.2%)</li>
+        <li>Final data: 70 observations (5 sectors × 14 years)</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati grezzi: 140 righe, EU27 aggregato, 5 settori NACE × 2 sessi × 14 anni (2010–2023)</li>
         <li>Calcolata quota femminile per settore e anno: <code>F / (F + M) × 100</code></li>
         <li>2023: Sanità 78.1%, Istruzione 72.7%, Manifattura 30.5%, ICT 30.2%, Costruzioni 10.5%</li>
@@ -100,29 +115,39 @@
     </div>
 
     <p class="note pt-3">
-      <strong>Come leggere i grafici.</strong> La soglia di parità è 50%. Sanità e istruzione sono stabilmente sopra il 70%. ICT, manifattura e costruzioni restano strutturalmente sotto il 35%. La quota femminile in ICT non è cresciuta nel periodo — anzi è leggermente diminuita — nonostante la digitalizzazione abbia moltiplicato il numero assoluto di occupati nel settore. Fonte: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/LFSA_EGAN2">Eurostat LFSA_EGAN2</a>, unit=<code>THS_PER</code>, age=<code>Y15-74</code>.
+      <span class="en"><strong>How to read the charts.</strong> The parity threshold is 50%. Healthcare and education are consistently above 70%. ICT, manufacturing and construction remain structurally below 35%. The female share in ICT has not grown in the period — in fact it has slightly declined — despite digitalisation having multiplied the absolute number of workers in the sector. Source: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/LFSA_EGAN2">Eurostat LFSA_EGAN2</a>, unit=<code>THS_PER</code>, age=<code>Y15-74</code>.</span>
+      <span class="it"><strong>Come leggere i grafici.</strong> La soglia di parità è 50%. Sanità e istruzione sono stabilmente sopra il 70%. ICT, manifattura e costruzioni restano strutturalmente sotto il 35%. La quota femminile in ICT non è cresciuta nel periodo — anzi è leggermente diminuita — nonostante la digitalizzazione abbia moltiplicato il numero assoluto di occupati nel settore. Fonte: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/LFSA_EGAN2">Eurostat LFSA_EGAN2</a>, unit=<code>THS_PER</code>, age=<code>Y15-74</code>.</span>
     </p>
   </section>
 
   <!-- ═══ SEZIONE C: PART-TIME ═══ -->
   <section class="section py-5" id="parttime">
     <p class="section-label mb-1">Dataset C · LFSA_EPPGA · Eurostat</p>
-    <h2 class="mb-2">Lavoro part-time: un indicatore del lavoro di cura non retribuito?</h2>
-    <p class="subtitle mb-4">Percentuale di donne e uomini (15–74 anni) in occupazione a tempo parziale sul totale degli occupati. Il divario sistematico riflette la distribuzione asimmetrica del lavoro di cura familiare.</p>
+    <h2 class="mb-2"><span class="en">Part-time work: an indicator of unpaid care work?</span><span class="it">Lavoro part-time: un indicatore del lavoro di cura non retribuito?</span></h2>
+    <p class="subtitle mb-4"><span class="en">Percentage of women and men (15–74 years) in part-time employment out of total employed. The systematic gap reflects the asymmetric distribution of family care work.</span><span class="it">Percentuale di donne e uomini (15–74 anni) in occupazione a tempo parziale sul totale degli occupati. Il divario sistematico riflette la distribuzione asimmetrica del lavoro di cura familiare.</span></p>
 
-    <h3 class="subsection-title mb-3">EU27: evoluzione 2010–2023 per sesso</h3>
+    <h3 class="subsection-title mb-3"><span class="en">EU27: trend 2010–2023 by sex</span><span class="it">EU27: evoluzione 2010–2023 per sesso</span></h3>
     <div class="chart-wrap mb-3">
       <svg id="chart-parttime-ts" style="min-height:380px;"></svg>
     </div>
 
-    <h3 class="subsection-title mb-3 mt-4">Divario part-time (F − M) per paese EU27 — ultimo anno disponibile</h3>
+    <h3 class="subsection-title mb-3 mt-4"><span class="en">Part-time gap (F − M) by EU27 country — latest available year</span><span class="it">Divario part-time (F − M) per paese EU27 — ultimo anno disponibile</span></h3>
     <div class="chart-wrap mb-3">
       <div id="chart-parttime-gap" style="min-height:760px;"></div>
     </div>
 
     <div class="transform p-3 mb-3">
-      <h4 class="mb-2">Trasformazioni Dataset C</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations — Dataset C</span><span class="it">Trasformazioni Dataset C</span></h4>
+      <ul class="mb-0 en">
+        <li>Raw data: 1,026 rows, 38 geographic entities, years 1983–2023</li>
+        <li>Filtered for trend analysis: EU27_2020, years 2010–2023, sexes M and F</li>
+        <li>EU27 2023: women 29.1%, men 9.4% — gap of 19.7 percentage points</li>
+        <li>For the ranking: selected the latest available year per country, EU27 countries only</li>
+        <li>Calculated F − M gap per country; sorted in descending order</li>
+        <li>Note: Romania (gap −0.7pp, excluded from chart as roughViz does not support negative values) and Bulgaria (gap +0.3pp) show near parity — in those markets part-time is rare for both sexes</li>
+        <li>Final data in ranking: 27 observations</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati grezzi: 1026 righe, 38 entità geografiche, anni 1983–2023</li>
         <li>Filtrato per analisi trend: EU27_2020, anni 2010–2023, sessi M e F</li>
         <li>EU27 2023: donne 29.1%, uomini 9.4% — gap di 19.7 punti percentuali</li>
@@ -134,7 +159,8 @@
     </div>
 
     <p class="note pt-3">
-      <strong>Come leggere i grafici.</strong> Il divario part-time è interpretato dalla letteratura come proxy del carico di cura non retribuito (figli, anziani, lavoro domestico) che ricade prevalentemente sulle donne. Un divario elevato — come in NL, AT, DE — è correlato a sistemi fiscali che penalizzano il secondo reddito e a una minore disponibilità di asili nido pubblici. Fonte: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/LFSA_EPPGA">Eurostat LFSA_EPPGA</a>, unit=<code>PC</code>, age=<code>Y15-74</code>.
+      <span class="en"><strong>How to read the charts.</strong> The part-time gap is interpreted in the literature as a proxy for unpaid care burden (children, elderly, domestic work) that falls predominantly on women. A high gap — as in NL, AT, DE — is correlated with tax systems that penalise the second income and with lower availability of public childcare. Source: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/LFSA_EPPGA">Eurostat LFSA_EPPGA</a>, unit=<code>PC</code>, age=<code>Y15-74</code>.</span>
+      <span class="it"><strong>Come leggere i grafici.</strong> Il divario part-time è interpretato dalla letteratura come proxy del carico di cura non retribuito (figli, anziani, lavoro domestico) che ricade prevalentemente sulle donne. Un divario elevato — come in NL, AT, DE — è correlato a sistemi fiscali che penalizzano il secondo reddito e a una minore disponibilità di asili nido pubblici. Fonte: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/LFSA_EPPGA">Eurostat LFSA_EPPGA</a>, unit=<code>PC</code>, age=<code>Y15-74</code>.</span>
     </p>
   </section>
 
@@ -148,45 +174,51 @@
 <script>
 initShell({
   title:         "Stereotipi di genere nei dati europei",
+  title_en:      "Gender stereotypes in European data",
   date:          "Aprile 2026",
+  date_en:       "April 2026",
   intro:         "Segregazione occupazionale, divario nelle lauree STEM e asimmetria nel lavoro part-time: tre proxy statistiche che misurano come gli stereotipi di genere si riflettano nelle scelte di istruzione e lavoro nei paesi dell'Unione Europea.",
+  intro_en:      "Occupational segregation, gender gap in STEM graduates and asymmetry in part-time work: three statistical proxies that measure how gender stereotypes are reflected in educational and work choices across EU countries.",
   badges: [
     { label: "Eurostat", value: "TPS00217" },
     { label: "Eurostat", value: "LFSA_EGAN2" },
     { label: "Eurostat", value: "LFSA_EPPGA" },
-    { label: "Periodo", value: "2010–2023" },
-    { label: "Paesi", value: "EU27 + candidati" }
+    { label: "Period",   value: "2010–2023" },
+    { label: "Countries", value: "EU27 + candidates" }
   ],
   nav: [
-    { id: "stem",     label: "Laureate STEM" },
-    { id: "settori",  label: "Segregazione settoriale" },
-    { id: "parttime", label: "Lavoro part-time" }
+    { id: "stem",     label: "Laureate STEM",          label_en: "STEM Graduates" },
+    { id: "settori",  label: "Segregazione settoriale", label_en: "Occupational Segregation" },
+    { id: "parttime", label: "Lavoro part-time",        label_en: "Part-time Work" }
   ],
-  introTitle:    "Cosa misurano questi dati",
-  introSubtitle: "Tre proxy quantitative per fenomeni che i sondaggi di opinione non possono catturare con la stessa precisione.",
+  introTitle:       "Cosa misurano questi dati",
+  introTitle_en:    "What these data measure",
+  introSubtitle:    "Tre proxy quantitative per fenomeni che i sondaggi di opinione non possono catturare con la stessa precisione.",
+  introSubtitle_en: "Three quantitative proxies for phenomena that opinion surveys cannot capture with the same precision.",
   scopeLimit:    "I dati SDMX di Eurostat misurano esiti osservabili (chi lavora dove, chi studia cosa, chi lavora a tempo parziale) ma non permettono di stabilire le cause. La correlazione tra segregazione settoriale e stereotipi di genere è solida nella letteratura scientifica, ma questi dati da soli non dimostrano causalità. Influenze come politiche di congedo parentale, struttura del mercato del lavoro e aspettative culturali agiscono in modo combinato.",
+  scopeLimit_en: "Eurostat SDMX data measure observable outcomes (who works where, who studies what, who works part-time) but do not establish causes. The correlation between occupational segregation and gender stereotypes is robust in the scientific literature, but this data alone does not prove causality. Factors such as parental leave policies, labour market structure and cultural expectations act in combination.",
   findingCards: [
-    { value: "78%",   color: "default", label: "<strong>dei lavoratori nella sanità EU</strong> sono donne (2023) — il settore più femminilizzato d'Europa" },
-    { value: "10,5%", color: "default", label: "<strong>delle occupate nelle costruzioni EU</strong> sono donne (2023) — il settore più mascolinizzato" },
-    { value: "3×",    color: "blue",    label: "<strong>più donne che uomini</strong> lavorano part-time in EU27: 29% vs 9% nel 2023" },
-    { value: "35%",   color: "default", label: "<strong>media UE delle laureate STEM</strong> — in calo rispetto ai paesi dell'Est Europa dove si supera il 40%" }
+    { value: "78%",   color: "default", label: "<strong>dei lavoratori nella sanità EU</strong> sono donne (2023) — il settore più femminilizzato d'Europa",         label_en: "<strong>of healthcare workers in the EU</strong> are women (2023) — the most feminised sector in Europe" },
+    { value: "10,5%", color: "default", label: "<strong>delle occupate nelle costruzioni EU</strong> sono donne (2023) — il settore più mascolinizzato",            label_en: "<strong>of workers in EU construction</strong> are women (2023) — the most male-dominated sector" },
+    { value: "3×",    color: "blue",    label: "<strong>più donne che uomini</strong> lavorano part-time in EU27: 29% vs 9% nel 2023",                             label_en: "<strong>more women than men</strong> work part-time in EU27: 29% vs 9% in 2023" },
+    { value: "35%",   color: "default", label: "<strong>media UE delle laureate STEM</strong> — in calo rispetto ai paesi dell'Est Europa dove si supera il 40%", label_en: "<strong>EU average of women among STEM graduates</strong> — lower than Eastern European countries where it exceeds 40%" }
   ],
   rawData: {
     license:        "CC BY 4.0",
     extractionDate: "9 aprile 2026",
     files: [
-      { provider: "Eurostat", datasetId: "TPS00217",   desc: "Laureate STEM — % su totale laureati STEM",        rows: 333,  period: "2015–2023", file: "output/A_stem_laureate_femmine.csv" },
-      { provider: "Eurostat", datasetId: "LFSA_EGAN2", desc: "Occupati per settore NACE e sesso — EU27",          rows: 140,  period: "2010–2023", file: "output/B_occupazione_settore_sesso.csv" },
-      { provider: "Eurostat", datasetId: "LFSA_EPPGA", desc: "Occupati part-time per sesso — % sul totale",       rows: 1026, period: "1983–2023", file: "output/C_part_time_sesso.csv" }
+      { provider: "Eurostat", datasetId: "TPS00217",   desc: "Laureate STEM — % su totale laureati STEM",  desc_en: "STEM graduates — % of total STEM graduates",    rows: 333,  period: "2015–2023", file: "output/A_stem_laureate_femmine.csv" },
+      { provider: "Eurostat", datasetId: "LFSA_EGAN2", desc: "Occupati per settore NACE e sesso — EU27",   desc_en: "Employed by NACE sector and sex — EU27",         rows: 140,  period: "2010–2023", file: "output/B_occupazione_settore_sesso.csv" },
+      { provider: "Eurostat", datasetId: "LFSA_EPPGA", desc: "Occupati part-time per sesso — % sul totale", desc_en: "Part-time employed by sex — % of total",         rows: 1026, period: "1983–2023", file: "output/C_part_time_sesso.csv" }
     ]
   },
   methodology: {
     githubUrl: "https://github.com/datapitch-it/automatic-reports/tree/main/reports/04_stereotipi-genere",
     classifications: [
-      { code: "ISCEDF13", system: "Campi ISCED 2013",   meaning: "Scienze naturali, ICT, ingegneria e costruzioni (aggregato STEM)" },
-      { code: "ISCED11",  system: "Livello istruzione",  meaning: "Istruzione terziaria (livelli 5–8: dal ciclo breve al dottorato)" },
-      { code: "NACE_R2",  system: "Attività economica",  meaning: "Manifattura, Costruzioni, ICT, Istruzione, Sanità e assistenza sociale" },
-      { code: "AGE",      system: "Classe d'età",         meaning: "Popolazione in età lavorativa (15–74 anni)" }
+      { code: "ISCEDF13", system: "Campi ISCED 2013",  system_en: "ISCED 2013 fields",   meaning: "Scienze naturali, ICT, ingegneria e costruzioni (aggregato STEM)", meaning_en: "Natural sciences, ICT, engineering and construction (STEM aggregate)" },
+      { code: "ISCED11",  system: "Livello istruzione", system_en: "Education level",      meaning: "Istruzione terziaria (livelli 5–8: dal ciclo breve al dottorato)",  meaning_en: "Tertiary education (levels 5–8: short-cycle to doctorate)" },
+      { code: "NACE_R2",  system: "Attività economica", system_en: "Economic activity",    meaning: "Manifattura, Costruzioni, ICT, Istruzione, Sanità e assistenza sociale", meaning_en: "Manufacturing, Construction, ICT, Education, Human health and social work" },
+      { code: "AGE",      system: "Classe d'età",        system_en: "Age group",            meaning: "Popolazione in età lavorativa (15–74 anni)",                        meaning_en: "Working-age population (15–74 years)" }
     ],
     apiUrls: [
       {
@@ -360,5 +392,6 @@ new roughViz.BarH({
 });
 </script>
 
+<script src="../../assets/lang.js"></script>
 </body>
 </html>

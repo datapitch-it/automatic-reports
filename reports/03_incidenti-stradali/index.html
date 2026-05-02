@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,17 +24,21 @@
 
   <!-- ═══ RANKING ═══ -->
   <section class="section py-5" id="ranking">
-    <p class="section-label mb-1">Fase 1 · Eurostat SDG_11_40 · Tasso (RT)</p>
-    <h2 class="mb-2">Mortalità stradale per paese (2023)</h2>
+    <p class="section-label mb-1"><span class="en">Phase 1 · Eurostat SDG_11_40 · Rate (RT)</span><span class="it">Fase 1 · Eurostat SDG_11_40 · Tasso (RT)</span></p>
+    <h2 class="mb-2"><span class="en">Road mortality by country (2023)</span><span class="it">Mortalità stradale per paese (2023)</span></h2>
     <p class="subtitle mb-4">
-      Morti per 100.000 abitanti · Totale strade · 27 paesi UE
+      <span class="en">Deaths per 100,000 inhabitants · All roads · 27 EU countries</span><span class="it">Morti per 100.000 abitanti · Totale strade · 27 paesi UE</span>
     </p>
 
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> Il grafico mostra il numero di vittime per ogni 100.000 residenti.
+      <span class="en"><strong>How to read:</strong> The chart shows the number of victims per 100,000 residents.
+      Lower values indicate safer roads or better prevention policies.
+      SDMX source: <code>SDG_11_40</code>, Eurostat.
+      Chart: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> Il grafico mostra il numero di vittime per ogni 100.000 residenti.
       Valori bassi indicano strade più sicure o migliori politiche di prevenzione.
       Fonte SDMX: <code>SDG_11_40</code>, Eurostat.
-      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
     </p>
 
     <div class="chart-wrap mb-4">
@@ -42,8 +46,14 @@
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 400+ rows (2010-2024)</li>
+        <li>Selected year 2023 as the most complete reference</li>
+        <li>Filtered to 27 EU member states only</li>
+        <li>Descending order to highlight critical cases</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 400+ righe (2010-2024)</li>
         <li>Selezionato l'anno 2023 come riferimento più completo</li>
         <li>Filtrati solo i 27 stati membri dell'Unione Europea</li>
@@ -54,16 +64,19 @@
 
   <!-- ═══ ASSOLUTI ═══ -->
   <section class="section py-5" id="assoluti">
-    <p class="section-label mb-1">Fase 2 · Eurostat SDG_11_40 · Numero (NR)</p>
-    <h2 class="mb-2">Il costo umano: decessi totali (2023)</h2>
+    <p class="section-label mb-1"><span class="en">Phase 2 · Eurostat SDG_11_40 · Count (NR)</span><span class="it">Fase 2 · Eurostat SDG_11_40 · Numero (NR)</span></p>
+    <h2 class="mb-2"><span class="en">The human cost: total deaths (2023)</span><span class="it">Il costo umano: decessi totali (2023)</span></h2>
     <p class="subtitle mb-4">
-      Numero assoluto di morti · Totale strade · 27 paesi UE
+      <span class="en">Absolute number of deaths · All roads · 27 EU countries</span><span class="it">Numero assoluto di morti · Totale strade · 27 paesi UE</span>
     </p>
 
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> Mentre il tasso per 100k abitanti (sezione precedente) misura la sicurezza, questi dati mostrano l'impatto reale in termini di vite umane. I paesi più popolosi (FR, IT, DE) registrano naturalmente i numeri più elevati.
+      <span class="en"><strong>How to read:</strong> While the rate per 100k inhabitants (previous section) measures safety, these data show the real impact in terms of human lives. More populous countries (FR, IT, DE) naturally record the highest numbers.
+      SDMX source: <code>SDG_11_40</code>, Eurostat.
+      Chart: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> Mentre il tasso per 100k abitanti (sezione precedente) misura la sicurezza, questi dati mostrano l'impatto reale in termini di vite umane. I paesi più popolosi (FR, IT, DE) registrano naturalmente i numeri più elevati.
       Fonte SDMX: <code>SDG_11_40</code>, Eurostat.
-      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
     </p>
 
     <div class="chart-wrap mb-4">
@@ -71,8 +84,13 @@
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 400+ rows (2010-2024)</li>
+        <li>Filter: Unit <code>NR</code> (absolute count) and year <code>2023</code></li>
+        <li>Selection of the 27 EU countries only</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 400+ righe (2010-2024)</li>
         <li>Filtro: Unità <code>NR</code> (numero assoluto) e anno <code>2023</code></li>
         <li>Selezione dei soli 27 paesi UE</li>
@@ -82,17 +100,21 @@
 
   <!-- ═══ SERIE STORICA ═══ -->
   <section class="section py-5" id="serie">
-    <p class="section-label mb-1">Fase 2 · Serie Temporale · Trend 2010–2023</p>
-    <h2 class="mb-2">L'evoluzione del rischio stradale</h2>
+    <p class="section-label mb-1"><span class="en">Phase 2 · Time Series · Trend 2010–2023</span><span class="it">Fase 2 · Serie Temporale · Trend 2010–2023</span></p>
+    <h2 class="mb-2"><span class="en">The evolution of road risk</span><span class="it">L'evoluzione del rischio stradale</span></h2>
     <p class="subtitle mb-4">
-      Confronto tra Italia e Media Europea (EU27_2020)
+      <span class="en">Comparison between Italy and the European Average (EU27_2020)</span><span class="it">Confronto tra Italia e Media Europea (EU27_2020)</span>
     </p>
 
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> Il trend mostra una diminuzione costante fino al 2020 (minimo storico dovuto ai lockdown).
+      <span class="en"><strong>How to read:</strong> The trend shows a steady decrease until 2020 (historic low due to lockdowns).
+      From 2021 a slight rebound is observed.
+      SDMX source: <code>SDG_11_40</code>, Eurostat.
+      Chart: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> Il trend mostra una diminuzione costante fino al 2020 (minimo storico dovuto ai lockdown).
       Dal 2021 si osserva un leggero rimbalzo.
       Fonte SDMX: <code>SDG_11_40</code>, Eurostat.
-      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.</span>
     </p>
 
     <div class="chart-wrap mb-4">
@@ -100,8 +122,13 @@
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Extracted aggregated data for the European Union (EU27_2020)</li>
+        <li>Comparison with the Italian time series</li>
+        <li>The 2024 figure is not shown due to lack of uniformity across countries</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Estratti i dati aggregati per l'Unione Europea (EU27_2020)</li>
         <li>Confronto con la serie storica italiana</li>
         <li>Il dato 2024 non è mostrato per mancanza di uniformità tra i paesi</li>
@@ -111,17 +138,21 @@
 
   <!-- ═══ TIPO STRADA ═══ -->
   <section class="section py-5" id="strade">
-    <p class="section-label mb-1">Fase 3 · Breakdown infrastruttura · 2022</p>
-    <h2 class="mb-2">Dove avvengono gli incidenti?</h2>
+    <p class="section-label mb-1"><span class="en">Phase 3 · Infrastructure breakdown · 2022</span><span class="it">Fase 3 · Breakdown infrastruttura · 2022</span></p>
+    <h2 class="mb-2"><span class="en">Where do accidents happen?</span><span class="it">Dove avvengono gli incidenti?</span></h2>
     <p class="subtitle mb-4">
-      Morti per 100.000 abitanti per tipo di strada · Italia vs UE
+      <span class="en">Deaths per 100,000 inhabitants by road type · Italy vs EU</span><span class="it">Morti per 100.000 abitanti per tipo di strada · Italia vs UE</span>
     </p>
 
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> La maggior parte dei decessi avviene su strade rurali ed extra-urbane.
+      <span class="en"><strong>How to read:</strong> Most deaths occur on rural and extra-urban roads.
+      In Italy, the urban road rate is significantly above the EU average.
+      SDMX source: <code>SDG_11_40</code>, Eurostat.
+      Chart: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> La maggior parte dei decessi avviene su strade rurali ed extra-urbane.
       In Italia, il tasso su strade urbane è significativamente superiore alla media UE.
       Fonte SDMX: <code>SDG_11_40</code>, Eurostat.
-      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
     </p>
 
     <div class="row row-cols-1 row-cols-md-2 g-4">
@@ -133,15 +164,19 @@
       </div>
       <div class="col">
         <div class="chart-wrap">
-          <h4 class="subsection-title">MEDIA UE (2022)</h4>
+          <h4 class="subsection-title"><span class="en">EU AVERAGE (2022)</span><span class="it">MEDIA UE (2022)</span></h4>
           <div id="chart-roads-eu"></div>
         </div>
       </div>
     </div>
 
     <div class="transform p-3 mt-4 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Used codes <code>MWAY</code> (Motorways), <code>RD_URB</code> (Urban), <code>RD_RUR</code> (Rural)</li>
+        <li>Data from 2022 to ensure maximum granularity</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Usati codici <code>MWAY</code> (Autostrade), <code>RD_URB</code> (Urbane), <code>RD_RUR</code> (Rurali)</li>
         <li>Dati riferiti al 2022 per garantire la massima granularità</li>
       </ul>
@@ -163,36 +198,42 @@
 <script>
 // ── CONFIG SHELL ─────────────────────────────────────────────────────────────
 initShell({
-  title:  "Incidenti Stradali in Europa: La Mappa della Sicurezza",
-  date:   "17 aprile 2026",
-  intro:  "Analisi della mortalità stradale nei paesi europei basata sugli indicatori SDG di Eurostat. Il report confronta i tassi di decessi per 100.000 abitanti e l'evoluzione nell'ultimo decennio.",
+  title:    "Incidenti Stradali in Europa: La Mappa della Sicurezza",
+  title_en: "Road Accidents in Europe: The Safety Map",
+  date:     "17 aprile 2026",
+  date_en:  "17 April 2026",
+  intro:    "Analisi della mortalità stradale nei paesi europei basata sugli indicatori SDG di Eurostat. Il report confronta i tassi di decessi per 100.000 abitanti e l'evoluzione nell'ultimo decennio.",
+  intro_en: "Analysis of road mortality in European countries based on Eurostat SDG indicators. The report compares death rates per 100,000 inhabitants and trends over the last decade.",
   badges: [
-    { label: "Eurostat", value: "SDG_11_40" },
-    { label: "Periodo",  value: "2010–2024" },
-    { label: "Paesi",    value: "27 UE + EFTA" }
+    { label: "Eurostat",  value: "SDG_11_40" },
+    { label: "Period",    value: "2010–2024" },
+    { label: "Countries", value: "27 EU + EFTA" }
   ],
   nav: [
-    { id: "ranking",  label: "Classifica" },
-    { id: "assoluti", label: "Numeri Assoluti" },
-    { id: "serie",    label: "Serie Storica" },
-    { id: "strade",   label: "Tipo di Strada" }
+    { id: "ranking",  label: "Classifica",     label_en: "Ranking" },
+    { id: "assoluti", label: "Numeri Assoluti", label_en: "Absolute Numbers" },
+    { id: "serie",    label: "Serie Storica",   label_en: "Time Series" },
+    { id: "strade",   label: "Tipo di Strada",  label_en: "Road Type" }
   ],
-  introTitle:    "La sfida della sicurezza stradale",
-  introSubtitle: "Morti per incidenti stradali in Europa",
-  scopeLimit: "I dati includono i decessi avvenuti entro 30 giorni dall'incidente su strade pubbliche. Non coprono i danni materiali o le lesioni non fatali. I dati 2024 sono parziali per alcuni paesi.",
+  introTitle:       "La sfida della sicurezza stradale",
+  introTitle_en:    "The road safety challenge",
+  introSubtitle:    "Morti per incidenti stradali in Europa",
+  introSubtitle_en: "Road accident deaths in Europe",
+  scopeLimit:    "I dati includono i decessi avvenuti entro 30 giorni dall'incidente su strade pubbliche. Non coprono i danni materiali o le lesioni non fatali. I dati 2024 sono parziali per alcuni paesi.",
+  scopeLimit_en: "Data includes deaths occurring within 30 days of the accident on public roads. It does not cover material damage or non-fatal injuries. The 2024 data is incomplete for some countries.",
   findingCards: [
-    { value: "4,5", label: "<strong>Media UE</strong> — morti per 100k abitanti nel 2023" },
-    { value: "2,2", label: "<strong>Svezia</strong> — il paese più sicuro nel 2023" },
-    { value: "8,1", color: "blue", label: "<strong>Romania</strong> — tasso più alto registrato (pari alla Bulgaria)" },
-    { value: "5,2", label: "<strong>Italia</strong> — tasso superiore alla media europea del 15%" }
+    { value: "4,5", label: "<strong>Media UE</strong> — morti per 100k abitanti nel 2023",                     label_en: "<strong>EU Average</strong> — deaths per 100k inhabitants in 2023" },
+    { value: "2,2", label: "<strong>Svezia</strong> — il paese più sicuro nel 2023",                           label_en: "<strong>Sweden</strong> — the safest country in 2023" },
+    { value: "8,1", color: "blue", label: "<strong>Romania</strong> — tasso più alto registrato (pari alla Bulgaria)", label_en: "<strong>Romania</strong> — highest rate recorded (equal to Bulgaria)" },
+    { value: "5,2", label: "<strong>Italia</strong> — tasso superiore alla media europea del 15%",             label_en: "<strong>Italy</strong> — rate 15% above the European average" }
   ],
   rawData: {
     license: "Eurostat CC BY 4.0",
     extractionDate: "17 aprile 2026",
     files: [
-      { provider: "Eurostat", datasetId: "SDG_11_40", desc: "Tasso mortalità stradale",   rows: "400+",  period: "EU27+ · 2010-2024", file: "output/A_tasso_mortalita.csv" },
-      { provider: "Eurostat", datasetId: "SDG_11_40", desc: "Numero decessi (assoluti)",  rows: "400+",  period: "EU27+ · 2010-2024", file: "output/B_numero_morti.csv" },
-      { provider: "Eurostat", datasetId: "SDG_11_40", desc: "Breakdown tipo strada",      rows: "1200+", period: "2010-2024",          file: "output/C_tipo_strada.csv" }
+      { provider: "Eurostat", datasetId: "SDG_11_40", desc: "Tasso mortalità stradale",  desc_en: "Road mortality rate",          rows: "400+",  period: "EU27+ · 2010-2024", file: "output/A_tasso_mortalita.csv" },
+      { provider: "Eurostat", datasetId: "SDG_11_40", desc: "Numero decessi (assoluti)", desc_en: "Number of deaths (absolute)",  rows: "400+",  period: "EU27+ · 2010-2024", file: "output/B_numero_morti.csv" },
+      { provider: "Eurostat", datasetId: "SDG_11_40", desc: "Breakdown tipo strada",     desc_en: "Road type breakdown",          rows: "1200+", period: "2010-2024",          file: "output/C_tipo_strada.csv" }
     ]
   },
   methodology: {
@@ -307,5 +348,6 @@ new roughViz.Bar({
   yLabel: 'tasso per 100k'
 });
 </script>
+<script src="../../assets/lang.js"></script>
 </body>
 </html>

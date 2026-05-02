@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,10 +19,10 @@
 
   <!-- ═══ FASE A ═══ -->
   <section class="section py-5" id="fase-a">
-    <p class="section-label mb-1">Fase A · Eurostat GOV_10A_EXP · COFOG GF0201</p>
-    <h2 class="mb-2">Spesa per difesa militare — Ranking europeo</h2>
+    <p class="section-label mb-1"><span class="en">Phase A · Eurostat GOV_10A_EXP · COFOG GF0201</span><span class="it">Fase A · Eurostat GOV_10A_EXP · COFOG GF0201</span></p>
+    <h2 class="mb-2"><span class="en">Military defence spending — European ranking</span><span class="it">Spesa per difesa militare — Ranking europeo</span></h2>
     <p class="subtitle mb-4">
-      Ultimo anno disponibile (2023 o 2024) · % del PIL · Governo generale (S13) · 27 paesi
+      <span class="en">Latest available year (2023 or 2024) · % of GDP · General government (S13) · 27 countries</span><span class="it">Ultimo anno disponibile (2023 o 2024) · % del PIL · Governo generale (S13) · 27 paesi</span>
     </p>
 
     <div class="chart-wrap mb-4">
@@ -30,8 +30,15 @@
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 660 rows (all EU countries + Switzerland, Norway, Iceland · years 2000–2024)</li>
+        <li>Selected the <strong>latest available year</strong> per country (not always 2024)</li>
+        <li><strong>Slovakia excluded</strong>: value <code>-0.1</code> caused by accounting adjustments, cannot be represented in a horizontal bar chart</li>
+        <li>Ascending sort by value (lowest to highest)</li>
+        <li>No numerical aggregation: values are the original Eurostat <code>PC_GDP</code> figures</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 660 righe (tutti i paesi EU + Svizzera, Norvegia, Islanda · anni 2000–2024)</li>
         <li>Selezione dell'<strong>ultimo anno disponibile</strong> per ciascun paese (non sempre 2024)</li>
         <li><strong>Esclusa Slovacchia</strong>: valore <code>-0.1</code> causato da rettifiche contabili, non rappresentabile in un grafico a barre orizzontali</li>
@@ -41,25 +48,21 @@
     </div>
 
     <p class="note pt-3">
-      <strong>Come leggere:</strong> Spesa del governo generale (<code>S13</code>) per la funzione
-      "difesa militare" (<code>GF0201 COFOG 1999</code>), espressa come percentuale del PIL.
-      Germania e Francia non riportano dati in questo dataset Eurostat — sono disponibili solo via OECD (vedi Fase D).
-      Il valore negativo della Slovacchia riflette rettifiche contabili nell'anno riportato.
-      Flag <code>p</code> = dato provvisorio. Fonte SDMX: <code>GOV_10A_EXP</code>, Eurostat.
-      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+      <span class="en"><strong>How to read:</strong> General government (<code>S13</code>) spending on "military defence" (<code>GF0201 COFOG 1999</code>), expressed as a percentage of GDP. Germany and France do not report data in this Eurostat dataset — available only via OECD (see Phase D). Slovakia's negative value reflects accounting adjustments in the reported year. Flag <code>p</code> = provisional. SDMX source: <code>GOV_10A_EXP</code>, Eurostat. Chart: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> Spesa del governo generale (<code>S13</code>) per la funzione "difesa militare" (<code>GF0201 COFOG 1999</code>), espressa come percentuale del PIL. Germania e Francia non riportano dati in questo dataset Eurostat — sono disponibili solo via OECD (vedi Fase D). Il valore negativo della Slovacchia riflette rettifiche contabili nell'anno riportato. Flag <code>p</code> = dato provvisorio. Fonte SDMX: <code>GOV_10A_EXP</code>, Eurostat. Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
     </p>
   </section>
 
   <!-- ═══ FASE B ═══ -->
   <section class="section py-5" id="fase-b">
-    <p class="section-label mb-1">Fase B · Eurostat GOV_10A_EXP · 2000–2024</p>
-    <h2 class="mb-2">Serie storica — Paesi selezionati</h2>
+    <p class="section-label mb-1"><span class="en">Phase B · Eurostat GOV_10A_EXP · 2000–2024</span><span class="it">Fase B · Eurostat GOV_10A_EXP · 2000–2024</span></p>
+    <h2 class="mb-2"><span class="en">Time series — Selected countries</span><span class="it">Serie storica — Paesi selezionati</span></h2>
     <p class="subtitle mb-3">
-      % del PIL · 7 paesi con profili strategici diversi · 2000–2024
+      <span class="en">% of GDP · 7 countries with different strategic profiles · 2000–2024</span><span class="it">% del PIL · 7 paesi con profili strategici diversi · 2000–2024</span>
     </p>
 
     <div class="d-flex flex-wrap align-items-center gap-3 mb-4" style="color:var(--ink-light);">
-      <span style="color:var(--ink-faint);">Colori:</span>
+      <span style="color:var(--ink-faint);"><span class="en">Colours:</span><span class="it">Colori:</span></span>
       <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#c0392b"></span>Estonia</span>
       <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#2980b9"></span>Grecia</span>
       <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#27ae60"></span>Polonia</span>
@@ -70,18 +73,24 @@
     </div>
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mb-4">
-      <div class="col"><div class="sm-card"><h4>Estonia — crescita più rapida EU</h4><svg id="viz-EE"></svg></div></div>
-      <div class="col"><div class="sm-card"><h4>Grecia — storicamente elevata</h4><svg id="viz-EL"></svg></div></div>
-      <div class="col"><div class="sm-card"><h4>Polonia — in forte rialzo dal 2022</h4><svg id="viz-PL"></svg></div></div>
-      <div class="col"><div class="sm-card"><h4>Norvegia — graduale aumento</h4><svg id="viz-NO"></svg></div></div>
-      <div class="col"><div class="sm-card"><h4>Svezia — storico neutrale, ora in rialzo</h4><svg id="viz-SE"></svg></div></div>
-      <div class="col"><div class="sm-card"><h4>Italia — sostanzialmente stabile</h4><svg id="viz-IT"></svg></div></div>
-      <div class="col"><div class="sm-card"><h4>Spagna — tra i più bassi</h4><svg id="viz-ES"></svg></div></div>
+      <div class="col"><div class="sm-card"><h4><span class="en">Estonia — fastest growth in EU</span><span class="it">Estonia — crescita più rapida EU</span></h4><svg id="viz-EE"></svg></div></div>
+      <div class="col"><div class="sm-card"><h4><span class="en">Greece — historically high</span><span class="it">Grecia — storicamente elevata</span></h4><svg id="viz-EL"></svg></div></div>
+      <div class="col"><div class="sm-card"><h4><span class="en">Poland — sharply rising since 2022</span><span class="it">Polonia — in forte rialzo dal 2022</span></h4><svg id="viz-PL"></svg></div></div>
+      <div class="col"><div class="sm-card"><h4><span class="en">Norway — gradual increase</span><span class="it">Norvegia — graduale aumento</span></h4><svg id="viz-NO"></svg></div></div>
+      <div class="col"><div class="sm-card"><h4><span class="en">Sweden — historically neutral, now rising</span><span class="it">Svezia — storico neutrale, ora in rialzo</span></h4><svg id="viz-SE"></svg></div></div>
+      <div class="col"><div class="sm-card"><h4><span class="en">Italy — broadly stable</span><span class="it">Italia — sostanzialmente stabile</span></h4><svg id="viz-IT"></svg></div></div>
+      <div class="col"><div class="sm-card"><h4><span class="en">Spain — among the lowest</span><span class="it">Spagna — tra i più bassi</span></h4><svg id="viz-ES"></svg></div></div>
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Same source query as Dataset A (<code>GOV_10A_EXP</code>), filtered at download to 7 countries: <code>IT+PL+ES+SE+EE+EL+NO</code></li>
+        <li>No aggregation: complete time series 2000–2024 for each country</li>
+        <li><code>null</code> values for years without observation: excluded from line (not interpolated)</li>
+        <li>Small multiples: each country in a separate chart, independent Y scale for readability</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Stessa query sorgente del Dataset A (<code>GOV_10A_EXP</code>), filtrata in fase di download su 7 paesi: <code>IT+PL+ES+SE+EE+EL+NO</code></li>
         <li>Nessuna aggregazione: serie temporale completa 2000–2024 per ciascun paese</li>
         <li>Valori <code>null</code> per anni senza osservazione: esclusi dalla linea (non interpolati)</li>
@@ -90,20 +99,27 @@
     </div>
 
     <p class="note pt-3">
-      Valori mancanti (anni senza osservazione) esclusi dalla serie. Germania e Francia non riportano dati in questo dataset Eurostat.
-      Fonte SDMX: <code>GOV_10A_EXP</code>. Grafici: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+      <span class="en">Missing values (years without observation) excluded from series. Germany and France do not report data in this Eurostat dataset. SDMX source: <code>GOV_10A_EXP</code>. Charts: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.</span>
+      <span class="it">Valori mancanti (anni senza osservazione) esclusi dalla serie. Germania e Francia non riportano dati in questo dataset Eurostat. Fonte SDMX: <code>GOV_10A_EXP</code>. Grafici: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.</span>
     </p>
   </section>
 
   <!-- ═══ FASE C ═══ -->
   <section class="section py-5" id="fase-c">
-    <p class="section-label mb-1">Fase C · Eurostat TSC00008 · GBARD · 2014–2025</p>
-    <h2 class="mb-2">R&amp;D governativo allocato alla difesa</h2>
+    <p class="section-label mb-1"><span class="en">Phase C · Eurostat TSC00008 · GBARD · 2014–2025</span><span class="it">Fase C · Eurostat TSC00008 · GBARD · 2014–2025</span></p>
+    <h2 class="mb-2"><span class="en">Government R&amp;D allocated to defence</span><span class="it">R&amp;D governativo allocato alla difesa</span></h2>
     <p class="subtitle mb-4">
-      % del budget R&amp;D governativo (GBARD) destinata alla difesa · Ultimo anno disponibile · 39 paesi
+      <span class="en">% of government R&amp;D budget (GBARD) allocated to defence · Latest available year · 39 countries</span><span class="it">% del budget R&amp;D governativo (GBARD) destinata alla difesa · Ultimo anno disponibile · 39 paesi</span>
     </p>
 
-    <div class="callout p-3 mb-4">
+    <div class="callout p-3 mb-4 en">
+      <strong>What is GBARD?</strong> "Government Budget Appropriations or Outlays for R&amp;D" —
+      measures R&amp;D budget <em>allocations</em>, not actual expenditure.
+      The value shows what share of the government R&amp;D budget goes to defence (military research,
+      weapons development, etc.). A US value of 52% means more than half of American government
+      research is military in nature.
+    </div>
+    <div class="callout p-3 mb-4 it">
       <strong>Che cos'è il GBARD?</strong> "Government Budget Appropriations or Outlays for R&amp;D" —
       misura gli <em>stanziamenti</em> di bilancio per R&amp;D, non la spesa effettiva realizzata.
       Il valore mostra quanta parte del budget R&amp;D governativo va alla difesa (ricerca militare,
@@ -111,19 +127,26 @@
       ricerca governativa americana è di natura militare.
     </div>
 
-    <h3 class="subsection-title mt-4 mb-3">Tutti i paesi — ranking globale</h3>
+    <h3 class="subsection-title mt-4 mb-3"><span class="en">All countries — global ranking</span><span class="it">Tutti i paesi — ranking globale</span></h3>
     <div class="chart-wrap mb-4">
       <div id="chart-all"></div>
     </div>
 
-    <h3 class="subsection-title mt-4 mb-3">Focus paesi europei (esclusi USA, Corea del Sud, UK, Giappone)</h3>
+    <h3 class="subsection-title mt-4 mb-3"><span class="en">Focus on European countries (excl. USA, South Korea, UK, Japan)</span><span class="it">Focus paesi europei (esclusi USA, Corea del Sud, UK, Giappone)</span></h3>
     <div class="chart-wrap mb-4">
       <div id="chart-eu"></div>
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 39 countries × years 2014–2025 (disaggregated series by country and year)</li>
+        <li>For the chart: selected the <strong>latest available year</strong> per country (varies: some have 2024 data, others stop at 2021–2023)</li>
+        <li>Descending sort by value (highest to lowest)</li>
+        <li>'All countries' and 'EU only' charts built from the same array, filtered to exclude USA, UK, South Korea, Japan, Turkey</li>
+        <li>No aggregation: <code>PC_GBA</code> is already a native percentage value in the dataset</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 39 paesi × anni 2014–2025 (serie disaggregata per paese e anno)</li>
         <li>Per il grafico: selezionato l'<strong>ultimo anno disponibile</strong> per ciascun paese (varia: alcuni hanno dati 2024, altri si fermano al 2021–2023)</li>
         <li>Ordinamento decrescente per valore (dal più alto al più basso)</li>
@@ -133,33 +156,38 @@
     </div>
 
     <p class="note pt-3">
-      Fonte SDMX: <code>TSC00008</code>, Eurostat. Codice NABS 2007: <code>NABS14</code> (difesa).
-      Unità: <code>PC_GBA</code> (% del totale GBARD). Flag <code>d</code> = definizione divergente dalla standard.
-      Grafici: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+      <span class="en">SDMX source: <code>TSC00008</code>, Eurostat. NABS 2007 code: <code>NABS14</code> (defence). Unit: <code>PC_GBA</code> (% of total GBARD). Flag <code>d</code> = definition deviates from standard. Charts: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.</span>
+      <span class="it">Fonte SDMX: <code>TSC00008</code>, Eurostat. Codice NABS 2007: <code>NABS14</code> (difesa). Unità: <code>PC_GBA</code> (% del totale GBARD). Flag <code>d</code> = definizione divergente dalla standard. Grafici: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.</span>
     </p>
   </section>
 
   <!-- ═══ FASE D ═══ -->
   <section class="section py-5" id="fase-d">
-    <p class="section-label mb-1">Fase D · OECD NASEC10 DF_TABLE11 · 2005–2024</p>
-    <h2 class="mb-2">Confronto globale — Crescita relativa della spesa</h2>
+    <p class="section-label mb-1"><span class="en">Phase D · OECD NASEC10 DF_TABLE11 · 2005–2024</span><span class="it">Fase D · OECD NASEC10 DF_TABLE11 · 2005–2024</span></p>
+    <h2 class="mb-2"><span class="en">Global comparison — Relative growth in spending</span><span class="it">Confronto globale — Crescita relativa della spesa</span></h2>
     <p class="subtitle mb-4">
-      Indice 2015 = 100 · Valuta nazionale corrente · Governo generale (S13) · 9 paesi
+      <span class="en">Index 2015 = 100 · Current national currency · General government (S13) · 9 countries</span><span class="it">Indice 2015 = 100 · Valuta nazionale corrente · Governo generale (S13) · 9 paesi</span>
     </p>
 
-    <div class="callout p-3 mb-4">
+    <div class="callout p-3 mb-4 en">
+      <strong>How to read the index:</strong> OECD data are in national currency (XDC), not directly comparable
+      across countries. The 2015=100 index shows <em>relative growth</em>: a value of 200 means spending
+      has doubled since 2015, regardless of currency.
+      Germany and France are available here but not in the Eurostat dataset (Phases A and B).
+    </div>
+    <div class="callout p-3 mb-4 it">
       <strong>Come leggere l'indice:</strong> I dati OECD sono in valuta nazionale (XDC), non comparabili
       direttamente tra paesi. L'indice 2015=100 mostra la <em>crescita relativa</em>: un valore
       di 200 significa che la spesa è raddoppiata rispetto al 2015, indipendentemente dalla valuta.
       Germania e Francia sono disponibili qui ma non nel dataset Eurostat (Fasi A e B).
     </div>
 
-    <h3 class="subsection-title mt-4 mb-3">Indice spesa 2024 (base 2015 = 100) — tutti i paesi</h3>
+    <h3 class="subsection-title mt-4 mb-3"><span class="en">Spending index 2024 (base 2015 = 100) — all countries</span><span class="it">Indice spesa 2024 (base 2015 = 100) — tutti i paesi</span></h3>
     <div class="chart-wrap mb-4">
       <div id="chart-est"></div>
     </div>
 
-    <h3 class="subsection-title mt-4 mb-3">Variazione % della spesa militare dal 2015 al 2024</h3>
+    <h3 class="subsection-title mt-4 mb-3"><span class="en">% change in military spending from 2015 to 2024</span><span class="it">Variazione % della spesa militare dal 2015 al 2024</span></h3>
     <div class="chart-wrap mb-4">
       <div id="chart-west"></div>
     </div>
@@ -168,30 +196,38 @@
       <table class="data-table table table-bordered table-sm">
         <thead>
           <tr>
-            <th>Paese</th>
-            <th>Indice 2024 (o ultimo disponibile)</th>
-            <th>Variazione % da 2015</th>
-            <th>Note</th>
+            <th><span class="en">Country</span><span class="it">Paese</span></th>
+            <th><span class="en">Index 2024 (or latest available)</span><span class="it">Indice 2024 (o ultimo disponibile)</span></th>
+            <th><span class="en">% change from 2015</span><span class="it">Variazione % da 2015</span></th>
+            <th><span class="en">Notes</span><span class="it">Note</span></th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>Svezia</td><td>249 (2024)</td><td>+149%</td><td>Massimo del campione; ingresso NATO 2024</td></tr>
-          <tr><td>Polonia</td><td>235 (2023)</td><td>+135%</td><td>Crescita accelerata dopo 2022</td></tr>
-          <tr><td>Norvegia</td><td>226 (2024)</td><td>+126%</td><td>Graduale ma costante</td></tr>
-          <tr><td>Germania</td><td>177 (2024)</td><td>+77%</td><td>Sondervermögen (fondo speciale 100 mld €) visibile dal 2022</td></tr>
-          <tr><td>Giappone</td><td>173 (2024)</td><td>+73%</td><td>Forte accelerazione dal 2022; obiettivo 2% PIL al 2027</td></tr>
+          <tr><td><span class="en">Sweden</span><span class="it">Svezia</span></td><td>249 (2024)</td><td>+149%</td><td><span class="en">Highest in sample; NATO accession 2024</span><span class="it">Massimo del campione; ingresso NATO 2024</span></td></tr>
+          <tr><td><span class="en">Poland</span><span class="it">Polonia</span></td><td>235 (2023)</td><td>+135%</td><td><span class="en">Accelerated growth after 2022</span><span class="it">Crescita accelerata dopo 2022</span></td></tr>
+          <tr><td><span class="en">Norway</span><span class="it">Norvegia</span></td><td>226 (2024)</td><td>+126%</td><td><span class="en">Gradual but steady</span><span class="it">Graduale ma costante</span></td></tr>
+          <tr><td><span class="en">Germany</span><span class="it">Germania</span></td><td>177 (2024)</td><td>+77%</td><td><span class="en">Sondervermögen (€100bn special fund) visible from 2022</span><span class="it">Sondervermögen (fondo speciale 100 mld €) visibile dal 2022</span></td></tr>
+          <tr><td><span class="en">Japan</span><span class="it">Giappone</span></td><td>173 (2024)</td><td>+73%</td><td><span class="en">Sharp acceleration from 2022; 2% GDP target by 2027</span><span class="it">Forte accelerazione dal 2022; obiettivo 2% PIL al 2027</span></td></tr>
           <tr><td>UK</td><td>163 (2024)</td><td>+63%</td><td></td></tr>
-          <tr><td>Francia</td><td>145 (2024)</td><td>+45%</td><td>LPM (Loi de Programmation Militaire) 2024–2030</td></tr>
-          <tr><td>Italia</td><td>142 (2024)</td><td>+42%</td><td></td></tr>
-          <tr><td>Spagna</td><td>128 (2024)</td><td>+28%</td><td>Crescita più lenta; obiettivo 2% PIL sotto pressione NATO</td></tr>
-          <tr><td>Australia</td><td>—</td><td>—</td><td>Dati zero nel dataset OECD</td></tr>
+          <tr><td><span class="en">France</span><span class="it">Francia</span></td><td>145 (2024)</td><td>+45%</td><td>LPM (Loi de Programmation Militaire) 2024–2030</td></tr>
+          <tr><td><span class="en">Italy</span><span class="it">Italia</span></td><td>142 (2024)</td><td>+42%</td><td></td></tr>
+          <tr><td><span class="en">Spain</span><span class="it">Spagna</span></td><td>128 (2024)</td><td>+28%</td><td><span class="en">Slowest growth; 2% GDP target under NATO pressure</span><span class="it">Crescita più lenta; obiettivo 2% PIL sotto pressione NATO</span></td></tr>
+          <tr><td>Australia</td><td>—</td><td>—</td><td><span class="en">Zero data in OECD dataset</span><span class="it">Dati zero nel dataset OECD</span></td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 198 rows (9 countries × years 2005–2024) in <strong>current national currency</strong> (<code>XDC</code>) — not directly comparable across countries</li>
+        <li>Main transformation: calculation of the <strong>2015=100 index</strong> per country: <code>index_year = (value_year / value_2015) × 100</code></li>
+        <li>Percentage change: <code>(value_2024 − value_2015) / value_2015 × 100</code></li>
+        <li>Australia excluded from charts: zero data in OECD dataset for <code>GF0201</code></li>
+        <li>Chart 1 (index 2024): horizontal bars with index value for all 9 countries</li>
+        <li>Chart 2 (% change): same data expressed as percentage change from 2015</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 198 righe (9 paesi × anni 2005–2024) in <strong>valuta nazionale corrente</strong> (<code>XDC</code>) — non confrontabili direttamente tra paesi</li>
         <li>Trasformazione principale: calcolo dell'<strong>indice 2015=100</strong> per ciascun paese: <code>indice_anno = (valore_anno / valore_2015) × 100</code></li>
         <li>Variazione percentuale: <code>(valore_2024 − valore_2015) / valore_2015 × 100</code></li>
@@ -202,10 +238,8 @@
     </div>
 
     <p class="note pt-3">
-      Fonte SDMX: <code>OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11</code> (provider OECD).
-      Transazione <code>OTE</code> · Settore <code>S13</code> · COFOG <code>GF0201</code>.
-      USA e Corea del Sud non presenti in questo dataset — per questi paesi vedi Fase C (R&amp;D difesa).
-      Grafici: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+      <span class="en">SDMX source: <code>OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11</code> (OECD provider). Transaction <code>OTE</code> · Sector <code>S13</code> · COFOG <code>GF0201</code>. USA and South Korea not in this dataset — for these countries see Phase C (defence R&amp;D). Charts: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.</span>
+      <span class="it">Fonte SDMX: <code>OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11</code> (provider OECD). Transazione <code>OTE</code> · Settore <code>S13</code> · COFOG <code>GF0201</code>. USA e Corea del Sud non presenti in questo dataset — per questi paesi vedi Fase C (R&amp;D difesa). Grafici: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.</span>
     </p>
   </section>
 
@@ -218,9 +252,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 initShell({
-  title:  "Spesa militare e industria della difesa",
-  date:   "8 aprile 2026",
-  intro:  "Analisi della spesa pubblica per la difesa militare in Europa e nel mondo, basata su dati statistici istituzionali (Eurostat e OECD) in formato SDMX. I dati coprono la domanda pubblica di difesa — la proxy statistica più affidabile disponibile in formato aperto per l'industria degli armamenti.",
+  title:     "Spesa militare e industria della difesa",
+  title_en:  "Military Spending and the Defence Industry",
+  date:      "8 aprile 2026",
+  date_en:   "8 April 2026",
+  intro:     "Analisi della spesa pubblica per la difesa militare in Europa e nel mondo, basata su dati statistici istituzionali (Eurostat e OECD) in formato SDMX. I dati coprono la domanda pubblica di difesa — la proxy statistica più affidabile disponibile in formato aperto per l'industria degli armamenti.",
+  intro_en:  "Analysis of public expenditure on military defence in Europe and worldwide, based on institutional statistical data (Eurostat and OECD) in SDMX format. The data cover public demand for defence — the most reliable statistical proxy available in open format for the arms industry.",
   badges: [
     { label: "Eurostat", value: "GOV_10A_EXP" },
     { label: "Eurostat", value: "TSC00008" },
@@ -230,40 +267,43 @@ initShell({
     { label: "Grafici", value: "roughViz · chart.xkcd" }
   ],
   nav: [
-    { id: "fase-a", label: "A — Ranking EU" },
-    { id: "fase-b", label: "B — Serie storica" },
-    { id: "fase-c", label: "C — R&amp;D difesa" },
-    { id: "fase-d", label: "D — Confronto OECD" }
+    { id: "fase-a", label: "A — Ranking EU",     label_en: "A — EU Ranking" },
+    { id: "fase-b", label: "B — Serie storica",  label_en: "B — Time series" },
+    { id: "fase-c", label: "C — R&amp;D difesa", label_en: "C — Defence R&D" },
+    { id: "fase-d", label: "D — Confronto OECD", label_en: "D — OECD comparison" }
   ],
-  introTitle:    "Cosa misuriamo e perché",
-  introSubtitle: "I provider SDMX pubblicano aggregati macroeconomici, non dati su singole aziende. Queste analisi misurano la domanda pubblica di difesa.",
+  introTitle:       "Cosa misuriamo e perché",
+  introTitle_en:    "What we measure and why",
+  introSubtitle:    "I provider SDMX pubblicano aggregati macroeconomici, non dati su singole aziende. Queste analisi misurano la domanda pubblica di difesa.",
+  introSubtitle_en: "SDMX providers publish macroeconomic aggregates, not data on individual companies. These analyses measure public demand for defence.",
   scopeLimit:    'I dati SDMX (Eurostat, OECD) non contengono informazioni su singole aziende produttrici di armi. Per dati su BAE Systems, Leonardo, Rheinmetall ecc. la fonte è il <a href="https://www.sipri.org/databases/armsindustry">SIPRI Arms Industry Database</a>. Questi grafici misurano la <strong>spesa governativa per la difesa</strong>, che rappresenta la domanda pubblica a cui l\'industria risponde.',
+  scopeLimit_en: 'SDMX data (Eurostat, OECD) contain no information on individual arms manufacturers. For data on BAE Systems, Leonardo, Rheinmetall etc. the source is the <a href="https://www.sipri.org/databases/armsindustry">SIPRI Arms Industry Database</a>. These charts measure <strong>government spending on defence</strong>, which represents the public demand to which industry responds.',
   findingCards: [
-    { value: "52%",  color: "default", label: "<strong>USA</strong> — quota del budget R&amp;D governativo destinata alla difesa militare (2024)" },
-    { value: "3.6%", color: "default", label: "<strong>Estonia</strong> — record EU per spesa militare in % del PIL (2024), da 1.1% nel 2000" },
-    { value: "249",  color: "blue",    label: "<strong>Svezia</strong> — indice spesa militare 2024 (base 2015=100): quasi triplicata in 9 anni" },
-    { value: "0.6%", color: "blue",    label: "<strong>Italia</strong> — % GBARD per R&amp;D militare, tra i più bassi d'Europa occidentale" }
+    { value: "52%",  color: "default", label: "<strong>USA</strong> — quota del budget R&amp;D governativo destinata alla difesa militare (2024)",  label_en: "<strong>USA</strong> — share of government R&D budget allocated to military defence (2024)" },
+    { value: "3.6%", color: "default", label: "<strong>Estonia</strong> — record EU per spesa militare in % del PIL (2024), da 1.1% nel 2000",       label_en: "<strong>Estonia</strong> — EU record for military spending as % of GDP (2024), up from 1.1% in 2000" },
+    { value: "249",  color: "blue",    label: "<strong>Svezia</strong> — indice spesa militare 2024 (base 2015=100): quasi triplicata in 9 anni",    label_en: "<strong>Sweden</strong> — military spending index 2024 (base 2015=100): almost tripled in 9 years" },
+    { value: "0.6%", color: "blue",    label: "<strong>Italia</strong> — % GBARD per R&amp;D militare, tra i più bassi d'Europa occidentale",        label_en: "<strong>Italy</strong> — % GBARD for military R&D, among the lowest in Western Europe" }
   ],
   rawData: {
     license:        '<a href="https://ec.europa.eu/eurostat/web/main/about/our-partner-organisations/legal-notice">CC BY 4.0</a> (Eurostat); <a href="https://www.oecd.org/termsandconditions/">CC BY-NC-SA 3.0</a> (OECD)',
     extractionDate: "8 aprile 2026",
     files: [
-      { provider: "Dataset A · Eurostat", datasetId: "GOV_10A_EXP",             desc: "Spesa militare % PIL — EU",            rows: 660,    period: "27 paesi · 2000–2024",          file: "output/A_spesa_militare_pil_eu.csv" },
-      { provider: "Dataset B · Eurostat", datasetId: "GOV_10A_EXP (filtrato)",  desc: "Paesi selezionati — serie storica",    rows: 7,      period: "IT PL ES SE EE EL NO · 2000–2024", file: "output/B_spesa_militare_paesi_selezionati.csv" },
-      { provider: "Dataset C · Eurostat", datasetId: "TSC00008",                desc: "R&amp;D difesa — % budget GBARD",      rows: 39,     period: "2014–2025",                     file: "output/C_rd_difesa.csv" },
-      { provider: "Dataset D · OECD",     datasetId: "NASEC10 DF_TABLE11",      desc: "Spesa militare — valuta locale",       rows: 198,    period: "9 paesi · 2005–2024",           file: "output/D_spesa_militare_oecd.csv" },
-      { provider: "Metadati · Eurostat",  datasetId: "",                         desc: "Codelist COFOG 1999",                  rows: 80,     period: "classificazione spesa pubblica", file: "metadata/cofog99_codes.csv" }
+      { provider: "Dataset A · Eurostat", datasetId: "GOV_10A_EXP",            desc: "Spesa militare % PIL — EU",         desc_en: "Military spending % GDP — EU",         rows: 660, period: "27 paesi · 2000–2024",             file: "output/A_spesa_militare_pil_eu.csv" },
+      { provider: "Dataset B · Eurostat", datasetId: "GOV_10A_EXP (filtrato)", desc: "Paesi selezionati — serie storica", desc_en: "Selected countries — time series",    rows: 7,   period: "IT PL ES SE EE EL NO · 2000–2024",  file: "output/B_spesa_militare_paesi_selezionati.csv" },
+      { provider: "Dataset C · Eurostat", datasetId: "TSC00008",               desc: "R&amp;D difesa — % budget GBARD",  desc_en: "Defence R&D — % GBARD budget",         rows: 39,  period: "2014–2025",                         file: "output/C_rd_difesa.csv" },
+      { provider: "Dataset D · OECD",     datasetId: "NASEC10 DF_TABLE11",     desc: "Spesa militare — valuta locale",   desc_en: "Military spending — local currency",   rows: 198, period: "9 paesi · 2005–2024",               file: "output/D_spesa_militare_oecd.csv" },
+      { provider: "Metadati · Eurostat",  datasetId: "",                        desc: "Codelist COFOG 1999",              desc_en: "COFOG 1999 codelist",                  rows: 80,  period: "classificazione spesa pubblica",    file: "metadata/cofog99_codes.csv" }
     ]
   },
   methodology: {
     githubUrl: "https://github.com/datapitch-it/automatic-reports/tree/main/reports/02_spesa-militare",
     classifications: [
-      { code: "GF0201",  system: "COFOG 1999",  meaning: "Difesa militare (esclude difesa civile e aiuti militari esteri)" },
-      { code: "S13",     system: "SEC 2010",    meaning: "Governo generale (centrale + locale + previdenziale)" },
-      { code: "PC_GDP",  system: "Eurostat",    meaning: "Percentuale del PIL — preferita per confronti internazionali" },
-      { code: "NABS14",  system: "NABS 2007",   meaning: "Difesa nel sistema di classificazione R&amp;D" },
-      { code: "PC_GBA",  system: "Eurostat",    meaning: "% del budget R&amp;D governativo totale (GBARD)" },
-      { code: "XDC",     system: "OECD",        meaning: "Valuta nazionale corrente (non confrontabile tra paesi)" }
+      { code: "GF0201", system: "COFOG 1999", meaning: "Difesa militare (esclude difesa civile e aiuti militari esteri)", meaning_en: "Military defence (excl. civil defence and foreign military aid)" },
+      { code: "S13",    system: "SEC 2010",   meaning: "Governo generale (centrale + locale + previdenziale)",            meaning_en: "General government (central + local + social security)" },
+      { code: "PC_GDP", system: "Eurostat",   meaning: "Percentuale del PIL — preferita per confronti internazionali",    meaning_en: "Percentage of GDP — preferred for international comparisons" },
+      { code: "NABS14", system: "NABS 2007",  meaning: "Difesa nel sistema di classificazione R&amp;D",                  meaning_en: "Defence in the R&D classification system" },
+      { code: "PC_GBA", system: "Eurostat",   meaning: "% del budget R&amp;D governativo totale (GBARD)",                meaning_en: "% of total government R&D budget (GBARD)" },
+      { code: "XDC",    system: "OECD",       meaning: "Valuta nazionale corrente (non confrontabile tra paesi)",         meaning_en: "Current national currency (not comparable across countries)" }
     ],
     apiUrls: [
       {
@@ -279,7 +319,8 @@ initShell({
         url:       "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TSC00008/A.NABS14.PC_GBA./ALL/?startPeriod=2014&amp;endPeriod=2025&amp;format=SDMX-CSV"
       }
     ],
-    extra: '  <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">Dataset D — OECD NASEC10 DF_TABLE11 (spesa militare valuta locale)</p>\n  <div class="query-url p-2 mb-4" style="color:var(--ink-faint);">\n    Non disponibile come URL diretto — il provider OECD SDMX 2.1 richiede autenticazione o CLI.<br>\n    <strong>Comando opensdmx:</strong><br>\n    opensdmx get "OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11" --provider oecd --FREQ A --REF_AREA "DEU+FRA+GBR+JPN+ITA+POL+ESP+SWE+NOR" --SECTOR S13 --EXPENDITURE GF0201 --TRANSACTION OTE --start-period 2005 --end-period 2024 --out output/D_spesa_militare_oecd.csv\n  </div>',
+    extra:    '  <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">Dataset D — OECD NASEC10 DF_TABLE11 (spesa militare valuta locale)</p>\n  <div class="query-url p-2 mb-4" style="color:var(--ink-faint);">\n    Non disponibile come URL diretto — il provider OECD SDMX 2.1 richiede autenticazione o CLI.<br>\n    <strong>Comando opensdmx:</strong><br>\n    opensdmx get "OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11" --provider oecd --FREQ A --REF_AREA "DEU+FRA+GBR+JPN+ITA+POL+ESP+SWE+NOR" --SECTOR S13 --EXPENDITURE GF0201 --TRANSACTION OTE --start-period 2005 --end-period 2024 --out output/D_spesa_militare_oecd.csv\n  </div>',
+    extra_en: '  <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">Dataset D — OECD NASEC10 DF_TABLE11 (military spending, local currency)</p>\n  <div class="query-url p-2 mb-4" style="color:var(--ink-faint);">\n    Not available as a direct URL — the OECD SDMX 2.1 provider requires authentication or CLI.<br>\n    <strong>opensdmx command:</strong><br>\n    opensdmx get "OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11" --provider oecd --FREQ A --REF_AREA "DEU+FRA+GBR+JPN+ITA+POL+ESP+SWE+NOR" --SECTOR S13 --EXPENDITURE GF0201 --TRANSACTION OTE --start-period 2005 --end-period 2024 --out output/D_spesa_militare_oecd.csv\n  </div>',
     cliHeader: "Fase",
     cliCommands: [
       { dataset: "A + B", command: "opensdmx run spesa_militare_eu_pil.yaml --out output/A_refresh.csv" },
@@ -287,14 +328,15 @@ initShell({
       { dataset: "D",     command: 'opensdmx get "OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11" --provider oecd --FREQ A --REF_AREA "DEU+FRA+GBR+JPN+ITA+POL+ESP+SWE+NOR" --SECTOR S13 --EXPENDITURE GF0201 --TRANSACTION OTE --start-period 2005 --end-period 2024 --out output/D_refresh.csv' }
     ],
     files: [
-      { file: "output/A_spesa_militare_pil_eu.csv",             desc: "660 righe · 27 paesi · % PIL · 2000–2024" },
-      { file: "output/B_spesa_militare_paesi_selezionati.csv",  desc: "7 paesi · serie storica completa" },
-      { file: "output/C_rd_difesa.csv",                         desc: "39 paesi · % GBARD · 2014–2025" },
-      { file: "output/D_spesa_militare_oecd.csv",               desc: "198 righe · 9 paesi · valuta locale · 2005–2024" },
-      { file: "metadata/cofog99_codes.csv",                     desc: "80 codici COFOG con label" }
+      { file: "output/A_spesa_militare_pil_eu.csv",            desc: "660 righe · 27 paesi · % PIL · 2000–2024" },
+      { file: "output/B_spesa_militare_paesi_selezionati.csv", desc: "7 paesi · serie storica completa" },
+      { file: "output/C_rd_difesa.csv",                        desc: "39 paesi · % GBARD · 2014–2025" },
+      { file: "output/D_spesa_militare_oecd.csv",              desc: "198 righe · 9 paesi · valuta locale · 2005–2024" },
+      { file: "metadata/cofog99_codes.csv",                    desc: "80 codici COFOG con label" }
     ]
   },
-  providers: "Eurostat · OECD",
+  providers:    "Eurostat · OECD",
+  providers_en: "Eurostat · OECD",
   github: "https://github.com/datapitch-it/automatic-reports"
 });
 
@@ -459,5 +501,6 @@ new roughViz.BarH({
 });
 </script>
 
+<script src="../../assets/lang.js"></script>
 </body>
 </html>

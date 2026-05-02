@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,12 +20,19 @@
   <!-- ═══ SEZIONE A: OCCUPAZIONE ═══ -->
   <section class="section py-5" id="occupazione">
     <p class="section-label mb-1">Fase A · Eurostat CULT_EMP_N2 · nace_r2 (J58, J59, J60)</p>
-    <h2 class="mb-2">Chi lavora nel settore media? Tredici anni di trasformazione</h2>
+    <h2 class="mb-2"><span class="en">Who works in the media sector? Thirteen years of transformation</span><span class="it">Chi lavora nel settore media? Tredici anni di trasformazione</span></h2>
     <p class="subtitle mb-4">
-      Migliaia di persone occupate · Attività NACE Rev.2 · EU27 + 35 paesi europei · 2011–2024 · frequenza annuale
+      <span class="en">Thousands of employed persons · NACE Rev.2 activities · EU27 + 35 European countries · 2011–2024 · annual frequency</span><span class="it">Migliaia di persone occupate · Attività NACE Rev.2 · EU27 + 35 paesi europei · 2011–2024 · frequenza annuale</span>
     </p>
 
-    <div class="callout p-3 mb-4">
+    <div class="callout p-3 mb-4 en">
+      <strong>What NACE measures:</strong> The NACE Rev.2 classification groups economic activities into standardised European codes.
+      <strong>J58</strong> covers publishers of newspapers, magazines, books and software;
+      <strong>J59</strong> the production of films, TV series, radio programmes and music recordings;
+      <strong>J60</strong> television and radio broadcasting channels. These three categories together
+      represent the employment core of the media and information sector.
+    </div>
+    <div class="callout p-3 mb-4 it">
       <strong>Cosa misura NACE:</strong> La classificazione NACE Rev.2 raggruppa le attività economiche in codici
       standardizzati a livello europeo. <strong>J58</strong> comprende editori di giornali, riviste, libri e software;
       <strong>J59</strong> la produzione di film, serie TV, programmi radio e registrazioni musicali;
@@ -34,46 +41,59 @@
     </div>
 
     <!-- Chart 1: Trend EU27 -->
-    <p class="chart-title-label">EU27 — Tendenza 2011–2024 per settore</p>
+    <p class="chart-title-label"><span class="en">EU27 — Trend 2011–2024 by sector</span><span class="it">EU27 — Tendenza 2011–2024 per settore</span></p>
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> Le tre linee mostrano l'andamento annuale degli occupati (in migliaia) in ciascun
+      <span class="en"><strong>How to read:</strong> The three lines show the annual trend of employed persons (in thousands) in each sector across the entire EU27. The divergence between publishing (in structural decline) and audiovisual production (in continuous growth, with a post-Covid rebound in 2021) is the central story of this chart. Broadcasting remains broadly stable. SDMX source: <code>CULT_EMP_N2</code>, Eurostat.
+      Chart: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> Le tre linee mostrano l'andamento annuale degli occupati (in migliaia) in ciascun
       settore nell'intera UE27. La divergenza tra editoria (in calo strutturale) e produzione audiovisiva (in crescita
       continua, con un rimbalzo post-Covid nel 2021) è la storia centrale di questo grafico. Il broadcasting rimane
       sostanzialmente stabile. Fonte SDMX: <code>CULT_EMP_N2</code>, Eurostat.
-      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.
+      Grafico: <a href="https://github.com/timqian/chart.xkcd">chart.xkcd</a>.</span>
     </p>
     <div class="chart-wrap mb-4">
       <svg id="chart-trend" style="min-height:400px;"></svg>
     </div>
 
     <!-- Chart 2: Ranking paesi 2024 -->
-    <p class="chart-title-label mt-5">Top 12 paesi per occupazione totale nel media 2024 (J58+J59+J60)</p>
+    <p class="chart-title-label mt-5"><span class="en">Top 12 countries by total media employment 2024 (J58+J59+J60)</span><span class="it">Top 12 paesi per occupazione totale nel media 2024 (J58+J59+J60)</span></p>
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> Totale delle persone occupate nei tre settori media (editoria + produzione audiovisiva
+      <span class="en"><strong>How to read:</strong> Total employed persons in the three media sectors (publishing + audiovisual production + broadcasting) in the most recent available year (2024). Germany dominates with almost 300,000 employed, followed by France and Spain. Italy is fourth with 101,400. Values are in thousands of persons.
+      SDMX source: <code>CULT_EMP_N2</code>, Eurostat. Chart: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> Totale delle persone occupate nei tre settori media (editoria + produzione audiovisiva
       + broadcasting) nell'anno più recente disponibile (2024). La Germania domina con quasi 300.000 occupati, seguita
       da Francia e Spagna. L'Italia è quarta con 101.400. I valori sono in migliaia di persone.
-      Fonte SDMX: <code>CULT_EMP_N2</code>, Eurostat. Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+      Fonte SDMX: <code>CULT_EMP_N2</code>, Eurostat. Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
     </p>
     <div class="chart-wrap mb-4">
       <div id="chart-ranking"></div>
     </div>
 
     <!-- Chart 3: Declino editoria J58 -->
-    <p class="chart-title-label mt-5">Paesi con il maggior crollo nell'editoria (J58) dal 2011 al 2024</p>
+    <p class="chart-title-label mt-5"><span class="en">Countries with the largest decline in publishing (J58) from 2011 to 2024</span><span class="it">Paesi con il maggior crollo nell'editoria (J58) dal 2011 al 2024</span></p>
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> Le barre mostrano la <em>magnitudine del calo percentuale</em> degli occupati
+      <span class="en"><strong>How to read:</strong> The bars show the <em>magnitude of the percentage decline</em> in publishing employment (NACE J58) between 2011 and 2024. All values are losses: a value of 53 means the country lost over half of its publishing sector workers. Only the 12 countries with the most pronounced decline are shown. Countries with missing data for either year are excluded.
+      SDMX source: <code>CULT_EMP_N2</code>, Eurostat. Chart: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> Le barre mostrano la <em>magnitudine del calo percentuale</em> degli occupati
       nell'editoria (NACE J58) tra il 2011 e il 2024. Tutti i valori sono perdite: un valore di 53 significa che il
       paese ha perso oltre la metà degli occupati nel settore editoriale. Sono mostrati solo i 12 paesi con il calo
       più pronunciato. I paesi con dati non disponibili per entrambi gli anni sono esclusi.
-      Fonte SDMX: <code>CULT_EMP_N2</code>, Eurostat. Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+      Fonte SDMX: <code>CULT_EMP_N2</code>, Eurostat. Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
     </p>
     <div class="chart-wrap mb-4">
       <div id="chart-decline"></div>
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 1,961 rows (36 countries × 4 NACE codes × 14 years, with gaps)</li>
+        <li>Trend chart: filtered on <code>geo = EU27_2020</code>, codes <code>J58, J59, J60</code>; <code>null</code> values excluded from points</li>
+        <li>Ranking chart: filtered on year <code>2024</code>, sum of J58+J59+J60 per country; <code>EU27_2020</code> excluded (aggregate); top 12 by value</li>
+        <li>Decline chart: calculated <code>change% = (val_2024 − val_2011) / val_2011 × 100</code> for J58; absolute magnitude (|change%|) shown for the 12 countries with the largest decline; countries with missing data in either year and <code>EU27_2020</code> excluded</li>
+        <li>No additional aggregation beyond the original API</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 1.961 righe (36 paesi × 4 codici NACE × 14 anni, con lacune)</li>
         <li>Grafico trend: filtrato su <code>geo = EU27_2020</code>, codici <code>J58, J59, J60</code>; valori <code>null</code> esclusi dai punti</li>
         <li>Grafico ranking: filtrato su anno <code>2024</code>, somma di J58+J59+J60 per paese; escluso <code>EU27_2020</code> (aggregato); top 12 per valore</li>
@@ -86,12 +106,18 @@
   <!-- ═══ SEZIONE B: LETTORI PER ETÀ ═══ -->
   <section class="section py-5" id="eta">
     <p class="section-label mb-1">Fase B · Eurostat CULT_PCS_NWA · dimensione: age</p>
-    <h2 class="mb-2">Chi legge i giornali? Il profilo per età</h2>
+    <h2 class="mb-2"><span class="en">Who reads newspapers? The age profile</span><span class="it">Chi legge i giornali? Il profilo per età</span></h2>
     <p class="subtitle mb-4">
-      Percentuale di popolazione per fascia d'età · Lettura giornaliera di quotidiani · Media su 23 paesi europei · 2011
+      <span class="en">Percentage of population by age group · Daily newspaper reading · Average across 23 European countries · 2011</span><span class="it">Percentuale di popolazione per fascia d'età · Lettura giornaliera di quotidiani · Media su 23 paesi europei · 2011</span>
     </p>
 
-    <div class="callout p-3 mb-4">
+    <div class="callout p-3 mb-4 en">
+      <strong>What this dataset measures:</strong> The share of people — within each age group — who reported reading
+      a newspaper <em>every day</em> in the 12 months before the interview.
+      This is a sample survey (EU-LFS + ad hoc modules), not administrative data.
+      Note: the data stops at 2011 and does not include reading news on websites, apps or social media.
+    </div>
+    <div class="callout p-3 mb-4 it">
       <strong>Cosa misura questo dataset:</strong> La quota di persone — all'interno di ciascuna fascia d'età —
       che dichiarava di leggere un quotidiano <em>ogni giorno</em> negli ultimi 12 mesi prima dell'intervista.
       Si tratta di un'indagine campionaria (EU-LFS + moduli ad hoc), non di dati amministrativi.
@@ -99,19 +125,28 @@
     </div>
 
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> Le quattro barre mostrano la percentuale di lettori giornalieri per fascia
+      <span class="en"><strong>How to read:</strong> The four bars show the percentage of daily readers by age group, calculated as an unweighted average across 23 European countries in 2011. The age groups are non-overlapping (25-34, 35-44, 45-54, 55-64 years). The difference between young adults and mature adults is small: about 3 percentage points. SDMX source: <code>CULT_PCS_NWA</code>, Eurostat.
+      Chart: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> Le quattro barre mostrano la percentuale di lettori giornalieri per fascia
       d'età, calcolata come media non ponderata su 23 paesi europei nel 2011. Le fasce sono non-sovrapposte
       (25-34, 35-44, 45-54, 55-64 anni). La differenza tra giovani adulti e adulti maturi è contenuta:
       circa 3 punti percentuali. Fonte SDMX: <code>CULT_PCS_NWA</code>, Eurostat.
-      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
     </p>
     <div class="chart-wrap mb-4">
       <div id="chart-age"></div>
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 2,249 rows (25 countries × 8 age groups × 7 frequencies × 2 years)</li>
+        <li>Filtered on year <code>2011</code> and frequency <code>DAY</code> (daily reading)</li>
+        <li>Selected the 4 non-overlapping age groups: <code>Y25-34, Y35-44, Y45-54, Y55-64</code></li>
+        <li>Calculated unweighted arithmetic mean across 23 countries (2 countries with missing data automatically excluded)</li>
+        <li>No territorial aggregation: each country has equal weight in the average</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 2.249 righe (25 paesi × 8 fasce d'età × 7 frequenze × 2 anni)</li>
         <li>Filtrato su anno <code>2011</code> e frequenza <code>DAY</code> (lettura giornaliera)</li>
         <li>Selezionate le 4 fasce d'età non sovrapposte: <code>Y25-34, Y35-44, Y45-54, Y55-64</code></li>
@@ -124,26 +159,35 @@
   <!-- ═══ SEZIONE C: LETTORI PER SESSO ═══ -->
   <section class="section py-5" id="sesso">
     <p class="section-label mb-1">Fase C · Eurostat CULT_PCS_NWS · dimensione: sex</p>
-    <h2 class="mb-2">Il gap di genere nella lettura dei quotidiani</h2>
+    <h2 class="mb-2"><span class="en">The gender gap in newspaper reading</span><span class="it">Il gap di genere nella lettura dei quotidiani</span></h2>
     <p class="subtitle mb-4">
-      Percentuale di popolazione per sesso · Lettura giornaliera di quotidiani · Media su 23 paesi europei · 2011
+      <span class="en">Percentage of population by sex · Daily newspaper reading · Average across 23 European countries · 2011</span><span class="it">Percentuale di popolazione per sesso · Lettura giornaliera di quotidiani · Media su 23 paesi europei · 2011</span>
     </p>
 
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> Le due barre confrontano la percentuale di uomini e donne che leggevano
+      <span class="en"><strong>How to read:</strong> The two bars compare the percentage of men and women who read a newspaper every day in 2011, average across 23 countries. The gap is about 8 percentage points (58% men vs 50% women). This gap was historically attributed to greater male presence in professions where reading the newspaper was part of the daily routine (offices, bars, public transport).
+      SDMX source: <code>CULT_PCS_NWS</code>, Eurostat.
+      Chart: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> Le due barre confrontano la percentuale di uomini e donne che leggevano
       un quotidiano ogni giorno nel 2011, media su 23 paesi. Il gap è di circa 8 punti percentuali (58% uomini
       vs 50% donne). Questo gap era storicamente attribuito alla maggiore presenza maschile nelle professioni
       dove la lettura del giornale era parte della routine quotidiana (uffici, bar, trasporti pubblici).
       Fonte SDMX: <code>CULT_PCS_NWS</code>, Eurostat.
-      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
     </p>
     <div class="chart-wrap mb-4">
       <div id="chart-sex"></div>
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 846 rows (25 countries × 3 sex values × 7 frequencies × 2 years)</li>
+        <li>Filtered on year <code>2011</code> and frequency <code>DAY</code></li>
+        <li>Selected values <code>F</code> (women) and <code>M</code> (men); excluded <code>T</code> (total) for visual clarity</li>
+        <li>Calculated unweighted arithmetic mean across 23 countries</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 846 righe (25 paesi × 3 valori sesso × 7 frequenze × 2 anni)</li>
         <li>Filtrato su anno <code>2011</code> e frequenza <code>DAY</code></li>
         <li>Selezionati i valori <code>F</code> (donne) e <code>M</code> (uomini); escluso <code>T</code> (totale) per chiarezza visiva</li>
@@ -155,12 +199,18 @@
   <!-- ═══ SEZIONE D: LETTORI PER ISTRUZIONE ═══ -->
   <section class="section py-5" id="istruzione">
     <p class="section-label mb-1">Fase D · Eurostat CULT_PCS_NWE · dimensione: isced97</p>
-    <h2 class="mb-2">Il predittore più forte: quanto studi, tanto leggi</h2>
+    <h2 class="mb-2"><span class="en">The strongest predictor: the more you study, the more you read</span><span class="it">Il predittore più forte: quanto studi, tanto leggi</span></h2>
     <p class="subtitle mb-4">
-      Percentuale di popolazione per livello di istruzione · Lettura giornaliera di quotidiani · Media su 23 paesi · 2011
+      <span class="en">Percentage of population by education level · Daily newspaper reading · Average across 23 countries · 2011</span><span class="it">Percentuale di popolazione per livello di istruzione · Lettura giornaliera di quotidiani · Media su 23 paesi · 2011</span>
     </p>
 
-    <div class="callout p-3 mb-4">
+    <div class="callout p-3 mb-4 en">
+      <strong>ISCED 1997:</strong> The international standard classification of education levels.
+      <strong>Low (ED0-2)</strong> = no qualification, primary or lower secondary school;
+      <strong>Medium (ED3-4)</strong> = upper secondary school diploma or equivalent vocational qualification;
+      <strong>High (ED5-6)</strong> = bachelor's, master's, doctorate or equivalent university degree.
+    </div>
+    <div class="callout p-3 mb-4 it">
       <strong>ISCED 1997:</strong> La classificazione internazionale dei livelli di istruzione (International Standard
       Classification of Education). <strong>Bassa (ED0-2)</strong> = nessun titolo, scuola primaria o secondaria inferiore;
       <strong>Media (ED3-4)</strong> = diploma di scuola secondaria superiore o qualifica professionale equivalente;
@@ -168,19 +218,28 @@
     </div>
 
     <p class="note pt-3 mb-4">
-      <strong>Come leggere:</strong> Le tre barre mostrano come il livello di istruzione si correli fortemente
+      <span class="en"><strong>How to read:</strong> The three bars show how education level strongly correlates with the habit of reading newspapers every day. Those with high education read almost twice as much as those with low education. This is the most powerful demographic predictor emerging from the data — more than age and sex combined. SDMX source: <code>CULT_PCS_NWE</code>, Eurostat.
+      Chart: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> Le tre barre mostrano come il livello di istruzione si correli fortemente
       con l'abitudine di leggere quotidiani ogni giorno. Chi ha un'istruzione alta legge quasi il doppio
       rispetto a chi ha un'istruzione bassa. Questo è il predittore demografico più potente che emerge dai dati —
       più dell'età e del sesso combinati. Fonte SDMX: <code>CULT_PCS_NWE</code>, Eurostat.
-      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.
+      Grafico: <a href="https://github.com/jwilber/roughViz">roughViz</a>.</span>
     </p>
     <div class="chart-wrap mb-4">
       <div id="chart-edu"></div>
     </div>
 
     <div class="transform p-3 mb-4">
-      <h4 class="mb-2">Trasformazioni applicate</h4>
-      <ul class="mb-0">
+      <h4 class="mb-2"><span class="en">Transformations applied</span><span class="it">Trasformazioni applicate</span></h4>
+      <ul class="mb-0 en">
+        <li>Source data: 1,120 rows (25 countries × 4 ISCED levels × 7 frequencies × 2 years)</li>
+        <li>Filtered on year <code>2011</code> and frequency <code>DAY</code></li>
+        <li>Selected the three non-aggregated levels: <code>ED0-2</code>, <code>ED3_4</code>, <code>ED5_6</code>; excluded <code>TOTAL</code></li>
+        <li>Calculated unweighted arithmetic mean across 23 countries</li>
+        <li>Labels simplified to "LOW / MEDIUM / HIGH" in the chart; full definitions in the callout above</li>
+      </ul>
+      <ul class="mb-0 it">
         <li>Dati sorgente: 1.120 righe (25 paesi × 4 livelli ISCED × 7 frequenze × 2 anni)</li>
         <li>Filtrato su anno <code>2011</code> e frequenza <code>DAY</code></li>
         <li>Selezionati i tre livelli non-aggregati: <code>ED0-2</code>, <code>ED3_4</code>, <code>ED5_6</code>; escluso <code>TOTAL</code></li>
@@ -199,53 +258,59 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 initShell({
-  title:         "Due velocità nel settore media europeo: l'editoria perde posti, la produzione audiovisiva li guadagna",
-  date:          "21 aprile 2026",
-  intro:         "Dal 2011 al 2024 il numero di occupati nell'editoria (giornali, riviste, libri) nell'Unione Europea è calato di quasi un terzo, mentre la produzione audiovisiva — film, serie, podcast — ha guadagnato altrettanto. E chi legge ancora i quotidiani di carta? Un'analisi del profilo demografico del lettore tradizionale, fotografato dall'ultima grande indagine europea sul tema.",
+  title:    "Due velocità nel settore media europeo: l'editoria perde posti, la produzione audiovisiva li guadagna",
+  title_en: "Two speeds in the European media sector: publishing loses jobs, audiovisual production gains them",
+  date:     "21 aprile 2026",
+  date_en:  "21 April 2026",
+  intro:    "Dal 2011 al 2024 il numero di occupati nell'editoria (giornali, riviste, libri) nell'Unione Europea è calato di quasi un terzo, mentre la produzione audiovisiva — film, serie, podcast — ha guadagnato altrettanto. E chi legge ancora i quotidiani di carta? Un'analisi del profilo demografico del lettore tradizionale, fotografato dall'ultima grande indagine europea sul tema.",
+  intro_en: "From 2011 to 2024, employment in publishing (newspapers, magazines, books) in the European Union fell by almost a third, while audiovisual production — film, series, podcasts — gained as much. And who still reads print newspapers? An analysis of the demographic profile of the traditional reader, captured by the last major European survey on the topic.",
   badges: [
-    { label: "Eurostat", value: "CULT_EMP_N2" },
-    { label: "Eurostat", value: "CULT_PCS_NWA/S/E" },
-    { label: "Periodo occupazione", value: "2011–2024" },
-    { label: "Periodo lettura", value: "2007–2011" },
-    { label: "Paesi", value: "fino a 36" }
+    { label: "Eurostat",             value: "CULT_EMP_N2" },
+    { label: "Eurostat",             value: "CULT_PCS_NWA/S/E" },
+    { label: "Employment period",    value: "2011–2024" },
+    { label: "Readership period",    value: "2007–2011" },
+    { label: "Countries",            value: "up to 36" }
   ],
   nav: [
-    { id: "occupazione", label: "Occupazione" },
-    { id: "eta",         label: "Per età" },
-    { id: "sesso",       label: "Per sesso" },
-    { id: "istruzione",  label: "Per istruzione" }
+    { id: "occupazione", label: "Occupazione",    label_en: "Employment" },
+    { id: "eta",         label: "Per età",        label_en: "By Age" },
+    { id: "sesso",       label: "Per sesso",      label_en: "By Sex" },
+    { id: "istruzione",  label: "Per istruzione", label_en: "By Education" }
   ],
-  introTitle:    "Il settore media in cifre: trasformazione, non collasso",
-  introSubtitle: "Occupazione per attività NACE · Percentuale di lettori di quotidiani per fascia demografica",
+  introTitle:       "Il settore media in cifre: trasformazione, non collasso",
+  introTitle_en:    "The media sector in numbers: transformation, not collapse",
+  introSubtitle:    "Occupazione per attività NACE · Percentuale di lettori di quotidiani per fascia demografica",
+  introSubtitle_en: "Employment by NACE activity · Percentage of newspaper readers by demographic group",
   scopeLimit:    "I dati SDMX misurano l'occupazione formale nel settore media (codici NACE J58, J59, J60) e la percentuale di popolazione che leggeva quotidiani cartacei almeno una volta al giorno. <strong>Non coprono</strong>: giornalisti freelance non contrattualizzati, consumo di notizie online e digitali, pluralismo editoriale, indipendenza dei media. I dati sulla lettura dei quotidiani sono fermi al 2011 (ultima indagine Eurostat disponibile) e riflettono un'era pre-smartphone nella distribuzione dell'informazione.",
+  scopeLimit_en: "SDMX data measure formal employment in the media sector (NACE codes J58, J59, J60) and the percentage of the population who read print newspapers at least once a day. <strong>They do not cover</strong>: non-contracted freelance journalists, online and digital news consumption, editorial pluralism, media independence. Newspaper readership data stops at 2011 (last available Eurostat survey) and reflects a pre-smartphone era in information distribution.",
   findingCards: [
-    { value: "−30%",  color: "default", label: "<strong>Editoria EU27</strong> — Da 744.800 a 517.400 occupati tra il 2011 e il 2024 (attività NACE J58)" },
-    { value: "+30%",  color: "blue",    label: "<strong>Produzione audiovisiva EU27</strong> — Da 353.800 a 460.400 occupati nello stesso periodo (NACE J59)" },
-    { value: "54%",   color: "green",   label: "<strong>Lettori quotidiani</strong> — Percentuale di europei che leggevano un giornale ogni giorno nel 2011 (media 23 paesi)" },
-    { value: "×1,8",  color: "default", label: "<strong>Effetto istruzione</strong> — I laureati leggono quotidiani quasi il doppio rispetto a chi ha bassa scolarità (69,6% vs 37,8%)" }
+    { value: "−30%",  color: "default", label: "<strong>Editoria EU27</strong> — Da 744.800 a 517.400 occupati tra il 2011 e il 2024 (attività NACE J58)",                    label_en: "<strong>EU27 Publishing</strong> — From 744,800 to 517,400 employed between 2011 and 2024 (NACE activity J58)" },
+    { value: "+30%",  color: "blue",    label: "<strong>Produzione audiovisiva EU27</strong> — Da 353.800 a 460.400 occupati nello stesso periodo (NACE J59)",               label_en: "<strong>EU27 Audiovisual production</strong> — From 353,800 to 460,400 employed in the same period (NACE J59)" },
+    { value: "54%",   color: "green",   label: "<strong>Lettori quotidiani</strong> — Percentuale di europei che leggevano un giornale ogni giorno nel 2011 (media 23 paesi)", label_en: "<strong>Newspaper readers</strong> — Percentage of Europeans who read a newspaper every day in 2011 (average of 23 countries)" },
+    { value: "×1,8",  color: "default", label: "<strong>Effetto istruzione</strong> — I laureati leggono quotidiani quasi il doppio rispetto a chi ha bassa scolarità (69,6% vs 37,8%)", label_en: "<strong>Education effect</strong> — Graduates read newspapers almost twice as often as those with low education (69.6% vs 37.8%)" }
   ],
   rawData: {
     license:        "Eurostat CC BY 4.0",
     extractionDate: "21 aprile 2026",
     files: [
-      { provider: "Eurostat", datasetId: "CULT_EMP_N2",   desc: "Occupazione media per settore NACE (J58, J59, J60, TOT)", rows: 1961, period: "36 paesi · 2011–2024",  file: "output/A_occupazione_media.csv" },
-      { provider: "Eurostat", datasetId: "CULT_PCS_NWA",  desc: "Lettori di quotidiani per fascia d'età",                  rows: 2249, period: "25 paesi · 2007–2011",  file: "output/B_lettori_eta.csv" },
-      { provider: "Eurostat", datasetId: "CULT_PCS_NWS",  desc: "Lettori di quotidiani per sesso",                         rows: 846,  period: "25 paesi · 2007–2011",  file: "output/C_lettori_sesso.csv" },
-      { provider: "Eurostat", datasetId: "CULT_PCS_NWE",  desc: "Lettori di quotidiani per livello di istruzione (ISCED 1997)", rows: 1120, period: "25 paesi · 2007–2011", file: "output/D_lettori_istruzione.csv" }
+      { provider: "Eurostat", datasetId: "CULT_EMP_N2",  desc: "Occupazione media per settore NACE (J58, J59, J60, TOT)",    desc_en: "Media employment by NACE sector (J58, J59, J60, TOT)",        rows: 1961, period: "36 paesi · 2011–2024",  file: "output/A_occupazione_media.csv" },
+      { provider: "Eurostat", datasetId: "CULT_PCS_NWA", desc: "Lettori di quotidiani per fascia d'età",                     desc_en: "Newspaper readers by age group",                              rows: 2249, period: "25 paesi · 2007–2011",  file: "output/B_lettori_eta.csv" },
+      { provider: "Eurostat", datasetId: "CULT_PCS_NWS", desc: "Lettori di quotidiani per sesso",                            desc_en: "Newspaper readers by sex",                                   rows: 846,  period: "25 paesi · 2007–2011",  file: "output/C_lettori_sesso.csv" },
+      { provider: "Eurostat", datasetId: "CULT_PCS_NWE", desc: "Lettori di quotidiani per livello di istruzione (ISCED 1997)", desc_en: "Newspaper readers by education level (ISCED 1997)",          rows: 1120, period: "25 paesi · 2007–2011", file: "output/D_lettori_istruzione.csv" }
     ]
   },
   methodology: {
     githubUrl: "https://github.com/datapitch-it/automatic-reports/tree/main/reports/05_media-giornalismo",
     classifications: [
-      { code: "J58",      system: "NACE Rev.2",        meaning: "Editoria: giornali, riviste, libri, software" },
-      { code: "J59",      system: "NACE Rev.2",        meaning: "Produzione cinematografica, TV, audio, musica" },
-      { code: "J60",      system: "NACE Rev.2",        meaning: "Programmazione e broadcasting radiotelevisivo" },
-      { code: "THS_PER",  system: "Eurostat unit",     meaning: "Migliaia di persone occupate" },
-      { code: "PC",       system: "Eurostat unit",     meaning: "Percentuale della popolazione" },
-      { code: "ED0-2",    system: "ISCED 1997",        meaning: "Istruzione bassa (nessun titolo → secondaria inferiore)" },
-      { code: "ED3_4",    system: "ISCED 1997",        meaning: "Istruzione media (diploma superiore, qualifica professionale)" },
-      { code: "ED5_6",    system: "ISCED 1997",        meaning: "Istruzione alta (laurea e oltre)" },
-      { code: "DAY",      system: "FREQUENC (Eurostat)", meaning: "Lettura ogni giorno" }
+      { code: "J58",      system: "NACE Rev.2",          system_en: "NACE Rev.2",          meaning: "Editoria: giornali, riviste, libri, software",                          meaning_en: "Publishing: newspapers, magazines, books, software" },
+      { code: "J59",      system: "NACE Rev.2",          system_en: "NACE Rev.2",          meaning: "Produzione cinematografica, TV, audio, musica",                         meaning_en: "Film, TV and radio production, music recording" },
+      { code: "J60",      system: "NACE Rev.2",          system_en: "NACE Rev.2",          meaning: "Programmazione e broadcasting radiotelevisivo",                         meaning_en: "Television and radio broadcasting" },
+      { code: "THS_PER",  system: "Eurostat unit",       system_en: "Eurostat unit",       meaning: "Migliaia di persone occupate",                                          meaning_en: "Thousands of employed persons" },
+      { code: "PC",       system: "Eurostat unit",       system_en: "Eurostat unit",       meaning: "Percentuale della popolazione",                                         meaning_en: "Percentage of population" },
+      { code: "ED0-2",    system: "ISCED 1997",          system_en: "ISCED 1997",          meaning: "Istruzione bassa (nessun titolo → secondaria inferiore)",               meaning_en: "Low education (no qualification → lower secondary)" },
+      { code: "ED3_4",    system: "ISCED 1997",          system_en: "ISCED 1997",          meaning: "Istruzione media (diploma superiore, qualifica professionale)",          meaning_en: "Medium education (upper secondary diploma, vocational qualification)" },
+      { code: "ED5_6",    system: "ISCED 1997",          system_en: "ISCED 1997",          meaning: "Istruzione alta (laurea e oltre)",                                      meaning_en: "High education (bachelor's and above)" },
+      { code: "DAY",      system: "FREQUENC (Eurostat)", system_en: "FREQUENC (Eurostat)", meaning: "Lettura ogni giorno",                                                   meaning_en: "Reading every day" }
     ],
     apiUrls: [
       {
@@ -448,5 +513,6 @@ new roughViz.Bar({
   yLabel: '% DELLA POPOLAZIONE',
 });
 </script>
+<script src="../../assets/lang.js"></script>
 </body>
 </html>
