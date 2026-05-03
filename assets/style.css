@@ -38,9 +38,10 @@ html { font-size: 19px; scroll-behavior: smooth; }
 .section { border-bottom: 1px solid var(--rule); }
 .section:last-child { border-bottom: none; }
 .section-label { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: #888; }
-.section h2 { font-size: 1.5rem; font-weight: normal; }
+.section h2 { font-size: 1.5rem; font-weight: bold; }
+.section h3 { font-weight: bold; }
 .section .subtitle { color: var(--ink-light); line-height: 1.5; }
-.subsection-title { font-size: 1rem; font-weight: normal; color: var(--ink); padding-bottom: 0.3rem; border-bottom: 1px dashed var(--rule); }
+.subsection-title { font-size: 1rem; font-weight: bold; color: var(--ink); padding-bottom: 0.3rem; border-bottom: 1px dashed var(--rule); }
 
 /* ── CALLOUTS ── */
 .callout { background: var(--paper-warm); border-left: 3px solid var(--accent); border-top: none; border-right: none; border-bottom: none; border-radius: 0; color: var(--ink-light); }

@@ -23,16 +23,20 @@ function _renderShell(cfg) {
   var titleHtml  = t(cfg.title_en  || cfg.title,  cfg.title);
   var introHtml  = t(cfg.intro_en  || cfg.intro,  cfg.intro);
   var dateHtml   = t(cfg.date_en   || cfg.date,   cfg.date);
-  var eyebrow    = t('SDMX Research', 'Ricerca SDMX') + ' · ' + dateHtml + ' · opensdmx CLI';
+  var eyebrow    = 'JournAI · ' + t('AI-generated report', 'Report generato da AI') + ' · ' + dateHtml + ' · opensdmx CLI';
 
-  $('shell-top').innerHTML =
-    '<nav class="site-nav navbar sticky-top py-2">\n' +
-    '  <div class="container">\n' +
-    '    <div class="d-flex flex-wrap gap-1">\n' +
-    '      ' + navLinks.join('\n      ') + '\n' +
-    '    </div>\n' +
+  var shellTop = $('shell-top');
+  var navEl = document.createElement('nav');
+  navEl.className = 'site-nav navbar sticky-top py-2';
+  navEl.innerHTML =
+    '<div class="container">\n' +
+    '  <div class="d-flex flex-wrap gap-1">\n' +
+    '    ' + navLinks.join('\n    ') + '\n' +
     '  </div>\n' +
-    '</nav>\n' +
+    '</div>';
+  shellTop.parentNode.insertBefore(navEl, shellTop);
+
+  shellTop.innerHTML =
     '<header class="site-header py-5">\n' +
     '  <div class="container">\n' +
     '    <p class="eyebrow mb-2">' + eyebrow + '</p>\n' +
