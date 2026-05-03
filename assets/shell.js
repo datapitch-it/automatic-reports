@@ -26,7 +26,8 @@ function _renderShell(cfg) {
   var eyebrow    = 'JournAI · ' + t('AI-generated report', 'Report generato da AI') + ' · ' + dateHtml + ' · opensdmx CLI';
 
   var shellTop = $('shell-top');
-  var navEl = document.createElement('nav');
+  var navEl = document.getElementById('shell-nav') || document.createElement('nav');
+  navEl.id = 'shell-nav';
   navEl.className = 'site-nav navbar sticky-top py-2';
   navEl.innerHTML =
     '<div class="container">\n' +
@@ -34,7 +35,9 @@ function _renderShell(cfg) {
     '    ' + navLinks.join('\n    ') + '\n' +
     '  </div>\n' +
     '</div>';
-  shellTop.parentNode.insertBefore(navEl, shellTop);
+  if (!navEl.parentNode) {
+    shellTop.parentNode.insertBefore(navEl, shellTop);
+  }
 
   shellTop.innerHTML =
     '<header class="site-header py-5">\n' +
