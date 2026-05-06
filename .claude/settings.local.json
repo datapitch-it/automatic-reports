@@ -76,7 +76,12 @@
       "Read(//home/nelsonmau/**)",
       "Bash(xargs cat *)",
       "Bash(curl -s \"https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/UNE_RT_A/A.Y15-74+Y15-24+Y25-54+Y55-74.PC_ACT.T+M+F.?format=SDMX-CSV&startPeriod=2000&endPeriod=2024\")",
-      "Bash(curl -s \"https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFSA_ARGAN/A.PC.T+M+F.Y15-64+Y15-74+Y20-64.TOTAL.?format=SDMX-CSV&startPeriod=2000&endPeriod=2024\")"
+      "Bash(curl -s \"https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/LFSA_ARGAN/A.PC.T+M+F.Y15-64+Y15-74+Y20-64.TOTAL.?format=SDMX-CSV&startPeriod=2000&endPeriod=2024\")",
+      "Bash(duckdb *)",
+      "mcp__playwright__browser_press_key",
+      "mcp__playwright__browser_tabs",
+      "Bash(node *)",
+      "Bash(awk -F, '{print $NF, $\\(NF-1\\), $\\(NF-2\\)}')"
     ]
   }
 }
