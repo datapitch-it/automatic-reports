@@ -77,10 +77,14 @@ Wait for the user's choice. Only then, write down in `notes.md`:
 
 ```markdown
 ## Research question
-[What we want to measure and why]
+### Original (verbatim)
+[Exact words used by the user — do not paraphrase]
+
+### Cleaned
+[Same question, lightly corrected for grammar and punctuation — meaning and scope unchanged]
 
 ## Statistical proxy
-[Which measurable quantity in SDMX approximates the phenomenon of interest]
+[Which measurable quantity in SDMX approximates the phenomenon of interest, and why it is a good (or imperfect) proxy]
 
 ## Scope
 [What SDMX data does NOT cover — to be declared explicitly on the page]
@@ -88,6 +92,8 @@ Wait for the user's choice. Only then, write down in `notes.md`:
 ## Candidate providers
 [To be filled after running `opensdmx providers` — see Phase 1.1]
 ```
+
+**Preservation rule**: the cleaned version is the one that goes into the HTML report (`researchQuestion` field of `initShell()`). It must not be rewritten as an analytical framing — only grammar and punctuation may change. The original verbatim version stays in `notes.md` only. This chain (original → cleaned → report) is what allows the reader to judge whether the data actually answers the question asked.
 
 ---
 
@@ -589,6 +595,13 @@ new chartXkcd.XY(document.getElementById('chart-[id2]'), { ... });
 
 ```js
 initShell({
+  // ── RESEARCH QUESTION ────────────────────────────────────────────────────
+  // Mandatory. Cleaned version of the user's original question (Phase 0).
+  // Must preserve the original scope and intent — only grammar may change.
+  researchQuestion: "How does Italy's defence spending compare to other EU countries?",
+  // The SDMX quantity used to answer it, and why it approximates the question.
+  statisticalProxy: "Eurostat GOV_10A_EXP — general government expenditure, % of GDP, sector S13, cofog99 GF0201 (defence)",
+
   // ── HEADER ──────────────────────────────────────────────────────────────
   title:   "Report title",
   date:    "29 April 2026",
@@ -851,6 +864,8 @@ introExtra: `
 
 ## Pre-publication checklist
 
+- [ ] **Research question**: `researchQuestion` in `initShell()` matches the cleaned version in `notes.md`; original verbatim is recorded in `notes.md`; scope and intent unchanged from what the user asked
+- [ ] **Statistical proxy**: `statisticalProxy` field filled and explains why the chosen SDMX indicator approximates the research question (and where it falls short)
 - [ ] `reports.json` updated with the new entry (order, path, date, title, desc, badges)
 - [ ] Every dataset has the "Double check passed" block in Methodology (run 1 + run 2 match)
 - [ ] `notes.md` contains all phases with exact commands

@@ -71,12 +71,34 @@ function _renderShell(cfg) {
     : '';
   var introExtraHtml = t(cfg.introExtra_en || cfg.introExtra || '', cfg.introExtra || '');
 
+  var rqHtml = '';
+  if (cfg.researchQuestion) {
+    var rqText = t(cfg.researchQuestion_en || cfg.researchQuestion, cfg.researchQuestion);
+    rqHtml =
+      '<div class="rq-block mb-4">\n' +
+      '  <p class="section-label mb-2">' + t('Research question', 'Domanda di ricerca') + '</p>\n' +
+      '  <blockquote class="rq-text mb-0">' + rqText + '</blockquote>\n' +
+      '</div>';
+  }
+
+  var proxyHtml = '';
+  if (cfg.statisticalProxy) {
+    var proxyText = t(cfg.statisticalProxy_en || cfg.statisticalProxy, cfg.statisticalProxy);
+    proxyHtml =
+      '<div class="proxy-block mb-4">\n' +
+      '  <p class="section-label mb-2">' + t('Statistical proxy (AI-Gen)', 'Proxy statistico (AI-Gen)') + '</p>\n' +
+      '  <p class="proxy-text mb-0">' + proxyText + '</p>\n' +
+      '</div>';
+  }
+
   $('shell-intro').innerHTML =
     '<section class="section py-5" id="intro">\n' +
     '  <div class="container">\n' +
     '    <p class="section-label mb-1">' + t('Context', 'Contesto') + '</p>\n' +
     '    <h2 class="mb-2">' + introTitle + '</h2>\n' +
     '    ' + introSubtitle + '\n' +
+    '    ' + rqHtml + '\n' +
+    '    ' + proxyHtml + '\n' +
     '    ' + scopeHtml + '\n' +
     '    ' + introExtraHtml + '\n' +
     '    <div class="row row-cols-2 row-cols-md-4 g-3">\n' +

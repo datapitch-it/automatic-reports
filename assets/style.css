@@ -124,6 +124,14 @@ a.dl-link:hover { background: var(--accent2); color: #fff; }
 .site-footer { border-top: 2px solid var(--ink); font-size: 1rem; color: var(--ink-faint); font-family: var(--mono); }
 .site-footer a { color: var(--ink-faint); }
 
+/* ── RESEARCH QUESTION ── */
+.rq-block { border-left: 3px solid var(--accent2); padding-left: 1rem; }
+.rq-text { font-size: 1.1rem; font-style: italic; color: var(--ink); margin: 0; border: none; padding: 0; }
+
+/* ── STATISTICAL PROXY ── */
+.proxy-block { border-left: 3px solid var(--rule); padding-left: 1rem; }
+.proxy-text { font-size: 1rem; color: var(--ink-faint); font-family: var(--mono); line-height: 1.6; }
+
 /* ── LANGUAGE TOGGLE ── */
 #lang-toggle { position: fixed; top: 0.9rem; right: 1.2rem; z-index: 1050; font-family: var(--mono); font-size: 0.8rem; background: rgba(20,20,20,0.92); border: 1px solid #444; padding: 3px 10px; display: flex; align-items: center; gap: 4px; }
 .lang-btn { background: none; border: none; color: #888; font-family: var(--mono); font-size: 0.8rem; cursor: pointer; padding: 0; letter-spacing: 0.06em; }
