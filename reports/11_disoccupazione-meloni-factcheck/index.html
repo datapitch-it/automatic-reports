@@ -437,63 +437,73 @@
 <script>
 // ── SHELL CONFIG ──────────────────────────────────────────────────────────────
 initShell({
-  researchQuestion: "Are the unemployment figures attributed to the Renzi, Conte, Draghi and Meloni governments in the Fratelli d'Italia infographic accurate and methodologically honest?",
-  statisticalProxy: "ISTAT 151_914 — Unemployment rate, 15–74 years, Italy, total (sex=9, education=99, citizenship=TOTAL). Approximates the phenomenon because it is the national ISTAT reference series; limitation: does not distinguish precarious from stable employment, nor cyclical effects (e.g. COVID) from government policy.",
+  researchQuestion: "I valori di disoccupazione attribuiti ai governi Renzi, Conte, Draghi e Meloni nell'infografica di Fratelli d'Italia sono corretti e metodologicamente onesti?",
+  statisticalProxy: "ISTAT 151_914 — Tasso di disoccupazione, 15–74 anni, Italia, totale (sesso=9, istruzione=99, cittadinanza=TOTAL). Approssima il fenomeno perché è la serie ISTAT di riferimento nazionale; limite: non distingue lavoro precario da stabile, né effetti ciclici (es. COVID) dall'azione di governo.",
 
-  title:  "Disoccupazione e governi italiani: il fact-check / Italian Unemployment & Governments: the fact-check",
-  date:   "6 May 2026",
-  intro:  "A Fratelli d'Italia infographic claims Italian unemployment under Meloni (5.3%) is dramatically lower than under Renzi (11.8%), Conte (10.1%) and Draghi (8%), citing ISTAT. This report traces each figure to its exact ISTAT source, finds they are real data points but cherry-picked single months with no consistent methodology, and shows the full declining trend across all governments since 2014.",
+  title:    "Disoccupazione e governi italiani: il fact-check",
+  title_en: "Italian Unemployment & Governments: the fact-check",
+  date:     "6 maggio 2026",
+  date_en:  "6 May 2026",
+  intro:    "Un'infografica di Fratelli d'Italia afferma che la disoccupazione sotto Meloni (5,3%) è drasticamente inferiore a quella sotto Renzi (11,8%), Conte (10,1%) e Draghi (8%), citando ISTAT. Questo report traccia ogni cifra alla sua fonte ISTAT esatta: i numeri esistono, ma sono singoli mesi cherry-picked senza metodologia coerente. Il trend è in calo dal 2014 attraverso tutti i governi.",
+  intro_en: "A Fratelli d'Italia infographic claims Italian unemployment under Meloni (5.3%) is dramatically lower than under Renzi (11.8%), Conte (10.1%) and Draghi (8%), citing ISTAT. This report traces each figure to its exact ISTAT source: the numbers are real, but are single cherry-picked months with no consistent methodology. The declining trend runs across all governments since 2014.",
   badges: [
     { label: "ISTAT",   value: "151_914 · 151_874 · 151_884" },
-    { label: "Period",  value: "2013–2025" },
-    { label: "Country", value: "Italy" }
+    { label: "Periodo", value: "2013–2025", label_en: "Period" },
+    { label: "Paese",   value: "Italia",    label_en: "Country" }
   ],
 
   nav: [
-    { id: "infografica", label: "Infographic" },
-    { id: "verdict",     label: "Verdict" },
-    { id: "trend",       label: "Trend" },
-    { id: "comparison",  label: "Comparison" },
-    { id: "context",     label: "Context" }
+    { id: "infografica", label: "Infografica",  label_en: "Infographic" },
+    { id: "verdict",     label: "Verdetto",     label_en: "Verdict" },
+    { id: "trend",       label: "Trend",        label_en: "Trend" },
+    { id: "comparison",  label: "Confronto",    label_en: "Comparison" },
+    { id: "context",     label: "Contesto",     label_en: "Context" }
   ],
 
-  introTitle:    "What the data says / Cosa dicono i dati",
-  introSubtitle: "Real numbers, misleading comparisons / Numeri reali, confronti fuorvianti",
+  introTitle:       "Cosa dicono i dati",
+  introTitle_en:    "What the data says",
+  introSubtitle:    "Numeri reali, confronti fuorvianti",
+  introSubtitle_en: "Real numbers, misleading comparisons",
   introExtra: `
     <div class="summary mb-5">
-      <h3 class="mb-3">What the data says / Cosa dicono i dati</h3>
+      <h3 class="mb-3"><span class="en">What the data says</span><span class="it">Cosa dicono i dati</span></h3>
       <p>
-        The four unemployment figures in the Fratelli d'Italia infographic (Renzi 11.8%, Conte 10.1%, Draghi 8%, Meloni 5.3%) are not invented — they all exist in ISTAT data. But each corresponds to a single cherry-picked month, not a mandate average, not an annual figure, and not a consistently defined period. For Meloni, the figure is August 2024 (5.32%), a month that benefits from seasonal effects in tourism and agriculture — while the actual average across her mandate to date is <strong>6.75%</strong>.
-        → <a href="#verdict">verdict table</a>
+        <span class="en">The four unemployment figures in the Fratelli d'Italia infographic (Renzi 11.8%, Conte 10.1%, Draghi 8%, Meloni 5.3%) are not invented — they all exist in ISTAT data. But each corresponds to a single cherry-picked month, not a mandate average, not an annual figure, and not a consistently defined period. For Meloni, the figure is August 2024 (5.32%), a month that benefits from seasonal effects in tourism and agriculture — while the actual average across her mandate to date is <strong>6.75%</strong>.</span>
+        <span class="it">Le quattro cifre dell'infografica di FdI (Renzi 11,8%, Conte 10,1%, Draghi 8%, Meloni 5,3%) non sono inventate — esistono tutte nei dati ISTAT. Ma ognuna corrisponde a un singolo mese cherry-picked, non a una media del mandato, non a un dato annuale, non a un periodo definito con criteri coerenti. Per Meloni, la cifra è agosto 2024 (5,32%), un mese favorito dagli effetti stagionali del turismo e dell'agricoltura — mentre la media effettiva del suo mandato è <strong>6,75%</strong>.</span>
+        → <a href="#verdict"><span class="en">verdict table</span><span class="it">tabella verdetto</span></a>
       </p>
       <p>
-        Il dato più rivelatore non è il mese scelto, ma la serie storica completa: la disoccupazione italiana è scesa da 12,85% nel 2014 a 6,52% nel 2024 in modo quasi lineare, attraversando sei governi di segno politico opposto. Il mandato con la discesa relativa più ampia — in punti percentuali — è quello di Draghi (−2,60pp). Meloni ha registrato una discesa comparabile (−2,62pp finora), continuando un trend già in atto.
-        → <a href="#trend">serie storica</a>
+        <span class="en">The most revealing finding is not the chosen month, but the full time series: Italian unemployment fell from 12.85% in 2014 to 6.52% in 2024 in an almost linear trend, crossing six governments of opposite political colours. The mandate with the largest relative decline — in percentage points — is Draghi's (−2.60pp). Meloni has recorded a comparable drop (−2.62pp so far), continuing a pre-existing trend.</span>
+        <span class="it">Il dato più rivelatore non è il mese scelto, ma la serie storica completa: la disoccupazione italiana è scesa da 12,85% nel 2014 a 6,52% nel 2024 in modo quasi lineare, attraversando sei governi di segno politico opposto. Il mandato con la discesa più ampia — in punti percentuali — è quello di Draghi (−2,60pp). Meloni ha registrato una discesa comparabile (−2,62pp finora), continuando un trend già in atto.</span>
+        → <a href="#trend"><span class="en">time series</span><span class="it">serie storica</span></a>
       </p>
       <p>
-        La sorpresa statistica è il governo assente: Gentiloni (dic 2016 – giu 2018) ha presieduto un calo di 1,7pp in 18 mesi, ma non compare nell'infografica. L'altra omissione è la fusione di Conte I (M5S-Lega) e Conte II (M5S-PD) in un'unica cifra, ignorando che durante il mandato di Conte la disoccupazione è scesa fino al 6,44% nel pieno del COVID — artefatto che l'infografica non nomina perché contraddirebbe la narrativa.
-        → <a href="#comparison">confronto</a>, <a href="#context">contesto</a>
+        <span class="en">The statistical surprise is the absent government: Gentiloni (Dec 2016–Jun 2018) presided over a 1.7pp drop in 18 months but does not appear in the infographic. The other omission is merging Conte I (M5S-Lega) and Conte II (M5S-PD) into a single figure — hiding the COVID distortion of 2020, when recorded unemployment fell to 6.44% due to furlough classification, a figure that would undermine the infographic's narrative.</span>
+        <span class="it">La sorpresa statistica è il governo assente: Gentiloni (dic 2016 – giu 2018) ha presieduto un calo di 1,7pp in 18 mesi, ma non compare nell'infografica. L'altra omissione è la fusione di Conte I (M5S-Lega) e Conte II (M5S-PD) in un'unica cifra — nascondendo la distorsione COVID del 2020, quando la disoccupazione registrata è scesa al 6,44% per la classificazione della cassa integrazione, un dato che smentirebbe la narrativa dell'infografica.</span>
+        → <a href="#comparison"><span class="en">comparison</span><span class="it">confronto</span></a>, <a href="#context"><span class="en">context</span><span class="it">contesto</span></a>
       </p>
     </div>
   `,
 
-  scopeLimit: "ISTAT data covers the ILO unemployment rate for Italy (15–74 years). It does not cover: quality of employment (temporary contracts, involuntary part-time), regional breakdown, or the causal relationship between government policies and unemployment trends. No statistical indicator can establish whether a government 'caused' a change in unemployment. / I dati ISTAT coprono il tasso di disoccupazione ILO per l'Italia (15–74 anni). Non coprono: qualità dell'occupazione (contratti a termine, part-time involontario), dettaglio regionale, o il nesso causale tra politiche di governo e andamento della disoccupazione.",
+  scopeLimit:    "I dati ISTAT coprono il tasso di disoccupazione ILO per l'Italia (15–74 anni). Non coprono: qualità dell'occupazione (contratti a termine, part-time involontario), dettaglio regionale, o il nesso causale tra politiche di governo e andamento della disoccupazione. Nessun indicatore statistico può stabilire se un governo ha 'causato' una variazione della disoccupazione.",
+  scopeLimit_en: "ISTAT data covers the ILO unemployment rate for Italy (15–74 years). It does not cover: quality of employment (temporary contracts, involuntary part-time), regional breakdown, or the causal relationship between government policies and unemployment trends. No statistical indicator can establish whether a government 'caused' a change in unemployment.",
 
   findingCards: [
-    { value: "5.32%",  label: "ISTAT Aug 2024 — Meloni's cherry-picked month / mese cherry-picked",  color: "accent" },
-    { value: "6.75%",  label: "Actual average unemployment across Meloni's mandate / Media effettiva mandato Meloni", color: "default" },
-    { value: "−6.3pp", label: "Total drop 2014→2024 (all governments) / Calo totale 2014→2024 (tutti i governi)", color: "blue" },
-    { value: "⚠️ 1",   label: "Government absent from infographic: Gentiloni (−1.7pp) / Governo assente: Gentiloni", color: "green" }
+    { value: "5,32%",  label: "ISTAT ago 2024 — mese cherry-picked per Meloni",           label_en: "ISTAT Aug 2024 — Meloni's cherry-picked month",      color: "accent" },
+    { value: "6,75%",  label: "Media effettiva della disoccupazione nel mandato Meloni",   label_en: "Actual average unemployment across Meloni's mandate", color: "default" },
+    { value: "−6,3pp", label: "Calo totale 2014→2024 (tutti i governi)",                  label_en: "Total drop 2014→2024 (all governments)",              color: "blue" },
+    { value: "⚠️ 1",   label: "Governo assente dall'infografica: Gentiloni (−1,7pp)",     label_en: "Government absent from infographic: Gentiloni (−1.7pp)", color: "green" }
   ],
 
   rawData: {
     license:        "ISTAT — dati.istat.it, licenza CC BY 3.0 IT",
-    extractionDate: "6 May 2026",
+    extractionDate: "6 maggio 2026",
     files: [
       {
         provider:  "ISTAT",
         datasetId: "151_914",
         desc:      "Tasso di disoccupazione annuale — 15-74 anni — Italia",
+        desc_en:   "Annual unemployment rate — 15–74 years — Italy",
         rows:      13,
         period:    "2013–2025",
         file:      "output/A_disoccupazione_annuale.csv"
@@ -502,6 +512,7 @@ initShell({
         provider:  "ISTAT",
         datasetId: "151_914",
         desc:      "Tasso di disoccupazione trimestrale grezzo — 15-74 anni — Italia",
+        desc_en:   "Quarterly raw unemployment rate — 15–74 years — Italy",
         rows:      52,
         period:    "2013–2025",
         file:      "output/B_disoccupazione_trimestrale.csv"
@@ -510,6 +521,7 @@ initShell({
         provider:  "ISTAT",
         datasetId: "151_874",
         desc:      "Tasso di disoccupazione mensile grezzo — 2022-2026",
+        desc_en:   "Raw monthly unemployment rate — 2022–2026",
         rows:      904,
         period:    "2022–2026",
         file:      "output/C_disoccupazione_mensile.csv"
@@ -518,6 +530,7 @@ initShell({
         provider:  "ISTAT",
         datasetId: "151_874",
         desc:      "Tasso di disoccupazione mensile grezzo — 2013-2022 (storico)",
+        desc_en:   "Raw monthly unemployment rate — 2013–2022 (historical)",
         rows:      6163,
         period:    "2013–2022",
         file:      "output/D_disoccupazione_mensile_storica.csv"
@@ -526,6 +539,7 @@ initShell({
         provider:  "ISTAT",
         datasetId: "151_884",
         desc:      "Tasso di disoccupazione trimestrale destagionalizzato — double check",
+        desc_en:   "Seasonally adjusted quarterly unemployment rate — double check",
         rows:      52,
         period:    "2013–2025",
         file:      "output/F_disoccupazione_destagionalizzata.csv"
@@ -536,12 +550,12 @@ initShell({
   methodology: {
     githubUrl: "https://github.com/datapitch-it/automatic-reports/reports/11_disoccupazione-meloni-factcheck",
     classifications: [
-      { code: "Y15-74",  system: "AGE (151_914)",        meaning: "15-74 anni — standard ILO" },
-      { code: "9",       system: "SEX (ISTAT)",          meaning: "Totale (maschi + femmine)" },
-      { code: "99",      system: "EDU_LEV_HIGHEST",      meaning: "Totale (tutti i livelli di istruzione)" },
-      { code: "TOTAL",   system: "CITIZENSHIP",          meaning: "Totale (italiani + stranieri)" },
-      { code: "UNEM_R",  system: "DATA_TYPE",            meaning: "Tasso di disoccupazione ILO" },
-      { code: "N",       system: "ADJUSTMENT (151_874)", meaning: "Dati grezzi non destagionalizzati" }
+      { code: "Y15-74",  system: "AGE (151_914)",        meaning: "15-74 anni — standard ILO",                 meaning_en: "15–74 years — ILO standard" },
+      { code: "9",       system: "SEX (ISTAT)",          meaning: "Totale (maschi + femmine)",                  meaning_en: "Total (males + females)" },
+      { code: "99",      system: "EDU_LEV_HIGHEST",      meaning: "Totale (tutti i livelli di istruzione)",     meaning_en: "Total (all education levels)" },
+      { code: "TOTAL",   system: "CITIZENSHIP",          meaning: "Totale (italiani + stranieri)",              meaning_en: "Total (nationals + foreigners)" },
+      { code: "UNEM_R",  system: "DATA_TYPE",            meaning: "Tasso di disoccupazione ILO",               meaning_en: "ILO unemployment rate" },
+      { code: "N",       system: "ADJUSTMENT (151_874)", meaning: "Dati grezzi non destagionalizzati",          meaning_en: "Raw data, not seasonally adjusted" }
     ],
     extra: `
       <p class="note pt-2 mb-4">
@@ -569,17 +583,17 @@ initShell({
       { dataset: "151_884 (s.adj.)",    command: "opensdmx run queries/F_disoccupazione_destagionalizzata.yaml --out output/F_disoccupazione_destagionalizzata.csv" }
     ],
     files: [
-      { file: "output/A_disoccupazione_annuale.csv",         desc: "13 rows · annual · 2013–2025" },
-      { file: "output/B_disoccupazione_trimestrale.csv",     desc: "52 rows · quarterly raw · 2013–2025" },
-      { file: "output/C_disoccupazione_mensile.csv",         desc: "904 rows · monthly raw · 2022–2026" },
-      { file: "output/D_disoccupazione_mensile_storica.csv", desc: "6163 rows · monthly raw · 2013–2022" },
-      { file: "output/F_disoccupazione_destagionalizzata.csv", desc: "52 rows · seasonally adj. · 2013–2025 (double-check)" },
-      { file: "queries/A_disoccupazione_annuale.yaml",        desc: "Reproducible query — annual" },
-      { file: "queries/B_disoccupazione_trimestrale.yaml",    desc: "Reproducible query — quarterly" },
-      { file: "queries/C_disoccupazione_mensile.yaml",        desc: "Reproducible query — monthly" },
-      { file: "queries/F_disoccupazione_destagionalizzata.yaml", desc: "Reproducible query — seasonally adj." },
-      { file: "notes.md",                                     desc: "Chronological operations log" },
-      { file: "disoccupazione-meloni.jpeg",                   desc: "Original infographic (Fratelli d'Italia)" }
+      { file: "output/A_disoccupazione_annuale.csv",           desc: "13 righe · annuale · 2013–2025",                desc_en: "13 rows · annual · 2013–2025" },
+      { file: "output/B_disoccupazione_trimestrale.csv",       desc: "52 righe · trimestrale grezzo · 2013–2025",     desc_en: "52 rows · quarterly raw · 2013–2025" },
+      { file: "output/C_disoccupazione_mensile.csv",           desc: "904 righe · mensile grezzo · 2022–2026",        desc_en: "904 rows · monthly raw · 2022–2026" },
+      { file: "output/D_disoccupazione_mensile_storica.csv",   desc: "6163 righe · mensile grezzo · 2013–2022",       desc_en: "6163 rows · monthly raw · 2013–2022" },
+      { file: "output/F_disoccupazione_destagionalizzata.csv", desc: "52 righe · destagionalizzato · 2013–2025 (double-check)", desc_en: "52 rows · seasonally adj. · 2013–2025 (double-check)" },
+      { file: "queries/A_disoccupazione_annuale.yaml",         desc: "Query riproducibile — annuale",                 desc_en: "Reproducible query — annual" },
+      { file: "queries/B_disoccupazione_trimestrale.yaml",     desc: "Query riproducibile — trimestrale",             desc_en: "Reproducible query — quarterly" },
+      { file: "queries/C_disoccupazione_mensile.yaml",         desc: "Query riproducibile — mensile",                 desc_en: "Reproducible query — monthly" },
+      { file: "queries/F_disoccupazione_destagionalizzata.yaml", desc: "Query riproducibile — destagionalizzato",     desc_en: "Reproducible query — seasonally adj." },
+      { file: "notes.md",                                      desc: "Log cronologico delle operazioni",              desc_en: "Chronological operations log" },
+      { file: "disoccupazione-meloni.jpeg",                    desc: "Infografica originale (Fratelli d'Italia)",     desc_en: "Original infographic (Fratelli d'Italia)" }
     ]
   },
 

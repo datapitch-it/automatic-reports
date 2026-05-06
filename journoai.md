@@ -56,6 +56,25 @@ The bilingual default applies to:
 SDMX codes, variable names, CLI commands and API URLs always remain in English
 regardless of language.
 
+### Two-layer bilingual system — MANDATORY
+
+**Layer 1 — `initShell()` config fields**: the shell renders the header, intro, nav, finding cards, raw data section and footer from the JS config. Every text field must have a separate `_en` variant. The `t(en, it)` function in shell.js reads these at render time (called again on toggle). Without `_en`/`_it` pairs, clicking ENG↔ITA has no effect on shell-rendered content.
+
+| Config field | Italian (default) | English variant |
+|---|---|---|
+| `title` | Italian title | `title_en` |
+| `date` | "6 maggio 2026" | `date_en: "6 May 2026"` |
+| `intro` | Italian text | `intro_en` |
+| `introTitle` | Italian | `introTitle_en` |
+| `introSubtitle` | Italian | `introSubtitle_en` |
+| `scopeLimit` | Italian | `scopeLimit_en` |
+| `findingCards[].label` | Italian | `label_en` |
+| `nav[].label` | Italian | `label_en` |
+| `rawData.files[].desc` | Italian | `desc_en` |
+| `methodology.classifications[].meaning` | Italian | `meaning_en` |
+
+**Layer 2 — static HTML sections** (inside `<main>`): use inline `<span class="en">` / `<span class="it">` pairs. The CSS shows/hides these automatically when `body.lang-it` is toggled. Do not put English-only or Italian-only plain text in static sections — always wrap in a span pair.
+
 ---
 
 ## Phase 0 — Defining the research question
