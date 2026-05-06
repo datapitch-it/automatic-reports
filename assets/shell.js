@@ -155,7 +155,7 @@ function _renderShell(cfg) {
   if (m.apiUrls && m.apiUrls.length) {
     var urlItems = m.apiUrls.map(function(u) {
       return '  <p class="mb-1" style="color:var(--ink-faint);font-family:var(--mono);">' +
-        u.datasetId + ' — ' + u.provider + ' (' + u.desc + ')</p>\n' +
+        u.datasetId + ' — ' + u.provider + ' (' + t(u.desc_en || u.desc, u.desc) + ')</p>\n' +
         '  <div class="query-url p-2 mb-3"><a href="' + u.url + '" target="_blank">' + u.url + '</a></div>';
     }).join('\n');
     urlsHtml =
@@ -184,7 +184,7 @@ function _renderShell(cfg) {
   var filesHtml = '';
   if (m.files && m.files.length) {
     var fileRows = m.files.map(function(f) {
-      return '<tr><td><code>' + f.file + '</code></td><td>' + f.desc + '</td></tr>';
+      return '<tr><td><code>' + f.file + '</code></td><td>' + t(f.desc_en || f.desc, f.desc) + '</td></tr>';
     }).join('\n        ');
     filesHtml =
       '  <h3 class="subsection-title mt-4 mb-3">' + t('Available files', 'File disponibili') + '</h3>\n' +
