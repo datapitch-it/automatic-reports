@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disoccupazione e governi italiani: il fact-check — SDMX Research</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../assets/style.css">
+  <script src="https://unpkg.com/rough-viz@1.0.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+  <style>
+    .infographic-wrap {
+      background: #f8f9fa;
+      border: 2px solid #dee2e6;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .infographic-wrap img {
+      max-width: 380px;
+      width: 100%;
+      border-radius: 4px;
+    }
+    .infographic-caption {
+      font-size: 0.85rem;
+      color: #6c757d;
+      margin-top: 0.5rem;
+    }
+    .verdict-table th { background: #f8f9fa; font-weight: 600; }
+    .badge-ok   { color: #1a7f4b; font-weight: 700; }
+    .badge-warn { color: #856404; font-weight: 700; }
+    .badge-fail { color: #b02020; font-weight: 700; }
+    .mandate-bar {
+      display: inline-block;
+      height: 10px;
+      border-radius: 3px;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+    .pm-timeline {
+      font-size: 0.78rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .pm-timeline td, .pm-timeline th {
+      border: 1px solid #dee2e6;
+      padding: 4px 8px;
+    }
+    .pm-timeline .renzi   { background: #dbeafe; }
+    .pm-timeline .gent    { background: #ede9fe; }
+    .pm-timeline .conte   { background: #fef9c3; }
+    .pm-timeline .draghi  { background: #dcfce7; }
+    .pm-timeline .meloni  { background: #fee2e2; }
+  </style>
+</head>
+<body>
+
+<div id="shell-top"></div>
+
+<div class="container">
+<div id="shell-intro"></div>
+</div>
+
+<main class="container py-2">
+
+  <!-- ═══ SEZIONE 0: L'INFOGRAFICA ═══ -->
+  <section class="section py-5" id="infografica">
+    <p class="section-label mb-1">
+      <span class="en">The infographic under scrutiny</span>
+      <span class="it">L'infografica sotto esame</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="en">What the Fratelli d'Italia graphic shows</span>
+      <span class="it">Cosa mostra la grafica di Fratelli d'Italia</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="en">Source claimed: ISTAT · No period, methodology or indicator specified</span>
+      <span class="it">Fonte dichiarata: ISTAT · Nessun periodo, metodologia o indicatore specificato</span>
+    </p>
+
+    <div class="row align-items-start g-4">
+      <div class="col-md-5">
+        <div class="infographic-wrap">
+          <img src="disoccupazione-meloni.jpeg" alt="Infografica FdI - Disoccupazione: Meloni 5.3%, Draghi 8%, Conte 10.1%, Renzi 11.8%">
+          <p class="infographic-caption">
+            <span class="en">© Fratelli d'Italia. Reproduced for fact-checking purposes.</span>
+            <span class="it">© Fratelli d'Italia. Riprodotta a fini di verifica giornalistica.</span>
+          </p>
+        </div>
+      </div>
+      <div class="col-md-7">
+        <div class="callout mb-3">
+          <span class="en">
+            The graphic compares unemployment rates under four prime ministers — Renzi (11.8%), Draghi (8%), Conte (10.1%) and Meloni (5.3%) — citing ISTAT as the source. No reference period, indicator definition or methodology is provided. This fact-check identifies the exact ISTAT data points used and evaluates whether the comparison is methodologically sound.
+          </span>
+          <span class="it">
+            La grafica confronta i tassi di disoccupazione sotto quattro presidenti del Consiglio — Renzi (11,8%), Draghi (8%), Conte (10,1%) e Meloni (5,3%) — citando ISTAT come fonte. Non sono indicati il periodo di riferimento, la definizione dell'indicatore né la metodologia. Questo fact-check identifica i dati ISTAT esatti utilizzati e valuta se il confronto sia metodologicamente corretto.
+          </span>
+        </div>
+        <div class="note p-3">
+          <strong>
+            <span class="en">Key issues identified before data analysis:</span>
+            <span class="it">Problemi chiave identificati prima dell'analisi dei dati:</span>
+          </strong>
+          <ul class="mb-0 mt-2">
+            <li><span class="en">No period specified — single month? annual average? quarterly?</span><span class="it">Nessun periodo specificato — singolo mese? media annuale? trimestrale?</span></li>
+            <li><span class="en">"Conte" merges two completely different governments (Conte I M5S-Lega, Conte II M5S-PD)</span><span class="it">"Conte" fonde due governi completamente diversi (Conte I M5S-Lega, Conte II M5S-PD)</span></li>
+            <li><span class="en">Gentiloni (Dec 2016 – Jun 2018) is absent despite governing during a significant decline</span><span class="it">Gentiloni (dic 2016 – giu 2018) è assente pur avendo governato durante un calo significativo</span></li>
+            <li><span class="en">Declining unemployment is a long-run trend since 2014 — across all governments</span><span class="it">Il calo della disoccupazione è un trend strutturale dal 2014 — trasversale a tutti i governi</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="transform p-3 mt-4">
+      <strong>
+        <span class="en">No data transformations in this section.</span>
+        <span class="it">Nessuna trasformazione dei dati in questa sezione.</span>
+      </strong>
+      <span class="en"> The infographic is reproduced as-is for reference.</span>
+      <span class="it"> L'infografica è riprodotta invariata a scopo di riferimento.</span>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE 1: VERDETTO ═══ -->
+  <section class="section py-5" id="verdict">
+    <p class="section-label mb-1">
+      <span class="en">ISTAT 151_914 · Monthly &amp; Annual</span>
+      <span class="it">ISTAT 151_914 · Mensile e annuale</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="en">Final verdict: values confirmed, methodology misleading</span>
+      <span class="it">Verdetto finale: valori confermati, metodologia fuorviante</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="en">Unemployment rate · 15–74 years · Italy · raw monthly and annual · ISTAT 151_914</span>
+      <span class="it">Tasso di disoccupazione · 15–74 anni · Italia · mensile grezzo e annuale · ISTAT 151_914</span>
+    </p>
+
+    <div class="callout mb-4">
+      <span class="en"><strong>Verdict in brief</strong>: all four figures exist in ISTAT data, but each corresponds to a single cherry-picked month — not an annual average, not a mandate-period average, not a consistent methodology. For Meloni, the figure used (5.32%, August 2024) is the seasonal summer minimum for that year. The mandate average under Meloni is 6.75%.</span>
+      <span class="it"><strong>Verdetto sintetico</strong>: tutte e quattro le cifre esistono nei dati ISTAT, ma corrispondono ciascuna a un singolo mese cherry-picked — non a una media annuale, non a una media del mandato, non a una metodologia coerente. Per Meloni, la cifra usata (5,32%, agosto 2024) è il minimo stagionale estivo di quell'anno. La media del mandato Meloni è 6,75%.</span>
+    </div>
+
+    <div class="table-responsive mb-4">
+      <table class="verdict-table table table-bordered table-sm">
+        <thead>
+          <tr>
+            <th><span class="en">Premier</span><span class="it">Presidente</span></th>
+            <th><span class="en">Infographic claim</span><span class="it">Dato infografica</span></th>
+            <th><span class="en">Closest ISTAT match</span><span class="it">Mese ISTAT più vicino</span></th>
+            <th><span class="en">Mandate avg.</span><span class="it">Media mandato</span></th>
+            <th><span class="en">Mandate range</span><span class="it">Range mandato</span></th>
+            <th>Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Renzi</strong><br><small>Feb 2014 – Dec 2016</small></td>
+            <td><strong>11.8%</strong></td>
+            <td>Sep 2016: <strong>11.79%</strong><br><small class="text-muted"><span class="en">one month, near end of mandate</span><span class="it">un mese, verso fine mandato</span></small></td>
+            <td>12.14%</td>
+            <td>9.93% – 14.43%</td>
+            <td><span class="badge-warn en">⚠️ CHERRY-PICKED</span><span class="badge-warn it">⚠️ CHERRY-PICKED</span></td>
+          </tr>
+          <tr>
+            <td><strong>Conte I+II</strong><br><small>Jun 2018 – Feb 2021</small></td>
+            <td><strong>10.1%</strong></td>
+            <td>Feb 2020: <strong>10.02%</strong><br><small class="text-muted"><span class="en">one month, during COVID onset</span><span class="it">un mese, inizio COVID</span></small></td>
+            <td>9.80%</td>
+            <td>6.44% – 11.34%<br><small class="text-muted">(6.44% = COVID distortion)</small></td>
+            <td><span class="badge-fail en">❌ CHERRY-PICKED + MISLEADING</span><span class="badge-fail it">❌ CHERRY-PICKED + FUORVIANTE</span></td>
+          </tr>
+          <tr>
+            <td><strong>Draghi</strong><br><small>Feb 2021 – Oct 2022</small></td>
+            <td><strong>8%</strong></td>
+            <td>Sep 2022: <strong>7.92%</strong><br><small class="text-muted"><span class="en">one month, last month of mandate</span><span class="it">un mese, ultimo mese di mandato</span></small></td>
+            <td>8.82%</td>
+            <td>7.45% – 10.71%</td>
+            <td><span class="badge-warn en">⚠️ CHERRY-PICKED</span><span class="badge-warn it">⚠️ CHERRY-PICKED</span></td>
+          </tr>
+          <tr class="table-danger">
+            <td><strong>Meloni</strong><br><small>Oct 2022 – present</small></td>
+            <td><strong>5.3%</strong></td>
+            <td>Aug 2024: <strong>5.32%</strong><br><small class="text-muted"><span class="en">one month, seasonal summer low</span><span class="it">un mese, minimo stagionale estivo</span></small></td>
+            <td>6.75%</td>
+            <td>4.95% – 8.41%</td>
+            <td><span class="badge-fail en">❌ CHERRY-PICKED (best month)</span><span class="badge-fail it">❌ CHERRY-PICKED (mese migliore)</span></td>
+          </tr>
+          <tr class="table-warning">
+            <td colspan="6">
+              <strong><span class="en">⚠️ MISSING: Gentiloni (Dec 2016 – Jun 2018)</span><span class="it">⚠️ ASSENTE: Gentiloni (dic 2016 – giu 2018)</span></strong><br>
+              <small><span class="en">Unemployment fell from ~12.1% to ~10.9% during Gentiloni's mandate — a significant decline not credited in the infographic.</span><span class="it">La disoccupazione è scesa da ~12,1% a ~10,9% durante il mandato Gentiloni — un calo significativo non riconosciuto nell'infografica.</span></small>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <strong><span class="en">Transformations:</span><span class="it">Trasformazioni:</span></strong>
+      <ul class="mb-0 mt-1">
+        <li><span class="en">Raw data: ISTAT 151_914 (annual) + ISTAT 151_874 (monthly, latest EDITION per period)</span><span class="it">Dati grezzi: ISTAT 151_914 (annuale) + ISTAT 151_874 (mensile, EDITION più recente per ogni periodo)</span></li>
+        <li><span class="en">Mandate averages: arithmetic mean of all available monthly values within each mandate period</span><span class="it">Medie mandato: media aritmetica di tutti i valori mensili disponibili nel periodo di ciascun mandato</span></li>
+        <li><span class="en">No other transformations applied</span><span class="it">Nessun'altra trasformazione applicata</span></li>
+      </ul>
+    </div>
+
+    <div class="note p-3 mb-2">
+      <span class="en"><strong>How to read this table.</strong> "Closest ISTAT match" is the monthly data point that best reproduces the infographic figure. "Mandate avg." is the arithmetic mean of all monthly ISTAT values during that government's term. When a single cherry-picked month is significantly below the mandate average (as for Meloni: 5.32% vs 6.75%), the comparison is misleading. Data: ISTAT 151_914 · 151_874. Library: HTML table.</span>
+      <span class="it"><strong>Come leggere questa tabella.</strong> "Mese ISTAT più vicino" è il dato mensile che riproduce meglio la cifra dell'infografica. "Media mandato" è la media aritmetica di tutti i valori mensili ISTAT durante il mandato. Quando un singolo mese cherry-picked è significativamente inferiore alla media (come per Meloni: 5,32% vs 6,75%), il confronto è fuorviante. Dati: ISTAT 151_914 · 151_874. Libreria: tabella HTML.</span>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE 2: SERIE STORICA ═══ -->
+  <section class="section py-5" id="trend">
+    <p class="section-label mb-1">
+      <span class="en">ISTAT 151_914 · Annual 2013–2025 · Italy</span>
+      <span class="it">ISTAT 151_914 · Annuale 2013–2025 · Italia</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="en">The full picture: unemployment has been falling since 2014 — continuously, across all governments</span>
+      <span class="it">Il quadro completo: la disoccupazione cala dal 2014 — in modo continuo, trasversale a tutti i governi</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="en">Unemployment rate (%) · 15–74 years · Total · Italy · Annual · ISTAT 151_914</span>
+      <span class="it">Tasso di disoccupazione (%) · 15–74 anni · Totale · Italia · Annuale · ISTAT 151_914</span>
+    </p>
+
+    <div class="callout mb-4">
+      <span class="en">The declining trend began in 2014 (12.85%) and has continued almost linearly to 6.52% in 2024 — a drop of −6.33 percentage points in 10 years. No single government can claim sole credit: the trend crosses Renzi, Gentiloni, Conte I, Conte II, Draghi and Meloni without major inflections (except the COVID dip in 2020, which was statistical artefact rather than structural improvement).</span>
+      <span class="it">Il trend discendente è iniziato nel 2014 (12,85%) e prosegue quasi linearmente fino a 6,52% nel 2024 — un calo di −6,33 punti percentuali in 10 anni. Nessun governo può rivendicarne il merito esclusivo: il trend attraversa Renzi, Gentiloni, Conte I, Conte II, Draghi e Meloni senza grandi inflessioni (eccetto il calo COVID del 2020, artefatto statistico più che miglioramento strutturale).</span>
+    </div>
+
+    <div class="chart-wrap mb-4" style="overflow-y: hidden;">
+      <svg id="chart-trend"></svg>
+    </div>
+
+    <!-- PM mandate timeline -->
+    <div class="mb-4">
+      <p class="note p-3">
+        <strong><span class="en">Government mandate periods</span><span class="it">Periodi di mandato</span> (2013–2025):</strong>
+      </p>
+      <div class="table-responsive">
+        <table class="pm-timeline">
+          <thead>
+            <tr>
+              <th><span class="en">Premier</span><span class="it">Presidente</span></th>
+              <th><span class="en">Period</span><span class="it">Periodo</span></th>
+              <th><span class="en">Unemployment at start</span><span class="it">Disoccupazione inizio</span></th>
+              <th><span class="en">Unemployment at end</span><span class="it">Disoccupazione fine</span></th>
+              <th><span class="en">Change</span><span class="it">Variazione</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="renzi">
+              <td><strong>Renzi</strong></td>
+              <td>Feb 2014 – Dec 2016</td>
+              <td>13.95% (feb 2014)</td>
+              <td>12.06% (dec 2016)</td>
+              <td>−1.89pp</td>
+            </tr>
+            <tr class="gent">
+              <td><strong>Gentiloni</strong> <em><span class="en">(absent from infographic)</span><span class="it">(assente dall'infografica)</span></em></td>
+              <td>Dec 2016 – Jun 2018</td>
+              <td>12.06% (dec 2016)</td>
+              <td>10.42% (jun 2018)</td>
+              <td>−1.64pp</td>
+            </tr>
+            <tr class="conte">
+              <td><strong>Conte I+II</strong></td>
+              <td>Jun 2018 – Feb 2021</td>
+              <td>10.42% (jun 2018)</td>
+              <td>10.71% (feb 2021)</td>
+              <td>+0.29pp <small>(COVID effect)</small></td>
+            </tr>
+            <tr class="draghi">
+              <td><strong>Draghi</strong></td>
+              <td>Feb 2021 – Oct 2022</td>
+              <td>10.71% (feb 2021)</td>
+              <td>8.11% (oct 2022)</td>
+              <td>−2.60pp</td>
+            </tr>
+            <tr class="meloni">
+              <td><strong>Meloni</strong></td>
+              <td>Oct 2022 – present</td>
+              <td>8.11% (oct 2022)</td>
+              <td>5.49% (nov 2025, latest)</td>
+              <td>−2.62pp</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <strong><span class="en">Transformations:</span><span class="it">Trasformazioni:</span></strong>
+      <ul class="mb-0 mt-1">
+        <li><span class="en">Raw data: 13 annual observations, ISTAT 151_914, Italy 15–74 years, total</span><span class="it">Dati grezzi: 13 osservazioni annuali, ISTAT 151_914, Italia 15–74 anni, totale</span></li>
+        <li><span class="en">Synthetic zero point added at x=2012, y=0 to enforce zero baseline (chart.xkcd requirement)</span><span class="it">Punto zero sintetico aggiunto in x=2012, y=0 per forzare la baseline a zero (requisito chart.xkcd)</span></li>
+        <li><span class="en">No other transformations</span><span class="it">Nessun'altra trasformazione</span></li>
+      </ul>
+    </div>
+    <div class="note p-3 mb-2">
+      <span class="en"><strong>Reading note.</strong> The Y-axis starts at zero as required. The COVID dip in 2020 (9.35%) is real but partially reflects a statistical artefact: workers on short-time work schemes (cassa integrazione) were classified as employed, depressing the measured unemployment rate. Data: ISTAT 151_914. Chart: chart.xkcd 1.1 XY.</span>
+      <span class="it"><strong>Nota di lettura.</strong> L'asse Y parte da zero come richiesto dalla metodologia. Il calo COVID del 2020 (9,35%) è reale ma riflette parzialmente un artefatto statistico: i lavoratori in cassa integrazione erano classificati come occupati, abbassando artificialmente il tasso. Dati: ISTAT 151_914. Grafico: chart.xkcd 1.1 XY.</span>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE 3: CONFRONTO CLAIM VS MEDIA ═══ -->
+  <section class="section py-5" id="comparison">
+    <p class="section-label mb-1">
+      <span class="en">ISTAT 151_914 · 151_874 · Italy</span>
+      <span class="it">ISTAT 151_914 · 151_874 · Italia</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="en">Infographic claims vs mandate averages</span>
+      <span class="it">Claim dell'infografica vs medie del mandato</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="en">Unemployment rate (%) · Each PM's cherry-picked figure vs actual mandate average</span>
+      <span class="it">Tasso di disoccupazione (%) · Cifra cherry-picked di ciascun premier vs media effettiva del mandato</span>
+    </p>
+
+    <div class="row g-4 mb-4">
+      <div class="col-md-6">
+        <p class="chart-title-label"><span class="en">INFOGRAPHIC CLAIMS (cherry-picked months)</span><span class="it">CLAIM INFOGRAFICA (mesi cherry-picked)</span></p>
+        <div class="chart-wrap" style="overflow-y:hidden;">
+          <div id="chart-claims"></div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <p class="chart-title-label"><span class="en">ACTUAL MANDATE AVERAGES</span><span class="it">MEDIE EFFETTIVE DEL MANDATO</span></p>
+        <div class="chart-wrap" style="overflow-y:hidden;">
+          <div id="chart-averages"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <strong><span class="en">Transformations:</span><span class="it">Trasformazioni:</span></strong>
+      <ul class="mb-0 mt-1">
+        <li><span class="en">Cherry-picked values: the monthly ISTAT data point closest to the infographic figure for each PM</span><span class="it">Valori cherry-picked: il dato mensile ISTAT più vicino alla cifra dell'infografica per ciascun premier</span></li>
+        <li><span class="en">Mandate averages: arithmetic mean of all available raw monthly observations (151_874) within each mandate period</span><span class="it">Medie mandato: media aritmetica di tutte le osservazioni mensili grezze disponibili (151_874) nel periodo di ogni mandato</span></li>
+        <li><span class="en">roughViz.BarH does not support negative values: all values shown are positive rates. Bars ordered descending (highest unemployment first) for both charts.</span><span class="it">roughViz.BarH non supporta valori negativi: tutti i valori mostrati sono tassi positivi. Barre ordinate decrescente (disoccupazione più alta prima) in entrambi i grafici.</span></li>
+      </ul>
+    </div>
+    <div class="note p-3 mb-2">
+      <span class="en"><strong>Reading note.</strong> Compare the two charts side by side. Meloni's claimed figure (5.3%) is 1.45pp below her actual mandate average (6.75%) — the largest absolute gap of any PM. The infographic's chosen figure for Meloni is a single month (August 2024), which benefits from seasonal summer effects in the Italian labour market. Data: ISTAT 151_914 + 151_874. Charts: roughViz 1.0.6 BarH.</span>
+      <span class="it"><strong>Nota di lettura.</strong> Confronta i due grafici affiancati. La cifra di Meloni nell'infografica (5,3%) è 1,45pp sotto la media effettiva del suo mandato (6,75%) — il gap assoluto più grande tra tutti i premier. La cifra scelta per Meloni è un singolo mese (agosto 2024), favorito dagli effetti stagionali estivi sul mercato del lavoro italiano. Dati: ISTAT 151_914 + 151_874. Grafici: roughViz 1.0.6 BarH.</span>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE 4: CONTESTO MANCANTE ═══ -->
+  <section class="section py-5" id="context">
+    <p class="section-label mb-1">
+      <span class="en">Structural analysis · ISTAT 151_914 · 2013–2025</span>
+      <span class="it">Analisi strutturale · ISTAT 151_914 · 2013–2025</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="en">What the infographic deliberately omits</span>
+      <span class="it">Cosa l'infografica omette deliberatamente</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="en">Three structural distortions in the Fratelli d'Italia graphic</span>
+      <span class="it">Tre distorsioni strutturali nella grafica di Fratelli d'Italia</span>
+    </p>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="card h-100 border-warning">
+          <div class="card-body">
+            <h5 class="card-title">
+              <span class="en">1. Gentiloni is invisible</span>
+              <span class="it">1. Gentiloni è invisibile</span>
+            </h5>
+            <p class="card-text">
+              <span class="en">Paolo Gentiloni governed Italy from December 2016 to June 2018 — 18 months during which unemployment fell from 12.1% to 10.4% (−1.7pp). His government is absent from the infographic, even though the decline it oversees is silently attributed to subsequent premiers.</span>
+              <span class="it">Paolo Gentiloni ha governato l'Italia da dicembre 2016 a giugno 2018 — 18 mesi durante i quali la disoccupazione è scesa da 12,1% a 10,4% (−1,7pp). Il suo governo è assente dall'infografica, anche se il calo che supervisiona viene tacitamente attribuito ai premier successivi.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 border-danger">
+          <div class="card-body">
+            <h5 class="card-title">
+              <span class="en">2. "Conte" conflates two governments</span>
+              <span class="it">2. "Conte" fonde due governi</span>
+            </h5>
+            <p class="card-text">
+              <span class="en">Conte I (Jun 2018–Sep 2019, M5S + Lega) and Conte II (Sep 2019–Feb 2021, M5S + PD) were politically opposite governments. Merging them into a single "10.1%" figure is statistically misleading — and hides the COVID distortion of 2020 (when recorded unemployment fell to 6.44% due to furlough classification).</span>
+              <span class="it">Conte I (giu 2018–set 2019, M5S + Lega) e Conte II (set 2019–feb 2021, M5S + PD) erano governi politicamente opposti. Unirli in un unico "10,1%" è fuorviante — e nasconde la distorsione COVID del 2020 (quando la disoccupazione registrata è scesa al 6,44% per la classificazione della cassa integrazione).</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 border-secondary">
+          <div class="card-body">
+            <h5 class="card-title">
+              <span class="en">3. August is the seasonal minimum</span>
+              <span class="it">3. Agosto è il minimo stagionale</span>
+            </h5>
+            <p class="card-text">
+              <span class="en">Italian unemployment systematically dips in August due to seasonal employment in tourism and agriculture. August 2024 (5.32%) is lower than both July 2024 (5.93%) and September 2024 (5.62%). Using a seasonal minimum month for Meloni, while using end-of-mandate or mid-mandate months for others, is an inconsistent cherry-pick.</span>
+              <span class="it">La disoccupazione italiana cala sistematicamente in agosto per l'occupazione stagionale nel turismo e nell'agricoltura. Agosto 2024 (5,32%) è inferiore sia a luglio 2024 (5,93%) sia a settembre 2024 (5,62%). Usare il mese di minimo stagionale per Meloni, mentre si usano mesi di fine o metà mandato per gli altri, è un cherry-picking inconsistente.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <strong><span class="en">No transformations:</span><span class="it">Nessuna trasformazione:</span></strong>
+      <span class="en"> contextual analysis based on ISTAT 151_874 monthly data and mandate chronology from official Italian government records.</span>
+      <span class="it"> analisi contestuale basata sui dati mensili ISTAT 151_874 e sulla cronologia dei mandati da fonti ufficiali del governo italiano.</span>
+    </div>
+    <div class="note p-3 mb-2">
+      <span class="en"><strong>Note.</strong> This section does not attribute or deny any government's contribution to employment trends — economic outcomes depend on global cycles, structural reforms accumulated over decades, and exogenous shocks. The claim here is limited to methodological critique: the infographic uses an inconsistent and opaque cherry-picking method that inflates Meloni's result relative to predecessors.</span>
+      <span class="it"><strong>Nota.</strong> Questa sezione non attribuisce né nega il contributo di alcun governo all'andamento dell'occupazione — i risultati economici dipendono da cicli globali, riforme strutturali accumulate in decenni e shock esogeni. L'affermazione qui si limita alla critica metodologica: l'infografica usa un cherry-picking inconsistente e opaco che gonfia il risultato di Meloni rispetto ai predecessori.</span>
+    </div>
+  </section>
+
+</main>
+
+<div id="shell-bottom"></div>
+
+<div class="container">
+<div id="shell-footer"></div>
+</div>
+
+<script src="../../assets/shell.js"></script>
+<script src="../../assets/lang.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── SHELL CONFIG ──────────────────────────────────────────────────────────────
+initShell({
+  researchQuestion: "Are the unemployment figures attributed to the Renzi, Conte, Draghi and Meloni governments in the Fratelli d'Italia infographic accurate and methodologically honest?",
+  statisticalProxy: "ISTAT 151_914 — Unemployment rate, 15–74 years, Italy, total (sex=9, education=99, citizenship=TOTAL). Approximates the phenomenon because it is the national ISTAT reference series; limitation: does not distinguish precarious from stable employment, nor cyclical effects (e.g. COVID) from government policy.",
+
+  title:  "Disoccupazione e governi italiani: il fact-check / Italian Unemployment & Governments: the fact-check",
+  date:   "6 May 2026",
+  intro:  "A Fratelli d'Italia infographic claims Italian unemployment under Meloni (5.3%) is dramatically lower than under Renzi (11.8%), Conte (10.1%) and Draghi (8%), citing ISTAT. This report traces each figure to its exact ISTAT source, finds they are real data points but cherry-picked single months with no consistent methodology, and shows the full declining trend across all governments since 2014.",
+  badges: [
+    { label: "ISTAT",   value: "151_914 · 151_874 · 151_884" },
+    { label: "Period",  value: "2013–2025" },
+    { label: "Country", value: "Italy" }
+  ],
+
+  nav: [
+    { id: "infografica", label: "Infographic" },
+    { id: "verdict",     label: "Verdict" },
+    { id: "trend",       label: "Trend" },
+    { id: "comparison",  label: "Comparison" },
+    { id: "context",     label: "Context" }
+  ],
+
+  introTitle:    "What the data says / Cosa dicono i dati",
+  introSubtitle: "Real numbers, misleading comparisons / Numeri reali, confronti fuorvianti",
+  introExtra: `
+    <div class="summary mb-5">
+      <h3 class="mb-3">What the data says / Cosa dicono i dati</h3>
+      <p>
+        The four unemployment figures in the Fratelli d'Italia infographic (Renzi 11.8%, Conte 10.1%, Draghi 8%, Meloni 5.3%) are not invented — they all exist in ISTAT data. But each corresponds to a single cherry-picked month, not a mandate average, not an annual figure, and not a consistently defined period. For Meloni, the figure is August 2024 (5.32%), a month that benefits from seasonal effects in tourism and agriculture — while the actual average across her mandate to date is <strong>6.75%</strong>.
+        → <a href="#verdict">verdict table</a>
+      </p>
+      <p>
+        Il dato più rivelatore non è il mese scelto, ma la serie storica completa: la disoccupazione italiana è scesa da 12,85% nel 2014 a 6,52% nel 2024 in modo quasi lineare, attraversando sei governi di segno politico opposto. Il mandato con la discesa relativa più ampia — in punti percentuali — è quello di Draghi (−2,60pp). Meloni ha registrato una discesa comparabile (−2,62pp finora), continuando un trend già in atto.
+        → <a href="#trend">serie storica</a>
+      </p>
+      <p>
+        La sorpresa statistica è il governo assente: Gentiloni (dic 2016 – giu 2018) ha presieduto un calo di 1,7pp in 18 mesi, ma non compare nell'infografica. L'altra omissione è la fusione di Conte I (M5S-Lega) e Conte II (M5S-PD) in un'unica cifra, ignorando che durante il mandato di Conte la disoccupazione è scesa fino al 6,44% nel pieno del COVID — artefatto che l'infografica non nomina perché contraddirebbe la narrativa.
+        → <a href="#comparison">confronto</a>, <a href="#context">contesto</a>
+      </p>
+    </div>
+  `,
+
+  scopeLimit: "ISTAT data covers the ILO unemployment rate for Italy (15–74 years). It does not cover: quality of employment (temporary contracts, involuntary part-time), regional breakdown, or the causal relationship between government policies and unemployment trends. No statistical indicator can establish whether a government 'caused' a change in unemployment. / I dati ISTAT coprono il tasso di disoccupazione ILO per l'Italia (15–74 anni). Non coprono: qualità dell'occupazione (contratti a termine, part-time involontario), dettaglio regionale, o il nesso causale tra politiche di governo e andamento della disoccupazione.",
+
+  findingCards: [
+    { value: "5.32%",  label: "ISTAT Aug 2024 — Meloni's cherry-picked month / mese cherry-picked",  color: "accent" },
+    { value: "6.75%",  label: "Actual average unemployment across Meloni's mandate / Media effettiva mandato Meloni", color: "default" },
+    { value: "−6.3pp", label: "Total drop 2014→2024 (all governments) / Calo totale 2014→2024 (tutti i governi)", color: "blue" },
+    { value: "⚠️ 1",   label: "Government absent from infographic: Gentiloni (−1.7pp) / Governo assente: Gentiloni", color: "green" }
+  ],
+
+  rawData: {
+    license:        "ISTAT — dati.istat.it, licenza CC BY 3.0 IT",
+    extractionDate: "6 May 2026",
+    files: [
+      {
+        provider:  "ISTAT",
+        datasetId: "151_914",
+        desc:      "Tasso di disoccupazione annuale — 15-74 anni — Italia",
+        rows:      13,
+        period:    "2013–2025",
+        file:      "output/A_disoccupazione_annuale.csv"
+      },
+      {
+        provider:  "ISTAT",
+        datasetId: "151_914",
+        desc:      "Tasso di disoccupazione trimestrale grezzo — 15-74 anni — Italia",
+        rows:      52,
+        period:    "2013–2025",
+        file:      "output/B_disoccupazione_trimestrale.csv"
+      },
+      {
+        provider:  "ISTAT",
+        datasetId: "151_874",
+        desc:      "Tasso di disoccupazione mensile grezzo — 2022-2026",
+        rows:      904,
+        period:    "2022–2026",
+        file:      "output/C_disoccupazione_mensile.csv"
+      },
+      {
+        provider:  "ISTAT",
+        datasetId: "151_874",
+        desc:      "Tasso di disoccupazione mensile grezzo — 2013-2022 (storico)",
+        rows:      6163,
+        period:    "2013–2022",
+        file:      "output/D_disoccupazione_mensile_storica.csv"
+      },
+      {
+        provider:  "ISTAT",
+        datasetId: "151_884",
+        desc:      "Tasso di disoccupazione trimestrale destagionalizzato — double check",
+        rows:      52,
+        period:    "2013–2025",
+        file:      "output/F_disoccupazione_destagionalizzata.csv"
+      }
+    ]
+  },
+
+  methodology: {
+    githubUrl: "https://github.com/datapitch-it/automatic-reports/reports/11_disoccupazione-meloni-factcheck",
+    classifications: [
+      { code: "Y15-74",  system: "AGE (151_914)",        meaning: "15-74 anni — standard ILO" },
+      { code: "9",       system: "SEX (ISTAT)",          meaning: "Totale (maschi + femmine)" },
+      { code: "99",      system: "EDU_LEV_HIGHEST",      meaning: "Totale (tutti i livelli di istruzione)" },
+      { code: "TOTAL",   system: "CITIZENSHIP",          meaning: "Totale (italiani + stranieri)" },
+      { code: "UNEM_R",  system: "DATA_TYPE",            meaning: "Tasso di disoccupazione ILO" },
+      { code: "N",       system: "ADJUSTMENT (151_874)", meaning: "Dati grezzi non destagionalizzati" }
+    ],
+    extra: `
+      <p class="note pt-2 mb-4">
+        <strong>Double check passed</strong> — ISTAT 151_914 (annual) validated against ISTAT 151_884 (seasonally adjusted quarterly):
+        2022 annual = 8.09% vs quarterly avg = 8.11% (Δ = 0.02pp ✓);
+        2023 annual = 7.65% vs quarterly avg = 7.68% (Δ = 0.03pp ✓);
+        2024 annual = 6.52% vs quarterly avg = 6.57% (Δ = 0.05pp ✓).
+        Differences &lt;0.1pp attributable to seasonal adjustment and rounding.
+      </p>
+      <p class="note pt-2 mb-4">
+        <strong>Cherry-pick analysis — monthly source</strong>: ISTAT 151_874 (raw monthly, non-seasonally adjusted, EDITION = latest available per period).
+        Meloni's 5.3% = August 2024 = 5.32% ✓ (seasonal summer minimum).
+        Renzi's 11.8% = September 2016 = 11.79% ✓.
+        Draghi's 8% ≈ September 2022 = 7.92% ✓.
+        Conte's 10.1% ≈ February 2020 = 10.02% ✓ (COVID onset month).
+        All figures are real ISTAT data points; no figure is fabricated.
+        The distortion lies in the inconsistent period selection.
+      </p>
+    `,
+    cliHdr: "Dataset",
+    cliCommands: [
+      { dataset: "151_914 (annual)",    command: "opensdmx run queries/A_disoccupazione_annuale.yaml --out output/A_disoccupazione_annuale.csv" },
+      { dataset: "151_914 (quarterly)", command: "opensdmx run queries/B_disoccupazione_trimestrale.yaml --out output/B_disoccupazione_trimestrale.csv" },
+      { dataset: "151_874 (monthly)",   command: "opensdmx run queries/C_disoccupazione_mensile.yaml --out output/C_disoccupazione_mensile.csv" },
+      { dataset: "151_884 (s.adj.)",    command: "opensdmx run queries/F_disoccupazione_destagionalizzata.yaml --out output/F_disoccupazione_destagionalizzata.csv" }
+    ],
+    files: [
+      { file: "output/A_disoccupazione_annuale.csv",         desc: "13 rows · annual · 2013–2025" },
+      { file: "output/B_disoccupazione_trimestrale.csv",     desc: "52 rows · quarterly raw · 2013–2025" },
+      { file: "output/C_disoccupazione_mensile.csv",         desc: "904 rows · monthly raw · 2022–2026" },
+      { file: "output/D_disoccupazione_mensile_storica.csv", desc: "6163 rows · monthly raw · 2013–2022" },
+      { file: "output/F_disoccupazione_destagionalizzata.csv", desc: "52 rows · seasonally adj. · 2013–2025 (double-check)" },
+      { file: "queries/A_disoccupazione_annuale.yaml",        desc: "Reproducible query — annual" },
+      { file: "queries/B_disoccupazione_trimestrale.yaml",    desc: "Reproducible query — quarterly" },
+      { file: "queries/C_disoccupazione_mensile.yaml",        desc: "Reproducible query — monthly" },
+      { file: "queries/F_disoccupazione_destagionalizzata.yaml", desc: "Reproducible query — seasonally adj." },
+      { file: "notes.md",                                     desc: "Chronological operations log" },
+      { file: "disoccupazione-meloni.jpeg",                   desc: "Original infographic (Fratelli d'Italia)" }
+    ]
+  },
+
+  providers: "ISTAT — dati.istat.it",
+  github:    "https://github.com/datapitch-it/automatic-reports"
+});
+
+// ── CHART 1: TIME SERIES (chart.xkcd.XY) ────────────────────────────────────
+const anniAnn = [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+const valoriAnn = [12.37, 12.85, 12.01, 11.75, 11.25, 10.58, 9.93, 9.35, 9.53, 8.09, 7.65, 6.52, 6.15];
+
+const pointsTrend = [{ x: 2012, y: 0 }]; // synthetic zero baseline
+anniAnn.forEach((a, i) => {
+  if (valoriAnn[i] !== null) pointsTrend.push({ x: a, y: valoriAnn[i] });
+});
+
+new chartXkcd.XY(document.getElementById('chart-trend'), {
+  xLabel: '',
+  yLabel: 'UNEMPLOYMENT RATE (%)',
+  data: {
+    datasets: [{ label: 'ITALY 15–74 YRS (ANNUAL)', data: pointsTrend }]
+  },
+  options: {
+    showLine: true,
+    dotSize: 0.5,
+    xTickCount: 5,
+    yTickCount: 5,
+    dataColors: ['#b02020'],
+  }
+});
+
+// ── CHART 2A: INFOGRAPHIC CLAIMS (roughViz.BarH) ─────────────────────────────
+(function() {
+  const wrap = document.querySelector('#chart-claims').closest('.chart-wrap');
+  const s = window.getComputedStyle(wrap);
+  const w = Math.floor(wrap.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight));
+
+  new roughViz.BarH({
+    element: '#chart-claims',
+    data: {
+      labels: ['RENZI (SEP 2016)', 'CONTE (FEB 2020)', 'DRAGHI (SEP 2022)', 'MELONI (AUG 2024)'],
+      values: [11.79, 10.02, 7.92, 5.32]
+    },
+    title: 'CHERRY-PICKED MONTHS',
+    titleFontSize: '1rem',
+    axisFontSize: '1rem',
+    roughness: 1.5,
+    stroke: '#333',
+    strokeWidth: 1,
+    fillStyle: 'hachure',
+    fillWeight: 0.7,
+    color: '#b02020',
+    highlight: '#c0392b',
+    tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+    width: w || 400,
+    height: 220,
+    margin: { top: 40, right: 60, bottom: 50, left: 200 },
+    xLabel: 'RATE (%)',
+  });
+})();
+
+// ── CHART 2B: MANDATE AVERAGES (roughViz.BarH) ────────────────────────────────
+(function() {
+  const wrap = document.querySelector('#chart-averages').closest('.chart-wrap');
+  const s = window.getComputedStyle(wrap);
+  const w = Math.floor(wrap.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight));
+
+  new roughViz.BarH({
+    element: '#chart-averages',
+    data: {
+      labels: ['RENZI', 'CONTE I+II', 'DRAGHI', 'MELONI'],
+      values: [12.14, 9.80, 8.82, 6.75]
+    },
+    title: 'MANDATE AVERAGES (ALL MONTHS)',
+    titleFontSize: '1rem',
+    axisFontSize: '1rem',
+    roughness: 1.5,
+    stroke: '#333',
+    strokeWidth: 1,
+    fillStyle: 'hachure',
+    fillWeight: 0.7,
+    color: '#1a6fa8',
+    highlight: '#2980b9',
+    tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:1rem;',
+    width: w || 400,
+    height: 220,
+    margin: { top: 40, right: 60, bottom: 50, left: 170 },
+    xLabel: 'RATE (%)',
+  });
+})();
+</script>
+</body>
+</html>

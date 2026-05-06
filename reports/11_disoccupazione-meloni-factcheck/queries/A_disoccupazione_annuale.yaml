@@ -1,0 +1,12 @@
+provider: istat
+dataset: "151_914"
+filters:
+  FREQ: A
+  REF_AREA: IT
+  SEX: "9"
+  AGE: Y15-74
+  EDU_LEV_HIGHEST: "99"
+  CITIZENSHIP: TOTAL
+  DURATION_UNEMPLOYMENT: TOTAL
+start_period: "2013"
+end_period: "2025"

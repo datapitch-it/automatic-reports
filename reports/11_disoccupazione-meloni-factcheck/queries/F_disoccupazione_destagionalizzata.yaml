@@ -1,0 +1,8 @@
+provider: istat
+dataset: "151_884"
+filters:
+  REF_AREA: IT
+  SEX: "9"
+  AGE: Y15-74
+start_period: "2013"
+end_period: "2025"

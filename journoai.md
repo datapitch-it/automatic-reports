@@ -46,17 +46,15 @@ Bootstrap, roughViz and chart.xkcd. Do not depend on files outside the repositor
 
 ## Phase 0 — Report language
 
-**Before any other operation**, ask the user:
+**Default: ENG | ITA (bilingual).** Do not ask the user about language unless they explicitly request a single-language report. The standard output is always a bilingual page using the `<span class="en">` / `<span class="it">` toggle pattern already in the shell.
 
-> What language should I generate the report in?
-
-Wait for the answer. The chosen language applies to:
-- all text in the `index.html` page (titles, descriptions, callouts, notes, chart labels)
-- the content of `notes.md`
+The bilingual default applies to:
+- all text in the `index.html` page (titles, descriptions, callouts, notes, chart labels) — every user-visible string must have both an `.en` and an `.it` variant
+- `notes.md` may be written in Italian (working language of the analyst)
 - file names are not affected (they remain in English/slug form)
 
 SDMX codes, variable names, CLI commands and API URLs always remain in English
-regardless of the chosen language.
+regardless of language.
 
 ---
 
@@ -577,6 +575,7 @@ After each new report, update `reports.json` in the repository root with a new e
 </div>
 
 <script src="../../assets/shell.js"></script>
+<script src="../../assets/lang.js"></script>  <!-- MANDATORY: ENG|ITA toggle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 // ── SHELL CONFIG ──────────────────────────────────────────────────────────────

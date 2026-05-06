@@ -1,5 +1,19 @@
 [
   {
+    "order": 11,
+    "path":  "reports/11_disoccupazione-meloni-factcheck/index.html",
+    "date":  "6 maggio 2026",
+    "title": "Disoccupazione e governi italiani: il fact-check dell'infografica FdI",
+    "title_en": "Italian Unemployment & Governments: fact-checking the Fratelli d'Italia infographic",
+    "desc":  "I valori ISTAT citati dall'infografica di FdI (Meloni 5,3%, Draghi 8%, Conte 10,1%, Renzi 11,8%) esistono nei dati, ma sono singoli mesi cherry-picked senza metodologia coerente. La media del mandato Meloni è 6,75%. Il trend è in calo continuo dal 2014 attraverso sei governi.",
+    "desc_en": "The ISTAT figures cited in the FdI infographic (Meloni 5.3%, Draghi 8%, Conte 10.1%, Renzi 11.8%) are real data points, but are single cherry-picked months with no consistent methodology. Meloni's mandate average is 6.75%. The trend has been declining continuously since 2014 across six governments.",
+    "badges": [
+      { "label": "ISTAT", "value": "151_914 · 151_874 · 151_884" },
+      { "label": "Period", "value": "2013–2025", "label_it": "Periodo" },
+      { "label": "Country", "value": "Italy", "label_it": "Paese" }
+    ]
+  },
+  {
     "order": 10,
     "path":  "reports/10_labour-market/index.html",
     "date":  "1 May 2026",

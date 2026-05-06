@@ -1,0 +1,8 @@
+provider: istat
+dataset: "151_874"
+filters:
+  SEX: "9"
+  AGE: Y15-74
+  ADJUSTMENT: N
+start_period: "2013-01"
+end_period: "2025-12"
