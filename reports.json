@@ -1,7 +1,7 @@
 [
   {
     "order": 11,
-    "path":  "reports/11_disoccupazione-meloni-factcheck/index.html",
+    "path":  "reports/11_disoccupazione-meloni-factcheck/",
     "date":  "6 maggio 2026",
     "title": "Disoccupazione e governi italiani: il fact-check dell'infografica FdI",
     "title_en": "Italian Unemployment & Governments: fact-checking the Fratelli d'Italia infographic",
@@ -15,7 +15,7 @@
   },
   {
     "order": 10,
-    "path":  "reports/10_labour-market/index.html",
+    "path":  "reports/10_labour-market/",
     "date":  "1 May 2026",
     "title": "Labour Market Indicators: jobs, wages, and security across Europe",
     "desc":  "A cross-country analysis of European and OECD labour markets from the worker's perspective: unemployment by age and sex, labour force participation gaps, precarious work, average wages, gender wage gap, and job vacancy rates — with historical trends from 2000 to 2024.",
@@ -28,7 +28,7 @@
   },
   {
     "order": 9,
-    "path":  "reports/09_sicilia-indicatori/index.html",
+    "path":  "reports/09_sicilia-indicatori/",
     "date":  "29 aprile 2026",
     "title": "Sicilia in numeri: 14 indicatori strutturali",
     "title_en": "Sicily in Numbers: 14 structural indicators",
@@ -44,7 +44,7 @@
   },
   {
     "order": 8,
-    "path":  "reports/08_netherlands-factcheck/index.html",
+    "path":  "reports/08_netherlands-factcheck/",
     "date":  "27 aprile 2026",
     "title": "Netherlands in Numbers: fact-checking dell'infografica Eurostat",
     "title_en": "Netherlands in Numbers: fact-checking the Eurostat infographic",
@@ -57,7 +57,7 @@
   },
   {
     "order": 7,
-    "path":  "reports/07_natalita-europa/index.html",
+    "path":  "reports/07_natalita-europa/",
     "date":  "24 aprile 2026",
     "title": "Natalità in Europa: il crollo silenzioso",
     "title_en": "Birth Rates in Europe: the silent collapse",
@@ -71,7 +71,7 @@
   },
   {
     "order": 6,
-    "path":  "reports/06_petrolio-fossili/index.html",
+    "path":  "reports/06_petrolio-fossili/",
     "date":  "22 aprile 2026",
     "title": "Petrolio e combustibili fossili: produzione, importazioni, usi, riserve",
     "title_en": "Oil and Fossil Fuels: production, imports, uses, reserves",
@@ -86,7 +86,7 @@
   },
   {
     "order": 5,
-    "path":  "reports/05_media-giornalismo/index.html",
+    "path":  "reports/05_media-giornalismo/",
     "date":  "21 aprile 2026",
     "title": "Due velocità nel settore media europeo",
     "title_en": "Two speeds in the European media sector",
@@ -99,7 +99,7 @@
   },
   {
     "order": 3,
-    "path":  "reports/03_incidenti-stradali/index.html",
+    "path":  "reports/03_incidenti-stradali/",
     "date":  "17 aprile 2026",
     "title": "Incidenti stradali in Europa: la mappa della sicurezza",
     "title_en": "Road Accidents in Europe: the safety map",
@@ -113,7 +113,7 @@
   },
   {
     "order": 4,
-    "path":  "reports/04_stereotipi-genere/index.html",
+    "path":  "reports/04_stereotipi-genere/",
     "date":  "9 aprile 2026",
     "title": "Stereotipi di genere nei dati europei",
     "title_en": "Gender Stereotypes in European Data",
@@ -126,7 +126,7 @@
   },
   {
     "order": 1,
-    "path":  "reports/01_gender-pay-gap/index.html",
+    "path":  "reports/01_gender-pay-gap/",
     "date":  "9 aprile 2026",
     "title": "Quanto guadagnano le donne rispetto agli uomini in Europa?",
     "title_en": "How much do women earn compared to men in Europe?",
@@ -140,7 +140,7 @@
   },
   {
     "order": 2,
-    "path":  "reports/02_spesa-militare/index.html",
+    "path":  "reports/02_spesa-militare/",
     "date":  "8 aprile 2026",
     "title": "Spesa militare e industria della difesa",
     "title_en": "Military Spending and the Defence Industry",

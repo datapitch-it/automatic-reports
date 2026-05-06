@@ -7,7 +7,7 @@ function _renderShell(cfg) {
 
   // ── NAV + HEADER ─────────────────────────────────────────────────────────
   var navLinks = [
-    '<a class="nav-link" href="../../index.html">← Home</a>',
+    '<a class="nav-link" href="../../">← Home</a>',
     '<a class="nav-link" href="#intro">↓ Intro</a>'
   ];
   (cfg.nav || []).forEach(function(n) {
