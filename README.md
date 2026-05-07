@@ -19,7 +19,7 @@ assets/          — CSS, JS, fonts
 
 ## Requirements
 
-- [`opensdmx`](https://github.com/bis-med-it/pysdmx) CLI available in PATH
+- [`opensdmx`](https://github.com/ondata/opensdmx) CLI available in PATH
 - A static HTTP server (e.g. `python3 -m http.server`)
 
 ## Run locally
