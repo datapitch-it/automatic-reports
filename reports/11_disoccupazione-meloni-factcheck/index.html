@@ -286,7 +286,7 @@
               <td><strong>Meloni</strong></td>
               <td>Oct 2022 – present</td>
               <td>8.11% (oct 2022)</td>
-              <td>5.49% (nov 2025, latest)</td>
+              <td>5.48% (mar 2026, latest)</td>
               <td>−2.62pp</td>
             </tr>
           </tbody>
@@ -298,13 +298,13 @@
       <strong><span class="en">Transformations:</span><span class="it">Trasformazioni:</span></strong>
       <ul class="mb-0 mt-1">
         <li><span class="en">Raw data: 13 annual observations, ISTAT 151_914, Italy 15–74 years, total</span><span class="it">Dati grezzi: 13 osservazioni annuali, ISTAT 151_914, Italia 15–74 anni, totale</span></li>
-        <li><span class="en">Synthetic zero point added at x=2012, y=0 to enforce zero baseline (chart.xkcd requirement)</span><span class="it">Punto zero sintetico aggiunto in x=2012, y=0 per forzare la baseline a zero (requisito chart.xkcd)</span></li>
+        <li><span class="en">No baseline manipulation — Y-axis auto-scaled to data range</span><span class="it">Nessuna manipolazione della baseline — asse Y autoscalato al range dei dati</span></li>
         <li><span class="en">No other transformations</span><span class="it">Nessun'altra trasformazione</span></li>
       </ul>
     </div>
     <div class="note p-3 mb-2">
-      <span class="en"><strong>Reading note.</strong> The Y-axis starts at zero as required. The COVID dip in 2020 (9.35%) is real but partially reflects a statistical artefact: workers on short-time work schemes (cassa integrazione) were classified as employed, depressing the measured unemployment rate. Data: ISTAT 151_914. Chart: chart.xkcd 1.1 XY.</span>
-      <span class="it"><strong>Nota di lettura.</strong> L'asse Y parte da zero come richiesto dalla metodologia. Il calo COVID del 2020 (9,35%) è reale ma riflette parzialmente un artefatto statistico: i lavoratori in cassa integrazione erano classificati come occupati, abbassando artificialmente il tasso. Dati: ISTAT 151_914. Grafico: chart.xkcd 1.1 XY.</span>
+      <span class="en"><strong>Reading note.</strong> The Y-axis is auto-scaled to the data range (approximately 6–13%) — not forced to zero, since there are no data points below the observed minimum. The COVID dip in 2020 (9.35%) is real but partially reflects a statistical artefact: workers on short-time work schemes (cassa integrazione) were classified as employed, depressing the measured unemployment rate. Data: ISTAT 151_914. Chart: chart.xkcd 1.1 XY.</span>
+      <span class="it"><strong>Nota di lettura.</strong> L'asse Y è autoscalato al range dei dati (circa 6–13%) — non forzato a zero, perché non esistono dati sotto il minimo osservato. Il calo COVID del 2020 (9,35%) è reale ma riflette parzialmente un artefatto statistico: i lavoratori in cassa integrazione erano classificati come occupati, abbassando artificialmente il tasso. Dati: ISTAT 151_914. Grafico: chart.xkcd 1.1 XY.</span>
     </div>
   </section>
 
@@ -485,8 +485,8 @@ initShell({
     </div>
   `,
 
-  scopeLimit:    "I dati ISTAT coprono il tasso di disoccupazione ILO per l'Italia (15–74 anni). Non coprono: qualità dell'occupazione (contratti a termine, part-time involontario), dettaglio regionale, o il nesso causale tra politiche di governo e andamento della disoccupazione. Nessun indicatore statistico può stabilire se un governo ha 'causato' una variazione della disoccupazione.",
-  scopeLimit_en: "ISTAT data covers the ILO unemployment rate for Italy (15–74 years). It does not cover: quality of employment (temporary contracts, involuntary part-time), regional breakdown, or the causal relationship between government policies and unemployment trends. No statistical indicator can establish whether a government 'caused' a change in unemployment.",
+  scopeLimit:    "Questo report usa la serie ISTAT 151_914/151_874 (tasso di disoccupazione ILO, 15–74 anni). Questa serie non copre: qualità dell'occupazione (contratti a termine, part-time involontario — ISTAT ha dataflow dedicati per questi aspetti), dettaglio regionale o demografico, o il nesso causale tra politiche di governo e andamento della disoccupazione. Nessun indicatore di tasso aggregato può stabilire se un governo ha 'causato' una variazione della disoccupazione.",
+  scopeLimit_en: "This report uses ISTAT series 151_914/151_874 (ILO unemployment rate, 15–74 years). This series does not cover: quality of employment (temporary contracts, involuntary part-time — ISTAT has dedicated dataflows for these), regional or demographic breakdown, or the causal relationship between government policies and unemployment trends. No aggregate rate indicator can establish whether a government 'caused' a change in unemployment.",
 
   findingCards: [
     { value: "5,32%",  label: "ISTAT ago 2024 — mese cherry-picked per Meloni",           label_en: "ISTAT Aug 2024 — Meloni's cherry-picked month",      color: "accent" },
@@ -605,7 +605,7 @@ initShell({
 const anniAnn = [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
 const valoriAnn = [12.37, 12.85, 12.01, 11.75, 11.25, 10.58, 9.93, 9.35, 9.53, 8.09, 7.65, 6.52, 6.15];
 
-const pointsTrend = [{ x: 2012, y: 0 }]; // synthetic zero baseline
+const pointsTrend = [];
 anniAnn.forEach((a, i) => {
   if (valoriAnn[i] !== null) pointsTrend.push({ x: a, y: valoriAnn[i] });
 });

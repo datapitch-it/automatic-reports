@@ -104,7 +104,9 @@ Wait for the user's choice. Only then, write down in `notes.md`:
 [Which measurable quantity in SDMX approximates the phenomenon of interest, and why it is a good (or imperfect) proxy]
 
 ## Scope
-[What SDMX data does NOT cover — to be declared explicitly on the page]
+[What THIS SPECIFIC SERIES/DATAFLOW does NOT cover — never generalise to the provider.
+Write "this series does not cover X", never "[Provider] does not cover X".
+Claiming a provider does not cover a phenomenon requires having searched the full catalogue (`opensdmx search`). A provider may have dedicated dataflows for exactly what the chosen series omits.]
 
 ## Candidate providers
 [To be filled after running `opensdmx providers` — see Phase 1.1]
@@ -205,6 +207,7 @@ opensdmx get "<DATASET_ID>" \
 - Omitting a dimension = all available values
 - Always use `--out` to save to `output/`
 - The CSV file must never be edited by hand
+- **Always record the edition ID**: every dataset has a publication edition (e.g. `2026M4G30` for ISTAT). Record it in `notes.md` and cite it in the `.transform` block on the page. Before publishing, verify that the edition used is the latest available — run the query again if in doubt.
 
 Real example (Eurostat):
 
@@ -344,7 +347,9 @@ not in separate CSV files. This ensures the page is self-contained.
 
 ### Chart rules
 
-- **Zero baseline — MANDATORY**: the Y-axis must always start at zero. Do not use truncated scales that visually amplify variations that would be marginal on an absolute scale. If the natural data range does not include zero, the axis must still extend to zero. For chart.xkcd XY: add a synthetic point `{x: firstYear, y: 0}` at the end of the data array (it will be ignored visually if far from the range, but forces the scale); alternatively, prepend a point `{x: minYear - 1, y: 0}` with `showLine: false` on the first segment — or choose a library that explicitly supports `yMin: 0`. This rule applies to all chart types (XY, Bar, BarH). No exceptions: if a truncated scale is the only way to read the chart, the problem is in the choice of chart type, not in the baseline.
+- **Zero baseline — conditional rule**:
+  - **Absolute values** (expenditure in €, number of persons, kg, km²): the Y-axis must always start at zero. A truncated scale on an absolute series is a visual distortion — never acceptable.
+  - **Rates, percentages, indices** (unemployment rate, inflation, index numbers): if the data range does not naturally approach zero, do **not** force the axis to zero with synthetic data points. Use the auto-scaled range. Never add a fake point `{x: year, y: 0}` to force the baseline — a missing data point is not a methodology, it is fabricated data. Instead, in the `.note` block explicitly state that the Y-axis does not start at zero and why (e.g. "The Y-axis is auto-scaled to the data range — starting at zero would compress the meaningful variation without adding information"). If a truncated scale makes marginal variations look dramatic, the solution is a contextualising sentence in the callout, not a forced zero that distorts the other direction.
 
 - **Minimum font 1rem**: always set `axisFontSize: '1rem'` and `titleFontSize: '1rem'` in every
   roughViz call. CSS cannot guarantee this limit because roughViz writes font-size
@@ -763,7 +768,10 @@ Each dataset section must have:
 - Never use interpolated data without declaring it explicitly
 - Never publish API URLs without having verified them by clicking
 - Never choose a chart type that distorts perception (e.g. area chart for non-cumulative data)
-- **Never truncate the Y-axis**: the Y-axis can never start from a value other than zero. A truncated scale (e.g. Y from 40 to 55 instead of 0 to 55) is a visual distortion that magnifies marginal variations
+- **Never truncate the Y-axis on absolute values**: for expenditure, counts, and other absolute series, the Y-axis must start at zero. A truncated absolute scale magnifies marginal variations and is a visual distortion.
+- **Never add synthetic data points to force a zero baseline**: a point `{x: year, y: 0}` that does not exist in the source data is fabricated data. If auto-scaling creates a "wow" effect on a rate/percentage chart, address it with a contextualising sentence in the callout — not with an invented data point.
+- **Never write "[Provider] does not cover X"** without having searched the provider's full catalogue. The correct formulation is always "this series/dataflow does not cover X". A provider may have dedicated dataflows for what the chosen series omits.
+- **Never use third-party claim language for your own analytical choices**: in fact-check reports, distinguish clearly between "the data point that [Source] chose" and "the data point we selected for comparison". Column headers, table captions and body text must make this distinction explicit.
 
 ---
 
@@ -897,7 +905,8 @@ introExtra: `
 - [ ] The `.transform` block is present in every dataset section
 - [ ] **Generation date**: present in `DD Month YYYY` format (in the report language) in all three places: `initShell({ date })`, Raw data callout, footer
 - [ ] The Raw data section states extraction date and licence
-- [ ] The "Scope limit" callout in the Intro section is present and accurate
-- [ ] **Zero baseline**: all charts have the Y-axis starting at zero — no truncated scales
+- [ ] The "Scope limit" callout refers to **this specific series/dataflow**, not to the provider as a whole — formulation is "this series does not cover X", never "[Provider] does not cover X"
+- [ ] **Edition ID**: the edition used for each dataset is recorded in `notes.md` and cited in the `.transform` block; confirmed as the latest available before publishing
+- [ ] **Zero baseline**: absolute-value charts (€, persons, kg) have Y starting at zero; rate/percentage/index charts use auto-scaled range with an explicit note in `.note` explaining why zero is not shown — no synthetic data points added to force the baseline
 - [ ] No `font-size` below `1rem` in chart JS configs (`axisFontSize`, `titleFontSize`, `labelFontSize`) — roughViz writes these values as inline styles on the SVG, which CSS cannot override without `!important`; the JS parameter is the only reliable control point
 - [ ] **Executive Summary**: `introExtra` filled with 3–4 paragraphs, every claim cites an exact value with year, every cited section has a working `<a href>`
