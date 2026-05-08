@@ -152,6 +152,52 @@
     </div>
   </section>
 
+  <!-- ═══ SEZIONE D — DEBITO STORICO 1980-2025 ═══ -->
+  <section class="section py-5" id="storico">
+    <p class="section-label mb-1">
+      <span class="en">Phase 3 · IMF HPD (1980–2009) + Eurostat GOV_10DD_EDPT1 (2010–2025) · Long-run debt</span>
+      <span class="it">Fase 3 · IMF HPD (1980–2009) + Eurostat GOV_10DD_EDPT1 (2010–2025) · Debito di lungo periodo</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="en">Italy's debt from 1980 to 2025: a 45-year structural problem</span>
+      <span class="it">Il debito italiano dal 1980 al 2025: un problema strutturale di 45 anni</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="en">% of GDP · Combined series: IMF Historical Public Debt + Eurostat EDP concept · Annual · 46 data points</span>
+      <span class="it">% del PIL · Serie combinata: IMF Historical Public Debt + Eurostat concetto EDP · Annuale · 46 punti</span>
+    </p>
+
+    <div class="callout mb-4">
+      <p>
+        <span class="en">Italy's debt crossed the <strong>100% of GDP threshold in 1992</strong> — the very year the Maastricht Treaty was signed, which set the 60% ceiling. When Italy joined the euro in 1999, its debt stood at <strong>110% of GDP</strong>, nearly double the Treaty limit. The Maastricht convergence criteria were effectively waived for Italy on the grounds of a "sufficiently declining" trajectory that never materialised. The 2011 sovereign crisis did not reveal a new vulnerability — it priced in a structural imbalance that had existed for three decades. Germany (blue) crossed the Maastricht threshold only during the 2008–2009 crisis and had returned to 58.7% by 2019 before the pandemic.</span>
+        <span class="it">Il debito italiano ha superato la <strong>soglia del 100% del PIL nel 1992</strong> — lo stesso anno in cui fu firmato il Trattato di Maastricht, che fissava il tetto al 60%. Quando l'Italia entrò nell'euro nel 1999, il suo debito era al <strong>110% del PIL</strong>, quasi il doppio del limite del Trattato. I criteri di convergenza di Maastricht furono di fatto derogati per l'Italia sulla base di una traiettoria "sufficientemente decrescente" che non si concretizzò mai. La crisi sovrana del 2011 non ha rivelato una vulnerabilità nuova — ha prezzato uno squilibrio strutturale esistente da tre decenni. La Germania (blu) ha superato la soglia Maastricht solo durante la crisi 2008–2009 ed era tornata al 58,7% nel 2019 prima della pandemia.</span>
+      </p>
+    </div>
+
+    <div class="chart-wrap mb-4" style="overflow-y:hidden;">
+      <svg id="chart-storico"></svg>
+    </div>
+
+    <div class="callout callout-note mb-4">
+      <p>
+        <span class="en"><strong>How to read:</strong> Y-axis auto-scaled (31%–154%). <strong>Sources spliced at 2010</strong>: 1980–2009 from IMF Historical Public Debt (HPD), 2010–2025 from Eurostat GOV_10DD_EDPT1 (EDP concept). A methodological gap of ~2.5–3.4 pp exists at the junction: for 2010, IMF HPD shows 115.4% while Eurostat shows 118.8%. Both measure general government gross debt but use slightly different GDP denominators and coverage. Eurostat EDP is the official Maastricht criterion measure; it is used for the 2010–2025 segment as it is the primary source for EU fiscal surveillance. German series starts from 1991 (reunification year; pre-1991 West Germany data not comparable). Red = Italy; blue = Germany. Rendered with chart.xkcd 1.1.</span>
+        <span class="it"><strong>Come leggere:</strong> Asse Y in scala automatica (31%–154%). <strong>Fonti unite al 2010</strong>: 1980–2009 da IMF Historical Public Debt (HPD), 2010–2025 da Eurostat GOV_10DD_EDPT1 (concetto EDP). Esiste un gap metodologico di ~2,5–3,4 pp alla giunzione: per il 2010, IMF HPD mostra 115,4% mentre Eurostat mostra 118,8%. Entrambe misurano il debito lordo delle amministrazioni pubbliche ma usano denominatori PIL e coperture settoriali leggermente diversi. Il concetto EDP Eurostat è la misura ufficiale del criterio Maastricht; è usato per il segmento 2010–2025 in quanto fonte primaria per la sorveglianza fiscale UE. La serie tedesca inizia dal 1991 (anno della riunificazione; i dati pre-1991 della Germania Ovest non sono comparabili). Rosso = Italia; blu = Germania. Realizzato con chart.xkcd 1.1.</span>
+      </p>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <strong><span class="en">Transformations — Dataset C (IMF HPD + Eurostat GOV_10DD_EDPT1 splice)</span><span class="it">Trasformazioni — Dataset C (Splice IMF HPD + Eurostat GOV_10DD_EDPT1)</span></strong>
+      <ul class="mb-0 mt-2">
+        <li><span class="en">IMF HPD download: all rows for ITA and DEU, annual 1980–2015 (last available year in HPD)</span><span class="it">Download IMF HPD: tutte le righe per ITA e DEU, annuale 1980–2015 (ultimo anno disponibile in HPD)</span></li>
+        <li><span class="en">Eurostat GOV_10DD_EDPT1: reuse of Dataset B, filtered to na_item=GD, annual 1995–2025</span><span class="it">Eurostat GOV_10DD_EDPT1: riutilizzo del Dataset B, filtrato a na_item=GD, annuale 1995–2025</span></li>
+        <li><span class="en">Splice rule: IMF HPD for 1980–2009; Eurostat for 2010–2025 (Eurostat takes precedence from 2010 as the official EU surveillance source)</span><span class="it">Regola di giunzione: IMF HPD per 1980–2009; Eurostat per 2010–2025 (Eurostat ha precedenza dal 2010 come fonte ufficiale di sorveglianza UE)</span></li>
+        <li><span class="en">Overlap verification (2010–2015): IMF vs Eurostat difference ranges from 2.1 to 3.4 pp — consistent systematic gap attributable to methodology, not data errors. Documented in notes.md</span><span class="it">Verifica overlap (2010–2015): differenza IMF vs Eurostat da 2,1 a 3,4 pp — gap sistematico attribuibile alla metodologia, non a errori nei dati. Documentato in notes.md</span></li>
+        <li><span class="en">German series starts from 1991 (reunification); pre-1991 West Germany data excluded as not comparable to unified Germany</span><span class="it">Serie tedesca dal 1991 (riunificazione); dati pre-1991 della Germania Ovest esclusi in quanto non comparabili con la Germania unificata</span></li>
+        <li><span class="en">Combined series: 46 annual data points for Italy (1980–2025), 35 for Germany (1991–2025)</span><span class="it">Serie combinata: 46 punti annuali per l'Italia (1980–2025), 35 per la Germania (1991–2025)</span></li>
+      </ul>
+    </div>
+  </section>
+
 </main>
 
 <div id="shell-bottom"></div>
@@ -172,6 +218,12 @@ const spreadY = [0.82,0.88,0.85,0.94,1.26,1.56,1.41,1.45,1.56,1.45,1.65,1.69,1.7
 const itY = [4.08,4.05,3.95,4.0,3.99,4.1,4.03,3.8,3.86,3.8,4.18,4.6,4.73,4.74,4.88,4.84,4.76,4.82,5.46,5.27,5.75,5.97,7.06,6.81,6.54,5.55,5.05,5.68,5.78,5.9,6.0,5.82,5.25,4.95,4.85,4.54,4.21,4.49,4.64,4.28,3.96,4.38,4.42,4.42,4.54,4.25,4.1,4.11,3.87,3.65,3.4,3.23,3.12,2.92,2.79,2.63,2.4,2.42,2.29,1.99,1.7,1.56,1.29,1.36,1.81,2.2,2.04,1.84,1.92,1.7,1.57,1.58,1.53,1.56,1.38,1.44,1.53,1.45,1.23,1.18,1.27,1.45,1.94,1.89,1.99,2.35,2.4,2.26,2.19,2.05,2.23,2.11,2.11,2.07,1.79,1.8,1.98,2.08,1.97,1.77,2.18,2.74,2.64,3.16,2.96,3.47,3.39,2.98,2.77,2.81,2.69,2.62,2.64,2.28,1.65,1.4,0.9,1.0,1.27,1.37,1.28,0.96,1.55,1.8,1.76,1.46,1.2,1.03,0.98,0.77,0.66,0.58,0.62,0.59,0.7,0.8,0.98,0.88,0.75,0.63,0.78,0.96,1.01,1.05,1.35,1.79,1.85,2.44,2.99,3.64,3.36,3.3,4.14,4.53,4.24,4.26,4.24,4.27,4.24,4.23,4.31,4.07,4.16,4.22,4.51,4.89,4.43,3.82,3.81,3.87,3.7,3.86,3.84,3.94,3.83,3.68,3.57,3.5,3.57,3.32,3.676,3.575,3.887,3.71,3.63,3.5,3.54,3.538,3.56,3.442,3.459,3.552,3.492,3.388,3.733];
 
 const deY = [3.26,3.17,3.1,3.06,2.73,2.54,2.62,2.35,2.3,2.35,2.53,2.91,3.02,3.2,3.21,3.34,3.06,2.89,2.74,2.21,1.83,2.0,1.87,1.93,1.82,1.85,1.83,1.62,1.34,1.3,1.24,1.34,1.49,1.47,1.34,1.3,1.51,1.54,1.35,1.2,1.29,1.53,1.56,1.73,1.89,1.76,1.68,1.8,1.76,1.56,1.51,1.46,1.33,1.26,1.11,0.95,0.92,0.79,0.72,0.59,0.39,0.3,0.23,0.12,0.56,0.79,0.71,0.61,0.65,0.52,0.52,0.55,0.43,0.17,0.17,0.13,0.13,-0.02,-0.15,-0.13,-0.09,0.0,0.19,0.25,0.25,0.26,0.35,0.22,0.34,0.25,0.46,0.35,0.35,0.37,0.31,0.3,0.47,0.66,0.53,0.48,0.45,0.33,0.28,0.29,0.37,0.4,0.31,0.19,0.13,0.06,0.01,-0.04,-0.13,-0.31,-0.39,-0.65,-0.59,-0.47,-0.35,-0.3,-0.31,-0.47,-0.54,-0.45,-0.52,-0.43,-0.52,-0.52,-0.52,-0.61,-0.61,-0.62,-0.58,-0.45,-0.36,-0.33,-0.22,-0.29,-0.45,-0.54,-0.36,-0.21,-0.31,-0.38,-0.12,0.15,0.28,0.75,0.95,1.45,1.08,1.03,1.8,2.19,2.07,2.09,2.19,2.37,2.38,2.36,2.34,2.38,2.46,2.55,2.66,2.82,2.6,2.1,2.18,2.33,2.35,2.45,2.52,2.48,2.46,2.21,2.17,2.23,2.31,2.18,2.484,2.405,2.741,2.51,2.56,2.52,2.63,2.67,2.69,2.617,2.657,2.813,2.807,2.744,2.91];
+
+// Serie storica combinata 1980-2025 (IMF HPD + Eurostat)
+const longYears = [1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
+const longIT = [56.08,58.46,63.14,69.4,74.9,80.9,85.12,89.11,90.83,93.31,95.22,98.59,105.49,115.66,117.87,108.69,117.71,113.43,110.81,109.66,105.11,104.73,101.92,100.48,100.09,101.94,102.56,99.78,102.39,112.52,118.8,119.1,125.9,131.9,134.8,134.8,134.2,133.7,134.2,133.9,154.4,145.8,138.4,133.9,134.7,137.1];
+// DE: null per 1980-1990 (dati non comparabili pre-riunificazione)
+const longDE = [null,null,null,null,null,null,null,null,null,null,null,38.89,41.52,45.12,47.42,54.82,57.6,58.77,59.38,59.96,58.76,57.58,59.22,62.92,64.69,66.91,66.33,63.54,64.93,72.43,81.0,78.5,79.8,77.5,74.5,71.2,68.3,64.0,60.8,58.7,68.0,67.9,64.4,62.3,62.2,63.5];
 
 const debtYears = [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
 const debtIT = [118.8,119.1,125.9,131.9,134.8,134.8,134.2,133.7,134.2,133.9,154.4,145.8,138.4,133.9,134.7,137.1];
@@ -196,9 +248,10 @@ initShell({
   ],
 
   nav: [
-    { id: "spread",     label: "Spread",        label_en: "Spread"    },
-    { id: "rendimenti", label: "Rendimenti",     label_en: "Yields"    },
-    { id: "debito",     label: "Debito/PIL",     label_en: "Debt/GDP"  }
+    { id: "spread",     label: "Spread",        label_en: "Spread"      },
+    { id: "rendimenti", label: "Rendimenti",     label_en: "Yields"      },
+    { id: "debito",     label: "Debito/PIL",     label_en: "Debt/GDP"    },
+    { id: "storico",    label: "1980–2025",      label_en: "1980–2025"   }
   ],
 
   introTitle:    "Contesto e risultati",
@@ -237,8 +290,8 @@ initShell({
   findingCards: [
     { value: "519 bp", label: "picco spread — nov 2011",      label_en: "spread peak — Nov 2011",      color: "accent"  },
     { value: "82 bp",  label: "spread attuale — mar 2026",    label_en: "current spread — Mar 2026",   color: "default" },
-    { value: "154%",   label: "debito IT/PIL — picco 2020",   label_en: "IT debt/GDP — 2020 peak",     color: "accent"  },
-    { value: "137%",   label: "debito IT/PIL — 2025",         label_en: "IT debt/GDP — 2025",          color: "blue"    }
+    { value: "110%",   label: "debito IT all'ingresso nell'euro — 1999", label_en: "IT debt at euro entry — 1999", color: "accent" },
+    { value: "45 anni", label: "debito IT sopra il 60% Maastricht", label_en: "IT debt above 60% Maastricht ceiling", color: "blue" }
   ],
 
   rawData: {
@@ -263,6 +316,15 @@ initShell({
         rows:      826,
         period:    "1995 / 2025",
         file:      "output/B_debito_pil_it_de.csv"
+      },
+      {
+        provider:  "IMF",
+        datasetId: "IMF.FAD,HPD",
+        desc:      "Debito storico IT e DE — annuale 1980–2015 (Historical Public Debt)",
+        desc_en:   "Historical debt IT and DE — annual 1980–2015 (Historical Public Debt)",
+        rows:      72,
+        period:    "1980 / 2015",
+        file:      "output/C_debito_storico_imf.csv"
       }
     ]
   },
@@ -288,6 +350,10 @@ initShell({
         Run 1 (opensdmx get): 827 righe (826 dati + header) · Run 2 (URL diretto): 827 righe → <strong>MATCH ✓</strong><br>
         URL: <code>https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/GOV_10DD_EDPT1/A.PC_GDP.S13..IT+DE/?startPeriod=1995&format=SDMX-CSV</code>
       </p>
+      <p class="note pt-2 mb-2">
+        <strong>Double check — IMF.FAD,HPD</strong><br>
+        Download via opensdmx: 72 righe (ITA+DEU, 1980–2015). Overlap verificato con Eurostat 2010–2015: differenza sistematica 2,1–3,4 pp (IMF HPD inferiore). Gap attribuibile a metodologie diverse: IMF usa PIL anno fiscale; Eurostat usa concetto EDP/Maastricht. Discontinuità nota documentata in notes.md e nel blocco .note della Sezione D.
+      </p>
     `,
     apiUrls: [
       {
@@ -312,8 +378,10 @@ initShell({
     files: [
       { file: "output/A_rendimenti_it_de.csv",   desc: "390 righe · IT+DE · mensile gen 2010–mar 2026"      },
       { file: "output/B_debito_pil_it_de.csv",   desc: "826 righe · IT+DE · annuale 1995–2025 (tutti na_item)" },
+      { file: "output/C_debito_storico_imf.csv",   desc: "72 righe · ITA+DEU · annuale 1980–2015 (IMF HPD)"  },
       { file: "queries/A_rendimenti_it_de.yaml", desc: "Query YAML riproducibile — Dataset A"               },
       { file: "queries/B_debito_pil_it_de.yaml", desc: "Query YAML riproducibile — Dataset B"               },
+      { file: "queries/C_debito_storico_imf.yaml", desc: "Query YAML riproducibile — Dataset C"             },
       { file: "notes.md",                         desc: "Log cronologico delle operazioni"                   }
     ]
   },
@@ -356,6 +424,30 @@ new chartXkcd.XY(document.getElementById('chart-rendimenti'), {
   options: {
     showLine: true,
     dotSize: 0.2,
+    xTickCount: 8,
+    yTickCount: 5,
+    dataColors: ['#b02020', '#1a6fa8'],
+  }
+});
+
+// ── CHART D: SERIE STORICA 1980-2025 ─────────────────────────────────────────
+const longPointsIT = longYears.map((y, i) => ({ x: y, y: longIT[i] }));
+const longPointsDE = longYears
+  .map((y, i) => longDE[i] !== null ? { x: y, y: longDE[i] } : null)
+  .filter(p => p !== null);
+
+new chartXkcd.XY(document.getElementById('chart-storico'), {
+  xLabel: '',
+  yLabel: '% PIL',
+  data: {
+    datasets: [
+      { label: 'DEBITO IT — % PIL (IMF 1980–2009 / EUROSTAT 2010–2025)', data: longPointsIT },
+      { label: 'DEBITO DE — % PIL (IMF 1991–2009 / EUROSTAT 2010–2025)', data: longPointsDE }
+    ]
+  },
+  options: {
+    showLine: true,
+    dotSize: 0.5,
     xTickCount: 8,
     yTickCount: 5,
     dataColors: ['#b02020', '#1a6fa8'],

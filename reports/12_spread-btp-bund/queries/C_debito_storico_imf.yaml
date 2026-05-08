@@ -1,0 +1,12 @@
+provider: imf
+dataset: IMF.FAD,HPD
+filters:
+  COUNTRY: ITA+DEU
+start_period: "1980"
+format: SDMX-CSV
+# Debito pubblico lordo delle amministrazioni centrali in % del PIL (debito storico)
+# Indicatore: G63G_S13_POFYGDP (Gross debt, General government, % of fiscal year GDP)
+# Copertura: 1800-2015 per la maggior parte dei paesi
+# Nota metodologica: ~3 pp di scarto con Eurostat GOV_10DD_EDPT1 nel periodo di overlap 2010-2015
+# (Eurostat usa il concetto EDP/Maastricht; IMF HPD usa PIL anno fiscale con copertura settoriale leggermente diversa)
+# Nella serie combinata usata nel report: IMF HPD per 1980-2009, Eurostat per 2010-2025
