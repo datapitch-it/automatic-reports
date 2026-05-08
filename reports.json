@@ -1,5 +1,19 @@
 [
   {
+    "order": 12,
+    "path":  "reports/12_spread-btp-bund/",
+    "date":  "8 maggio 2026",
+    "title": "Spread BTP-Bund e rischio sovrano",
+    "title_en": "BTP-Bund Spread and Sovereign Risk",
+    "desc":  "Evoluzione dello spread tra BTP e Bund a 10 anni dal 2010 a oggi (195 mesi mensili). Tre break strutturali: crisi sovrana 2011 (picco 519 bp), shock pandemia 2020, normalizzazione tassi BCE dal 2022. Debito pubblico IT al 137,1% del PIL nel 2025, in risalita dopo il picco pandemico di 154,4%.",
+    "desc_en": "Evolution of the BTP-Bund 10-year spread from 2010 to today (195 monthly observations). Three structural breaks: 2011 sovereign crisis (peak 519 bp), 2020 pandemic shock, ECB rate normalisation from 2022. Italian public debt at 137.1% of GDP in 2025, rising again after the pandemic peak of 154.4%.",
+    "badges": [
+      { "label": "Eurostat", "value": "IRT_LT_MCBY_M · GOV_10DD_EDPT1" },
+      { "label": "Period",   "value": "2010–2026", "label_it": "Periodo" },
+      { "label": "Countries","value": "IT · DE",   "label_it": "Paesi"  }
+    ]
+  },
+  {
     "order": 11,
     "path":  "reports/11_disoccupazione-meloni-factcheck/",
     "date":  "6 maggio 2026",

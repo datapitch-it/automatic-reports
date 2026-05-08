@@ -1,0 +1,9 @@
+provider: eurostat
+dataset: IRT_LT_MCBY_M
+filters:
+  geo: IT+DE
+start_period: "2010-01"
+format: SDMX-CSV
+# Rendimenti sovrani a 10 anni (criterio di convergenza EMU) per Italia e Germania
+# Dimensioni: freq=M (mensile), int_rt=MCBY (Maastricht Convergence Bond Yield), geo
+# Fonte: Eurostat IRT_LT_MCBY_M

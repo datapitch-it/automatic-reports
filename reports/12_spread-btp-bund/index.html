@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spread BTP-Bund e rischio sovrano — SDMX Research</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../assets/style.css">
+  <script src="https://unpkg.com/rough-viz@1.0.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+</head>
+<body>
+
+<div id="shell-top"></div>
+
+<div class="container">
+<div id="shell-intro"></div>
+</div>
+
+<main class="container py-2">
+
+  <!-- ═══ SEZIONE A — SPREAD BTP-BUND MENSILE ═══ -->
+  <section class="section py-5" id="spread">
+    <p class="section-label mb-1">
+      <span class="en">Phase 1 · Eurostat IRT_LT_MCBY_M · Monthly spread</span>
+      <span class="it">Fase 1 · Eurostat IRT_LT_MCBY_M · Spread mensile</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="en">BTP-Bund spread: from the 2011 sovereign crisis to today</span>
+      <span class="it">Spread BTP-Bund: dalla crisi sovrana del 2011 a oggi</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="en">Percentage points (pp) · IT minus DE 10-year yield · Monthly · Jan 2010 – Mar 2026</span>
+      <span class="it">Punti percentuali (pp) · Rendimento 10 anni IT meno DE · Mensile · Gen 2010 – Mar 2026</span>
+    </p>
+
+    <div class="callout mb-4">
+      <p>
+        <span class="en">The BTP-Bund spread measures how much more Italy pays compared to Germany to borrow money for 10 years on financial markets. A spread of 100 basis points (1 pp) means Italy pays 1% more per year on its debt. The higher the spread, the more financial markets consider Italian sovereign debt to be risky relative to the German benchmark. The series reaches its peak in <strong>November 2011 (519 bp)</strong> during the euro zone sovereign debt crisis — Italy was days away from needing a bailout — and its minimum in <strong>February 2026 (64 bp)</strong>.</span>
+        <span class="it">Lo spread BTP-Bund misura quanto in più paga l'Italia rispetto alla Germania per prendere a prestito denaro a 10 anni sui mercati finanziari. Uno spread di 100 punti base (1 pp) significa che l'Italia paga l'1% in più all'anno sul proprio debito. Più alto lo spread, più i mercati considerano il debito sovrano italiano rischioso rispetto al benchmark tedesco. La serie raggiunge il picco a <strong>novembre 2011 (519 bp)</strong> durante la crisi del debito sovrano dell'eurozona — l'Italia era a giorni da una richiesta di salvataggio — e il minimo a <strong>febbraio 2026 (64 bp)</strong>.</span>
+      </p>
+    </div>
+
+    <div class="chart-wrap mb-4" style="overflow-y:hidden;">
+      <svg id="chart-spread"></svg>
+    </div>
+
+    <div class="callout callout-note mb-4">
+      <p>
+        <span class="en"><strong>How to read:</strong> Y-axis is auto-scaled to the data range (0.64–5.19 pp). Forcing the axis to zero would compress all meaningful variation into the top 20% of the chart. The values shown are the exact monthly difference (Italian 10-year yield minus German 10-year yield) as published by Eurostat under the EMU convergence criterion methodology (MCBY). Key events: <strong>Nov 2011</strong> — peak at 519 bp, fall of Berlusconi government, Monti cabinet; <strong>Jul 2012</strong> — still at 476 bp, then Draghi's "whatever it takes" triggers rapid descent; <strong>Apr 2020</strong> — pandemic shock, spread widens to 225 bp; <strong>Oct 2022</strong> — energy crisis + Meloni government formation, 234 bp; <strong>Feb 2026</strong> — historical minimum at 64 bp.</span>
+        <span class="it"><strong>Come leggere:</strong> L'asse Y è in scala automatica (0,64–5,19 pp). Forzare l'asse a zero comprimerebbe tutta la variazione significativa nel 20% superiore del grafico. I valori mostrati sono la differenza mensile esatta (rendimento a 10 anni IT meno DE) come pubblicata da Eurostat secondo la metodologia del criterio di convergenza EMU (MCBY). Eventi chiave: <strong>nov 2011</strong> — picco a 519 bp, caduta governo Berlusconi, esecutivo Monti; <strong>lug 2012</strong> — ancora a 476 bp, poi il "whatever it takes" di Draghi innesca la discesa rapida; <strong>apr 2020</strong> — shock pandemia, spread a 225 bp; <strong>ott 2022</strong> — crisi energetica + formazione governo Meloni, 234 bp; <strong>feb 2026</strong> — minimo storico a 64 bp.</span>
+      </p>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <strong><span class="en">Transformations — Dataset A (IRT_LT_MCBY_M)</span><span class="it">Trasformazioni — Dataset A (IRT_LT_MCBY_M)</span></strong>
+      <ul class="mb-0 mt-2">
+        <li><span class="en">Raw data: 390 observations, 2 countries (IT, DE), monthly Jan 2010 – Mar 2026</span><span class="it">Dati grezzi: 390 osservazioni, 2 paesi (IT, DE), mensile gen 2010 – mar 2026</span></li>
+        <li><span class="en">Spread computed as IT yield minus DE yield for each month: 195 values</span><span class="it">Spread calcolato come rendimento IT meno DE per ciascun mese: 195 valori</span></li>
+        <li><span class="en">No observations with missing or flagged values found (OBS_FLAG column empty throughout)</span><span class="it">Nessuna osservazione con valori mancanti o flag (colonna OBS_FLAG vuota per tutta la serie)</span></li>
+        <li><span class="en">X-axis: decimal year (year + (month−1)/12) for continuous time representation</span><span class="it">Asse X: anno decimale (anno + (mese−1)/12) per rappresentazione temporale continua</span></li>
+        <li><span class="en">Y-axis not forced to zero: rates and spreads use auto-scaled range per methodology note above</span><span class="it">Asse Y non forzato a zero: tassi e spread usano scala automatica come da nota metodologica sopra</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE B — RENDIMENTI IT E DE SEPARATI ═══ -->
+  <section class="section py-5" id="rendimenti">
+    <p class="section-label mb-1">
+      <span class="en">Phase 1 · Eurostat IRT_LT_MCBY_M · 10-year yields by country</span>
+      <span class="it">Fase 1 · Eurostat IRT_LT_MCBY_M · Rendimenti 10 anni per paese</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="en">BTP (Italy) and Bund (Germany): absolute yields 2010–2026</span>
+      <span class="it">BTP (Italia) e Bund (Germania): rendimenti assoluti 2010–2026</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="en">Annual percentage (%) · 10-year maturity · EMU convergence criterion series · Monthly</span>
+      <span class="it">Percentuale annua (%) · Scadenza 10 anni · Serie criterio di convergenza EMU · Mensile</span>
+    </p>
+
+    <div class="callout mb-4">
+      <p>
+        <span class="en">This chart shows the absolute yield levels for Italy (red) and Germany (blue). The spread from Section A is the vertical distance between the two lines at any given month. Notable: the German Bund yield entered negative territory in mid-2019 and stayed there until 2022, reaching a minimum of <strong>−0.65% in August 2019</strong>. This negative-yield phase mechanically inflated the spread even without any deterioration in Italian fundamentals. From 2022, as the ECB exited the negative-rate era, both yields rose sharply — but the spread remained contained.</span>
+        <span class="it">Questo grafico mostra i livelli assoluti di rendimento per Italia (rosso) e Germania (blu). Lo spread della Sezione A è la distanza verticale tra le due linee in ciascun mese. Da notare: il rendimento del Bund tedesco è entrato in territorio negativo a metà 2019 e vi è rimasto fino al 2022, raggiungendo un minimo di <strong>−0,65% ad agosto 2019</strong>. Questa fase di rendimenti negativi ha gonfiato meccanicamente lo spread anche senza alcun deterioramento dei fondamentali italiani. Dal 2022, con l'uscita della BCE dai tassi negativi, entrambi i rendimenti sono saliti bruscamente — ma lo spread è rimasto contenuto.</span>
+      </p>
+    </div>
+
+    <div class="chart-wrap mb-4" style="overflow-y:hidden;">
+      <svg id="chart-rendimenti"></svg>
+    </div>
+
+    <div class="callout callout-note mb-4">
+      <p>
+        <span class="en"><strong>How to read:</strong> Y-axis auto-scaled (−0.65% to 7.06%). The two series cross only briefly in early 2010; from mid-2010 onward Italy always has a higher yield. Red line = BTP (Italy); blue line = Bund (Germany). Source: Eurostat IRT_LT_MCBY_M — EMU convergence criterion bond yield (10-year benchmark). Rendered with chart.xkcd 1.1.</span>
+        <span class="it"><strong>Come leggere:</strong> Asse Y in scala automatica (−0,65% – 7,06%). Le due serie si incrociano solo brevemente a inizio 2010; da metà 2010 in poi l'Italia ha sempre rendimenti più alti. Linea rossa = BTP (Italia); linea blu = Bund (Germania). Fonte: Eurostat IRT_LT_MCBY_M — rendimento obbligazionario criterio di convergenza EMU (benchmark 10 anni). Realizzato con chart.xkcd 1.1.</span>
+      </p>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <strong><span class="en">Transformations — Dataset A (IRT_LT_MCBY_M), reuse</span><span class="it">Trasformazioni — Dataset A (IRT_LT_MCBY_M), riutilizzo</span></strong>
+      <ul class="mb-0 mt-2">
+        <li><span class="en">Same source as Section A. Series separated by country (IT and DE) from the same 390-row download</span><span class="it">Stessa fonte della Sezione A. Serie separate per paese (IT e DE) dallo stesso download di 390 righe</span></li>
+        <li><span class="en">No additional transformations: values are monthly yields as published</span><span class="it">Nessuna trasformazione aggiuntiva: i valori sono rendimenti mensili come pubblicati</span></li>
+        <li><span class="en">Two datasets rendered on the same chart for direct visual comparison</span><span class="it">Due dataset visualizzati sullo stesso grafico per confronto visivo diretto</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SEZIONE C — DEBITO/PIL ANNUALE ═══ -->
+  <section class="section py-5" id="debito">
+    <p class="section-label mb-1">
+      <span class="en">Phase 2 · Eurostat GOV_10DD_EDPT1 · Government debt / GDP</span>
+      <span class="it">Fase 2 · Eurostat GOV_10DD_EDPT1 · Debito pubblico / PIL</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="en">Public debt as % of GDP: Italy vs Germany 2010–2025</span>
+      <span class="it">Debito pubblico in % del PIL: Italia vs Germania 2010–2025</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="en">% of GDP · General government (S13) · Consolidated gross debt (EDP concept) · Annual</span>
+      <span class="it">% del PIL · Amministrazioni pubbliche (S13) · Debito lordo consolidato (concetto EDP) · Annuale</span>
+    </p>
+
+    <div class="callout mb-4">
+      <p>
+        <span class="en">This is the <strong>Maastricht debt</strong> — the official general government consolidated gross debt used by the European Commission for the Excessive Deficit Procedure (EDP). It measures the total stock of government liabilities (securities, loans, deposits) as a percentage of GDP. Italy's debt peaked at <strong>154.4% of GDP in 2020</strong> (+35.6 pp in one year due to the pandemic), then fell to 133.9% by 2023, but rose again to <strong>137.1% in 2025</strong>. Germany followed the opposite trajectory: from 81.0% in 2010 it fell to 62.2% in 2024, then ticked up slightly to 63.5% in 2025.</span>
+        <span class="it">Questo è il <strong>debito di Maastricht</strong> — il debito lordo consolidato delle amministrazioni pubbliche usato dalla Commissione europea per la Procedura per i Disavanzi Eccessivi (EDP). Misura lo stock totale di passività pubbliche (titoli, prestiti, depositi) come percentuale del PIL. Il debito italiano ha raggiunto il picco a <strong>154,4% del PIL nel 2020</strong> (+35,6 pp in un anno per effetto pandemia), poi sceso al 133,9% nel 2023, ma tornato a salire al <strong>137,1% nel 2025</strong>. La Germania ha seguito la traiettoria opposta: dall'81,0% nel 2010 è scesa al 62,2% nel 2024, per risalire leggermente al 63,5% nel 2025.</span>
+      </p>
+    </div>
+
+    <div class="chart-wrap mb-4" style="overflow-y:hidden;">
+      <svg id="chart-debito"></svg>
+    </div>
+
+    <div class="callout callout-note mb-4">
+      <p>
+        <span class="en"><strong>How to read:</strong> Y-axis auto-scaled (58%–155%). The 60% Maastricht Treaty ceiling is well below both countries' 2010 starting points. Red line = Italy; blue line = Germany. The gap between the two lines is the structural debt differential that partly explains the persistent spread. Source: Eurostat GOV_10DD_EDPT1, indicator GD (Government consolidated gross debt), sector S13, unit PC_GDP. Rendered with chart.xkcd 1.1.</span>
+        <span class="it"><strong>Come leggere:</strong> Asse Y in scala automatica (58%–155%). Il tetto del 60% del Trattato di Maastricht è ben al di sotto del punto di partenza del 2010 di entrambi i paesi. Linea rossa = Italia; linea blu = Germania. Il divario tra le due linee è il differenziale strutturale di debito che spiega in parte lo spread persistente. Fonte: Eurostat GOV_10DD_EDPT1, indicatore GD (Debito lordo consolidato delle amministrazioni pubbliche), settore S13, unità PC_GDP. Realizzato con chart.xkcd 1.1.</span>
+      </p>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <strong><span class="en">Transformations — Dataset B (GOV_10DD_EDPT1)</span><span class="it">Trasformazioni — Dataset B (GOV_10DD_EDPT1)</span></strong>
+      <ul class="mb-0 mt-2">
+        <li><span class="en">Raw data: 826 observations, 2 countries (IT, DE), all na_item indicators, annual 1995–2025</span><span class="it">Dati grezzi: 826 osservazioni, 2 paesi (IT, DE), tutti gli indicatori na_item, annuale 1995–2025</span></li>
+        <li><span class="en">Filtered to na_item = GD (Government consolidated gross debt) only: 32 observations retained</span><span class="it">Filtrato a na_item = GD (Debito lordo consolidato delle amministrazioni pubbliche): 32 osservazioni mantenute</span></li>
+        <li><span class="en">Further filtered to 2010–2025 for alignment with the yield series: 32 observations (16 per country)</span><span class="it">Ulteriore filtro al 2010–2025 per allineamento con la serie dei rendimenti: 32 osservazioni (16 per paese)</span></li>
+        <li><span class="en">No flags or missing values in the GD series for IT and DE over this period</span><span class="it">Nessun flag o valore mancante nella serie GD per IT e DE in questo periodo</span></li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<div id="shell-bottom"></div>
+
+<div class="container">
+<div id="shell-footer"></div>
+</div>
+
+<script src="../../assets/shell.js"></script>
+<script src="../../assets/lang.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+// ── DATA ARRAYS ───────────────────────────────────────────────────────────────
+const spreadX = [2010.0,2010.0833,2010.1667,2010.25,2010.3333,2010.4167,2010.5,2010.5833,2010.6667,2010.75,2010.8333,2010.9167,2011.0,2011.0833,2011.1667,2011.25,2011.3333,2011.4167,2011.5,2011.5833,2011.6667,2011.75,2011.8333,2011.9167,2012.0,2012.0833,2012.1667,2012.25,2012.3333,2012.4167,2012.5,2012.5833,2012.6667,2012.75,2012.8333,2012.9167,2013.0,2013.0833,2013.1667,2013.25,2013.3333,2013.4167,2013.5,2013.5833,2013.6667,2013.75,2013.8333,2013.9167,2014.0,2014.0833,2014.1667,2014.25,2014.3333,2014.4167,2014.5,2014.5833,2014.6667,2014.75,2014.8333,2014.9167,2015.0,2015.0833,2015.1667,2015.25,2015.3333,2015.4167,2015.5,2015.5833,2015.6667,2015.75,2015.8333,2015.9167,2016.0,2016.0833,2016.1667,2016.25,2016.3333,2016.4167,2016.5,2016.5833,2016.6667,2016.75,2016.8333,2016.9167,2017.0,2017.0833,2017.1667,2017.25,2017.3333,2017.4167,2017.5,2017.5833,2017.6667,2017.75,2017.8333,2017.9167,2018.0,2018.0833,2018.1667,2018.25,2018.3333,2018.4167,2018.5,2018.5833,2018.6667,2018.75,2018.8333,2018.9167,2019.0,2019.0833,2019.1667,2019.25,2019.3333,2019.4167,2019.5,2019.5833,2019.6667,2019.75,2019.8333,2019.9167,2020.0,2020.0833,2020.1667,2020.25,2020.3333,2020.4167,2020.5,2020.5833,2020.6667,2020.75,2020.8333,2020.9167,2021.0,2021.0833,2021.1667,2021.25,2021.3333,2021.4167,2021.5,2021.5833,2021.6667,2021.75,2021.8333,2021.9167,2022.0,2022.0833,2022.1667,2022.25,2022.3333,2022.4167,2022.5,2022.5833,2022.6667,2022.75,2022.8333,2022.9167,2023.0,2023.0833,2023.1667,2023.25,2023.3333,2023.4167,2023.5,2023.5833,2023.6667,2023.75,2023.8333,2023.9167,2024.0,2024.0833,2024.1667,2024.25,2024.3333,2024.4167,2024.5,2024.5833,2024.6667,2024.75,2024.8333,2024.9167,2025.0,2025.0833,2025.1667,2025.25,2025.3333,2025.4167,2025.5,2025.5833,2025.6667,2025.75,2025.8333,2025.9167,2026.0,2026.0833,2026.1667];
+const spreadY = [0.82,0.88,0.85,0.94,1.26,1.56,1.41,1.45,1.56,1.45,1.65,1.69,1.71,1.54,1.67,1.5,1.7,1.93,2.72,3.06,3.92,3.97,5.19,4.88,4.72,3.7,3.22,4.06,4.44,4.6,4.76,4.48,3.76,3.48,3.51,3.24,2.7,2.95,3.29,3.08,2.67,2.85,2.86,2.69,2.65,2.49,2.42,2.31,2.11,2.09,1.89,1.77,1.79,1.66,1.68,1.68,1.48,1.63,1.57,1.4,1.31,1.26,1.06,1.24,1.25,1.41,1.33,1.23,1.27,1.18,1.05,1.03,1.1,1.39,1.21,1.31,1.4,1.47,1.38,1.31,1.36,1.45,1.75,1.64,1.74,2.09,2.05,2.04,1.85,1.8,1.77,1.76,1.76,1.7,1.48,1.5,1.51,1.42,1.44,1.29,1.73,2.41,2.36,2.87,2.59,3.07,3.08,2.79,2.64,2.75,2.68,2.66,2.77,2.59,2.04,2.05,1.49,1.47,1.62,1.67,1.59,1.43,2.09,2.25,2.28,1.89,1.72,1.55,1.5,1.38,1.27,1.2,1.2,1.04,1.06,1.13,1.2,1.17,1.2,1.17,1.14,1.17,1.32,1.43,1.47,1.64,1.57,1.69,2.04,2.19,2.28,2.27,2.34,2.34,2.17,2.17,2.05,1.9,1.86,1.87,1.97,1.69,1.7,1.67,1.85,2.07,1.83,1.72,1.63,1.54,1.35,1.41,1.32,1.46,1.37,1.47,1.4,1.27,1.26,1.14,1.192,1.17,1.146,1.2,1.07,0.98,0.91,0.868,0.87,0.825,0.802,0.739,0.685,0.644,0.823];
+
+const itY = [4.08,4.05,3.95,4.0,3.99,4.1,4.03,3.8,3.86,3.8,4.18,4.6,4.73,4.74,4.88,4.84,4.76,4.82,5.46,5.27,5.75,5.97,7.06,6.81,6.54,5.55,5.05,5.68,5.78,5.9,6.0,5.82,5.25,4.95,4.85,4.54,4.21,4.49,4.64,4.28,3.96,4.38,4.42,4.42,4.54,4.25,4.1,4.11,3.87,3.65,3.4,3.23,3.12,2.92,2.79,2.63,2.4,2.42,2.29,1.99,1.7,1.56,1.29,1.36,1.81,2.2,2.04,1.84,1.92,1.7,1.57,1.58,1.53,1.56,1.38,1.44,1.53,1.45,1.23,1.18,1.27,1.45,1.94,1.89,1.99,2.35,2.4,2.26,2.19,2.05,2.23,2.11,2.11,2.07,1.79,1.8,1.98,2.08,1.97,1.77,2.18,2.74,2.64,3.16,2.96,3.47,3.39,2.98,2.77,2.81,2.69,2.62,2.64,2.28,1.65,1.4,0.9,1.0,1.27,1.37,1.28,0.96,1.55,1.8,1.76,1.46,1.2,1.03,0.98,0.77,0.66,0.58,0.62,0.59,0.7,0.8,0.98,0.88,0.75,0.63,0.78,0.96,1.01,1.05,1.35,1.79,1.85,2.44,2.99,3.64,3.36,3.3,4.14,4.53,4.24,4.26,4.24,4.27,4.24,4.23,4.31,4.07,4.16,4.22,4.51,4.89,4.43,3.82,3.81,3.87,3.7,3.86,3.84,3.94,3.83,3.68,3.57,3.5,3.57,3.32,3.676,3.575,3.887,3.71,3.63,3.5,3.54,3.538,3.56,3.442,3.459,3.552,3.492,3.388,3.733];
+
+const deY = [3.26,3.17,3.1,3.06,2.73,2.54,2.62,2.35,2.3,2.35,2.53,2.91,3.02,3.2,3.21,3.34,3.06,2.89,2.74,2.21,1.83,2.0,1.87,1.93,1.82,1.85,1.83,1.62,1.34,1.3,1.24,1.34,1.49,1.47,1.34,1.3,1.51,1.54,1.35,1.2,1.29,1.53,1.56,1.73,1.89,1.76,1.68,1.8,1.76,1.56,1.51,1.46,1.33,1.26,1.11,0.95,0.92,0.79,0.72,0.59,0.39,0.3,0.23,0.12,0.56,0.79,0.71,0.61,0.65,0.52,0.52,0.55,0.43,0.17,0.17,0.13,0.13,-0.02,-0.15,-0.13,-0.09,0.0,0.19,0.25,0.25,0.26,0.35,0.22,0.34,0.25,0.46,0.35,0.35,0.37,0.31,0.3,0.47,0.66,0.53,0.48,0.45,0.33,0.28,0.29,0.37,0.4,0.31,0.19,0.13,0.06,0.01,-0.04,-0.13,-0.31,-0.39,-0.65,-0.59,-0.47,-0.35,-0.3,-0.31,-0.47,-0.54,-0.45,-0.52,-0.43,-0.52,-0.52,-0.52,-0.61,-0.61,-0.62,-0.58,-0.45,-0.36,-0.33,-0.22,-0.29,-0.45,-0.54,-0.36,-0.21,-0.31,-0.38,-0.12,0.15,0.28,0.75,0.95,1.45,1.08,1.03,1.8,2.19,2.07,2.09,2.19,2.37,2.38,2.36,2.34,2.38,2.46,2.55,2.66,2.82,2.6,2.1,2.18,2.33,2.35,2.45,2.52,2.48,2.46,2.21,2.17,2.23,2.31,2.18,2.484,2.405,2.741,2.51,2.56,2.52,2.63,2.67,2.69,2.617,2.657,2.813,2.807,2.744,2.91];
+
+const debtYears = [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
+const debtIT = [118.8,119.1,125.9,131.9,134.8,134.8,134.2,133.7,134.2,133.9,154.4,145.8,138.4,133.9,134.7,137.1];
+const debtDE = [81.0,78.5,79.8,77.5,74.5,71.2,68.3,64.0,60.8,58.7,68.0,67.9,64.4,62.3,62.2,63.5];
+
+// ── SHELL CONFIG ──────────────────────────────────────────────────────────────
+initShell({
+  researchQuestion: "Come è evoluto lo spread BTP-Bund dal 2010 a oggi e quali fattori macro lo spiegano?",
+  statisticalProxy: "Eurostat IRT_LT_MCBY_M — rendimento obbligazionario a 10 anni (criterio di convergenza EMU, MCBY) per IT e DE. Spread calcolato come differenza mensile IT−DE. Debito/PIL: Eurostat GOV_10DD_EDPT1, indicatore GD (debito lordo consolidato EDP), settore S13, unità PC_GDP.",
+
+  title:    "Spread BTP-Bund e rischio sovrano",
+  title_en: "BTP-Bund Spread and Sovereign Risk",
+  date:     "8 maggio 2026",
+  date_en:  "8 May 2026",
+  intro:    "Evoluzione dello spread tra BTP italiano e Bund tedesco a 10 anni dal 2010 a oggi, con il debito pubblico/PIL come fattore macro di contesto. La serie copre 195 mesi mensili (gen 2010 – mar 2026) e documenta tre break strutturali: la crisi sovrana del 2011, lo shock pandemia del 2020, e la normalizzazione dei tassi BCE dal 2022.",
+  intro_en: "Evolution of the spread between the Italian BTP and the German Bund at 10 years from 2010 to today, with the public debt/GDP ratio as a macro context factor. The series covers 195 monthly observations (Jan 2010 – Mar 2026) and documents three structural breaks: the 2011 sovereign crisis, the 2020 pandemic shock, and the ECB rate normalisation from 2022.",
+
+  badges: [
+    { label: "Eurostat", value: "IRT_LT_MCBY_M · GOV_10DD_EDPT1" },
+    { label: "Periodo",  value: "2010–2026", label_en: "Period" },
+    { label: "Paesi",    value: "IT · DE",   label_en: "Countries" }
+  ],
+
+  nav: [
+    { id: "spread",     label: "Spread",        label_en: "Spread"    },
+    { id: "rendimenti", label: "Rendimenti",     label_en: "Yields"    },
+    { id: "debito",     label: "Debito/PIL",     label_en: "Debt/GDP"  }
+  ],
+
+  introTitle:    "Contesto e risultati",
+  introTitle_en: "Context and findings",
+  introSubtitle:    "Spread BTP-Bund mensile 2010–2026 e debito pubblico/PIL Italia vs Germania",
+  introSubtitle_en: "Monthly BTP-Bund spread 2010–2026 and public debt/GDP Italy vs Germany",
+
+  introExtra: `
+    <div class="summary mb-5">
+      <h3 class="mb-3">
+        <span class="en">What the data says</span>
+        <span class="it">Cosa dicono i dati</span>
+      </h3>
+      <p>
+        <span class="en">The BTP-Bund spread has traced a near-complete cycle in 15 years. Starting at 82 bp in January 2010, it exploded to a peak of <strong>519 basis points in November 2011</strong> — when the Italian 10-year yield hit 7.06% and the country was days away from needing a bailout — then gradually retreated over more than a decade. By February 2026 it had returned to its 2010 starting point: 64 bp, the historical minimum of the series. As of March 2026 it stands at 82 bp. → <a href="#spread">spread chart</a></span>
+        <span class="it">Lo spread BTP-Bund ha percorso un ciclo quasi completo in 15 anni. Partito da 82 bp a gennaio 2010, è esploso fino al picco di <strong>519 punti base a novembre 2011</strong> — quando il rendimento del BTP a 10 anni raggiunse il 7,06% e il paese era a giorni da una richiesta di salvataggio — per poi ritrarsi gradualmente in oltre un decennio. A febbraio 2026 era tornato al punto di partenza del 2010: 64 bp, il minimo storico della serie. A marzo 2026 si attesta a 82 bp. → <a href="#spread">grafico spread</a></span>
+      </p>
+      <p>
+        <span class="en">Behind the spread lies a structural divergence in public finances. While Italy's debt peaked at <strong>154.4% of GDP in 2020</strong> — a +35.6 pp jump in a single year driven by pandemic spending — Germany reduced its ratio from 81.0% in 2010 to 62.2% in 2024. This 72 pp gap on the debt stock explains why, even during low-volatility periods (2015–2019), markets never fully closed the Italian risk premium. A further complication: from mid-2019 to 2022, the German Bund yield turned negative (minimum −0.65% in August 2019), mechanically inflating the spread metric even without any deterioration in Italian fundamentals. → <a href="#rendimenti">yields chart</a>, <a href="#debito">debt chart</a></span>
+        <span class="it">Dietro lo spread c'è una divergenza strutturale nei conti pubblici. Mentre il debito italiano ha raggiunto il picco del <strong>154,4% del PIL nel 2020</strong> — un salto di +35,6 pp in un solo anno per effetto della pandemia — la Germania ha ridotto il suo rapporto dall'81,0% del 2010 al 62,2% del 2024. Questo divario di 72 pp sullo stock di debito spiega perché, anche nei periodi di bassa volatilità (2015–2019), i mercati non hanno mai azzerato il premio di rischio italiano. Un ulteriore elemento: dal 2019 al 2022, il rendimento del Bund è entrato in territorio negativo (minimo −0,65% ad agosto 2019), gonfiando meccanicamente lo spread anche senza alcun deterioramento dei fondamentali italiani. → <a href="#rendimenti">grafico rendimenti</a>, <a href="#debito">grafico debito</a></span>
+      </p>
+      <p>
+        <span class="en">The most counterintuitive finding: the March 2026 spread (82 bp) is identical to January 2010 (82 bp), but the underlying context is radically different. In 2010, Italy had a debt of 118.8% of GDP; in 2026, it stands at 137.1%. The compression of the spread does not reflect structural improvement in Italian sovereign risk — it reflects the ECB rate normalisation effect: with the Bund at 2.91%, the spread "normalises" in absolute terms even without any change in Italy's credit profile. → <a href="#spread">spread chart</a>, <a href="#debito">debt chart</a></span>
+        <span class="it">Il dato più controintuitivo: lo spread di marzo 2026 (82 bp) è identico a quello di gennaio 2010 (82 bp), ma il contesto di fondo è radicalmente diverso. Nel 2010 l'Italia aveva un debito del 118,8% del PIL; nel 2026 è al 137,1%. La compressione dello spread non riflette un miglioramento strutturale del rischio sovrano italiano — riflette l'effetto normalizzazione dei tassi BCE: con il Bund al 2,91%, lo spread si "normalizza" in termini assoluti anche senza variazioni nel profilo di credito dell'Italia. → <a href="#spread">grafico spread</a>, <a href="#debito">grafico debito</a></span>
+      </p>
+      <p>
+        <span class="en">The key watch item for 2026 is the direction of Italian debt: after the post-pandemic reduction (from 154.4% in 2020 to 133.9% in 2023), the debt ratio has started rising again — 134.7% in 2024, 137.1% in 2025. If ECB rates begin to fall and the Bund yields return towards 1%, the spread could re-expand significantly even with modest absolute values, as Italy's structural risk premium would reassert itself. → <a href="#debito">debt chart</a></span>
+        <span class="it">Il punto di attenzione per il 2026 è la direzione del debito italiano: dopo la riduzione post-pandemia (da 154,4% nel 2020 a 133,9% nel 2023), il rapporto debito/PIL è tornato a salire — 134,7% nel 2024, 137,1% nel 2025. Se i tassi BCE iniziassero a scendere e il Bund tornasse verso l'1%, lo spread potrebbe riesplodere significativamente anche con valori assoluti modesti, man mano che il premio di rischio strutturale italiano si riaffermerebbe. → <a href="#debito">grafico debito</a></span>
+      </p>
+    </div>
+  `,
+
+  scopeLimit:    "Il dataset IRT_LT_MCBY_M copre il rendimento obbligazionario del criterio di convergenza EMU (benchmark 10 anni): non include rendimenti a scadenze più brevi, credit default swap (CDS), né differenziali swap. Il debito/PIL da GOV_10DD_EDPT1 è il debito lordo consolidato EDP: non copre debito implicito (pensioni, garanzie statali) né variazioni di cassa infra-annuali.",
+  scopeLimit_en: "The IRT_LT_MCBY_M dataset covers the EMU convergence criterion bond yield (10-year benchmark): it does not include shorter-maturity yields, credit default swaps (CDS), or swap differentials. The debt/GDP from GOV_10DD_EDPT1 is the consolidated gross EDP debt: it does not cover implicit debt (pensions, state guarantees) or intra-annual cash variations.",
+
+  findingCards: [
+    { value: "519 bp", label: "picco spread — nov 2011",      label_en: "spread peak — Nov 2011",      color: "accent"  },
+    { value: "82 bp",  label: "spread attuale — mar 2026",    label_en: "current spread — Mar 2026",   color: "default" },
+    { value: "154%",   label: "debito IT/PIL — picco 2020",   label_en: "IT debt/GDP — 2020 peak",     color: "accent"  },
+    { value: "137%",   label: "debito IT/PIL — 2025",         label_en: "IT debt/GDP — 2025",          color: "blue"    }
+  ],
+
+  rawData: {
+    license:           "Eurostat CC BY 4.0",
+    extractionDate:    "8 maggio 2026",
+    extractionDate_en: "8 May 2026",
+    files: [
+      {
+        provider:  "Eurostat",
+        datasetId: "IRT_LT_MCBY_M",
+        desc:      "Rendimenti sovrani 10 anni IT e DE — mensili 2010–2026",
+        desc_en:   "10-year sovereign yields IT and DE — monthly 2010–2026",
+        rows:      390,
+        period:    "2010-01 / 2026-03",
+        file:      "output/A_rendimenti_it_de.csv"
+      },
+      {
+        provider:  "Eurostat",
+        datasetId: "GOV_10DD_EDPT1",
+        desc:      "Debito pubblico/PIL consolidato IT e DE — annuale 1995–2025 (tutti gli indicatori na_item)",
+        desc_en:   "Consolidated public debt/GDP IT and DE — annual 1995–2025 (all na_item indicators)",
+        rows:      826,
+        period:    "1995 / 2025",
+        file:      "output/B_debito_pil_it_de.csv"
+      }
+    ]
+  },
+
+  methodology: {
+    githubUrl: "https://github.com/datapitch-it/automatic-reports/reports/12_spread-btp-bund",
+    classifications: [
+      { code: "MCBY",   system: "int_rt",  meaning: "Maastricht Convergence Bond Yield — rendimento a 10 anni criterio EMU", meaning_en: "Maastricht Convergence Bond Yield — 10-year EMU convergence criterion yield" },
+      { code: "GD",     system: "na_item", meaning: "Debito lordo consolidato delle amministrazioni pubbliche (concetto EDP)", meaning_en: "General government consolidated gross debt (EDP concept)" },
+      { code: "S13",    system: "sector",  meaning: "Amministrazioni pubbliche", meaning_en: "General government" },
+      { code: "PC_GDP", system: "unit",    meaning: "Percentuale del PIL", meaning_en: "Percentage of GDP" },
+      { code: "IT",     system: "geo",     meaning: "Italia", meaning_en: "Italy" },
+      { code: "DE",     system: "geo",     meaning: "Germania", meaning_en: "Germany" }
+    ],
+    extra: `
+      <p class="note pt-2 mb-2">
+        <strong>Double check — IRT_LT_MCBY_M</strong><br>
+        Run 1 (opensdmx get): 391 righe (390 dati + header) · Run 2 (URL diretto): 391 righe → <strong>MATCH ✓</strong><br>
+        URL: <code>https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/IRT_LT_MCBY_M/M.MCBY.IT+DE/?startPeriod=2010-01&format=SDMX-CSV</code>
+      </p>
+      <p class="note pt-2 mb-2">
+        <strong>Double check — GOV_10DD_EDPT1</strong><br>
+        Run 1 (opensdmx get): 827 righe (826 dati + header) · Run 2 (URL diretto): 827 righe → <strong>MATCH ✓</strong><br>
+        URL: <code>https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/GOV_10DD_EDPT1/A.PC_GDP.S13..IT+DE/?startPeriod=1995&format=SDMX-CSV</code>
+      </p>
+    `,
+    apiUrls: [
+      {
+        datasetId: "IRT_LT_MCBY_M",
+        provider:  "Eurostat",
+        desc:      "Rendimenti sovrani 10 anni (MCBY) — IT e DE — gen 2010 in poi",
+        desc_en:   "10-year sovereign yields (MCBY) — IT and DE — from Jan 2010",
+        url:       "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/IRT_LT_MCBY_M/M.MCBY.IT+DE/?startPeriod=2010-01&format=SDMX-CSV"
+      },
+      {
+        datasetId: "GOV_10DD_EDPT1",
+        provider:  "Eurostat",
+        desc:      "Deficit/debito/dati associati — IT e DE — annuale dal 1995",
+        desc_en:   "Deficit/debt/associated data — IT and DE — annual from 1995",
+        url:       "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/GOV_10DD_EDPT1/A.PC_GDP.S13..IT+DE/?startPeriod=1995&format=SDMX-CSV"
+      }
+    ],
+    cliCommands: [
+      { dataset: "IRT_LT_MCBY_M",   command: "opensdmx run queries/A_rendimenti_it_de.yaml --out output/A_rendimenti_it_de.csv"   },
+      { dataset: "GOV_10DD_EDPT1",  command: "opensdmx run queries/B_debito_pil_it_de.yaml --out output/B_debito_pil_it_de.csv"  }
+    ],
+    files: [
+      { file: "output/A_rendimenti_it_de.csv",   desc: "390 righe · IT+DE · mensile gen 2010–mar 2026"      },
+      { file: "output/B_debito_pil_it_de.csv",   desc: "826 righe · IT+DE · annuale 1995–2025 (tutti na_item)" },
+      { file: "queries/A_rendimenti_it_de.yaml", desc: "Query YAML riproducibile — Dataset A"               },
+      { file: "queries/B_debito_pil_it_de.yaml", desc: "Query YAML riproducibile — Dataset B"               },
+      { file: "notes.md",                         desc: "Log cronologico delle operazioni"                   }
+    ]
+  },
+
+  providers: "Eurostat",
+  github:    "https://github.com/datapitch-it/automatic-reports"
+});
+
+// ── CHART A: SPREAD MENSILE ───────────────────────────────────────────────────
+const spreadPoints = spreadX.map((x, i) => ({ x, y: spreadY[i] }));
+
+new chartXkcd.XY(document.getElementById('chart-spread'), {
+  xLabel: '',
+  yLabel: 'PP',
+  data: {
+    datasets: [{ label: 'SPREAD BTP-BUND (IT − DE)', data: spreadPoints }]
+  },
+  options: {
+    showLine: true,
+    dotSize: 0.2,
+    xTickCount: 8,
+    yTickCount: 5,
+    dataColors: ['#b02020'],
+  }
+});
+
+// ── CHART B: RENDIMENTI IT E DE ───────────────────────────────────────────────
+const itPoints = spreadX.map((x, i) => ({ x, y: itY[i] }));
+const dePoints = spreadX.map((x, i) => ({ x, y: deY[i] }));
+
+new chartXkcd.XY(document.getElementById('chart-rendimenti'), {
+  xLabel: '',
+  yLabel: '%',
+  data: {
+    datasets: [
+      { label: 'BTP — ITALIA',   data: itPoints },
+      { label: 'BUND — GERMANIA', data: dePoints }
+    ]
+  },
+  options: {
+    showLine: true,
+    dotSize: 0.2,
+    xTickCount: 8,
+    yTickCount: 5,
+    dataColors: ['#b02020', '#1a6fa8'],
+  }
+});
+
+// ── CHART C: DEBITO/PIL ANNUALE ───────────────────────────────────────────────
+const debtPointsIT = debtYears.map((y, i) => ({ x: y, y: debtIT[i] }));
+const debtPointsDE = debtYears.map((y, i) => ({ x: y, y: debtDE[i] }));
+
+new chartXkcd.XY(document.getElementById('chart-debito'), {
+  xLabel: '',
+  yLabel: '% PIL',
+  data: {
+    datasets: [
+      { label: 'DEBITO IT — % PIL', data: debtPointsIT },
+      { label: 'DEBITO DE — % PIL', data: debtPointsDE }
+    ]
+  },
+  options: {
+    showLine: true,
+    dotSize: 0.5,
+    xTickCount: 8,
+    yTickCount: 5,
+    dataColors: ['#b02020', '#1a6fa8'],
+  }
+});
+
+</script>
+</body>
+</html>

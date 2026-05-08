@@ -1,0 +1,12 @@
+provider: eurostat
+dataset: GOV_10DD_EDPT1
+filters:
+  unit: PC_GDP
+  sector: S13
+  geo: IT+DE
+start_period: "1995"
+format: SDMX-CSV
+# Debito pubblico lordo consolidato (concetto EDP/Maastricht) in % del PIL
+# Settore S13 = Amministrazioni pubbliche
+# na_item filtrato in post-processing: GD (Government consolidated gross debt)
+# Fonte: Eurostat GOV_10DD_EDPT1
