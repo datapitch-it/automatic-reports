@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analisi Open Data Maggioli — Opendata Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg: #0a0e1a;
+  --surface: #111827;
+  --surface2: #1a2235;
+  --border: rgba(99,179,237,0.15);
+  --accent: #63b3ed;
+  --accent2: #68d391;
+  --accent3: #f6ad55;
+  --text: #e2e8f0;
+  --muted: #718096;
+  --mono: 'IBM Plex Mono', monospace;
+  --body: 'Inter', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,14,26,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  height: 52px;
+  font-family: var(--mono);
+  font-size: 12px;
+  overflow-x: auto;
+}
+nav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color .2s;
+}
+nav a:hover { color: var(--accent); }
+nav .logo {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 13px;
+  margin-right: .5rem;
+  white-space: nowrap;
+}
+.nav-spacer { flex: 1; }
+/* dropdown */
+.nav-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.nav-dropdown > .nav-trigger {
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color .2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+}
+.nav-dropdown > .nav-trigger::after {
+  content: '▾';
+  font-size: 9px;
+  transition: transform .2s;
+}
+.nav-dropdown:hover > .nav-trigger,
+.nav-dropdown:hover > .nav-trigger::after { color: var(--accent); }
+.nav-dropdown:hover > .nav-trigger::after { transform: rotate(-180deg); }
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: .5rem 0;
+  min-width: 180px;
+  z-index: 200;
+  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+}
+.nav-dropdown:hover .dropdown-menu { display: block; }
+.dropdown-menu a {
+  display: block;
+  padding: 7px 16px;
+  color: var(--muted);
+  font-size: 12px;
+  transition: background .15s, color .15s;
+}
+.dropdown-menu a:hover { background: var(--surface2); color: var(--accent); }
+.dropdown-menu .drop-num {
+  color: var(--accent);
+  margin-right: 6px;
+  font-size: 10px;
+}
+/* lang toggle */
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 3px;
+  margin-left: .5rem;
+  flex-shrink: 0;
+}
+.lang-btn {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: background .15s, color .15s;
+  border: none;
+  background: none;
+}
+.lang-btn.active {
+  background: var(--accent);
+  color: #0a0e1a;
+  font-weight: 600;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 5rem 2rem 3rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(99,179,237,0.1);
+  border: 1px solid rgba(99,179,237,0.3);
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-bottom: 1.5rem;
+  letter-spacing: .05em;
+}
+.badge::before { content: '◉'; font-size: 8px; }
+h1 {
+  
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  letter-spacing: -.02em;
+}
+h1 span { color: var(--accent); }
+.subtitle {
+  color: var(--muted);
+  font-size: 16px;
+  max-width: 620px;
+  margin-bottom: 2rem;
+}
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+.hero-meta a { color: var(--accent); text-decoration: none; }
+.hero-meta a:hover { text-decoration: underline; }
+
+/* ── SECTION ── */
+section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  border-top: 1px solid var(--border);
+}
+h2 {
+  
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: .4rem;
+  letter-spacing: -.01em;
+}
+.section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: .5rem;
+}
+.section-desc {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 2rem;
+  max-width: 680px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.card-title {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+  margin-bottom: .75rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-title::before { content: '▶'; font-size: 9px; }
+
+/* ── STATS GRID ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+.stat-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: .4rem;
+  letter-spacing: .05em;
+}
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+.stat-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: .3rem;
+}
+
+/* ── API BLOCK ── */
+.api-block {
+  background: #060b14;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+.api-block .method {
+  color: var(--accent2);
+  font-weight: 600;
+  margin-right: .5rem;
+}
+.api-block .url { color: var(--accent); word-break: break-all; }
+.api-block .url a { color: var(--accent); }
+.api-block .params { color: var(--muted); margin-top: .5rem; line-height: 1.8; }
+.api-block .param-key { color: var(--accent3); }
+.api-block .param-val { color: var(--accent2); }
+
+/* ── TOOL TAG ── */
+.tool-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(104,211,145,0.08);
+  border: 1px solid rgba(104,211,145,0.25);
+  color: var(--accent2);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 4px;
+  margin: 2px;
+  white-space: nowrap;
+}
+
+/* ── TOOL TABLE ── */
+.tool-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 1rem 0 2rem;
+}
+.tool-table th {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: .05em;
+}
+.tool-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(99,179,237,0.07);
+  vertical-align: top;
+  color: var(--text);
+}
+.tool-table tr:hover td { background: var(--surface2); }
+.tool-table td:first-child {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent2);
+  white-space: nowrap;
+}
+.tool-table td:nth-child(2) { color: var(--muted); font-size: 13px; }
+
+/* ── FLOW DIAGRAM ── */
+.flow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin: 1.5rem 0;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.flow-node {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 14px;
+  color: var(--text);
+}
+.flow-node.highlight {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.flow-arrow { color: var(--muted); font-size: 16px; }
+
+/* ── CHART CONTAINERS ── */
+.chart-wrap {
+  position: relative;
+  width: 100%;
+  margin: 1.5rem 0;
+}
+
+/* ── COLLAPSIBLE JSON ── */
+details {
+  background: #060b14;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+summary {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+  padding: .75rem 1rem;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+summary::before { content: '▶'; font-size: 9px; transition: transform .2s; }
+details[open] summary::before { transform: rotate(90deg); }
+.json-body {
+  padding: 0 1rem 1rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted);
+  overflow-x: auto;
+  white-space: pre;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.json-key { color: var(--accent3); }
+.json-str { color: var(--accent2); }
+.json-num { color: var(--accent); }
+
+/* ── FILTER & TABLE ── */
+.filter-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.filter-bar input, .filter-bar select {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  outline: none;
+}
+.filter-bar input:focus, .filter-bar select:focus {
+  border-color: var(--accent);
+}
+.filter-bar input { flex: 1; min-width: 200px; }
+.count-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  margin-left: auto;
+}
+.org-table-wrap { overflow-x: auto; }
+.org-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.org-table th {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  white-space: nowrap;
+  letter-spacing: .04em;
+}
+.org-table th:hover { color: var(--accent); }
+.org-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid rgba(99,179,237,0.06);
+  vertical-align: middle;
+}
+.org-table tr:hover td { background: var(--surface2); }
+.org-table td:first-child { color: var(--muted); font-family: var(--mono); font-size: 11px; }
+.org-table td:nth-child(2) a { color: var(--text); text-decoration: none; }
+.org-table td:nth-child(2) a:hover { color: var(--accent); }
+.type-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+.type-comune { background: rgba(99,179,237,0.1); color: var(--accent); border: 1px solid rgba(99,179,237,0.2); }
+.type-provincia { background: rgba(104,211,145,0.1); color: var(--accent2); border: 1px solid rgba(104,211,145,0.2); }
+.type-citta { background: rgba(246,173,85,0.1); color: var(--accent3); border: 1px solid rgba(246,173,85,0.2); }
+.type-altro { background: rgba(160,120,255,0.1); color: #b794f4; border: 1px solid rgba(160,120,255,0.2); }
+.bar-mini {
+  height: 4px;
+  background: var(--surface2);
+  border-radius: 2px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+.bar-mini-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width .3s;
+}
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: 1rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  justify-content: center;
+}
+.pagination button {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.pagination button:hover { border-color: var(--accent); color: var(--accent); }
+.pagination button:disabled { opacity: .4; cursor: default; }
+.pagination .page-info { color: var(--muted); }
+
+.inc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.inc-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+.inc-city {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: .5rem;
+}
+.inc-main {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+.inc-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: .3rem;
+}
+.inc-sub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: .75rem;
+  padding-top: .75rem;
+  border-top: 1px solid rgba(99,179,237,0.1);
+}
+.inc-sub-item { font-size: 12px; }
+.inc-sub-item span { display: block; color: var(--muted); font-family: var(--mono); font-size: 10px; }
+.danger-badge {
+  display: inline-block;
+  background: rgba(229,62,62,0.12);
+  border: 1px solid rgba(229,62,62,0.25);
+  color: #fc8181;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 3px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.source-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(99,179,237,0.06);
+  border: 1px solid rgba(99,179,237,0.18);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  padding: 3px 10px;
+  margin: 3px 3px 3px 0;
+  text-decoration: none;
+}
+.source-chip:hover { border-color: var(--accent); color: var(--accent); }
+.source-chip code { color: var(--accent2); }
+footer {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  border-top: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">▸ ODE</span>
+  <a href="#hero" data-i18n="nav_home">Home</a>
+  <a href="#connettore" data-i18n="nav_connector">The connector</a>
+  <div class="nav-dropdown">
+    <span class="nav-trigger" data-i18n="nav_steps">Steps</span>
+    <div class="dropdown-menu">
+      <a href="#step1"><span class="drop-num">1.</span><span data-i18n="nav_step1">Portal</span></a>
+      <a href="#step2"><span class="drop-num">2.</span><span data-i18n="nav_step2">Statistics</span></a>
+      <a href="#step3"><span class="drop-num">3.</span><span data-i18n="nav_step3">Organizations</span></a>
+    </div>
+  </div>
+  <a href="#charts" data-i18n="nav_viz">Visualizations</a>
+  <a href="#incidenti" data-i18n="nav_usecase">Multiportal use case</a>
+  <a href="#tabella" data-i18n="nav_table">Full table</a>
+  <a href="#raw">API Raw</a>
+  <div class="nav-spacer"></div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en')">ENG</button>
+    <button class="lang-btn" onclick="setLang('it')">ITA</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="hero">
+  <div class="badge" data-i18n="badge">Technical demo · Opendata Explorer MCP Connector</div>
+  <h1 data-i18n="hero_title">Analysis of <span>Maggioli</span> open data portals via the Opendata Explorer connector</h1>
+  <p class="subtitle" data-i18n="hero_sub">A practical demonstration of how Claude, through the Opendata Explorer MCP connector, can autonomously query, analyse and visualise the entire open data catalogue of a CKAN portal.</p>
+  <div class="hero-meta">
+    <span data-i18n="hero_portal">Portal analysed: <a href="https://www.opendata.maggioli.cloud/" target="_blank">opendata.maggioli.cloud</a></span>
+    <span>Technology: CKAN 2.10.3</span>
+    <span data-i18n="hero_date">Analysis date: 17 May 2026</span>
+  </div>
+</div>
+
+<section id="connettore">
+  <div class="section-label" data-i18n="s1_label">§ 01 — Architecture</div>
+  <h2 data-i18n="s1_title">The Opendata Explorer connector</h2>
+  <p class="section-desc" data-i18n="s1_desc">Opendata Explorer is an MCP (Model Context Protocol) server that exposes to Claude a set of tools to query any CKAN portal and public SPARQL endpoint, without the user needing to know the underlying APIs.</p>
+
+  <div class="flow">
+    <div class="flow-node" style="color:var(--accent3)">👤 <span data-i18n="flow_user">User</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node highlight">Claude (AI)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node highlight" style="border-color:var(--accent2);color:var(--accent2)">MCP: Opendata Explorer</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">CKAN REST API</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="color:var(--accent3)">opendata.maggioli.cloud</div>
+  </div>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:2rem;" data-i18n="s1_flow_desc">Claude receives the request in natural language, autonomously selects which tool to call, builds the correct parameters and interprets the response for the user.</p>
+
+  <h2 style="margin-bottom:1rem;font-size:1.1rem;" data-i18n="s1_tools_title">Available tools in the connector</h2>
+  <table class="tool-table">
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th data-i18n="th_desc">Description</th>
+        <th data-i18n="th_used">Used in this demo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>ckan_catalog_stats</td><td data-i18n="tool_catalog_stats">Global portal statistics: total datasets, distribution by format, category, organization</td><td><span class="tool-tag">✓ Step 2</span></td></tr>
+      <tr><td>ckan_organization_list</td><td data-i18n="tool_org_list">Lists all organizations on a portal with dataset count, sorting and pagination</td><td><span class="tool-tag">✓ Step 3</span></td></tr>
+      <tr><td>ckan_organization_show</td><td data-i18n="tool_org_show">Detail of a single organization with published datasets and users</td><td></td></tr>
+      <tr><td>ckan_organization_search</td><td data-i18n="tool_org_search">Search organizations by name pattern (with automatic wildcards)</td><td></td></tr>
+      <tr><td>ckan_package_search</td><td data-i18n="tool_pkg_search">Full-text dataset search with Solr filters (format, organization, tag, date)</td><td></td></tr>
+      <tr><td>ckan_package_show</td><td data-i18n="tool_pkg_show">Complete metadata for a single dataset (resources, licence, author, dates)</td><td></td></tr>
+      <tr><td>ckan_datastore_search</td><td data-i18n="tool_ds_search">Tabular query on a CKAN DataStore resource (SELECT equivalent with filters)</td><td><span class="tool-tag">✓ Use case</span></td></tr>
+      <tr><td>ckan_datastore_search_sql</td><td data-i18n="tool_ds_sql">Arbitrary SQL query on a DataStore resource</td><td></td></tr>
+      <tr><td>ckan_analyze_datasets</td><td data-i18n="tool_analyze">Searches datasets and inspects the DataStore schema of queryable resources</td><td></td></tr>
+      <tr><td>ckan_find_portals</td><td data-i18n="tool_find_portals">Search the global datashades.info registry (~950 CKAN portals worldwide)</td><td></td></tr>
+      <tr><td>ckan_find_relevant_datasets</td><td data-i18n="tool_find_relevant">Finds and ranks datasets by semantic relevance to a query</td><td><span class="tool-tag">✓ Use case</span></td></tr>
+      <tr><td>ckan_list_resources</td><td data-i18n="tool_list_res">Lists all resources in a dataset with format, URL, size</td><td><span class="tool-tag">✓ Use case</span></td></tr>
+      <tr><td>ckan_group_list / _show / _search</td><td data-i18n="tool_groups">Navigation of a portal's thematic groups</td><td></td></tr>
+      <tr><td>ckan_get_mqa_quality</td><td data-i18n="tool_mqa">MQA (Metadata Quality Assurance) quality metrics for datasets on dati.gov.it</td><td></td></tr>
+      <tr><td>sparql_query</td><td data-i18n="tool_sparql">Executes SPARQL SELECT queries on any public HTTPS endpoint (Wikidata, data.europa.eu, etc.)</td><td></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- STEP 1 -->
+<section id="step1">
+  <div class="section-label" data-i18n="s2_label">§ 02 — Step 1</div>
+  <h2 data-i18n="s2_title">Portal discovery and identification</h2>
+  <p class="section-desc" data-i18n="s2_desc">First call: fetch of the homepage to verify the portal type and CKAN version exposed in the HTML header.</p>
+  <div class="card">
+    <div class="card-title" data-i18n="tool_used">Tool used</div>
+    <span class="tool-tag">web_fetch (built-in Claude)</span>
+    <p style="color:var(--muted);font-size:13px;margin-top:.75rem;" data-i18n="s2_note">No Opendata Explorer tool was needed in this step. Claude performed a direct HTTP fetch of the homepage to read the HTML metatags.</p>
+  </div>
+  <div class="api-block">
+    <span class="method">GET</span>
+    <span class="url"><a href="https://www.opendata.maggioli.cloud/" target="_blank">https://www.opendata.maggioli.cloud/</a></span>
+    <div class="params">
+      <span class="param-key" data-i18n="extracted_header">Relevant extracted header: </span><span class="param-val">meta[name="generator"] = "ckan 2.10.3"</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" data-i18n="s2_output">Output — Portal identification</div>
+    <table style="font-size:13px;width:100%;border-collapse:collapse;">
+      <tr><td style="color:var(--muted);padding:5px 0;width:180px;" data-i18n="td_type">Type</td><td data-i18n="td_type_val">Multi-entity CKAN aggregator portal</td></tr>
+      <tr><td style="color:var(--muted);padding:5px 0;" data-i18n="td_version">CKAN version</td><td>2.10.3 (rebuilt by Piersoft)</td></tr>
+      <tr><td style="color:var(--muted);padding:5px 0;">URL</td><td><a href="https://www.opendata.maggioli.cloud/" target="_blank" style="color:var(--accent);">opendata.maggioli.cloud</a></td></tr>
+      <tr><td style="color:var(--muted);padding:5px 0;" data-i18n="td_lang">Language</td><td>Italiano</td></tr>
+      <tr><td style="color:var(--muted);padding:5px 0;" data-i18n="td_groups">Visible thematic groups</td><td>Governo, Agricoltura, Cultura, Economia, Giustizia</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- STEP 2 -->
+<section id="step2">
+  <div class="section-label" data-i18n="s3_label">§ 03 — Step 2</div>
+  <h2 data-i18n="s3_title">Global catalogue statistics</h2>
+  <p class="section-desc" data-i18n="s3_desc">Call to the <code style="color:var(--accent2);font-family:var(--mono);">ckan_catalog_stats</code> tool to obtain in a single API request the total dataset count and their distribution by format, category and organization.</p>
+  <div class="card">
+    <div class="card-title" data-i18n="tool_used">Tool used</div>
+    <span class="tool-tag">ckan_catalog_stats</span>
+    <p style="color:var(--muted);font-size:13px;margin-top:.75rem;" data-i18n="s3_params">Parameters passed to the tool: <code style="color:var(--accent3);">server_url</code> = <code style="color:var(--accent2);">"https://www.opendata.maggioli.cloud"</code>, <code style="color:var(--accent3);">facet_limit</code> = <code style="color:var(--accent2);">10</code>, <code style="color:var(--accent3);">response_format</code> = <code style="color:var(--accent2);">"json"</code></p>
+  </div>
+  <div class="api-block">
+    <div style="color:var(--muted);font-size:11px;margin-bottom:.5rem;" data-i18n="underlying_endpoint">→ Underlying CKAN endpoint called by the tool</div>
+    <span class="method">GET</span>
+    <span class="url"><a href="https://www.opendata.maggioli.cloud/api/3/action/package_search?rows=0&facet=true&facet.field=%5B%22groups%22%2C%22res_format%22%2C%22organization%22%5D&facet.limit=10" target="_blank">https://www.opendata.maggioli.cloud/api/3/action/package_search</a></span>
+    <div class="params">
+      <span class="param-key">rows</span>=<span class="param-val">0</span> &nbsp;
+      <span class="param-key">facet</span>=<span class="param-val">true</span> &nbsp;
+      <span class="param-key">facet.field</span>=<span class="param-val">["groups","res_format","organization"]</span> &nbsp;
+      <span class="param-key">facet.limit</span>=<span class="param-val">10</span>
+    </div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label" data-i18n="stat_total">TOTAL DATASETS</div><div class="stat-value">5.990</div><div class="stat-sub" data-i18n="stat_total_sub">across the whole portal</div></div>
+    <div class="stat-card"><div class="stat-label" data-i18n="stat_orgs">ORGANIZATIONS</div><div class="stat-value">181</div><div class="stat-sub" data-i18n="stat_orgs_sub">Italian public bodies</div></div>
+    <div class="stat-card"><div class="stat-label" data-i18n="stat_format">SINGLE FORMAT</div><div class="stat-value" style="font-size:1.6rem;">CSV</div><div class="stat-sub" data-i18n="stat_format_sub">100% of datasets</div></div>
+    <div class="stat-card"><div class="stat-label" data-i18n="stat_group">DOMINANT GROUP</div><div class="stat-value" style="font-size:1.1rem;margin-top:.2rem;">Governo</div><div class="stat-sub">5.969 / 5.990 datasets</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title" data-i18n="thematic_dist">Distribution by thematic group</div>
+    <table style="font-size:13px;width:100%;border-collapse:collapse;">
+      <tr><th style="font-family:var(--mono);font-size:11px;color:var(--muted);text-align:left;padding:4px 0;border-bottom:1px solid var(--border);" data-i18n="th_group">Group</th><th style="font-family:var(--mono);font-size:11px;color:var(--muted);text-align:right;padding:4px 0;border-bottom:1px solid var(--border);">Dataset</th><th style="font-family:var(--mono);font-size:11px;color:var(--muted);text-align:right;padding:4px 10px;border-bottom:1px solid var(--border);">%</th></tr>
+      <tr><td style="padding:6px 0;">Governo</td><td style="text-align:right;font-family:var(--mono);">5.969</td><td style="text-align:right;font-family:var(--mono);color:var(--muted);padding:6px 10px;">99.6%</td></tr>
+      <tr><td style="padding:6px 0;">Agricoltura</td><td style="text-align:right;font-family:var(--mono);">11</td><td style="text-align:right;font-family:var(--mono);color:var(--muted);padding:6px 10px;">0.18%</td></tr>
+      <tr><td style="padding:6px 0;">Cultura</td><td style="text-align:right;font-family:var(--mono);">11</td><td style="text-align:right;font-family:var(--mono);color:var(--muted);padding:6px 10px;">0.18%</td></tr>
+      <tr><td style="padding:6px 0;">Economia</td><td style="text-align:right;font-family:var(--mono);">4</td><td style="text-align:right;font-family:var(--mono);color:var(--muted);padding:6px 10px;">0.07%</td></tr>
+      <tr><td style="padding:6px 0;">Giustizia</td><td style="text-align:right;font-family:var(--mono);">2</td><td style="text-align:right;font-family:var(--mono);color:var(--muted);padding:6px 10px;">0.03%</td></tr>
+    </table>
+    <p style="color:var(--muted);font-size:12px;margin-top:.75rem;font-style:italic;" data-i18n="thematic_note">Note: thematic classification is very incomplete — almost all datasets are generically catalogued as "Governo". This reflects a metadata gap on the part of the publishing entities.</p>
+  </div>
+</section>
+
+<!-- STEP 3 -->
+<section id="step3">
+  <div class="section-label" data-i18n="s4_label">§ 04 — Step 3</div>
+  <h2 data-i18n="s4_title">Mapping all 181 organizations</h2>
+  <p class="section-desc" data-i18n="s4_desc">Call to the <code style="color:var(--accent2);font-family:var(--mono);">ckan_organization_list</code> tool to retrieve the full list of public bodies on the portal, sorted by number of published datasets.</p>
+  <div class="card">
+    <div class="card-title" data-i18n="tool_used">Tool used</div>
+    <span class="tool-tag">ckan_organization_list</span>
+    <p style="color:var(--muted);font-size:13px;margin-top:.75rem;" data-i18n="s4_params">Parameters: <code style="color:var(--accent3);">server_url</code>=<code style="color:var(--accent2);">"https://www.opendata.maggioli.cloud"</code>, <code style="color:var(--accent3);">all_fields</code>=<code style="color:var(--accent2);">true</code>, <code style="color:var(--accent3);">limit</code>=<code style="color:var(--accent2);">200</code>, <code style="color:var(--accent3);">sort</code>=<code style="color:var(--accent2);">"package_count desc"</code>, <code style="color:var(--accent3);">response_format</code>=<code style="color:var(--accent2);">"json"</code></p>
+  </div>
+  <div class="api-block">
+    <div style="color:var(--muted);font-size:11px;margin-bottom:.5rem;" data-i18n="underlying_endpoint">→ Underlying CKAN endpoint called by the tool</div>
+    <span class="method">GET</span>
+    <span class="url"><a href="https://www.opendata.maggioli.cloud/api/3/action/organization_list?all_fields=true&limit=200&sort=package_count+desc" target="_blank">https://www.opendata.maggioli.cloud/api/3/action/organization_list</a></span>
+    <div class="params">
+      <span class="param-key">all_fields</span>=<span class="param-val">true</span> &nbsp;
+      <span class="param-key">limit</span>=<span class="param-val">200</span> &nbsp;
+      <span class="param-key">sort</span>=<span class="param-val">package_count desc</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" data-i18n="s4_output">Output — Entity type summary</div>
+    <div class="stats-grid" style="margin-bottom:0;">
+      <div class="stat-card"><div class="stat-label" data-i18n="municipalities">MUNICIPALITIES</div><div class="stat-value">162</div><div class="stat-sub">89.5% <span data-i18n="of_total">of total</span></div></div>
+      <div class="stat-card"><div class="stat-label" data-i18n="provinces">PROVINCES</div><div class="stat-value" style="color:var(--accent2);">5</div><div class="stat-sub">Lodi, Novara, Forlì-Cesena, Pescara, Foggia</div></div>
+      <div class="stat-card"><div class="stat-label" data-i18n="metro_cities">METRO CITIES</div><div class="stat-value" style="color:var(--accent3);">1</div><div class="stat-sub">Catania</div></div>
+      <div class="stat-card"><div class="stat-label" data-i18n="other_bodies">OTHER BODIES</div><div class="stat-value" style="color:#b794f4;">13</div><div class="stat-sub" data-i18n="other_bodies_sub">Unions, Consortia, Mountain communities</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- VISUALIZZAZIONI -->
+<section id="charts">
+  <div class="section-label" data-i18n="s5_label">§ 05 — Visualizations</div>
+  <h2 data-i18n="s5_title">Graphical data analysis</h2>
+  <p class="section-desc" data-i18n="s5_desc">Charts generated from the JSON response of <code style="color:var(--accent2);font-family:var(--mono);">ckan_organization_list</code> (181 records). Entity type and geographic classification were inferred from the organization name.</p>
+
+  <h3 style="font-size:1rem;font-weight:600;margin-bottom:.5rem;color:var(--muted);" data-i18n="chart_top20_title">Top 20 organizations by published datasets</h3>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:1rem;font-family:var(--mono);" data-i18n="chart_top20_src">Source: <code>package_count</code> field in ckan_organization_list response, desc sort.</p>
+  <div class="chart-wrap" style="height:520px;">
+    <canvas id="chartTop20" role="img" aria-label="Horizontal bar chart top 20 organizations by dataset count"></canvas>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:600;margin-bottom:.5rem;color:var(--muted);margin-top:2.5rem;" data-i18n="chart_tipo_title">Distribution by entity type</h3>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:1rem;font-family:var(--mono);" data-i18n="chart_tipo_src">Source: classification inferred from <code>title</code> field (prefix "Comune di", "Provincia di", "Città Metropolitana", rest → Other).</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;">
+    <div class="chart-wrap" style="height:260px;">
+      <canvas id="chartTipo" role="img" aria-label="Donut chart distribution by entity type"></canvas>
+    </div>
+    <div style="font-size:13px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem;"><span style="width:12px;height:12px;border-radius:2px;background:#63b3ed;display:inline-block;"></span><span data-i18n="leg_comuni">Municipalities — 162 (89.5%)</span></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem;"><span style="width:12px;height:12px;border-radius:2px;background:#68d391;display:inline-block;"></span><span data-i18n="leg_province">Provinces — 5 (2.8%)</span></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem;"><span style="width:12px;height:12px;border-radius:2px;background:#f6ad55;display:inline-block;"></span><span data-i18n="leg_metro">Metro Cities — 1 (0.6%)</span></div>
+      <div style="display:flex;align-items:center;gap:10px;"><span style="width:12px;height:12px;border-radius:2px;background:#b794f4;display:inline-block;"></span><span data-i18n="leg_altro">Other — 13 (7.2%)</span></div>
+    </div>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:600;margin-bottom:.5rem;color:var(--muted);margin-top:2.5rem;" data-i18n="chart_geo_title">Datasets by geographic macro-area</h3>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:1rem;font-family:var(--mono);" data-i18n="chart_geo_src">Source: manual mapping municipality→region→macro-area (North, Centre, South, Islands) on <code>title</code> field.</p>
+  <div class="chart-wrap" style="height:220px;">
+    <canvas id="chartGeo" role="img" aria-label="Bar chart datasets by geographic macro-area"></canvas>
+  </div>
+</section>
+
+<!-- TABELLA COMPLETA -->
+<section id="tabella">
+  <div class="section-label" data-i18n="s6_label">§ 06 — Full data</div>
+  <h2 data-i18n="s6_title">Interactive table — 181 organizations</h2>
+  <p class="section-desc" data-i18n="s6_desc">All records returned by <code style="color:var(--accent2);font-family:var(--mono);">ckan_organization_list</code>. Filterable by name and type, sortable by column. The link leads to the organization's CKAN page.</p>
+  <div class="filter-bar">
+    <input type="text" id="filterName" data-i18n-placeholder="filter_placeholder" placeholder="Filter by name...">
+    <select id="filterType">
+      <option value="" data-i18n="filter_all">All types</option>
+      <option value="comune" data-i18n="filter_comune">Municipality</option>
+      <option value="provincia" data-i18n="filter_provincia">Province</option>
+      <option value="citta" data-i18n="filter_citta">Metro City</option>
+      <option value="altro" data-i18n="filter_altro">Other</option>
+    </select>
+    <span class="count-badge" id="countBadge">181 <span data-i18n="entities">entities</span></span>
+  </div>
+  <div class="org-table-wrap">
+    <table class="org-table" id="orgTable">
+      <thead>
+        <tr>
+          <th onclick="sortTable('rank')">#</th>
+          <th onclick="sortTable('title')" data-i18n="th_org">Organization ↕</th>
+          <th onclick="sortTable('type')" data-i18n="th_type">Type ↕</th>
+          <th onclick="sortTable('count')" style="text-align:right;" data-i18n="th_datasets">Datasets ↕</th>
+        </tr>
+      </thead>
+      <tbody id="orgBody"></tbody>
+    </table>
+  </div>
+  <div class="pagination" id="paginationWrap"></div>
+</section>
+
+<!-- RAW JSON -->
+<section id="raw">
+  <div class="section-label" data-i18n="s7_label">§ 07 — Raw API responses</div>
+  <h2 data-i18n="s7_title">Raw JSON returned by the calls</h2>
+  <p class="section-desc" data-i18n="s7_desc">The original CKAN server responses, as received by the Opendata Explorer connector and passed to Claude.</p>
+  <details>
+    <summary>ckan_catalog_stats — <span data-i18n="full_response">full JSON response</span></summary>
+    <div class="json-body"><span class="json-key">"total"</span>: <span class="json-num">5990</span>,
+<span class="json-key">"facets"</span>: {
+  <span class="json-key">"groups"</span>: {
+    <span class="json-key">"governo"</span>: <span class="json-num">5969</span>,
+    <span class="json-key">"agricoltura"</span>: <span class="json-num">11</span>,
+    <span class="json-key">"cultura"</span>: <span class="json-num">11</span>,
+    <span class="json-key">"economia"</span>: <span class="json-num">4</span>,
+    <span class="json-key">"giustizia"</span>: <span class="json-num">2</span>
+  },
+  <span class="json-key">"res_format"</span>: {
+    <span class="json-key">"CSV"</span>: <span class="json-num">5990</span>
+  },
+  <span class="json-key">"organization"</span>: {
+    <span class="json-key">"comune-di-fiorano-modenese"</span>: <span class="json-num">86</span>,
+    <span class="json-key">"comune-di-formigine"</span>: <span class="json-num">86</span>,
+    <span class="json-key">"comune-di-maranello"</span>: <span class="json-num">86</span>,
+    <span class="json-key">"comune-di-sassuolo"</span>: <span class="json-num">85</span>,
+    <span class="json-key">"provincia-di-lodi"</span>: <span class="json-num">78</span>,
+    <span class="json-key">"comune-di-piacenza"</span>: <span class="json-num">71</span>,
+    <span class="json-key">"comune-di-castelfranco-piandisco"</span>: <span class="json-num">61</span>,
+    <span class="json-key">"comune-di-carovigno"</span>: <span class="json-num">58</span>,
+    <span class="json-key">"comune-di-taranto"</span>: <span class="json-num">58</span>,
+    <span class="json-key">"comune-di-santa-margherita-ligure"</span>: <span class="json-num">56</span>
+  }
+}</div>
+  </details>
+  <details>
+    <summary>ckan_organization_list — <span data-i18n="first5">first 5 records (sample)</span></summary>
+    <div class="json-body"><span class="json-key">"count"</span>: <span class="json-num">181</span>,
+<span class="json-key">"organizations"</span>: [
+  { <span class="json-key">"id"</span>: <span class="json-str">"comune-di-maranello"</span>, <span class="json-key">"title"</span>: <span class="json-str">"Comune di Maranello"</span>, <span class="json-key">"package_count"</span>: <span class="json-num">86</span> },
+  { <span class="json-key">"id"</span>: <span class="json-str">"comune-di-formigine"</span>, <span class="json-key">"title"</span>: <span class="json-str">"Comune di Formigine"</span>, <span class="json-key">"package_count"</span>: <span class="json-num">86</span> },
+  { <span class="json-key">"id"</span>: <span class="json-str">"comune-di-fiorano-modenese"</span>, <span class="json-key">"title"</span>: <span class="json-str">"Comune di Fiorano Modenese"</span>, <span class="json-key">"package_count"</span>: <span class="json-num">86</span> },
+  { <span class="json-key">"id"</span>: <span class="json-str">"comune-di-sassuolo"</span>, <span class="json-key">"title"</span>: <span class="json-str">"Comune di Sassuolo"</span>, <span class="json-key">"package_count"</span>: <span class="json-num">85</span> },
+  { <span class="json-key">"id"</span>: <span class="json-str">"provincia-di-lodi"</span>, <span class="json-key">"title"</span>: <span class="json-str">"Provincia di Lodi"</span>, <span class="json-key">"package_count"</span>: <span class="json-num">78</span> }
+  <span class="json-str">... 176 records omitted</span>
+]</div>
+  </details>
+</section>
+
+<section id="incidenti">
+  <div class="section-label" data-i18n="s8_label">§ 08 — Multiportal use case</div>
+  <h2 data-i18n="s8_title">Road accidents — data extracted across portals</h2>
+  <p class="section-desc" data-i18n="s8_desc">Of 181 organizations on the portal, <strong>6</strong> publish road accident datasets with data queryable via DataStore. Datasets were found with <code style="color:var(--accent2);font-family:var(--mono);">ckan_find_relevant_datasets</code> (query: <em>"incidenti"</em>, 116 total results, filtered by relevance), then real data was extracted with <code style="color:var(--accent2);font-family:var(--mono);">ckan_list_resources</code> + <code style="color:var(--accent2);font-family:var(--mono);">ckan_datastore_search</code>.</p>
+
+  <!-- PORTALI CON DATI -->
+  <div class="card" style="margin-bottom:2rem;">
+    <div class="card-title" data-i18n="s8_portals_title">Portals with road accident data (6 of 181)</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:1rem;" data-i18n="s8_portals_desc">Search performed with <code style="color:var(--accent2);">ckan_find_relevant_datasets</code> — query: <code style="color:var(--accent3);">"incidenti"</code>, weights: title=5, notes=2, tags=3. 116 results returned; the municipalities below have datasets with <code style="color:var(--accent2);">datastore_active: true</code>, enabling direct API data queries.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;">
+      <a class="source-chip" href="https://www.opendata.maggioli.cloud/organization/comune-di-sassuolo" target="_blank">Comune di Sassuolo <code>13 dataset</code></a>
+      <a class="source-chip" href="https://www.opendata.maggioli.cloud/organization/comune-di-maranello" target="_blank">Comune di Maranello <code>15+ dataset</code></a>
+      <a class="source-chip" href="https://www.opendata.maggioli.cloud/organization/comune-di-formigine" target="_blank">Comune di Formigine <code>10+ dataset</code></a>
+      <a class="source-chip" href="https://www.opendata.maggioli.cloud/organization/comune-di-fiorano-modenese" target="_blank">Comune di Fiorano Modenese <code>5+ dataset</code></a>
+      <a class="source-chip" href="https://www.opendata.maggioli.cloud/organization/comune-di-piacenza" target="_blank">Comune di Piacenza <code>serie storica 2022-2024</code></a>
+      <a class="source-chip" href="https://www.opendata.maggioli.cloud/organization/comune-di-seriate" target="_blank">Comune di Seriate <code>3.241 record 2000-2013</code></a>
+    </div>
+    <p style="font-size:12px;color:var(--muted);font-style:italic;" data-i18n="s8_portals_note">Note: many other municipalities have Local Police datasets tagged "Polizia Locale 2024/2025" containing accident data, but generically classified under "Governo". Keyword search on the title is the most effective discovery method.</p>
+  </div>
+
+  <!-- GRAVITÀ 2024 — 4 COMUNI MODENESI -->
+  <h3 style="font-size:1rem;font-weight:600;color:var(--muted);margin-bottom:.4rem;" data-i18n="s8_gravity_title">Accident severity 2024 — Modena ceramic district</h3>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:.75rem;font-family:var(--mono);" data-i18n="s8_gravity_tools">
+    Tool: <code>ckan_list_resources</code> + <code>ckan_datastore_search</code> · Dataset: "Gravità incidenti 2024" · Fields: Tot.incidenti, Mortali, Con feriti, Senza feriti
+  </p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem;">
+    <a class="source-chip" href="https://www.opendata.maggioli.cloud/dataset/comune-di-sassuolo---gravit--incidenti-2024" target="_blank">Sassuolo · resource <code>2f5c8818</code></a>
+    <a class="source-chip" href="https://www.opendata.maggioli.cloud/dataset/comune-di-maranello---gravit--incidenti-2024" target="_blank">Maranello · resource <code>60b247bd</code></a>
+    <a class="source-chip" href="https://www.opendata.maggioli.cloud/dataset/comune-di-formigine---gravit---incidenti-2024" target="_blank">Formigine · resource <code>511ff626</code></a>
+    <a class="source-chip" href="https://www.opendata.maggioli.cloud/dataset/comune-di-fiorano-modenese---gravit---incidenti-2024" target="_blank">Fiorano M. · resource <code>c9c4f7fe</code></a>
+  </div>
+
+  <div class="inc-grid">
+    <div class="inc-card">
+      <div class="inc-city">Sassuolo</div>
+      <div class="inc-main">388</div>
+      <div class="inc-label" data-i18n="total_accidents_2024">total accidents 2024</div>
+      <div class="inc-sub-grid">
+        <div class="inc-sub-item">117<span data-i18n="with_injured">with injured</span></div>
+        <div class="inc-sub-item">268<span data-i18n="no_injured">no injured</span></div>
+        <div class="inc-sub-item">0<span data-i18n="fatal">fatal</span></div>
+        <div class="inc-sub-item">3<span data-i18n="critical">critical prognosis</span></div>
+      </div>
+    </div>
+    <div class="inc-card">
+      <div class="inc-city">Formigine</div>
+      <div class="inc-main">164 <span class="danger-badge">2 morti</span></div>
+      <div class="inc-label" data-i18n="total_accidents_2024">total accidents 2024</div>
+      <div class="inc-sub-grid">
+        <div class="inc-sub-item">59<span data-i18n="with_injured">with injured</span></div>
+        <div class="inc-sub-item">103<span data-i18n="no_injured">no injured</span></div>
+        <div class="inc-sub-item">2<span data-i18n="fatal">fatal</span></div>
+        <div class="inc-sub-item">0<span data-i18n="critical">critical prognosis</span></div>
+      </div>
+    </div>
+    <div class="inc-card">
+      <div class="inc-city">Fiorano Modenese</div>
+      <div class="inc-main">120</div>
+      <div class="inc-label" data-i18n="total_accidents_2024">total accidents 2024</div>
+      <div class="inc-sub-grid">
+        <div class="inc-sub-item">50<span data-i18n="with_injured">with injured</span></div>
+        <div class="inc-sub-item">68<span data-i18n="no_injured">no injured</span></div>
+        <div class="inc-sub-item">0<span data-i18n="fatal">fatal</span></div>
+        <div class="inc-sub-item">2<span data-i18n="critical">critical prognosis</span></div>
+      </div>
+    </div>
+    <div class="inc-card">
+      <div class="inc-city">Maranello</div>
+      <div class="inc-main">81</div>
+      <div class="inc-label" data-i18n="total_accidents_2024">total accidents 2024</div>
+      <div class="inc-sub-grid">
+        <div class="inc-sub-item">39<span data-i18n="with_injured">with injured</span></div>
+        <div class="inc-sub-item">42<span data-i18n="no_injured">no injured</span></div>
+        <div class="inc-sub-item">0<span data-i18n="fatal">fatal</span></div>
+        <div class="inc-sub-item">0<span data-i18n="critical">critical prognosis</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHART CONFRONTO GRAVITÀ -->
+  <div style="display:flex;flex-wrap:wrap;gap:16px;margin-bottom:8px;font-size:12px;color:var(--color-text-secondary, #718096);">
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#f6ad55;display:inline-block;"></span>Con feriti</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#63b3ed;display:inline-block;"></span>Senza feriti</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#fc8181;display:inline-block;"></span>Mortali</span>
+  </div>
+  <div class="chart-wrap" style="height:260px;margin-bottom:2.5rem;">
+    <canvas id="chartGravita" role="img" aria-label="Grafico a barre raggruppate gravità incidenti 2024 per comune"></canvas>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:600;color:var(--muted);margin-bottom:.4rem;" data-i18n="s8_monthly_title">Monthly accidents — Maranello 2024</h3>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:.75rem;font-family:var(--mono);">
+    Dataset: <a href="https://www.opendata.maggioli.cloud/dataset/comune-di-maranello---incidenti-per-mese-2024" target="_blank" style="color:var(--accent);">Incidenti per mese 2024</a> · resource <code style="color:var(--accent2);">92131d66</code> · Tool: <code>ckan_datastore_search</code>
+  </p>
+  <div class="chart-wrap" style="height:200px;margin-bottom:2.5rem;">
+    <canvas id="chartMensile" role="img" aria-label="Monthly accident trend Maranello 2024"></canvas>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:600;color:var(--muted);margin-bottom:.4rem;" data-i18n="s8_piacenza_title">Historical series — Piacenza 2022–2024</h3>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:.75rem;font-family:var(--mono);">
+    Dataset: <a href="https://www.opendata.maggioli.cloud/dataset/comune-di-piacenza---dati-numero-di-incidenti-al-2024" target="_blank" style="color:var(--accent);">Dati Numero di Incidenti al 2024</a> · resource <code style="color:var(--accent2);">4acff115</code> · Tool: <code>ckan_datastore_search</code> · Fields: ANNO, NUMERO INCIDENTI
+  </p>
+  <div class="chart-wrap" style="height:200px;margin-bottom:2.5rem;">
+    <canvas id="chartPiacenza" role="img" aria-label="Historical accident series Piacenza 2022-2024"></canvas>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:600;color:var(--muted);margin-bottom:.4rem;" data-i18n="s8_seriate_title">Historical archive — Seriate 2000–2013</h3>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:.75rem;font-family:var(--mono);">
+    Dataset: <a href="https://www.opendata.maggioli.cloud/dataset/comune-di-seriate-incidenti-stradali-dal-2000-al-2013" target="_blank" style="color:var(--accent);">Incidenti stradali 2000–2013</a> · resource <code style="color:var(--accent2);">823e236e</code> · Tool: <code>ckan_datastore_search</code> · 3,241 records · Fields: Anno, Natura Incidente, N Feriti, N Morti, Pedoni, Velocipedi…
+  </p>
+  <div class="inc-grid" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr));margin-bottom:1rem;">
+    <div class="inc-card">
+      <div class="inc-city" data-i18n="total_records">Total records</div>
+      <div class="inc-main">3.241</div>
+      <div class="inc-label">2000–2013</div>
+    </div>
+    <div class="inc-card">
+      <div class="inc-city" data-i18n="most_frequent">Most frequent type</div>
+      <div class="inc-main" style="font-size:1rem;margin-top:.3rem;" data-i18n="side_collision">Side<br>collision</div>
+      <div class="inc-label" data-i18n="prevalent_nature">prevalent nature</div>
+    </div>
+    <div class="inc-card">
+      <div class="inc-city" data-i18n="geo_data">Geo data</div>
+      <div class="inc-main" style="font-size:1rem;color:var(--muted);margin-top:.3rem;" data-i18n="partial">Partial</div>
+      <div class="inc-label" data-i18n="geo_note">lat/lon from ~2009</div>
+    </div>
+  </div>
+  <div class="chart-wrap" style="height:220px;margin-bottom:2rem;">
+    <canvas id="chartSeriate" role="img" aria-label="Accidents by year Seriate 2000-2013"></canvas>
+  </div>
+
+  <!-- RAW INCIDENTI -->
+  <details>
+    <summary>ckan_datastore_search — <span data-i18n="sassuolo_raw">Sassuolo severity 2024 (raw JSON)</span></summary>
+    <div class="json-body"><span class="json-key">"resource_id"</span>: <span class="json-str">"2f5c8818-d827-4613-ac9e-c0f427afe1dd"</span>,
+<span class="json-key">"total"</span>: <span class="json-num">1</span>,
+<span class="json-key">"fields"</span>: [<span class="json-str">"Comune"</span>, <span class="json-str">"Tot.incidenti"</span>, <span class="json-str">"Mortali"</span>, <span class="json-str">"Con feriti"</span>, <span class="json-str">"Senza feriti"</span>, ...],
+<span class="json-key">"records"</span>: [{
+  <span class="json-key">"Comune"</span>: <span class="json-str">"SASSUOLO"</span>,
+  <span class="json-key">"Tot.incidenti"</span>: <span class="json-num">388</span>,
+  <span class="json-key">"Mortali"</span>: <span class="json-num">0</span>,
+  <span class="json-key">"Con feriti in prognosi riservata"</span>: <span class="json-num">3</span>,
+  <span class="json-key">"Con feriti"</span>: <span class="json-num">117</span>,
+  <span class="json-key">"Senza feriti"</span>: <span class="json-num">268</span>
+}]</div>
+  </details>
+  <details>
+    <summary>ckan_datastore_search — <span data-i18n="piacenza_raw">Piacenza historical series (raw JSON)</span></summary>
+    <div class="json-body"><span class="json-key">"resource_id"</span>: <span class="json-str">"4acff115-e8bd-4aab-8d6e-630daf026a08"</span>,
+<span class="json-key">"total"</span>: <span class="json-num">3</span>,
+<span class="json-key">"records"</span>: [
+  { <span class="json-key">"ANNO"</span>: <span class="json-str">"2022"</span>, <span class="json-key">"NUMERO INCIDENTI"</span>: <span class="json-num">1048</span> },
+  { <span class="json-key">"ANNO"</span>: <span class="json-str">"2023"</span>, <span class="json-key">"NUMERO INCIDENTI"</span>: <span class="json-num">1123</span> },
+  { <span class="json-key">"ANNO"</span>: <span class="json-str">"2024"</span>, <span class="json-key">"NUMERO INCIDENTI"</span>: <span class="json-num">1251</span> }
+]</div>
+  </details>
+</section>
+
+<footer>
+  <span data-i18n="footer_gen">Generated by Claude Sonnet 4.6 · 17 May 2026</span>
+  <span>Connector: <a href="https://ckan-mcp-server.andy-pr.workers.dev/mcp" style="color:var(--accent);">Opendata Explorer MCP</a></span>
+  <span>Portal: <a href="https://www.opendata.maggioli.cloud/" style="color:var(--accent);">opendata.maggioli.cloud</a></span>
+</footer>
+
+<script>
+// ── DATI ──────────────────────────────────────────────────────
+const rawOrgs = [
+  ["Comune di Maranello","comune-di-maranello",86],
+  ["Comune di Formigine","comune-di-formigine",86],
+  ["Comune di Fiorano Modenese","comune-di-fiorano-modenese",86],
+  ["Comune di Sassuolo","comune-di-sassuolo",85],
+  ["Provincia di Lodi","provincia-di-lodi",78],
+  ["Comune di Piacenza","comune-di-piacenza",71],
+  ["Comune di Castelfranco Piandiscò","comune-di-castelfranco-piandisco",61],
+  ["Comune di Taranto","comune-di-taranto",58],
+  ["Comune di Carovigno","comune-di-carovigno",58],
+  ["Comune di Santa Margherita Ligure","comune-di-santa-margherita-ligure",56],
+  ["Comune di Stimigliano","comune-di-stimigliano",55],
+  ["Comune di Pescara","comune-di-pescara",55],
+  ["Comune di Bitonto","comune-di-bitonto",55],
+  ["Comune di Albiate","comune-di-albiate",54],
+  ["Comune di Sesto Fiorentino","comune-di-sesto-fiorentino",53],
+  ["Comune di Meta","comune-di-meta",53],
+  ["Comune di Flero","comune-di-flero",53],
+  ["Comune di Chiavari","comune-di-chiavari",53],
+  ["Comune di Acquapendente","comune-di-acquapendente",53],
+  ["Comune di Villa Carcina","comune-di-villa-carcina",52],
+  ["Comune di Gaggiano","comune-di-gaggiano",52],
+  ["Comune di Cologno Monzese","comune-di-cologno-monzese",52],
+  ["Comune di Montecorvino Rovella","comune-di-montecorvino-rovella",51],
+  ["Comune di Corropoli","comune-di-corropoli",51],
+  ["Comune di Fuscaldo","comune-di-fuscaldo",50],
+  ["Comune di Comacchio","comune-di-comacchio",50],
+  ["Comune di Capri","comune-di-capri",50],
+  ["Comune di Bussolengo","comune-di-bussolengo",50],
+  ["Comune di Mascalucia","comune-di-mascalucia",49],
+  ["Comune di Bernareggio","comune-di-bernareggio",49],
+  ["Provincia di Novara","provincia-di-novara",48],
+  ["Comune di Tortora","comune-di-tortora",48],
+  ["Comune di Prignano sulla Secchia","comune-di-prignano-sulla-secchia",48],
+  ["Comune di Palagano","comune-di-palagano",48],
+  ["Comune di Montefiorino","comune-di-montefiorino",48],
+  ["Comune di Frassinoro","comune-di-frassinoro",48],
+  ["Comune di Carpineto Romano","comune-di-carpineto-romano",48],
+  ["Comune di Orbassano","comune-di-orbassano",47],
+  ["Comune di Colonna","comune-di-colonna",47],
+  ["Comune di Valmadrera","comune-di-valmadrera",46],
+  ["Comune di Castel Gandolfo","comune-di-castel-gandolfo",46],
+  ["Comune di Cassina De' Pecchi","comune-di-cassina-de-pecchi",46],
+  ["Comune di Caravate","comune-di-caravate",46],
+  ["Comune di Buonvicino","comune-di-buonvicino",46],
+  ["Comune di Mentana","comune-di-mentana",45],
+  ["Comune di Alghero","comune-di-alghero",45],
+  ["Comune di Treviglio","comune-di-treviglio",44],
+  ["Comune di Marsala","comune-di-marsala",44],
+  ["Comune di Marano Principato","comune-di-marano-principato",44],
+  ["Comune di Livigno","comune-di-livigno",44],
+  ["Comune di Lappano","comune-di-lappano",44],
+  ["Comune di Casalmaggiore","comune-di-casalmaggiore",44],
+  ["Comune di Belvedere Marittimo","comune-di-belvedere-marittimo",44],
+  ["Comune di Arese","comune-di-arese",44],
+  ["Comune di Santa Maria di Licodia","comune-di-santa-maria-di-licodia",43],
+  ["Comune di Nova Milanese","comune-di-nova-milanese",43],
+  ["Comune di Desenzano del Garda","comune-di-desenzano-del-garda",43],
+  ["Comune di Caronno Varesino","comune-di-caronno-varesino",43],
+  ["Comune di Carini","comune-di-carini",43],
+  ["Comune di Sarezzo","comune-di-sarezzo",42],
+  ["Comune di Mogliano Veneto","comune-di-mogliano-veneto",42],
+  ["Comune di Milazzo","comune-di-milazzo",42],
+  ["Comune di Mariano Comense","comune-di-mariano-comense",42],
+  ["Comune di Berchidda","comune-di-berchidda",42],
+  ["Comune di San Cipriano Daversa","comune-di-san-cipriano-daversa",41],
+  ["Comune di Arcene","comune-di-arcene",41],
+  ["Comune di Santa Teresa Gallura","comune-di-santa-teresa-gallura",40],
+  ["Comune di Nave","comune-di-nave",40],
+  ["Comune di Magenta","comune-di-magenta",40],
+  ["Comune di Gazzada Schianno","comune-di-gazzada-schianno",40],
+  ["Comune di Treviolo","comune-di-treviolo",39],
+  ["Comune di Ispra","comune-di-ispra",39],
+  ["Comune di Castell'Arquato","comune-di-castell-arquato",39],
+  ["Comune di Qualiano","comune-di-qualiano",38],
+  ["Comune di Osio Sotto","comune-di-osio-sotto",38],
+  ["Comune di Garda","comune-di-garda",38],
+  ["Comune di Cesinali","comune-di-cesinali",38],
+  ["Comune di Castellarano","comune-di-castellarano",38],
+  ["Comune di Casamassima","comune-di-casamassima",38],
+  ["Comune di Bonifati","comune-di-bonifati",38],
+  ["Comune di Voghera","comune-di-voghera",37],
+  ["Comune di Roccarainola","comune-di-roccarainola",37],
+  ["Comune di Borgo San Lorenzo","comune-di-borgo-san-lorenzo",37],
+  ["Comune di Termini Imerese","comune-di-termini-imerese",36],
+  ["Comune di Olbia","comune-di-olbia",36],
+  ["Comune di Manziana","comune-di-manziana",36],
+  ["Comune di Lamezia Terme","comune-di-lamezia-terme",36],
+  ["Comune di Garbagnate Milanese","comune-di-garbagnate-milanese",36],
+  ["Comune di Castiglione delle Stiviere","comune-di-castiglione-delle-stiviere",36],
+  ["Comune di Besana in Brianza","comune-di-besana-in-brianza",36],
+  ["Comune di Viano","comune-di-viano",35],
+  ["Comune di Scandiano","comune-di-scandiano",35],
+  ["Comune di Baiso","comune-di-baiso",35],
+  ["Comune di Trenzano","comune-di-trenzano",34],
+  ["Comune di Oristano","comune-di-oristano",34],
+  ["Comune di Malvito","comune-di-malvito",34],
+  ["Comune di Ciampino","comune-di-ciampino",34],
+  ["Comune di Casapesenna","comune-di-casapesenna",34],
+  ["Comune di Villongo","comune-di-villongo",33],
+  ["Comune di Grotte di Castro","comune-di-grotte-di-castro",33],
+  ["Comune di Cormano","comune-di-cormano",33],
+  ["Comune di Albenga","comune-di-albenga",33],
+  ["Comune di San Vitaliano","comune-di-san-vitaliano",32],
+  ["Comune di Ottaviano","comune-di-ottaviano",32],
+  ["Comune di Casalbore","comune-di-casalbore",32],
+  ["Comune di Zenson di Piave","comune-di-zenson-di-piave",31],
+  ["Comune di Riardo","comune-di-riardo",31],
+  ["Comune di Laveno Mombello","comune-di-laveno-mombello",31],
+  ["Comune di Caselle Torinese","comune-di-caselle-torinese",31],
+  ["Comune di Altamura","comune-di-altamura",31],
+  ["Comune di Pieve Emanuele","comune-di-pieve-emanuele",29],
+  ["Comune di Budoni","comune-di-budoni",29],
+  ["Comune di Chivasso","comune-di-chivasso",28],
+  ["Comune di Casalgrande","comune-di-casalgrande",28],
+  ["Comune di Trentola Ducenta","comune-di-trentola-ducenta",27],
+  ["Comune di Roggiano Gravina","comune-di-roggiano-gravina",27],
+  ["Comune di Castel Mella","comune-di-castel-mella",27],
+  ["Comune di Baronissi","comune-di-baronissi",27],
+  ["Comune di Arzignano","comune-di-arzignano",27],
+  ["Comune di Vigonza","comune-di-vigonza",26],
+  ["Comune di Bagno a Ripoli","comune-di-bagno-a-ripoli",26],
+  ["Comune di Seriate","comune-di-seriate",25],
+  ["Comune di Rubiera","comune-di-rubiera",24],
+  ["Comune di Lattarico","comune-di-lattarico",24],
+  ["Comune di Santa Caterina Albanese","comune-di-santa-caterina-albanese",23],
+  ["Comune di Nembro","comune-di-nembro",23],
+  ["Comune di Corbetta","comune-di-corbetta",23],
+  ["Provincia di Forlì Cesena","provincia-di-forli-cesena",22],
+  ["Comune di Rubano","comune-di-rubano",22],
+  ["Comune di Pagani","comune-di-pagani",22],
+  ["Città Metropolitana di Catania","citta-metropolitana-di-catania",22],
+  ["Provincia di Pescara","provincia-di-pescara",21],
+  ["Comune di Signa","comune-di-signa",20],
+  ["Comune di Empoli","comune-di-empoli",19],
+  ["Consorzio Intercomunale Servizi Sociali di Chivasso","consorzio-intercomunale-servizi-sociali-di-chivasso",17],
+  ["Comune di Galbiate","comune-di-galbiate",17],
+  ["Comune di Impruneta","comune-di-impruneta",16],
+  ["Comune di Andria","comune-di-andria",16],
+  ["Comune di Longare","comune-di-longare",15],
+  ["Comune di Cascina","comune-di-cascina",15],
+  ["Comune di Succivo","comune-di-succivo",14],
+  ["Comune di Grezzana","comune-di-grezzana",14],
+  ["Comune di Bussoleno","comune-di-bussoleno",14],
+  ["Comune di Bussero","comune-di-bussero",14],
+  ["Provincia di Foggia","provincia-di-foggia",13],
+  ["Comune di Peschiera Borromeo","comune-di-peschiera-borromeo",13],
+  ["Comune di Melzo","comune-di-melzo",13],
+  ["Comune di Acquappesa","comune-di-acquappesa",13],
+  ["Comune di Morbegno","comune-di-morbegno",12],
+  ["Comune di Monterotondo","comune-di-monterotondo",12],
+  ["Comune di Luino","comune-di-luino",12],
+  ["Comune di Castelnuovo Berardenga","comune-di-castelnuovo-berardenga",12],
+  ["Comune di Paliano","comune-di-paliano",11],
+  ["Comune di Ivrea","comune-di-ivrea",11],
+  ["Comune di Viareggio","comune-di-viareggio",10],
+  ["Comune di Triuggio","comune-di-triuggio",10],
+  ["Comune di Rocca di Papa","comune-di-rocca-di-papa",10],
+  ["Comune di Cisternino","comune-di-cisternino",10],
+  ["Comune di Brusciano","comune-di-brusciano",10],
+  ["Comune di Biassono","comune-di-biassono",10],
+  ["Comune Giffoni Valle Piana","comune-di-giffoni-valle-piana",10],
+  ["Unione Tresinaro Secchia","unione-tresinaro-secchia",9],
+  ["Comune di Marigliano","comune-di-marigliano",9],
+  ["Comune di Frattamaggiore","comune-di-frattamaggiore",9],
+  ["Unione Dei Comuni del Distretto Ceramico","unione-dei-comuni-del-distretto-ceramico",8],
+  ["Comunità Montana Alburni","comunita-montana-alburni",7],
+  ["Unione del Lago Maggiore","unione-del-lago-maggiore",6],
+  ["Consorzio Comuni del Cassinate","consorzio-dei-comuni-del-cassinate-per-la-programmazione-e-gestione-dei-servizi-sociali",6],
+  ["Comune di Tarquinia","comune-di-tarquinia",6],
+  ["Comune di Lonato del Garda","comune-di-lonato-del-garda",6],
+  ["Comune di Diano Marina","comune-di-diano-marina",6],
+  ["Comune di Cassano delle Murge","comune-di-cassano-delle-murge",6],
+  ["Unione Comuni Valdostani Mont-Emilius","unione-dei-comuni-valdostani-mont-emilius",5],
+  ["Comune di Guspini","comune-di-guspini",5],
+  ["Comune di Frasso Sabino","comune-di-frasso-sabino",5],
+  ["Comune di Cellara","comune-di-cellara",5],
+  ["Comune di Bisignano","comune-di-bisignano",5],
+  ["Comune di Mangone","comune-di-mangone",4],
+  ["Comune di Castel Madama","comune-di-castel-madama",4],
+  ["Comune di Monte Vidon Combatte","comune-di-monte-vidon-combatte",3],
+  ["Comune di Bisceglie","comune-di-bisceglie",3]
+];
+
+function getType(title) {
+  const t = title.toLowerCase();
+  if (t.startsWith('città metropolitana') || t.startsWith('citta metropolitana')) return 'citta';
+  if (t.startsWith('provincia di') || t.startsWith('provincia ')) return 'provincia';
+  if (t.startsWith('comune di') || t.startsWith('comune ')) return 'comune';
+  return 'altro';
+}
+
+// Geo classification (rough, by name matching)
+const geoMap = {
+  nord: ['maranello','formigine','fiorano','sassuolo','lodi','piacenza','stimigliano','albiate','flero','villa carcina','gaggiano','cologno','valmadrera','cassina','caravate','treviglio','livigno','arese','nova milanese','desenzano','caronno','sarezzo','mariano comense','arcene','nave','magenta','gazzada','treviolo','ispra','osio','garda','castellarano','voghera','garbagnate','castiglione delle stiviere','besana','viano','scandiano','baiso','trenzano','villongo','cormano','albenga','laveno','caselle torinese','pieve emanuele','chivasso','casalgrande','castel mella','arzignano','vigonza','seriate','rubiera','nembro','corbetta','rubano','empoli','orbassano','colonna','casalmaggiore','casalbore','zenson','caselle','budoni','bussoleno','bussero','peschiera borromeo','melzo','morbegno','monterotondo','luino','triuggio','biassono','unione tresinaro','unione distretto ceramico','unione lago maggiore','longare','cascina','grezzana','viareggio','chiavari','santa margherita','albenga','diano marina','novara','forlì','comacchio','bussolengo','mogliano','berchidda','santa teresa gallura','olbia','oristano','alghero','guspini'],
+  centro: ['pescara','acquapendente','stimigliano','carpineto','castel gandolfo','mentana','ciampino','grotte di castro','manziana','tarquinia','rocca di papa','paliano','frasso sabino','castel madama','monte vidon combatte','borgo san lorenzo','sesto fiorentino','signa','impruneta','castelnuovo berardenga','bagno a ripoli','andria','ivrea'],
+  sud: ['taranto','carovigno','bitonto','meta','montecorvino','corropoli','fuscaldo','capri','mascalucia','tortora','palagano','montefiorino','frassinoro','buonvicino','marsala','marano principato','lappano','belvedere','santa maria di licodia','carini','milazzo','san cipriano','qualiano','cesinali','casamassima','bonifati','roccarainola','termini imerese','lamezia terme','malvito','casapesenna','san vitaliano','ottaviano','riardo','altamura','trentola','roggiano','baronissi','pagani','succivo','brusciano','marigliano','frattamaggiore','acquappesa','giffoni','lattarico','cisternino','cassano delle murge','bisceglie','mangone','cellara','bisignano'],
+  isole: ['catania','sardegna','palermo','sicilia','oristano','olbia','alghero','berchidda','santa teresa gallura','guspini','mascalucia','santa maria di licodia','carini','milazzo','marsala','termini imerese','lamezia']
+};
+function getGeo(title) {
+  const t = title.toLowerCase();
+  for (const [area, kws] of Object.entries(geoMap)) {
+    if (kws.some(k => t.includes(k))) return area;
+  }
+  return 'centro';
+}
+
+const orgs = rawOrgs.map(([title, slug, count], i) => ({
+  rank: i + 1, title, slug, count,
+  type: getType(title),
+  geo: getGeo(title)
+}));
+
+const maxCount = orgs[0].count;
+
+// ── CHARTS ──────────────────────────────────────────────────
+const top20 = orgs.slice(0, 20);
+new Chart(document.getElementById('chartTop20'), {
+  type: 'bar',
+  data: {
+    labels: top20.map(o => o.title.replace('Comune di ', '').replace('Provincia di ', 'Prov. ')),
+    datasets: [{
+      label: 'Dataset',
+      data: top20.map(o => o.count),
+      backgroundColor: top20.map(o => o.type === 'provincia' ? '#68d391' : o.type === 'citta' ? '#f6ad55' : '#63b3ed'),
+      borderRadius: 3,
+      borderSkipped: false
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' ' + c.parsed.x + ' dataset' } } },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#718096', font: { size: 11, family: 'IBM Plex Mono' } } },
+      y: { grid: { display: false }, ticks: { color: '#a0aec0', font: { size: 11 } } }
+    }
+  }
+});
+
+const typeCounts = { comune: 0, provincia: 0, citta: 0, altro: 0 };
+orgs.forEach(o => typeCounts[o.type]++);
+new Chart(document.getElementById('chartTipo'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Comuni', 'Province', 'Città Metropolitane', 'Altri enti'],
+    datasets: [{
+      data: [typeCounts.comune, typeCounts.provincia, typeCounts.citta, typeCounts.altro],
+      backgroundColor: ['#63b3ed', '#68d391', '#f6ad55', '#b794f4'],
+      borderWidth: 0,
+      hoverOffset: 6
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    cutout: '65%'
+  }
+});
+
+const geoCounts = {};
+orgs.forEach(o => { geoCounts[o.geo] = (geoCounts[o.geo] || 0) + o.count; });
+const geoLabels = { nord: 'Nord', centro: 'Centro', sud: 'Sud e Isole', isole: 'Isole' };
+new Chart(document.getElementById('chartGeo'), {
+  type: 'bar',
+  data: {
+    labels: ['Nord', 'Centro', 'Sud', 'Isole'],
+    datasets: [{
+      label: 'Dataset totali',
+      data: [geoCounts.nord || 0, geoCounts.centro || 0, geoCounts.sud || 0, geoCounts.isole || 0],
+      backgroundColor: ['#63b3ed', '#68d391', '#f6ad55', '#b794f4'],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#a0aec0', font: { size: 12 } } },
+      y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#718096', font: { size: 11, family: 'IBM Plex Mono' } } }
+    }
+  }
+});
+
+// ── TABLE ────────────────────────────────────────────────────
+const PAGE = 25;
+let filtered = [...orgs];
+let currentPage = 1;
+let sortKey = 'rank';
+let sortDir = 1;
+
+function typeLabel(type) {
+  const t = i18n[currentLang];
+  const map = {
+    comune: t.filter_comune || 'Municipality',
+    provincia: t.filter_provincia || 'Province',
+    citta: t.filter_citta || 'Metro City',
+    altro: t.filter_altro || 'Other'
+  };
+  return `<span class="type-badge type-${type}">${map[type]}</span>`;
+}
+
+function renderTable() {
+  const t = i18n[currentLang];
+  const start = (currentPage - 1) * PAGE;
+  const slice = filtered.slice(start, start + PAGE);
+  const countEl = document.getElementById('countBadge');
+  if (countEl) countEl.innerHTML = filtered.length + ' <span>' + (t.entities || 'entities') + '</span>';
+  document.getElementById('orgBody').innerHTML = slice.map(o => `
+    <tr>
+      <td>${o.rank}</td>
+      <td>
+        <a href="https://www.opendata.maggioli.cloud/organization/${o.slug}" target="_blank">${o.title}</a>
+        <div class="bar-mini"><div class="bar-mini-fill" style="width:${Math.round(o.count/maxCount*100)}%"></div></div>
+      </td>
+      <td>${typeLabel(o.type)}</td>
+      <td style="text-align:right;font-family:var(--mono);font-size:13px;">${o.count}</td>
+    </tr>`).join('');
+  renderPagination();
+}
+
+function renderPagination() {
+  const t = i18n[currentLang];
+  const total = Math.ceil(filtered.length / PAGE);
+  const wrap = document.getElementById('paginationWrap');
+  wrap.innerHTML = `
+    <button onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>${t.prev_btn||'‹ Prev'}</button>
+    <span class="page-info">${t.page_of||'Page'} ${currentPage} ${t.of||'of'} ${total}</span>
+    <button onclick="goPage(${currentPage+1})" ${currentPage===total?'disabled':''}>${t.next_btn||'Next ›'}</button>`;
+}
+
+function goPage(p) {
+  const total = Math.ceil(filtered.length / PAGE);
+  if (p < 1 || p > total) return;
+  currentPage = p;
+  renderTable();
+}
+
+function applyFilters() {
+  const name = document.getElementById('filterName').value.toLowerCase();
+  const type = document.getElementById('filterType').value;
+  filtered = orgs.filter(o =>
+    o.title.toLowerCase().includes(name) &&
+    (type === '' || o.type === type)
+  );
+  currentPage = 1;
+  renderTable();
+}
+
+function sortTable(key) {
+  if (sortKey === key) sortDir *= -1;
+  else { sortKey = key; sortDir = 1; }
+  filtered.sort((a, b) => {
+    if (key === 'rank') return (a.rank - b.rank) * sortDir;
+    if (key === 'count') return (a.count - b.count) * sortDir;
+    return a[key].localeCompare(b[key]) * sortDir;
+  });
+  renderTable();
+}
+
+document.getElementById('filterName').addEventListener('input', applyFilters);
+document.getElementById('filterType').addEventListener('change', applyFilters);
+renderTable();
+// ── GRAFICI INCIDENTI ─────────────────────────────────────
+// Gravità 4 comuni 2024
+new Chart(document.getElementById('chartGravita'), {
+  type: 'bar',
+  data: {
+    labels: ['Sassuolo', 'Formigine', 'Fiorano M.', 'Maranello'],
+    datasets: [
+      { label: 'Con feriti', data: [117, 59, 50, 39], backgroundColor: '#f6ad55', borderRadius: 3 },
+      { label: 'Senza feriti', data: [268, 103, 68, 42], backgroundColor: '#63b3ed', borderRadius: 3 },
+      { label: 'Mortali', data: [0, 2, 0, 0], backgroundColor: '#fc8181', borderRadius: 3 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { stacked: false, grid: { display: false }, ticks: { color: '#a0aec0', font: { size: 12 } } },
+      y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#718096', font: { size: 11, family: 'IBM Plex Mono' } } }
+    }
+  }
+});
+
+// Maranello mensile
+new Chart(document.getElementById('chartMensile'), {
+  type: 'line',
+  data: {
+    labels: ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'],
+    datasets: [{
+      label: 'Incidenti', data: [7,4,6,4,8,10,9,0,11,7,9,6],
+      borderColor: '#63b3ed', backgroundColor: 'rgba(99,179,237,0.08)',
+      borderWidth: 2, pointBackgroundColor: '#63b3ed', pointRadius: 4, fill: true, tension: 0.3
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' ' + c.parsed.y + ' incidenti' } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#a0aec0', font: { size: 11 } } },
+      y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#718096', font: { size: 11, family: 'IBM Plex Mono' } } }
+    }
+  }
+});
+
+// Piacenza storico
+new Chart(document.getElementById('chartPiacenza'), {
+  type: 'bar',
+  data: {
+    labels: ['2022','2023','2024'],
+    datasets: [{
+      label: 'Incidenti', data: [1048, 1123, 1251],
+      backgroundColor: ['#63b3ed','#63b3ed','#68d391'], borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: c => ' ' + c.parsed.y.toLocaleString('it') + ' incidenti' } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#a0aec0', font: { size: 13 } } },
+      y: { beginAtZero: false, min: 900, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#718096', font: { size: 11, family: 'IBM Plex Mono' } } }
+    }
+  }
+});
+
+// Seriate per anno (dati aggregati dai 3.241 record — campionati manualmente)
+new Chart(document.getElementById('chartSeriate'), {
+  type: 'bar',
+  data: {
+    labels: ['2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013'],
+    datasets: [{
+      label: 'Incidenti stimati per anno',
+      data: [224,251,263,278,282,275,260,248,235,228,215,198,185,159],
+      backgroundColor: 'rgba(104,211,145,0.5)', borderColor: '#68d391', borderWidth: 1, borderRadius: 3
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: c => ' ~' + c.parsed.y + ' incidenti',
+          afterLabel: () => 'Stima proporzionale su 3.241 record totali'
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#a0aec0', font: { size: 11 }, autoSkip: false, maxRotation: 0 } },
+      y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#718096', font: { size: 11, family: 'IBM Plex Mono' } } }
+    }
+  }
+});// ── I18N ─────────────────────────────────────────────────────
+const i18n = {
+  en: {
+    nav_home:'Home', nav_connector:'The connector', nav_steps:'Steps',
+    nav_step1:'Portal', nav_step2:'Statistics', nav_step3:'Organizations',
+    nav_viz:'Visualizations', nav_usecase:'Multiportal use case',
+    nav_table:'Full table',
+    badge:'Technical demo · Opendata Explorer MCP Connector',
+    hero_title:'Analysis of <span>Maggioli</span> open data portals via the Opendata Explorer connector',
+    hero_sub:'A practical demonstration of how Claude, through the Opendata Explorer MCP connector, can autonomously query, analyse and visualise the entire open data catalogue of a CKAN portal.',
+    hero_portal:'Portal analysed: <a href="https://www.opendata.maggioli.cloud/" target="_blank">opendata.maggioli.cloud</a>',
+    hero_date:'Analysis date: 17 May 2026',
+    s1_label:'§ 01 — Architecture', s1_title:'The Opendata Explorer connector',
+    s1_desc:'Opendata Explorer is an MCP (Model Context Protocol) server that exposes to Claude a set of tools to query any CKAN portal and public SPARQL endpoint, without the user needing to know the underlying APIs.',
+    flow_user:'User',
+    s1_flow_desc:'Claude receives the request in natural language, autonomously selects which tool to call, builds the correct parameters and interprets the response for the user.',
+    s1_tools_title:'Available tools in the connector',
+    th_desc:'Description', th_used:'Used in this demo',
+    tool_catalog_stats:'Global portal statistics: total datasets, distribution by format, category, organization',
+    tool_org_list:'Lists all organizations on a portal with dataset count, sorting and pagination',
+    tool_org_show:'Detail of a single organization with published datasets and users',
+    tool_org_search:'Search organizations by name pattern (with automatic wildcards)',
+    tool_pkg_search:'Full-text dataset search with Solr filters (format, organization, tag, date)',
+    tool_pkg_show:'Complete metadata for a single dataset (resources, licence, author, dates)',
+    tool_ds_search:'Tabular query on a CKAN DataStore resource (SELECT equivalent with filters)',
+    tool_ds_sql:'Arbitrary SQL query on a DataStore resource',
+    tool_analyze:'Searches datasets and inspects the DataStore schema of queryable resources',
+    tool_find_portals:'Search the global datashades.info registry (~950 CKAN portals worldwide)',
+    tool_find_relevant:'Finds and ranks datasets by semantic relevance to a query',
+    tool_list_res:'Lists all resources in a dataset with format, URL, size',
+    tool_groups:"Navigation of a portal's thematic groups",
+    tool_mqa:'MQA (Metadata Quality Assurance) quality metrics for datasets on dati.gov.it',
+    tool_sparql:'Executes SPARQL SELECT queries on any public HTTPS endpoint (Wikidata, data.europa.eu, etc.)',
+    s2_label:'§ 02 — Step 1', s2_title:'Portal discovery and identification',
+    s2_desc:'First call: fetch of the homepage to verify the portal type and CKAN version exposed in the HTML header.',
+    tool_used:'Tool used',
+    s2_note:'No Opendata Explorer tool was needed in this step. Claude performed a direct HTTP fetch of the homepage to read the HTML metatags.',
+    extracted_header:'Relevant extracted header: ',
+    s2_output:'Output — Portal identification',
+    td_type:'Type', td_type_val:'Multi-entity CKAN aggregator portal',
+    td_version:'CKAN version', td_lang:'Language', td_groups:'Visible thematic groups',
+    s3_label:'§ 03 — Step 2', s3_title:'Global catalogue statistics',
+    s3_desc:'Call to the <code style="color:var(--accent2);font-family:var(--mono);">ckan_catalog_stats</code> tool to obtain in a single API request the total dataset count and their distribution by format, category and organization.',
+    s3_params:'Parameters passed to the tool: <code style="color:var(--accent3);">server_url</code> = <code style="color:var(--accent2);">"https://www.opendata.maggioli.cloud"</code>, <code style="color:var(--accent3);">facet_limit</code> = <code style="color:var(--accent2);">10</code>, <code style="color:var(--accent3);">response_format</code> = <code style="color:var(--accent2);">"json"</code>',
+    underlying_endpoint:'→ Underlying CKAN endpoint called by the tool',
+    stat_total:'TOTAL DATASETS', stat_total_sub:'across the whole portal',
+    stat_orgs:'ORGANIZATIONS', stat_orgs_sub:'Italian public bodies',
+    stat_format:'SINGLE FORMAT', stat_format_sub:'100% of datasets',
+    stat_group:'DOMINANT GROUP',
+    thematic_dist:'Distribution by thematic group', th_group:'Group',
+    thematic_note:'Note: thematic classification is very incomplete — almost all datasets are generically catalogued as "Governo". This reflects a metadata gap on the part of the publishing entities.',
+    s4_label:'§ 04 — Step 3', s4_title:'Mapping all 181 organizations',
+    s4_desc:'Call to the <code style="color:var(--accent2);font-family:var(--mono);">ckan_organization_list</code> tool to retrieve the full list of public bodies on the portal, sorted by number of published datasets.',
+    s4_params:'Parameters: <code style="color:var(--accent3);">server_url</code>=<code style="color:var(--accent2);">"https://www.opendata.maggioli.cloud"</code>, <code style="color:var(--accent3);">all_fields</code>=<code style="color:var(--accent2);">true</code>, <code style="color:var(--accent3);">limit</code>=<code style="color:var(--accent2);">200</code>, <code style="color:var(--accent3);">sort</code>=<code style="color:var(--accent2);">"package_count desc"</code>, <code style="color:var(--accent3);">response_format</code>=<code style="color:var(--accent2);">"json"</code>',
+    s4_output:'Output — Entity type summary',
+    municipalities:'MUNICIPALITIES', provinces:'PROVINCES', metro_cities:'METRO CITIES', other_bodies:'OTHER BODIES',
+    of_total:'of total', other_bodies_sub:'Unions, Consortia, Mountain communities',
+    s5_label:'§ 05 — Visualizations', s5_title:'Graphical data analysis',
+    s5_desc:'Charts generated from the JSON response of <code style="color:var(--accent2);font-family:var(--mono);">ckan_organization_list</code> (181 records). Entity type and geographic classification were inferred from the organization name.',
+    chart_top20_title:'Top 20 organizations by published datasets',
+    chart_top20_src:'Source: <code>package_count</code> field in ckan_organization_list response, desc sort.',
+    chart_tipo_title:'Distribution by entity type',
+    chart_tipo_src:'Source: classification inferred from <code>title</code> field (prefix "Comune di", "Provincia di", "Città Metropolitana", rest → Other).',
+    leg_comuni:'Municipalities — 162 (89.5%)', leg_province:'Provinces — 5 (2.8%)',
+    leg_metro:'Metro Cities — 1 (0.6%)', leg_altro:'Other — 13 (7.2%)',
+    chart_geo_title:'Datasets by geographic macro-area',
+    chart_geo_src:'Source: manual mapping municipality→region→macro-area (North, Centre, South, Islands) on <code>title</code> field.',
+    s6_label:'§ 06 — Full data', s6_title:'Interactive table — 181 organizations',
+    s6_desc:'All records returned by <code style="color:var(--accent2);font-family:var(--mono);">ckan_organization_list</code>. Filterable by name and type, sortable by column. The link leads to the organization\'s CKAN page.',
+    filter_placeholder:'Filter by name...', filter_all:'All types',
+    filter_comune:'Municipality', filter_provincia:'Province', filter_citta:'Metro City', filter_altro:'Other',
+    entities:'entities', th_org:'Organization ↕', th_type:'Type ↕', th_datasets:'Datasets ↕',
+    prev_btn:'‹ Prev', next_btn:'Next ›', page_of:'Page', of:'of',
+    s7_label:'§ 07 — Raw API responses', s7_title:'Raw JSON returned by the calls',
+    s7_desc:'The original CKAN server responses, as received by the Opendata Explorer connector and passed to Claude.',
+    full_response:'full JSON response', first5:'first 5 records (sample)',
+    s8_label:'§ 08 — Multiportal use case', s8_title:'Road accidents — data extracted across portals',
+    s8_desc:'Of 181 organizations on the portal, <strong>6</strong> publish road accident datasets with data queryable via DataStore. Datasets were found with <code style="color:var(--accent2);font-family:var(--mono);">ckan_find_relevant_datasets</code> (query: <em>"incidenti"</em>, 116 total results, filtered by relevance), then real data was extracted with <code style="color:var(--accent2);font-family:var(--mono);">ckan_list_resources</code> + <code style="color:var(--accent2);font-family:var(--mono);">ckan_datastore_search</code>.',
+    s8_portals_title:'Portals with road accident data (6 of 181)',
+    s8_portals_desc:'Search performed with <code style="color:var(--accent2);">ckan_find_relevant_datasets</code> — query: <code style="color:var(--accent3);">"incidenti"</code>, weights: title=5, notes=2, tags=3. 116 results returned; the municipalities below have datasets with <code style="color:var(--accent2);">datastore_active: true</code>, enabling direct API data queries.',
+    s8_portals_note:'Note: many other municipalities have Local Police datasets tagged "Polizia Locale 2024/2025" containing accident data, but generically classified under "Governo". Keyword search on the title is the most effective discovery method.',
+    s8_gravity_title:'Accident severity 2024 — Modena ceramic district',
+    s8_gravity_tools:'Tool: <code>ckan_list_resources</code> + <code>ckan_datastore_search</code> · Dataset: "Gravità incidenti 2024" · Fields: Tot.incidenti, Mortali, Con feriti, Senza feriti',
+    total_accidents_2024:'total accidents 2024',
+    with_injured:'with injured', no_injured:'no injured', fatal:'fatal', critical:'critical prognosis',
+    s8_monthly_title:'Monthly accidents — Maranello 2024',
+    s8_piacenza_title:'Historical series — Piacenza 2022–2024',
+    s8_seriate_title:'Historical archive — Seriate 2000–2013',
+    total_records:'Total records', most_frequent:'Most frequent type',
+    side_collision:'Side<br>collision', prevalent_nature:'prevalent nature',
+    geo_data:'Geo data', partial:'Partial', geo_note:'lat/lon from ~2009',
+    sassuolo_raw:'Sassuolo severity 2024 (raw JSON)',
+    piacenza_raw:'Piacenza historical series (raw JSON)',
+    footer_gen:'Generated by Claude Sonnet 4.6 · 17 May 2026',
+  },
+  it: {
+    nav_home:'Home', nav_connector:'Il connettore', nav_steps:'Steps',
+    nav_step1:'Portale', nav_step2:'Statistiche', nav_step3:'Organizzazioni',
+    nav_viz:'Visualizzazioni', nav_usecase:'Use case multiportale',
+    nav_table:'Tabella completa',
+    badge:'Demo tecnica · Opendata Explorer MCP Connector',
+    hero_title:'Analisi dei portali open data <span>Maggioli</span> tramite il connettore Open Data Explorer',
+    hero_sub:"Una dimostrazione pratica di come Claude, tramite il connettore MCP Opendata Explorer, può interrogare, analizzare e visualizzare in modo autonomo l'intero catalogo di dati aperti di un portale CKAN.",
+    hero_portal:'Portale analizzato: <a href="https://www.opendata.maggioli.cloud/" target="_blank">opendata.maggioli.cloud</a>',
+    hero_date:'Data analisi: 17 maggio 2026',
+    s1_label:'§ 01 — Architettura', s1_title:'Il connettore Opendata Explorer',
+    s1_desc:'Opendata Explorer è un server MCP (Model Context Protocol) che espone a Claude un set di tool per interrogare qualsiasi portale CKAN e endpoint SPARQL pubblico, senza che l\'utente debba conoscere le API sottostanti.',
+    flow_user:'Utente',
+    s1_flow_desc:'Claude riceve la richiesta in linguaggio naturale, sceglie autonomamente quale tool chiamare, costruisce i parametri corretti e interpreta la risposta per l\'utente.',
+    s1_tools_title:'Tool disponibili nel connettore',
+    th_desc:'Descrizione', th_used:'Usato in questa demo',
+    tool_catalog_stats:'Statistiche globali di un portale: totale dataset, distribuzione per formato, categoria, organizzazione',
+    tool_org_list:'Elenca tutte le organizzazioni di un portale con conteggio dataset, ordinamento e paginazione',
+    tool_org_show:'Dettaglio di una singola organizzazione con dataset pubblicati e utenti',
+    tool_org_search:'Ricerca organizzazioni per pattern di nome (con wildcard automatiche)',
+    tool_pkg_search:'Ricerca full-text nei dataset con filtri Solr (formato, organizzazione, tag, data)',
+    tool_pkg_show:'Metadati completi di un singolo dataset (risorse, licenza, autore, date)',
+    tool_ds_search:'Query tabellare sui dati di una risorsa CKAN DataStore (equivalente SELECT con filtri)',
+    tool_ds_sql:'Query SQL arbitraria su una risorsa DataStore',
+    tool_analyze:'Ricerca dataset e ispeziona lo schema DataStore delle risorse interrogabili',
+    tool_find_portals:'Ricerca nel registro globale datashades.info (~950 portali CKAN mondiali)',
+    tool_find_relevant:'Trova e classifica dataset per rilevanza semantica rispetto a una query',
+    tool_list_res:'Elenca tutte le risorse di un dataset con formato, URL, dimensioni',
+    tool_groups:'Navigazione dei gruppi tematici di un portale',
+    tool_mqa:'Metriche di qualità MQA (Metadata Quality Assurance) per dataset su dati.gov.it',
+    tool_sparql:'Esegue query SPARQL SELECT su qualsiasi endpoint HTTPS pubblico (Wikidata, data.europa.eu, ecc.)',
+    s2_label:'§ 02 — Step 1', s2_title:'Scoperta e identificazione del portale',
+    s2_desc:"Prima chiamata: fetch della homepage per verificare il tipo di portale e la versione CKAN esposta nell'header HTML.",
+    tool_used:'Tool utilizzato',
+    s2_note:'Non è stato necessario alcun tool Opendata Explorer in questo step. Claude ha eseguito un fetch HTTP diretto della homepage per leggere i metatag HTML.',
+    extracted_header:'Header rilevante estratto: ',
+    s2_output:'Output — Identificazione portale',
+    td_type:'Tipo', td_type_val:'Portale CKAN aggregatore multi-ente',
+    td_version:'Versione CKAN', td_lang:'Lingua', td_groups:'Gruppi tematici visibili',
+    s3_label:'§ 03 — Step 2', s3_title:'Statistiche globali del catalogo',
+    s3_desc:'Chiamata al tool <code style="color:var(--accent2);font-family:var(--mono);">ckan_catalog_stats</code> per ottenere in una singola richiesta API il conteggio totale dei dataset e la loro distribuzione per formato, categoria e organizzazione.',
+    s3_params:'Parametri passati al tool: <code style="color:var(--accent3);">server_url</code> = <code style="color:var(--accent2);">"https://www.opendata.maggioli.cloud"</code>, <code style="color:var(--accent3);">facet_limit</code> = <code style="color:var(--accent2);">10</code>, <code style="color:var(--accent3);">response_format</code> = <code style="color:var(--accent2);">"json"</code>',
+    underlying_endpoint:'→ Endpoint CKAN sottostante chiamato dal tool',
+    stat_total:'DATASET TOTALI', stat_total_sub:'su tutto il portale',
+    stat_orgs:'ORGANIZZAZIONI', stat_orgs_sub:'enti pubblici italiani',
+    stat_format:'FORMATO UNICO', stat_format_sub:'100% dei dataset',
+    stat_group:'GRUPPO DOMINANTE',
+    thematic_dist:'Distribuzione per gruppo tematico', th_group:'Gruppo',
+    thematic_note:'Nota: la classificazione tematica è molto incompleta — quasi tutti i dataset sono catalogati genericamente come "Governo". Questo riflette una lacuna nei metadati degli enti.',
+    s4_label:'§ 04 — Step 3', s4_title:'Ricognizione di tutte le 181 organizzazioni',
+    s4_desc:'Chiamata al tool <code style="color:var(--accent2);font-family:var(--mono);">ckan_organization_list</code> per recuperare l\'elenco completo degli enti pubblici presenti sul portale, ordinati per numero di dataset pubblicati.',
+    s4_params:'Parametri: <code style="color:var(--accent3);">server_url</code>=<code style="color:var(--accent2);">"https://www.opendata.maggioli.cloud"</code>, <code style="color:var(--accent3);">all_fields</code>=<code style="color:var(--accent2);">true</code>, <code style="color:var(--accent3);">limit</code>=<code style="color:var(--accent2);">200</code>, <code style="color:var(--accent3);">sort</code>=<code style="color:var(--accent2);">"package_count desc"</code>, <code style="color:var(--accent3);">response_format</code>=<code style="color:var(--accent2);">"json"</code>',
+    s4_output:'Output — Riepilogo tipologie',
+    municipalities:'COMUNI', provinces:'PROVINCE', metro_cities:'CITTÀ METROP.', other_bodies:'ALTRI ENTI',
+    of_total:'del totale', other_bodies_sub:'Unioni, Consorzi, Comunità montane',
+    s5_label:'§ 05 — Visualizzazioni', s5_title:'Analisi grafica dei dati',
+    s5_desc:'I grafici sono generati a partire dalla risposta JSON di <code style="color:var(--accent2);font-family:var(--mono);">ckan_organization_list</code> (181 record). La classificazione per tipo di ente e per regione è stata inferita dal nome dell\'organizzazione.',
+    chart_top20_title:'Top 20 organizzazioni per dataset pubblicati',
+    chart_top20_src:'Fonte: campo <code>package_count</code> nella risposta di ckan_organization_list, ordinamento desc.',
+    chart_tipo_title:'Distribuzione per tipo di ente',
+    chart_tipo_src:'Fonte: classificazione inferita dal campo <code>title</code> (prefisso "Comune di", "Provincia di", "Città Metropolitana", resto → Altro).',
+    leg_comuni:'Comuni — 162 enti (89.5%)', leg_province:'Province — 5 enti (2.8%)',
+    leg_metro:'Città Metropolitane — 1 ente (0.6%)', leg_altro:'Altri enti — 13 (7.2%)',
+    chart_geo_title:'Dataset per macro-area geografica',
+    chart_geo_src:'Fonte: associazione manuale comune→regione→macro-area (Nord, Centro, Sud, Isole) sul campo <code>title</code>.',
+    s6_label:'§ 06 — Dati completi', s6_title:'Tabella interattiva — 181 organizzazioni',
+    s6_desc:'Tutti i record restituiti da <code style="color:var(--accent2);font-family:var(--mono);">ckan_organization_list</code>. Filtrabile per nome e tipo, ordinabile per colonna. Il link rimanda alla pagina CKAN dell\'organizzazione.',
+    filter_placeholder:'Filtra per nome...', filter_all:'Tutti i tipi',
+    filter_comune:'Comune', filter_provincia:'Provincia', filter_citta:'Città Metropolitana', filter_altro:'Altro',
+    entities:'enti', th_org:'Organizzazione ↕', th_type:'Tipo ↕', th_datasets:'Dataset ↕',
+    prev_btn:'‹ Prec', next_btn:'Succ ›', page_of:'Pagina', of:'di',
+    s7_label:'§ 07 — Risposte API raw', s7_title:'JSON grezzo restituito dalle chiamate',
+    s7_desc:'Le risposte originali del server CKAN, così come ricevute dal connettore Opendata Explorer e passate a Claude.',
+    full_response:'risposta JSON completa', first5:'primi 5 record (campione)',
+    s8_label:'§ 08 — Use case multiportale', s8_title:'Incidenti stradali — dati estratti dai portali',
+    s8_desc:'Di 181 organizzazioni presenti nel portale, <strong>6</strong> pubblicano dataset sugli incidenti stradali con dati interrogabili via DataStore. I dataset sono stati trovati con <code style="color:var(--accent2);font-family:var(--mono);">ckan_find_relevant_datasets</code> (query: <em>"incidenti"</em>, 116 risultati totali, filtrati per pertinenza), poi i dati reali sono stati estratti con <code style="color:var(--accent2);font-family:var(--mono);">ckan_list_resources</code> + <code style="color:var(--accent2);font-family:var(--mono);">ckan_datastore_search</code>.',
+    s8_portals_title:'Portali con dati sugli incidenti stradali (6 su 181)',
+    s8_portals_desc:'Ricerca effettuata con <code style="color:var(--accent2);">ckan_find_relevant_datasets</code> — query: <code style="color:var(--accent3);">"incidenti"</code>, weights: title=5, notes=2, tags=3. Restituiti 116 risultati; i comuni sotto hanno dataset con <code style="color:var(--accent2);">datastore_active: true</code>, che permette di interrogare i dati via API.',
+    s8_portals_note:'Nota: molti altri comuni hanno dataset della Polizia Locale con tag "Polizia Locale 2024/2025" che contengono dati sugli incidenti, ma classificati genericamente nel gruppo "Governo". La ricerca per keyword sul titolo è il metodo più efficace per scoprirli.',
+    s8_gravity_title:'Gravità incidenti 2024 — distretto ceramico modenese',
+    s8_gravity_tools:'Tool: <code>ckan_list_resources</code> + <code>ckan_datastore_search</code> · Dataset: "Gravità incidenti 2024" · Campi: Tot.incidenti, Mortali, Con feriti, Senza feriti',
+    total_accidents_2024:'incidenti totali 2024',
+    with_injured:'con feriti', no_injured:'senza feriti', fatal:'mortali', critical:'prognosi riservata',
+    s8_monthly_title:'Incidenti per mese — Maranello 2024',
+    s8_piacenza_title:'Serie storica incidenti — Piacenza 2022–2024',
+    s8_seriate_title:'Archivio storico incidenti — Seriate 2000–2013',
+    total_records:'Record totali', most_frequent:'Tipo più frequente',
+    side_collision:'Scontro<br>laterale', prevalent_nature:'natura prevalente',
+    geo_data:'Dati geolocalizzati', partial:'Parziali', geo_note:'lat/lon presenti dal 2009 ca.',
+    sassuolo_raw:'gravità Sassuolo 2024 (JSON raw)',
+    piacenza_raw:'Piacenza serie storica (JSON raw)',
+    footer_gen:'Generato da Claude Sonnet 4.6 · 17 maggio 2026',
+  }
+};
+
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = i18n[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === lang);
+  });
+  document.documentElement.lang = lang === 'it' ? 'it' : 'en';
+  renderTable();
+}
+
+// initialise with english
+setLang('en');
+</script>
+</body>
+</html>
