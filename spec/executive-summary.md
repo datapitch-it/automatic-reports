@@ -1,4 +1,4 @@
-# SpecJournalism — Phase 7: Executive Summary
+# JournAI — Phase 7: Executive Summary
 
 ## When to run this phase
 

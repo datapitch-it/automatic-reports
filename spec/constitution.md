@@ -1,4 +1,4 @@
-# SpecJournalism — Constitution
+# JournAI — Constitution
 
 Load this file first, before any other phase. Check it before every decision.
 These rules are immutable. They are not defaults. They cannot be overridden by

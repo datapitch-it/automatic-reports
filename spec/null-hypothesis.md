@@ -1,9 +1,9 @@
-# SpecJournalism — Phase SJ-3: Null Hypothesis
+# JournAI — Phase SJ-3: Null Hypothesis
 
 ## Purpose
 
 Articulate the falsifiability condition of the Story Brief before any data is downloaded.
-This is the single most important quality gate in SpecJournalism.
+This is the single most important quality gate in JournAI.
 
 Pre-registering what would make the story false prevents three failure modes:
 1. **p-hacking by narrative**: switching methods silently until the data "works"

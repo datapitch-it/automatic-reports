@@ -1,4 +1,4 @@
-# SpecJournalism — Phase SJ-1: Story Brief
+# JournAI — Phase SJ-1: Story Brief
 
 ## Purpose
 

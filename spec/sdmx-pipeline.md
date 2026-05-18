@@ -1,4 +1,4 @@
-# SpecJournalism — Phases 1–3: SDMX Pipeline
+# JournAI — Phases 1–3: SDMX Pipeline
 
 ## Purpose
 

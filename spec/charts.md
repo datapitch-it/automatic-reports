@@ -1,4 +1,4 @@
-# SpecJournalism — Phase 4: Charts
+# JournAI — Phase 4: Charts
 
 ## Libraries
 

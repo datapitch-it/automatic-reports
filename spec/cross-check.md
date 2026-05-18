@@ -1,4 +1,4 @@
-# SpecJournalism — Phase SJ-5: Cross-Check
+# JournAI — Phase SJ-5: Cross-Check
 
 ## Purpose
 

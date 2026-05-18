@@ -1,13 +1,13 @@
-# SpecJournalism — Spec Driven Data Journalism
+# JournAI — Spec Driven Data Journalism
 
 ## What this is
 
-SpecJournalism is a methodology for producing data journalism analyses and statistical reports
+JournAI is a methodology for producing data journalism analyses and statistical reports
 using AI as orchestrator. It applies Spec Driven Development principles to data journalism:
 the **Story Brief** is the source of truth. Datasets, methodology, charts and narrative are
 continuously regenerated outputs.
 
-SpecJournalism wraps a technical execution pipeline (SDMX data acquisition via opensdmx CLI,
+JournAI wraps a technical execution pipeline (SDMX data acquisition via opensdmx CLI,
 Chart.js/D3 visualisations, self-contained HTML publication). It adds pre-phases and quality
 gates that run before and during technical execution.
 
@@ -44,7 +44,7 @@ not redefined to fit what is available.
 
 ## Full workflow
 
-### Pre-phases (SpecJournalism)
+### Pre-phases (JournAI)
 
 ```
 SJ-0  Load constitution.md — verify it is current
@@ -72,7 +72,7 @@ Phase 7  Executive summary — narrative answers story-brief.md (→ executive-s
 ### Post-execution
 
 ```
-SJ-6  Pre-publication checklist — pipeline checklist + SpecJournalism additions (→ accountability.md)
+SJ-6  Pre-publication checklist — pipeline checklist + JournAI additions (→ accountability.md)
 ```
 
 ---

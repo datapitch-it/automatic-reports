@@ -1,4 +1,4 @@
-# SpecJournalism — Spec Driven Data Journalism
+# JournAI — Spec Driven Data Journalism
 
 A research and prototyping project applying Spec Driven Development principles to
 AI-assisted statistical journalism using SDMX data sources (Eurostat, ISTAT, ECB, OECD, World Bank).
@@ -12,7 +12,7 @@ AI-assisted statistical journalism using SDMX data sources (Eurostat, ISTAT, ECB
 
 ## Methodology
 
-The `spec/` folder contains the full SpecJournalism methodology:
+The `spec/` folder contains the full JournAI methodology:
 
 ```
 spec/
@@ -34,7 +34,7 @@ spec/
 ## Project structure
 
 ```
-spec/            — SpecJournalism methodology (source of truth)
+spec/            — JournAI methodology (source of truth)
 index.html       — report catalogue
 reports/         — individual HTML report pages
 reports.json     — report metadata

@@ -1,4 +1,4 @@
-# SpecJournalism — Phase 5: HTML Publication Page
+# JournAI — Phase 5: HTML Publication Page
 
 ## Purpose
 

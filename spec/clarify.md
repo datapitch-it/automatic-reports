@@ -1,4 +1,4 @@
-# SpecJournalism — Phase SJ-2: Clarify
+# JournAI — Phase SJ-2: Clarify
 
 ## Purpose
 

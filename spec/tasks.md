@@ -1,4 +1,4 @@
-# SpecJournalism — Task Checklist
+# JournAI — Task Checklist
 
 ## How to use
 
@@ -11,7 +11,7 @@ Tasks marked `[P]` can run in parallel with adjacent `[P]` tasks.
 
 ---
 
-## Pre-phase block (SpecJournalism)
+## Pre-phase block (JournAI)
 
 - [ ] SJ-0 — Load `spec/constitution.md` and confirm it is current
 - [ ] SJ-1 — Run `/sj.brief` → produce `story-brief.md`
@@ -137,7 +137,7 @@ Do not build charts until this checkpoint passes.
 
 Run the full checklist in `accountability.md` before marking the analysis complete.
 
-- [ ] SpecJournalism gates (story-brief.md, data-design.md, null hypothesis, method drift)
+- [ ] JournAI gates (story-brief.md, data-design.md, null hypothesis, method drift)
 - [ ] Data and reproducibility (queries, metadata, double-check, edition IDs, reports.json)
 - [ ] HTML and charts (no errors, no img, tooltips, uppercase, Y-axis anchoring, font defaults)
 - [ ] Text and accountability (research question, proxy, transform blocks, dates, links)

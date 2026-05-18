@@ -1,4 +1,4 @@
-# SpecJournalism — Phase SJ-4: Data Design
+# JournAI — Phase SJ-4: Data Design
 
 ## Purpose
 

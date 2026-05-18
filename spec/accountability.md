@@ -1,4 +1,4 @@
-# SpecJournalism — Phase 6: Accountability
+# JournAI — Phase 6: Accountability
 
 ## Purpose
 
@@ -127,7 +127,7 @@ Each dataset section must have:
 
 ## Pre-publication checklist
 
-### SpecJournalism gates
+### JournAI gates
 - [ ] `story-brief.md` exists, is version-controlled, and its `journalistic_angle` is unchanged
   from the `researchQuestion` in `initShell()`
 - [ ] `data-design.md` exists, is version-controlled, and matches the analysis as built
