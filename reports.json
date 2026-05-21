@@ -1,5 +1,19 @@
 [
   {
+    "order": 13,
+    "path":  "reports/13_corruzione-ue/",
+    "date":  "21 maggio 2026",
+    "title": "Corruzione senza condanna — CPI, reati e giustizia nell'UE",
+    "title_en": "Corruption Without Conviction — CPI, offences and justice in the EU",
+    "desc":  "CPI EU27 sceso a 62/100 nel 2025 (minimo storico). Gap di 50 punti tra Danimarca (89) e Bulgaria/Ungheria (40). In Grecia, solo 1% dei sospettati per corruttela arriva a condanna. Il paradosso nordico: i paesi con CPI più alto registrano più reati di corruzione, perché li perseguono di più.",
+    "desc_en": "EU27 CPI down to 62/100 in 2025 (all-time low in available series). 50-point gap between Denmark (89) and Bulgaria/Hungary (40). In Greece, only 1% of bribery suspects reach conviction. The Nordic paradox: highest-CPI countries record more corruption offences, because they prosecute more.",
+    "badges": [
+      { "label": "Eurostat", "value": "SDG_16_50 · CRIM_OFF_CAT · CRIM_JUST_BRI · SDG_16_40 · GOV_10A_EXP" },
+      { "label": "Period",   "value": "2012–2025", "label_it": "Periodo" },
+      { "label": "Countries","value": "33",         "label_it": "Paesi"  }
+    ]
+  },
+  {
     "order": 12,
     "path":  "reports/12_spread-btp-bund/",
     "date":  "8 maggio 2026",

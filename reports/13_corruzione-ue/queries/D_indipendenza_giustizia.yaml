@@ -1,0 +1,8 @@
+provider: estat
+dataset: SDG_16_40
+filters:
+  lev_perc: VG_FG+VB_FB
+  unit: PC
+start_period: "2015"
+end_period: "2024"
+format: SDMX-CSV

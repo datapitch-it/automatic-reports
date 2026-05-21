@@ -1,0 +1,10 @@
+provider: estat
+dataset: GOV_10A_EXP
+filters:
+  unit: PC_GDP
+  sector: S13
+  cofog99: GF03+GF0301+GF0303
+  na_item: TE
+start_period: "2010"
+end_period: "2023"
+format: SDMX-CSV

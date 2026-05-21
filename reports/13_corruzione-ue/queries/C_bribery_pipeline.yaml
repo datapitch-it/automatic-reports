@@ -1,0 +1,9 @@
+provider: estat
+dataset: CRIM_JUST_BRI
+filters:
+  leg_stat: PER_SUSP+PER_PRSC+PER_CNV
+  sex: T
+  unit: P_HTHAB
+start_period: "2013"
+end_period: "2022"
+format: SDMX-CSV

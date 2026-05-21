@@ -1,0 +1,8 @@
+provider: estat
+dataset: CRIM_OFF_CAT
+filters:
+  iccs: ICCS0703+ICCS07031+ICCS07041+ICCS09051
+  unit: P_HTHAB
+start_period: "2013"
+end_period: "2024"
+format: SDMX-CSV

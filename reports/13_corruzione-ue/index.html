@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corruzione nell'UE — SDMX Research</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../assets/style.css">
+  <script src="https://unpkg.com/rough-viz@1.0.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13/runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1/dist/chart.xkcd.min.js"></script>
+</head>
+<body>
+
+<div id="shell-top"></div>
+
+<div class="container">
+<div id="shell-intro"></div>
+</div>
+
+<main class="container py-2">
+
+  <!-- ═══ SEZIONE 1: CPI RANKING 2025 ═══ -->
+  <section class="section py-5" id="cpi-ranking">
+    <p class="section-label mb-1">
+      <span class="it">Fase 1 · Eurostat SDG_16_50 · anno più recente disponibile</span>
+      <span class="en">Phase 1 · Eurostat SDG_16_50 · most recent year available</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="it">Indice di Percezione della Corruzione 2025</span>
+      <span class="en">Corruption Perceptions Index 2025</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="it">Score 0–100 (100 = massima trasparenza) · EU27 + 6 paesi candidati · fonte: Transparency International via Eurostat</span>
+      <span class="en">Score 0–100 (100 = maximum transparency) · EU27 + 6 candidate countries · source: Transparency International via Eurostat</span>
+    </p>
+
+    <div class="callout mb-4">
+      <strong><span class="it">Come leggere:</span><span class="en">How to read:</span></strong>
+      <span class="it"> Il CPI misura la percezione della corruzione nel settore pubblico secondo esperti e uomini d'affari. Non misura la corruzione reale, ma la sua percezione sistemica. Un punteggio più alto indica meno corruzione percepita. I paesi candidati alla membership UE (segnati con ★) sono inclusi secondo i criteri di eleggibilità della call ISF-2026.</span>
+      <span class="en"> The CPI measures the perception of corruption in the public sector according to experts and business people. It does not measure actual corruption, but its systemic perception. A higher score indicates less perceived corruption. EU candidate countries (marked ★) are included according to ISF-2026 call eligibility criteria.</span>
+    </div>
+
+    <div class="chart-wrap mb-4" style="overflow-y:hidden;">
+      <div id="chart-cpi-ranking"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <strong><span class="it">Dati grezzi:</span><span class="en">Raw data:</span></strong>
+      <span class="it"> 616 righe, 44 geografie, 2012–2025. Trasformazioni: selezionato anno 2025 (più recente) per 33 paesi: EU27 + Albania, Bosnia-Erzegovina, Kosovo, Montenegro, Macedonia del Nord, Serbia. Esclusi aggregati (EA21, EA20) e paesi fuori scope della call (Turchia, UK, Norvegia, Svizzera, Islanda, Russia, USA, Giappone, Corea).</span>
+      <span class="en"> 616 rows, 44 geographies, 2012–2025. Transformations: selected 2025 (most recent) for 33 countries: EU27 + Albania, Bosnia-Herzegovina, Kosovo, Montenegro, North Macedonia, Serbia. Aggregates (EA21, EA20) and out-of-scope countries excluded.</span>
+    </div>
+
+    <p class="note mb-4">
+      <span class="it">Fonte: Eurostat SDG_16_50 (Transparency International CPI). Dati aggiornati al 04/03/2026. I paesi candidati (AL, BA, XK, ME, MK, RS) sono inclusi nel dataset Eurostat. Moldova e Ucraina — eleggibili nella call ISF-2026 — non sono presenti nel dataset. Grafico: roughViz.js BarH.</span>
+      <span class="en">Source: Eurostat SDG_16_50 (Transparency International CPI). Data updated 04/03/2026. Candidate countries (AL, BA, XK, ME, MK, RS) are included in the Eurostat dataset. Moldova and Ukraine — eligible in the ISF-2026 call — are not present in the dataset. Chart: roughViz.js BarH.</span>
+    </p>
+  </section>
+
+  <!-- ═══ SEZIONE 2: CPI TREND EU27 ═══ -->
+  <section class="section py-5" id="cpi-trend">
+    <p class="section-label mb-1">
+      <span class="it">Fase 2 · Eurostat SDG_16_50 · aggregato EU27 · 2012–2025</span>
+      <span class="en">Phase 2 · Eurostat SDG_16_50 · EU27 aggregate · 2012–2025</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="it">L'UE perde terreno: CPI medio EU27, 2012–2025</span>
+      <span class="en">EU losing ground: EU27 average CPI, 2012–2025</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="it">Score 0–100 · aggregato EU27_2020 · frequenza annuale</span>
+      <span class="en">Score 0–100 · EU27_2020 aggregate · annual frequency</span>
+    </p>
+
+    <div class="callout mb-4">
+      <strong><span class="it">Nota sull'asse Y:</span><span class="en">Note on Y-axis:</span></strong>
+      <span class="it"> L'asse Y è auto-scalato sull'intervallo dei dati (62–65). Non parte da zero perché il CPI è un indice su scala 0–100 e la variazione rilevante — da 65 a 62 in dieci anni — sarebbe invisibile su scala completa. La discesa di 3 punti rappresenta comunque un deterioramento strutturale statisticamente significativo.</span>
+      <span class="en"> Y-axis is auto-scaled to the data range (62–65). It does not start at zero because the CPI is a 0–100 index and the relevant variation — from 65 to 62 in ten years — would be invisible at full scale. The 3-point decline still represents a statistically significant structural deterioration.</span>
+    </div>
+
+    <div class="chart-wrap mb-4">
+      <svg id="chart-cpi-trend" style="max-width:800px;width:100%;display:block;"></svg>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <span class="it">Dati grezzi: 616 righe totali. Trasformazioni: filtrato geo=EU27_2020, tutti gli anni 2012–2025 (14 osservazioni). Nessun valore mancante.</span>
+      <span class="en">Raw data: 616 total rows. Transformations: filtered geo=EU27_2020, all years 2012–2025 (14 observations). No missing values.</span>
+    </div>
+
+    <p class="note mb-4">
+      <span class="it">Fonte: Eurostat SDG_16_50. L'aggregato EU27_2020 è calcolato da Eurostat come media ponderata. Grafico: chart.xkcd.XY.</span>
+      <span class="en">Source: Eurostat SDG_16_50. The EU27_2020 aggregate is calculated by Eurostat as a weighted average. Chart: chart.xkcd.XY.</span>
+    </p>
+  </section>
+
+  <!-- ═══ SEZIONE 3: REATI DI CORRUZIONE REGISTRATI ═══ -->
+  <section class="section py-5" id="reati">
+    <p class="section-label mb-1">
+      <span class="it">Fase 3 · Eurostat CRIM_OFF_CAT · ICCS0703 (corruzione) · anno più recente</span>
+      <span class="en">Phase 3 · Eurostat CRIM_OFF_CAT · ICCS0703 (corruption) · most recent year</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="it">Il paradosso nordico: reati di corruzione registrati per 100.000 abitanti</span>
+      <span class="en">The Nordic paradox: police-recorded corruption offences per 100,000 inhabitants</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="it">ICCS0703 (corruzione, categoria aggregata) · per 100k abitanti · EU27 + candidati · 2016–2024</span>
+      <span class="en">ICCS0703 (corruption, aggregate category) · per 100k inhabitants · EU27 + candidates · 2016–2024</span>
+    </p>
+
+    <div class="callout callout-warning mb-4">
+      <strong>⚠ <span class="it">Attenzione alla lettura:</span><span class="en">Caution in reading:</span></strong>
+      <span class="it"> Un numero più alto di reati registrati NON indica necessariamente più corruzione. Riflette la <em>capacità di rilevazione e perseguimento</em> del sistema. Svezia (222.96/100k), Finlandia (126.65) e Danimarca (81.17) — i paesi con CPI più alto — registrano più reati perché denunciano e investigano di più. Slovacchia (0.90), Cipro (1.14) e Irlanda (0.06) registrano pochissimo nonostante il fenomeno esista. Il grafico misura la reattività istituzionale, non l'incidenza effettiva della corruzione.</span>
+      <span class="en"> A higher number of recorded offences does NOT necessarily indicate more corruption. It reflects the system's <em>detection and prosecution capacity</em>. Sweden (222.96/100k), Finland (126.65) and Denmark (81.17) — the countries with the highest CPI — record more offences because they investigate and prosecute more. Slovakia (0.90), Cyprus (1.14) and Ireland (0.06) record very little despite the phenomenon existing. The chart measures institutional responsiveness, not actual corruption incidence.</span>
+    </div>
+
+    <div class="chart-wrap mb-4" style="overflow-y:hidden;">
+      <div id="chart-reati"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <span class="it">Dati grezzi: 1.079 righe, 37 paesi, ICCS0703/07031/07041/09051, 2013–2024. Trasformazioni: selezionata categoria ICCS0703 (corruzione aggregata), unità P_HTHAB (per 100k). Per ogni paese: anno più recente disponibile. Bosnia-Erzegovina assente dal dataset. Kosovo: dato 2016 (★). Liechtenstein escluso (popolazione ~38k, valori non comparabili). Turchia esclusa (dato 2016, fuori scope call). Risultano 31 paesi.</span>
+      <span class="en">Raw data: 1,079 rows, 37 countries, ICCS0703/07031/07041/09051, 2013–2024. Transformations: selected ICCS0703 (aggregate corruption), unit P_HTHAB (per 100k). Per country: most recent available year. Bosnia-Herzegovina absent. Kosovo: 2016 data (★). Liechtenstein excluded (population ~38k). Turkey excluded (2016 data, out of call scope). 31 countries.</span>
+    </div>
+
+    <p class="note mb-4">
+      <span class="it">Fonte: Eurostat CRIM_OFF_CAT. Classificazione ICCS (International Classification of Crime for Statistical Purposes). Kosovo* = dato 2016. Grafico: roughViz.js BarH.</span>
+      <span class="en">Source: Eurostat CRIM_OFF_CAT. ICCS classification (International Classification of Crime for Statistical Purposes). Kosovo* = 2016 data. Chart: roughViz.js BarH.</span>
+    </p>
+  </section>
+
+  <!-- ═══ SEZIONE 4: FUNNEL GIUDIZIARIO ═══ -->
+  <section class="section py-5" id="pipeline">
+    <p class="section-label mb-1">
+      <span class="it">Fase 4 · Eurostat CRIM_JUST_BRI · PER_SUSP / PER_CNV · anno più recente</span>
+      <span class="en">Phase 4 · Eurostat CRIM_JUST_BRI · PER_SUSP / PER_CNV · most recent year</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="it">Il funnel dell'impunità: % di sospettati per corruttela che arrivano a condanna</span>
+      <span class="en">The impunity funnel: % of bribery suspects who reach conviction</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="it">Condannati / Sospettati × 100 · per 100k abitanti · 18 paesi con dati completi · 2016–2022</span>
+      <span class="en">Convicted / Suspects × 100 · per 100k inhabitants · 18 countries with complete data · 2016–2022</span>
+    </p>
+
+    <div class="callout mb-4">
+      <strong><span class="it">Come leggere:</span><span class="en">How to read:</span></strong>
+      <span class="it"> Il grafico mostra quante persone sospettate di corruttela (bribery, ICCS07031) arrivano poi a condanna, come percentuale del numero di sospettati dello stesso anno. Un tasso basso può indicare assoluzioni legittime, ma anche ostacoli strutturali: difficoltà probatorie, prescrizione, interferenze sul procedimento. In Grecia, su 100 sospettati, solo 1 viene condannato.</span>
+      <span class="en"> The chart shows what proportion of bribery suspects (ICCS07031) end up convicted, as a percentage of suspects in the same year. A low rate may indicate legitimate acquittals, but also structural obstacles: evidentiary difficulties, statutes of limitation, interference with proceedings. In Greece, out of 100 suspects, only 1 is convicted.</span>
+    </div>
+
+    <div class="chart-wrap mb-4" style="overflow-y:hidden;">
+      <div id="chart-pipeline"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <span class="it">Dati grezzi: 480 righe, 37 paesi, sex=T (totale), unit=P_HTHAB, 2013–2022. Trasformazioni: selezionati 18 paesi con tutti e 3 gli stadi (PER_SUSP, PER_PRSC, PER_CNV) e tasso condanna 0–100% (esclusi: DK, LU con sospettati ≈ 0 per arrotondamento; PT 140.7%, FI 195.6%, TR 625.0% per sfasamento temporale tra anni di indagine e anni di sentenza). Tasso = condannati/sospettati × 100.</span>
+      <span class="en">Raw data: 480 rows, 37 countries, sex=T (total), unit=P_HTHAB, 2013–2022. Transformations: 18 countries selected with all 3 stages and conviction rate 0–100% (excluded: DK, LU with suspects ≈ 0 due to rounding; PT 140.7%, FI 195.6%, TR 625.0% due to temporal lag between investigation years and sentencing years). Rate = convicted/suspects × 100.</span>
+    </div>
+
+    <p class="note mb-4">
+      <span class="it">Fonte: Eurostat CRIM_JUST_BRI. PER_SUSP = persone sospettate, PER_PRSC = sottoposte a procedimento penale, PER_CNV = condannate. Il tasso confronta valori dello stesso anno più recente disponibile per paese — non traccia coorti individuali attraverso il sistema. I sistemi giuridici non sono omogenei (common law vs. civil law): le differenze possono riflettere strutture processuali diverse oltre che efficacia istituzionale. Grafico: roughViz.js BarH.</span>
+      <span class="en">Source: Eurostat CRIM_JUST_BRI. PER_SUSP = persons suspected, PER_PRSC = persons prosecuted, PER_CNV = persons convicted. The rate compares values from the most recent year available per country — it does not track individual cohorts through the system. Legal systems are not homogeneous (common law vs. civil law): differences may reflect different procedural structures as well as institutional effectiveness. Chart: roughViz.js BarH.</span>
+    </p>
+  </section>
+
+  <!-- ═══ SEZIONE 5: INDIPENDENZA GIUSTIZIA ═══ -->
+  <section class="section py-5" id="giustizia">
+    <p class="section-label mb-1">
+      <span class="it">Fase 5 · Eurostat SDG_16_40 · VG_FG (molto/abbastanza indipendente) · anno più recente</span>
+      <span class="en">Phase 5 · Eurostat SDG_16_40 · VG_FG (very/fairly independent) · most recent year</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="it">Solo il 52% dei cittadini UE percepisce la giustizia come indipendente</span>
+      <span class="en">Only 52% of EU citizens perceive justice as independent</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="it">% che giudica la giustizia «molto o abbastanza indipendente» · EU27 · 2015–2024</span>
+      <span class="en">% rating the justice system as «very or fairly independent» · EU27 · 2015–2024</span>
+    </p>
+
+    <div class="callout mb-4">
+      <strong><span class="it">Come leggere:</span><span class="en">How to read:</span></strong>
+      <span class="it"> L'indicatore misura la percezione dei cittadini sull'indipendenza del sistema giudiziario da influenze politiche e di interesse economico. È un proxy della fiducia istituzionale e della resilienza democratica. Una giustizia percepita come dipendente facilita l'impunità e scoraggia la denuncia della corruzione.</span>
+      <span class="en"> The indicator measures citizens' perception of the judiciary's independence from political influence and economic interests. It is a proxy for institutional trust and democratic resilience. A justice system perceived as dependent facilitates impunity and discourages corruption reporting.</span>
+    </div>
+
+    <div class="chart-wrap mb-4" style="overflow-y:hidden;">
+      <div id="chart-giustizia"></div>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <span class="it">Dati grezzi: 514 righe, 34 geografie, 2015–2024. Trasformazioni: filtrato lev_perc=VG_FG (molto o abbastanza indipendente), anno più recente per paese. Esclusi aggregati (EU27_2020, EA20, EA21). Rimangono 28 paesi (EU27 + UK). Paesi candidati della call assenti dal dataset.</span>
+      <span class="en">Raw data: 514 rows, 34 geographies, 2015–2024. Transformations: filtered lev_perc=VG_FG (very or fairly independent), most recent year per country. Aggregates excluded. 28 countries remain (EU27 + UK). Call candidate countries absent from dataset.</span>
+    </div>
+
+    <p class="note mb-4">
+      <span class="it">Fonte: Eurostat SDG_16_40 (basato su EU Justice Scoreboard / Eurobarometer). Dati disponibili solo per EU27 + UK: i paesi candidati (AL, BA, ME, MK, RS, XK) non sono inclusi in questa rilevazione. Grafico: roughViz.js BarH.</span>
+      <span class="en">Source: Eurostat SDG_16_40 (based on EU Justice Scoreboard / Eurobarometer). Data available only for EU27 + UK: candidate countries (AL, BA, ME, MK, RS, XK) are not included in this survey. Chart: roughViz.js BarH.</span>
+    </p>
+  </section>
+
+</main>
+
+<div id="shell-bottom"></div>
+
+<div class="container">
+<div id="shell-footer"></div>
+</div>
+
+<script src="../../assets/shell.js"></script>
+<script src="../../assets/lang.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── SHELL CONFIG ─────────────────────────────────────────────────────────────
+initShell({
+  researchQuestion: "Nell'UE e nei paesi candidati, un CPI più basso corrisponde a un funnel giudiziario più debole e a una minore percezione di indipendenza della giustizia?",
+  researchQuestion_en: "In EU member states and candidate countries, does a lower CPI correspond to a weaker judicial funnel and lower perceived judicial independence?",
+
+  statisticalProxy: "Cinque dataset Eurostat: SDG_16_50 (CPI), CRIM_OFF_CAT (reati di corruzione per 100k, ICCS), CRIM_JUST_BRI (sospettati/processati/condannati per corruttela), SDG_16_40 (percezione indipendenza giustizia), GOV_10A_EXP (spesa pubblica COFOG GF03).",
+  statisticalProxy_en: "Five Eurostat datasets: SDG_16_50 (CPI), CRIM_OFF_CAT (corruption offences per 100k, ICCS), CRIM_JUST_BRI (suspects/prosecuted/convicted for bribery), SDG_16_40 (perceived judicial independence), GOV_10A_EXP (public expenditure COFOG GF03).",
+
+  title:   "Corruzione senza condanna",
+  title_en: "Corruption Without Conviction",
+  date:    "21 maggio 2026",
+  date_en: "21 May 2026",
+  intro:   "Corruzione, percezione e giustizia nell'UE e nei paesi candidati. Un'analisi dei dati Eurostat a supporto della call ISF-2026-TF2-AG-CORRUPT.",
+  intro_en: "Corruption, perception and justice in the EU and candidate countries. An analysis of Eurostat data supporting the ISF-2026-TF2-AG-CORRUPT call.",
+
+  badges: [
+    { label: "Eurostat",   value: "5 dataset" },
+    { label: "Periodo",    value: "2012–2025"  },
+    { label: "Paesi",      value: "33"         }
+  ],
+
+  nav: [
+    { id: "cpi-ranking", label: "CPI 2025",           label_en: "CPI 2025"          },
+    { id: "cpi-trend",   label: "Trend CPI",          label_en: "CPI Trend"         },
+    { id: "reati",       label: "Reati registrati",   label_en: "Recorded offences" },
+    { id: "pipeline",    label: "Funnel giudiziario", label_en: "Judicial funnel"   },
+    { id: "giustizia",   label: "Giustizia indip.",   label_en: "Justice indep."    }
+  ],
+
+  introTitle:    "Contesto e risultati",
+  introTitle_en: "Context and findings",
+  introSubtitle: "Dati a supporto della call ISF-2026-TF2-AG-CORRUPT (Internal Security Fund — lotta alla corruzione)",
+  introSubtitle_en: "Data supporting the ISF-2026-TF2-AG-CORRUPT call (Internal Security Fund — fight against corruption)",
+
+  introExtra: `
+    <div class="summary mb-5">
+      <h3 class="mb-3"><span class="it">Cosa dicono i dati</span><span class="en">What the data says</span></h3>
+      <p>
+        <span class="it">L'Indice di Percezione della Corruzione (CPI) medio EU27 è sceso da 65 nel 2015 a 62 nel 2025 — il livello più basso dell'intera serie storica disponibile. Dietro questa media si nasconde un divario strutturale di 50 punti: Danimarca (89) e Bulgaria o Ungheria (40) condividono lo stesso mercato unico ma non lo stesso rapporto con la corruzione. Tra i sei paesi candidati inclusi nella call ISF-2026, tutti hanno un CPI inferiore alla media EU27, con Serbia (33) e Bosnia-Erzegovina (34) al di sotto di qualsiasi Stato membro. →</span>
+        <span class="en">The EU27 average Corruption Perceptions Index (CPI) has fallen from 65 in 2015 to 62 in 2025 — the lowest level in the entire available time series. Behind this average lies a structural 50-point gap: Denmark (89) and Bulgaria or Hungary (40) share the same single market but not the same relationship with corruption. Among the six candidate countries included in the ISF-2026 call, all score below the EU27 average, with Serbia (33) and Bosnia-Herzegovina (34) below any EU member state. →</span>
+        <a href="#cpi-ranking"><span class="it">grafico CPI 2025</span><span class="en">CPI 2025 chart</span></a>,
+        <a href="#cpi-trend"><span class="it">trend 2012–2025</span><span class="en">2012–2025 trend</span></a>
+      </p>
+      <p>
+        <span class="it">Il paradosso dei dati penali è il risultato più controintuitivo: Svezia (222.96 reati di corruzione per 100k abitanti), Finlandia (126.65) e Danimarca (81.17) — i paesi con CPI più alto — registrano <em>più</em> reati di corruzione di Slovacchia (0.90), Cipro (1.14) e Irlanda (0.06). Il motivo è che i paesi con istituzioni più forti <em>rilevano e perseguono di più</em>. I paesi con CPI basso non registrano poco perché c'è meno corruzione, ma perché i loro sistemi la individuano e processano meno. Questo è esattamente il razionale della call: costruire capacità di rilevazione dove è più debole. →</span>
+        <span class="en">The criminal data paradox is the most counterintuitive finding: Sweden (222.96 corruption offences per 100k), Finland (126.65) and Denmark (81.17) — the countries with the highest CPI — record <em>more</em> corruption offences than Slovakia (0.90), Cyprus (1.14) and Ireland (0.06). The reason is that countries with stronger institutions <em>detect and prosecute more</em>. Low-CPI countries record little not because there is less corruption, but because their systems identify and process it less. This is exactly the rationale of the call: building detection capacity where it is weakest. →</span>
+        <a href="#reati"><span class="it">grafico reati</span><span class="en">offences chart</span></a>
+      </p>
+      <p>
+        <span class="it">Il dato più sorprendente è il funnel giudiziario: in Grecia, su 100 persone sospettate di corruttela (bribery), solo 1 arriva a condanna (tasso: 1.0%). In Montenegro è il 4.5%, in Slovenia il 7.1%. All'altro estremo, la Polonia condanna l'86.3% dei sospettati. La media EU percepisce la propria giustizia come indipendente solo nel 52% dei casi: in Croazia (23%), Bulgaria (24%) e Polonia (28%) la maggioranza assoluta non ci crede. Questi paesi compaiono anche in fondo alle classifiche CPI. La correlazione tra fiducia nella giustizia e percezione della corruzione è il filo che collega tutti i dataset. →</span>
+        <span class="en">The most striking finding is the judicial funnel: in Greece, out of 100 people suspected of bribery, only 1 reaches conviction (rate: 1.0%). In Montenegro it is 4.5%, in Slovenia 7.1%. At the other extreme, Poland convicts 86.3% of suspects. The EU average perceives its own justice as independent in only 52% of cases: in Croatia (23%), Bulgaria (24%) and Poland (28%) the absolute majority does not believe so. These countries also appear at the bottom of CPI rankings. The correlation between trust in justice and corruption perception is the thread connecting all datasets. →</span>
+        <a href="#pipeline"><span class="it">grafico funnel</span><span class="en">funnel chart</span></a>,
+        <a href="#giustizia"><span class="it">grafico indipendenza</span><span class="en">independence chart</span></a>
+      </p>
+    </div>
+  `,
+
+  scopeLimit: "Questi dati non coprono Moldova e Ucraina (assenti dalle statistiche penali Eurostat), né misurano la corruzione non denunciata. Il CPI (SDG_16_50) è un indice di percezione, non di corruzione effettiva. I tassi di condanna per corruttela derivano da sistemi giuridici non omogenei (common law vs. civil law). Bosnia-Erzegovina è assente da CRIM_OFF_CAT. I dati sull'indipendenza della giustizia non includono i paesi candidati.",
+  scopeLimit_en: "These data do not cover Moldova and Ukraine (absent from Eurostat criminal statistics), nor do they measure unreported corruption. The CPI (SDG_16_50) is a perception index, not a measure of actual corruption. Conviction rates for bribery derive from non-homogeneous legal systems. Bosnia-Herzegovina is absent from CRIM_OFF_CAT. Justice independence data does not include candidate countries.",
+
+  findingCards: [
+    { value: "62/100", label: "CPI medio EU27 nel 2025 (−3 dal picco 2015)",         label_en: "EU27 average CPI in 2025 (−3 from 2015 peak)",         color: "accent"  },
+    { value: "50 pt",  label: "Gap CPI tra Danimarca (89) e i peggiori paesi UE (40)", label_en: "CPI gap between Denmark (89) and worst EU countries (40)", color: "default" },
+    { value: "1%",     label: "Tasso di condanna per corruttela in Grecia",           label_en: "Bribery conviction rate in Greece",                       color: "accent"  },
+    { value: "52%",    label: "EU27 che percepisce la giustizia come indipendente",   label_en: "EU27 perceiving justice as independent",                  color: "blue"    }
+  ],
+
+  rawData: {
+    license:        "Eurostat CC BY 4.0",
+    extractionDate: "21 maggio 2026",
+    files: [
+      { provider: "Eurostat", datasetId: "SDG_16_50",    desc: "Indice di Percezione della Corruzione (CPI)",            desc_en: "Corruption Perceptions Index (CPI)",               rows: 616,  period: "2012–2025", file: "output/A_cpi.csv"                   },
+      { provider: "Eurostat", datasetId: "CRIM_OFF_CAT", desc: "Reati di corruzione registrati dalla polizia per 100k",  desc_en: "Police-recorded corruption offences per 100k",     rows: 1079, period: "2013–2024", file: "output/B_reati_corruzione.csv"       },
+      { provider: "Eurostat", datasetId: "CRIM_JUST_BRI",desc: "Pipeline giudiziaria corruttela (sospettati/condannati)",desc_en: "Bribery judicial pipeline (suspects/convicted)",   rows: 480,  period: "2013–2022", file: "output/C_bribery_pipeline.csv"      },
+      { provider: "Eurostat", datasetId: "SDG_16_40",    desc: "Indipendenza percepita del sistema giudiziario",        desc_en: "Perceived independence of the justice system",     rows: 514,  period: "2015–2024", file: "output/D_indipendenza_giustizia.csv" },
+      { provider: "Eurostat", datasetId: "GOV_10A_EXP",  desc: "Spesa pubblica per ordine pubblico e sicurezza (% PIL)",desc_en: "Public expenditure on public order (% GDP)",       rows: 1428, period: "2010–2023", file: "output/E_spesa_ordine_pubblico.csv"  }
+    ]
+  },
+
+  methodology: {
+    classifications: [
+      { code: "ICCS0703",  system: "ICCS", meaning: "Corruzione (categoria aggregata)",                    meaning_en: "Corruption (aggregate category)"                   },
+      { code: "ICCS07031", system: "ICCS", meaning: "Corruzione per corruttela (bribery)",                 meaning_en: "Bribery"                                           },
+      { code: "ICCS07041", system: "ICCS", meaning: "Riciclaggio di denaro",                              meaning_en: "Money laundering"                                  },
+      { code: "ICCS09051", system: "ICCS", meaning: "Partecipazione a organizzazione criminale",          meaning_en: "Participation in an organized criminal group"      },
+      { code: "PER_SUSP",  system: "LEG_STAT", meaning: "Persone sospettate",                            meaning_en: "Persons suspected"                                 },
+      { code: "PER_PRSC",  system: "LEG_STAT", meaning: "Persone sottoposte a procedimento penale",      meaning_en: "Persons prosecuted"                                },
+      { code: "PER_CNV",   system: "LEG_STAT", meaning: "Persone condannate",                            meaning_en: "Persons convicted"                                 },
+      { code: "VG_FG",     system: "LEV_PERC", meaning: "Molto o abbastanza indipendente",               meaning_en: "Very or fairly independent"                        },
+      { code: "GF03",      system: "COFOG99",  meaning: "Ordine pubblico e sicurezza (totale)",           meaning_en: "Public order and safety (total)"                   },
+      { code: "P_HTHAB",   system: "UNIT",     meaning: "Per 100.000 abitanti",                          meaning_en: "Per 100,000 inhabitants"                           },
+      { code: "SC",        system: "UNIT",     meaning: "Score CPI (0–100)",                             meaning_en: "CPI Score (0–100)"                                 }
+    ],
+    apiUrls: [
+      { datasetId: "SDG_16_50",    provider: "Eurostat", desc: "CPI",                    desc_en: "CPI",                    url: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/SDG_16_50/A.SC./ALL/?startPeriod=2012&endPeriod=2025&format=SDMX-CSV" },
+      { datasetId: "CRIM_OFF_CAT", provider: "Eurostat", desc: "Reati corruzione",       desc_en: "Corruption offences",    url: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/CRIM_OFF_CAT/A.ICCS0703+ICCS07031+ICCS07041+ICCS09051.P_HTHAB./ALL/?startPeriod=2013&endPeriod=2024&format=SDMX-CSV" },
+      { datasetId: "CRIM_JUST_BRI",provider: "Eurostat", desc: "Pipeline corruttela",    desc_en: "Bribery pipeline",       url: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/CRIM_JUST_BRI/A.PER_SUSP+PER_PRSC+PER_CNV.T.P_HTHAB./ALL/?startPeriod=2013&endPeriod=2022&format=SDMX-CSV" },
+      { datasetId: "SDG_16_40",    provider: "Eurostat", desc: "Indipendenza giustizia", desc_en: "Justice independence",   url: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/SDG_16_40/A.VG_FG+VB_FB.PC./ALL/?startPeriod=2015&endPeriod=2024&format=SDMX-CSV" },
+      { datasetId: "GOV_10A_EXP",  provider: "Eurostat", desc: "Spesa ordine pubblico", desc_en: "Public order spending",  url: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/GOV_10A_EXP/A.PC_GDP.S13.GF03+GF0301+GF0303.TE./ALL/?startPeriod=2010&endPeriod=2023&format=SDMX-CSV" }
+    ],
+    cliCommands: [
+      { dataset: "SDG_16_50",     command: "opensdmx run queries/A_cpi.yaml --out output/A_cpi.csv"                                  },
+      { dataset: "CRIM_OFF_CAT",  command: "opensdmx run queries/B_reati_corruzione.yaml --out output/B_reati_corruzione.csv"         },
+      { dataset: "CRIM_JUST_BRI", command: "opensdmx run queries/C_bribery_pipeline.yaml --out output/C_bribery_pipeline.csv"        },
+      { dataset: "SDG_16_40",     command: "opensdmx run queries/D_indipendenza_giustizia.yaml --out output/D_indipendenza_giustizia.csv" },
+      { dataset: "GOV_10A_EXP",   command: "opensdmx run queries/E_spesa_ordine_pubblico.yaml --out output/E_spesa_ordine_pubblico.csv" }
+    ],
+    files: [
+      { file: "output/A_cpi.csv",                    desc: "616 righe · 44 geografie · 2012–2025"     },
+      { file: "output/B_reati_corruzione.csv",        desc: "1.079 righe · 37 paesi · 2013–2024"      },
+      { file: "output/C_bribery_pipeline.csv",        desc: "480 righe · 37 paesi · 2013–2022"        },
+      { file: "output/D_indipendenza_giustizia.csv",  desc: "514 righe · 34 geografie · 2015–2024"    },
+      { file: "output/E_spesa_ordine_pubblico.csv",   desc: "1.428 righe · 34 paesi · 2010–2023"      },
+      { file: "queries/A_cpi.yaml",                   desc: "Query riproducibile YAML"                 },
+      { file: "queries/B_reati_corruzione.yaml",      desc: "Query riproducibile YAML"                 },
+      { file: "queries/C_bribery_pipeline.yaml",      desc: "Query riproducibile YAML"                 },
+      { file: "queries/D_indipendenza_giustizia.yaml",desc: "Query riproducibile YAML"                 },
+      { file: "queries/E_spesa_ordine_pubblico.yaml", desc: "Query riproducibile YAML"                 },
+      { file: "notes.md",                             desc: "Log cronologico delle operazioni"         }
+    ]
+  },
+
+  providers: "Eurostat · Transparency International (via Eurostat SDG)",
+  github:    "https://github.com/datapitch-it/automatic-reports"
+});
+
+// ── CHART 1: CPI RANKING 2025 ────────────────────────────────────────────────
+(function() {
+  const wrap = document.getElementById('chart-cpi-ranking').closest ? document.getElementById('chart-cpi-ranking') : null;
+  // EU27 + 6 candidati ISF-2026, ordinati decrescente (migliori in cima, peggiori in fondo)
+  const labels = [
+    'DANIMARCA','FINLANDIA','SVEZIA','PAESI BASSI','LUSSEMBURGO','GERMANIA','IRLANDA',
+    'ESTONIA','BELGIO','AUSTRIA','FRANCIA','LITUANIA','LETTONIA','CECHIA','SLOVENIA',
+    'PORTOGALLO','SPAGNA','CIPRO','POLONIA','ITALIA','GRECIA','MALTA','SLOVACCHIA',
+    'CROAZIA','MONTENEGRO','ROMANIA','KOSOVO','N. MACEDONIA','UNGHERIA','BULGARIA',
+    'ALBANIA','BOSNIA & HZ.','SERBIA'
+  ];
+  const values = [
+    89, 88, 80, 78, 78, 77, 76,
+    76, 69, 69, 66, 65, 60, 59, 58,
+    56, 55, 55, 53, 53, 50, 49, 48,
+    47, 46, 45, 43, 40, 40, 40,
+    39, 34, 33
+  ];
+  new roughViz.BarH({
+    element: '#chart-cpi-ranking',
+    data: { labels, values },
+    title: 'CPI 2025 — Score 0–100 (100 = nessuna corruzione percepita)',
+    titleFontSize: '1rem',
+    axisFontSize: '0.85rem',
+    roughness: 1.2,
+    stroke: '#333',
+    strokeWidth: 1,
+    fillStyle: 'hachure',
+    fillWeight: 0.6,
+    color: '#b02020',
+    highlight: '#c0392b',
+    tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:0.9rem;',
+    width: Math.min(900, (document.querySelector('.container') || document.body).clientWidth - 40),
+    height: 980,
+    margin: { top: 40, right: 80, bottom: 40, left: 160 },
+    xLabel: 'SCORE CPI',
+  });
+})();
+
+// ── CHART 2: CPI EU27 TREND ──────────────────────────────────────────────────
+(function() {
+  const anni   = [2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
+  const valori = [63,  63,  64,  65,  64,  64,  64,  64,  64,  64,  64,  64,  62,  62 ];
+  const pts = anni.map((a,i) => ({ x: a, y: valori[i] }));
+  new chartXkcd.XY(document.getElementById('chart-cpi-trend'), {
+    xLabel: '',
+    yLabel: 'SCORE CPI (0–100)',
+    data: {
+      datasets: [{ label: 'CPI MEDIO EU27', data: pts }]
+    },
+    options: {
+      showLine: true,
+      dotSize: 0.5,
+      xTickCount: 7,
+      yTickCount: 5,
+      dataColors: ['#b02020'],
+    }
+  });
+})();
+
+// ── CHART 3: REATI DI CORRUZIONE (ICCS0703) ──────────────────────────────────
+(function() {
+  // Ordinati decrescenti → il più alto (SE 222.96) appare in cima
+  const labels = [
+    'SVEZIA','FINLANDIA','DANIMARCA','UNGHERIA','AUSTRIA','BELGIO','SLOVENIA',
+    'PAESI BASSI','ALBANIA','MONTENEGRO','MALTA','CROAZIA','ROMANIA','KOSOVO ★',
+    'CECHIA','LITUANIA','SERBIA','POLONIA','GERMANIA','BULGARIA','GRECIA',
+    'LETTONIA','ESTONIA','ITALIA','FRANCIA','SPAGNA','PORTOGALLO',
+    'N. MACEDONIA','CIPRO','SLOVACCHIA','LUSSEMBURGO','IRLANDA'
+  ];
+  const values = [
+    222.96, 126.65, 81.17, 65.91, 58.06, 38.60, 33.05,
+    31.15, 30.89, 22.61, 17.93, 15.56, 15.54, 14.68,
+    13.77, 10.19, 10.17, 9.77, 8.85, 8.10, 6.87,
+    5.00, 4.51, 4.25, 4.21, 3.10, 2.04,
+    1.20, 1.14, 0.90, 0.45, 0.06
+  ];
+  new roughViz.BarH({
+    element: '#chart-reati',
+    data: { labels, values },
+    title: 'ICCS0703 — Reati di corruzione per 100.000 abitanti (anno più recente)',
+    titleFontSize: '1rem',
+    axisFontSize: '0.85rem',
+    roughness: 1.2,
+    stroke: '#333',
+    strokeWidth: 1,
+    fillStyle: 'hachure',
+    fillWeight: 0.6,
+    color: '#1a6fa8',
+    highlight: '#2980b9',
+    tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:0.9rem;',
+    width: Math.min(900, (document.querySelector('.container') || document.body).clientWidth - 40),
+    height: 970,
+    margin: { top: 40, right: 80, bottom: 40, left: 160 },
+    xLabel: 'REATI PER 100K ABITANTI',
+  });
+})();
+
+// ── CHART 4: FUNNEL GIUDIZIARIO ───────────────────────────────────────────────
+(function() {
+  // Ordinati decrescenti → il tasso più alto (PL 86.3%) appare in cima
+  const labels = [
+    'POLONIA','CECHIA','SERBIA','KOSOVO','BELGIO','LITUANIA',
+    'FRANCIA','SVEZIA','LETTONIA','SLOVACCHIA','ROMANIA','ALBANIA',
+    'UNGHERIA','CROAZIA','AUSTRIA','SLOVENIA','MONTENEGRO','GRECIA'
+  ];
+  const values = [
+    86.3, 74.7, 73.5, 58.0, 50.0, 47.9,
+    46.8, 44.0, 41.9, 36.5, 28.9, 27.1,
+    23.1, 21.8, 8.7, 7.1, 4.5, 1.0
+  ];
+  new roughViz.BarH({
+    element: '#chart-pipeline',
+    data: { labels, values },
+    title: '% condannati / sospettati per corruttela (anno più recente)',
+    titleFontSize: '1rem',
+    axisFontSize: '0.85rem',
+    roughness: 1.2,
+    stroke: '#333',
+    strokeWidth: 1,
+    fillStyle: 'hachure',
+    fillWeight: 0.6,
+    color: '#8e44ad',
+    highlight: '#9b59b6',
+    tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:0.9rem;',
+    width: Math.min(900, (document.querySelector('.container') || document.body).clientWidth - 40),
+    height: 640,
+    margin: { top: 40, right: 80, bottom: 40, left: 160 },
+    xLabel: '% CONDANNATI / SOSPETTATI',
+  });
+})();
+
+// ── CHART 5: INDIPENDENZA PERCEPITA DELLA GIUSTIZIA ──────────────────────────
+(function() {
+  // Ordinati decrescenti → paesi più fiduciosi (DK/FI 83%) in cima
+  const labels = [
+    'DANIMARCA','FINLANDIA','AUSTRIA','SVEZIA','LUSSEMBURGO','GERMANIA','IRLANDA',
+    'REGNO UNITO','PAESI BASSI','ESTONIA','MALTA','BELGIO','LITUANIA',
+    'CECHIA','FRANCIA','PORTOGALLO','ROMANIA','CIPRO','SLOVENIA',
+    'LETTONIA','UNGHERIA','GRECIA','SPAGNA','ITALIA','SLOVACCHIA',
+    'POLONIA','BULGARIA','CROAZIA'
+  ];
+  const values = [
+    83, 83, 82, 78, 77, 72, 72,
+    71, 70, 67, 65, 61, 56,
+    54, 54, 53, 52, 49, 45,
+    43, 41, 40, 37, 36, 33,
+    28, 24, 23
+  ];
+  new roughViz.BarH({
+    element: '#chart-giustizia',
+    data: { labels, values },
+    title: '% che percepisce la giustizia come indipendente (anno più recente)',
+    titleFontSize: '1rem',
+    axisFontSize: '0.85rem',
+    roughness: 1.2,
+    stroke: '#333',
+    strokeWidth: 1,
+    fillStyle: 'hachure',
+    fillWeight: 0.6,
+    color: '#27ae60',
+    highlight: '#2ecc71',
+    tooltipStyles: 'background:#fff;border:1px solid #ccc;padding:4px 8px;font-size:0.9rem;',
+    width: Math.min(900, (document.querySelector('.container') || document.body).clientWidth - 40),
+    height: 900,
+    margin: { top: 40, right: 80, bottom: 40, left: 160 },
+    xLabel: '% PERCEZIONE GIUSTIZIA INDIPENDENTE',
+  });
+})();
+</script>
+</body>
+</html>

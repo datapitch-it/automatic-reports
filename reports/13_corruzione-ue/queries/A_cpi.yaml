@@ -1,0 +1,8 @@
+provider: estat
+dataset: SDG_16_50
+filters:
+  freq: A
+  unit: SC
+start_period: "2012"
+end_period: "2025"
+format: SDMX-CSV
