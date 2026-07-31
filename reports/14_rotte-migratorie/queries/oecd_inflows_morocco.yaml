@@ -1,0 +1,34 @@
+provider: oecd
+provider_url: https://sdmx.oecd.org/public/rest
+agency_id: OECD
+dataset: OECD.ELS.IMD,DSD_MIG@DF_MIG
+description: International migration database
+filters:
+  REF_AREA:
+    value: ESP+ITA+GRC
+    description: ''
+  CITIZENSHIP:
+    value: MAR
+    description: Morocco
+  FREQ:
+    value: A
+    description: ''
+  MEASURE:
+    value: B11
+    description: Inflows of foreign population
+  SEX:
+    value: _T
+    description: ''
+  BIRTH_PLACE:
+    value: _Z
+    description: ''
+  EDUCATION_LEV:
+    value: _Z
+    description: ''
+  UNIT_MEASURE:
+    value: PS
+    description: Persons
+start_period: null
+end_period: null
+last_n: null
+first_n: null

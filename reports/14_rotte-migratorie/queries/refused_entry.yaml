@@ -1,0 +1,26 @@
+provider: eurostat
+provider_url: https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1
+agency_id: ESTAT
+dataset: MIGR_EIRFS
+description: Third country nationals refused entry at the external borders - annual
+  data (rounded)
+filters:
+  border:
+    value: LAND+SEA
+    description: ''
+  unit:
+    value: PER
+    description: Person
+  reason:
+    value: TOTAL
+    description: Total
+  citizen:
+    value: MA+TOTAL
+    description: ''
+  geo:
+    value: ES+IT+EL
+    description: ''
+start_period: '2008'
+end_period: '2025'
+last_n: null
+first_n: null

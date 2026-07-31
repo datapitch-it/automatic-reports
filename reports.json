@@ -1,5 +1,20 @@
 [
   {
+    "order": 14,
+    "path":  "reports/14_rotte-migratorie/",
+    "date":  "31 luglio 2026",
+    "title": "Ceuta 2026, e poi? Cosa dicono davvero i dati sulle rotte migratorie verso l'Europa",
+    "title_en": "Ceuta 2026, and Then? What the Data Really Say About Migration Routes to Europe",
+    "desc":  "La crisi di Ceuta riportata oggi, 31 luglio 2026, dai media europei (~50.000 persone in 24 ore, 43 morti) ha cifre ancora provvisorie, non riscontrabili nei dati Eurostat per il ritardo fisiologico di pubblicazione. I respingimenti alla frontiera terrestre Ceuta/Melilla crollano comunque da 483.285 (2019) a 180 (2025). Il precedente più vicino nei dati ufficiali è la crisi di giugno 2021 (1.065 richieste d'asilo marocchine). I dati OECD mostrano invece una crescita strutturale dei flussi regolari verso la Spagna: da 6.898 (1997) a 123.468 (2023). Confronto con le rotte italiana e greca su un decennio.",
+    "desc_en": "The Ceuta crisis reported today, 31 July 2026, by European media (~50,000 people in 24 hours, 43 deaths) still has provisional figures, not yet reflected in Eurostat data due to normal publication lag. Land-border refusals at Ceuta/Melilla nonetheless collapse from 483,285 (2019) to 180 (2025). The closest precedent in the official record is the June 2021 crisis (1,065 Moroccan asylum applications). OECD data instead shows a structural rise in regular inflows to Spain: from 6,898 (1997) to 123,468 (2023). Compared against the Italian and Greek routes over a decade.",
+    "badges": [
+      { "label": "Eurostat", "value": "MIGR_EIRFS · MIGR_ASYAPPCTZM" },
+      { "label": "OECD",     "value": "DF_MIG" },
+      { "label": "Period",   "value": "1997–2026", "label_it": "Periodo" },
+      { "label": "Countries","value": "ES · IT · EL", "label_it": "Paesi"  }
+    ]
+  },
+  {
     "order": 13,
     "path":  "reports/13_corruzione-ue/",
     "date":  "21 maggio 2026",

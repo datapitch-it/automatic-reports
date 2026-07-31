@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rotte migratorie verso l'Europa: Ceuta e i dati Eurostat — JournAI</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../assets/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div id="shell-top"></div>
+
+<div class="container">
+<div id="shell-intro"></div>
+</div>
+
+<main class="container py-2">
+
+  <!-- ═══ SEZIONE A — RESPINGIMENTI VIA TERRA A CEUTA/MELILLA ═══ -->
+  <section class="section py-5" id="terra">
+    <p class="section-label mb-1">
+      <span class="en">Eurostat MIGR_EIRFS · Land border · Morocco → Spain</span>
+      <span class="it">Eurostat MIGR_EIRFS · Frontiera terrestre · Marocco → Spagna</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="en">Ceuta and Melilla: border refusals collapsed after 2020, and never recovered</span>
+      <span class="it">Ceuta e Melilla: i respingimenti sono crollati dopo il 2020 e non si sono più ripresi</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="en">Persons · Land border · Moroccan citizens · Annual 2008–2025</span>
+      <span class="it">Persone · Frontiera terrestre · Cittadini marocchini · Annuale 2008–2025</span>
+    </p>
+
+    <div class="callout mb-4">
+      <p>
+        <span class="en"><strong>Key finding</strong> — In 2019, Spain recorded 483,285 land-border refusals of Moroccan citizens at Ceuta and Melilla. In 2020 that number fell to 155 — a drop of over 3,000×. It has stayed in the low hundreds ever since: 180 in 2025, the most recent year available.</span>
+        <span class="it"><strong>Dato chiave</strong> — Nel 2019 la Spagna ha registrato 483.285 respingimenti alla frontiera terrestre di cittadini marocchini a Ceuta e Melilla. Nel 2020 il numero è crollato a 155 — un calo di oltre 3.000 volte. Da allora resta nell'ordine di poche centinaia: 180 nel 2025, l'ultimo anno disponibile.</span>
+      </p>
+    </div>
+
+    <div class="chart-wrap mb-4" style="height:380px">
+      <canvas id="chart-terra"></canvas>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <strong><span class="en">Data transformations</span><span class="it">Trasformazioni sui dati</span></strong>
+      <ul class="mb-0 mt-2">
+        <li><span class="en">Raw: MIGR_EIRFS, border=LAND, unit=PER, reason=TOTAL, citizen=MA, geo=ES, 2008–2025 (18 annual observations)</span><span class="it">Grezzo: MIGR_EIRFS, border=LAND, unit=PER, reason=TOTAL, citizen=MA, geo=ES, 2008–2025 (18 osservazioni annuali)</span></li>
+        <li><span class="en">No transformation applied — values as published by Eurostat</span><span class="it">Nessuna trasformazione applicata — valori come pubblicati da Eurostat</span></li>
+      </ul>
+    </div>
+
+    <p class="note mb-2">
+      <span class="en"><strong>How to read:</strong> Y-axis set to zero baseline (absolute count of persons). This indicator measures <strong>border refusals</strong> — third-country nationals stopped and denied entry at the external border — not total irregular arrivals or successful crossings; the two are structurally different metrics. The 2020 collapse coincides with COVID-19 border closures, not with a change in migratory pressure. Almost the entire Spanish land-border refusal count consists of Moroccan citizens (MA ≈ TOTAL every year), which is expected given Ceuta/Melilla's only land neighbour is Morocco. Source: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/MIGR_EIRFS" target="_blank">Eurostat MIGR_EIRFS</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> Asse Y a base zero (conteggio assoluto di persone). Questo indicatore misura i <strong>respingimenti alla frontiera</strong> — cittadini di paesi terzi fermati e a cui è negato l'ingresso — non gli arrivi irregolari totali né gli attraversamenti riusciti; sono metriche strutturalmente diverse. Il crollo del 2020 coincide con le chiusure delle frontiere per il Covid-19, non con un cambiamento della pressione migratoria. Quasi tutti i respingimenti alla frontiera terrestre spagnola riguardano cittadini marocchini (MA ≈ TOTAL in ogni anno), coerente col fatto che l'unico confine terrestre di Ceuta/Melilla è col Marocco. Fonte: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/MIGR_EIRFS" target="_blank">Eurostat MIGR_EIRFS</a>.</span>
+    </p>
+  </section>
+
+  <!-- ═══ SEZIONE B — CONFRONTO FRONTIERA MARITTIMA TRA ROTTE ═══ -->
+  <section class="section py-5" id="mare">
+    <p class="section-label mb-1">
+      <span class="en">Eurostat MIGR_EIRFS · Sea border · ES vs IT vs EL</span>
+      <span class="it">Eurostat MIGR_EIRFS · Frontiera marittima · ES vs IT vs EL</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="en">Sea-border refusals: Spain's Atlantic/Mediterranean route is now the smallest of the three</span>
+      <span class="it">Respingimenti alla frontiera marittima: la rotta spagnola è oggi la più piccola delle tre</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="en">Persons · Sea border · All citizenships · Annual 2008–2025</span>
+      <span class="it">Persone · Frontiera marittima · Tutte le cittadinanze · Annuale 2008–2025</span>
+    </p>
+
+    <div class="callout mb-4">
+      <p>
+        <span class="en"><strong>Key finding</strong> — In 2025, sea-border refusals stood at 370 for Spain, 1,405 for Italy, and 405 for Greece. Italy's Mediterranean route consistently records more sea-border refusals than Spain's Atlantic/Canary route across almost the entire 2008–2025 period.</span>
+        <span class="it"><strong>Dato chiave</strong> — Nel 2025 i respingimenti via mare sono 370 per la Spagna, 1.405 per l'Italia e 405 per la Grecia. La rotta mediterranea italiana registra costantemente più respingimenti via mare della rotta atlantica/canaria spagnola per quasi tutto il periodo 2008–2025.</span>
+      </p>
+    </div>
+
+    <div class="chart-wrap mb-4" style="height:380px">
+      <canvas id="chart-mare"></canvas>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <strong><span class="en">Data transformations</span><span class="it">Trasformazioni sui dati</span></strong>
+      <ul class="mb-0 mt-2">
+        <li><span class="en">Raw: MIGR_EIRFS, border=SEA, unit=PER, reason=TOTAL, citizen=TOTAL, geo=ES+IT+EL, 2008–2025 (54 annual observations)</span><span class="it">Grezzo: MIGR_EIRFS, border=SEA, unit=PER, reason=TOTAL, citizen=TOTAL, geo=ES+IT+EL, 2008–2025 (54 osservazioni annuali)</span></li>
+        <li><span class="en">Citizen=TOTAL used here (not MA-only) to compare overall route pressure, not just Moroccan nationals</span><span class="it">Usato citizen=TOTAL (non solo MA) per confrontare la pressione complessiva della rotta, non solo i cittadini marocchini</span></li>
+      </ul>
+    </div>
+
+    <p class="note mb-2">
+      <span class="en"><strong>How to read:</strong> Y-axis set to zero baseline. All three routes show a peak around 2015–2017 (Italy: 4,395 in 2017; Greece: 535 in 2024, its own peak later). This chart only captures <strong>people stopped at sea</strong>, not successful crossings — the well-documented Canary Islands route (Spain's Atlantic entry point for sub-Saharan migrants) is not separately identified in MIGR_EIRFS and is likely undercounted here, since interceptions at sea are recorded very differently across national coastguards. Source: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/MIGR_EIRFS" target="_blank">Eurostat MIGR_EIRFS</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> Asse Y a base zero. Tutte e tre le rotte mostrano un picco attorno al 2015–2017 (Italia: 4.395 nel 2017; Grecia: 535 nel 2024, picco più tardivo). Questo grafico cattura solo le <strong>persone fermate in mare</strong>, non gli attraversamenti riusciti — la rotta delle Canarie (punto di ingresso atlantico spagnolo per i migranti subsahariani), ben documentata altrove, non è isolata separatamente in MIGR_EIRFS ed è probabilmente sottostimata qui, poiché le intercettazioni in mare sono registrate in modo molto diverso dalle guardie costiere nazionali. Fonte: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/MIGR_EIRFS" target="_blank">Eurostat MIGR_EIRFS</a>.</span>
+    </p>
+  </section>
+
+  <!-- ═══ SEZIONE C — RICHIESTE ASILO MAROCCHINE, 2018-2026 ═══ -->
+  <section class="section py-5" id="asilo-marocco">
+    <p class="section-label mb-1">
+      <span class="en">Eurostat MIGR_ASYAPPCTZM · Monthly · Moroccan citizenship</span>
+      <span class="it">Eurostat MIGR_ASYAPPCTZM · Mensile · Cittadinanza marocchina</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="en">The real 2021 Ceuta spike shows up in the data — a 2026 mega-crisis does not</span>
+      <span class="it">Il vero picco di Ceuta 2021 si vede nei dati — una mega-crisi 2026 no</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="en">Persons · First-time and subsequent asylum applicants · Moroccan citizenship · Monthly Jan 2018 – Jun 2026</span>
+      <span class="it">Persone · Richiedenti asilo prima domanda e successiva · Cittadinanza marocchina · Mensile gen 2018 – giu 2026</span>
+    </p>
+
+    <div class="callout mb-4">
+      <p>
+        <span class="en"><strong>Key finding</strong> — Moroccan asylum applications to Spain peak sharply in <strong>June 2021 (1,065)</strong>, exactly the month of the documented Ceuta border crisis, then decline steadily. The most recent available data (May 2026: 240) sits well within the ordinary 2024–2026 range of 145–595 per month. No spike consistent with a sudden mass-arrival event is visible in this series as of the latest published month.</span>
+        <span class="it"><strong>Dato chiave</strong> — Le richieste d'asilo marocchine verso la Spagna raggiungono un picco netto a <strong>giugno 2021 (1.065)</strong>, esattamente il mese della crisi di frontiera di Ceuta documentata, per poi calare progressivamente. Il dato più recente disponibile (maggio 2026: 240) rientra pienamente nell'intervallo ordinario 2024–2026 di 145–595 al mese. Nessun picco compatibile con un evento improvviso di arrivi di massa è visibile in questa serie fino all'ultimo mese pubblicato.</span>
+      </p>
+    </div>
+
+    <div class="chart-wrap mb-4" style="height:380px">
+      <canvas id="chart-asilo-marocco"></canvas>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <strong><span class="en">Data transformations</span><span class="it">Trasformazioni sui dati</span></strong>
+      <ul class="mb-0 mt-2">
+        <li><span class="en">Raw: MIGR_ASYAPPCTZM, unit=PER, citizen=MA, sex=T, applicant=TOTAL, age=TOTAL, geo=ES+IT+EL, 2008–2026 (663 monthly observations)</span><span class="it">Grezzo: MIGR_ASYAPPCTZM, unit=PER, citizen=MA, sex=T, applicant=TOTAL, age=TOTAL, geo=ES+IT+EL, 2008–2026 (663 osservazioni mensili)</span></li>
+        <li><span class="en">Chart window restricted to Jan 2018 – Jun 2026 for readability; full series 2008–2026 available in the raw CSV</span><span class="it">Finestra del grafico limitata a gen 2018 – giu 2026 per leggibilità; serie completa 2008–2026 disponibile nel CSV grezzo</span></li>
+        <li><span class="en">Spain's June 2026 value is not yet published by Eurostat at extraction time and is rendered as a gap, not zero</span><span class="it">Il valore di giugno 2026 per la Spagna non è ancora pubblicato da Eurostat al momento dell'estrazione ed è reso come lacuna, non come zero</span></li>
+      </ul>
+    </div>
+
+    <p class="note mb-2">
+      <span class="en"><strong>How to read:</strong> Y-axis set to zero baseline. Some observations carry a <code>p</code> (provisional) flag from Eurostat, mostly in 2025–2026 — expected for the most recent months, subject to revision. Italy (blue) shows a slower, steadier rise since 2022 and has recently overtaken Spain in absolute Moroccan asylum applications. Source: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/MIGR_ASYAPPCTZM" target="_blank">Eurostat MIGR_ASYAPPCTZM</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> Asse Y a base zero. Alcune osservazioni hanno un flag <code>p</code> (provvisorio) da Eurostat, soprattutto nel 2025–2026 — atteso per i mesi più recenti, soggetto a revisione. L'Italia (blu) mostra una crescita più lenta ma costante dal 2022 e ha recentemente superato la Spagna nelle richieste d'asilo marocchine in valore assoluto. Fonte: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/MIGR_ASYAPPCTZM" target="_blank">Eurostat MIGR_ASYAPPCTZM</a>.</span>
+    </p>
+  </section>
+
+  <!-- ═══ SEZIONE D — CONFRONTO ROTTE, TUTTE LE CITTADINANZE ═══ -->
+  <section class="section py-5" id="confronto-rotte">
+    <p class="section-label mb-1">
+      <span class="en">Eurostat MIGR_ASYAPPCTZM · Annual totals · All citizenships · ES vs IT vs EL</span>
+      <span class="it">Eurostat MIGR_ASYAPPCTZM · Totali annuali · Tutte le cittadinanze · ES vs IT vs EL</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="en">Spain, Italy and Greece: a decade of shifting asylum pressure across the three main routes</span>
+      <span class="it">Spagna, Italia e Grecia: un decennio di pressione d'asilo mutevole sulle tre rotte principali</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="en">Persons · Total asylum applicants, all citizenships · Annual 2015–2025</span>
+      <span class="it">Persone · Totale richiedenti asilo, tutte le cittadinanze · Annuale 2015–2025</span>
+    </p>
+
+    <div class="callout mb-4">
+      <p>
+        <span class="en"><strong>Key finding</strong> — In 2015–2016, Greece and Italy absorbed most asylum pressure (Balkan and central Mediterranean routes). By 2023–2024, Spain had grown to match Italy in absolute asylum applications (167,750 vs 158,610 in 2024), reflecting a decade-long geographic rebalancing rather than a single dramatic event.</span>
+        <span class="it"><strong>Dato chiave</strong> — Nel 2015–2016 Grecia e Italia assorbivano la maggior parte della pressione d'asilo (rotte balcanica e mediterranea centrale). Entro il 2023–2024 la Spagna era cresciuta fino ad eguagliare l'Italia in richieste d'asilo assolute (167.750 contro 158.610 nel 2024), riflettendo un riequilibrio geografico decennale più che un singolo evento eclatante.</span>
+      </p>
+    </div>
+
+    <div class="chart-wrap mb-4" style="height:380px">
+      <canvas id="chart-confronto"></canvas>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <strong><span class="en">Data transformations</span><span class="it">Trasformazioni sui dati</span></strong>
+      <ul class="mb-0 mt-2">
+        <li><span class="en">Raw: MIGR_ASYAPPCTZM, unit=PER, citizen=TOTAL, sex=T, applicant=TOTAL, age=TOTAL, geo=ES+IT+EL, monthly 2008–2025</span><span class="it">Grezzo: MIGR_ASYAPPCTZM, unit=PER, citizen=TOTAL, sex=T, applicant=TOTAL, age=TOTAL, geo=ES+IT+EL, mensile 2008–2025</span></li>
+        <li><span class="en">Aggregated from monthly to annual sums per country; 2026 excluded as incomplete year</span><span class="it">Aggregato da mensile ad annuale per somma per paese; 2026 escluso in quanto anno incompleto</span></li>
+      </ul>
+    </div>
+
+    <p class="note mb-2">
+      <span class="en"><strong>How to read:</strong> Y-axis set to zero baseline. These totals include all citizenships, not just Moroccan — this is a route-level comparison, not a Ceuta-specific one. Source: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/MIGR_ASYAPPCTZM" target="_blank">Eurostat MIGR_ASYAPPCTZM</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> Asse Y a base zero. Questi totali includono tutte le cittadinanze, non solo quella marocchina — è un confronto a livello di rotta, non specifico per Ceuta. Fonte: <a href="https://ec.europa.eu/eurostat/databrowser/product/page/MIGR_ASYAPPCTZM" target="_blank">Eurostat MIGR_ASYAPPCTZM</a>.</span>
+    </p>
+  </section>
+
+  <!-- ═══ SEZIONE E — OECD, FLUSSI REGOLARI IN ENTRATA MAROCCO→SPAGNA/ITALIA ═══ -->
+  <section class="section py-5" id="oecd-flussi">
+    <p class="section-label mb-1">
+      <span class="en">OECD International Migration Database (DF_MIG) · Regular inflows · ES vs IT</span>
+      <span class="it">OECD International Migration Database (DF_MIG) · Flussi regolari in entrata · ES vs IT</span>
+    </p>
+    <h2 class="mb-2">
+      <span class="en">Beyond border crossings: a 25-year structural rise in regular Moroccan migration to Spain</span>
+      <span class="it">Oltre gli attraversamenti di frontiera: 25 anni di crescita strutturale della migrazione regolare marocchina verso la Spagna</span>
+    </h2>
+    <p class="subtitle mb-4">
+      <span class="en">Persons · Inflows of foreign population, Moroccan citizenship · Annual 1997–2023</span>
+      <span class="it">Persone · Flussi in entrata di popolazione straniera, cittadinanza marocchina · Annuale 1997–2023</span>
+    </p>
+
+    <div class="callout mb-4">
+      <p>
+        <span class="en"><strong>Key finding</strong> — This OECD indicator counts <strong>regular</strong> migration inflows (work, family, study and other legal permits), not border crossings or asylum claims. Spain's regular inflow of Moroccan citizens grew from 6,898 in 1997 to a record 123,468 in 2023 — roughly 18× over 26 years — while Italy's has stayed comparatively flat, oscillating between 12,000 and 41,000 over the same period.</span>
+        <span class="it"><strong>Dato chiave</strong> — Questo indicatore OECD conta i flussi migratori <strong>regolari</strong> (lavoro, famiglia, studio e altri permessi legali), non gli attraversamenti di frontiera né le richieste d'asilo. Il flusso regolare di cittadini marocchini verso la Spagna cresce da 6.898 nel 1997 a un record di 123.468 nel 2023 — circa 18 volte in 26 anni — mentre quello italiano resta comparativamente piatto, oscillando tra 12.000 e 41.000 nello stesso periodo.</span>
+      </p>
+    </div>
+
+    <div class="chart-wrap mb-4" style="height:380px">
+      <canvas id="chart-oecd"></canvas>
+    </div>
+
+    <div class="transform p-3 mb-4">
+      <strong><span class="en">Data transformations</span><span class="it">Trasformazioni sui dati</span></strong>
+      <ul class="mb-0 mt-2">
+        <li><span class="en">Raw: OECD.ELS.IMD,DSD_MIG@DF_MIG, REF_AREA=ESP+ITA+GRC, CITIZENSHIP=MAR, FREQ=A, MEASURE=B11 (inflows of foreign population), SEX=_T, BIRTH_PLACE=_Z, EDUCATION_LEV=_Z, UNIT_MEASURE=PS, 1997–2023 (55 annual observations)</span><span class="it">Grezzo: OECD.ELS.IMD,DSD_MIG@DF_MIG, REF_AREA=ESP+ITA+GRC, CITIZENSHIP=MAR, FREQ=A, MEASURE=B11 (flussi in entrata popolazione straniera), SEX=_T, BIRTH_PLACE=_Z, EDUCATION_LEV=_Z, UNIT_MEASURE=PS, 1997–2023 (55 osservazioni annuali)</span></li>
+        <li><span class="en">Greece (GRC) excluded from the chart: only 2 observations exist for this dataflow, both null (no usable Greek series for MAR/B11)</span><span class="it">Grecia (GRC) esclusa dal grafico: esistono solo 2 osservazioni per questo dataflow, entrambe nulle (nessuna serie greca utilizzabile per MAR/B11)</span></li>
+        <li><span class="en">Values rounded to the nearest integer; OECD publishes some years (2012–2016 for Spain) with decimal estimates</span><span class="it">Valori arrotondati all'intero più vicino; OECD pubblica alcuni anni (2012–2016 per la Spagna) con stime decimali</span></li>
+      </ul>
+    </div>
+
+    <p class="note mb-2">
+      <span class="en"><strong>How to read:</strong> Y-axis set to zero baseline. This is a different metric family from Sections A–D: OECD's B11 measures people granted legal entry/residence, largely independent of border-control events. It is not directly comparable to Eurostat's border-refusal or asylum counts, but it shows that Spain's overall migratory relationship with Morocco has deepened structurally over 25 years — a slower-moving trend that provides context for, but does not explain, any single border event. The <code>opensdmx --provider oecd</code> flow does not support the <code>constraints</code> command; codes were verified via <code>opensdmx values</code> and confirmed with a wildcard preview query. Source: <a href="https://www.oecd.org/en/data/datasets/international-migration-database.html" target="_blank">OECD International Migration Database</a>.</span>
+      <span class="it"><strong>Come leggere:</strong> Asse Y a base zero. Questa è una famiglia di metriche diversa dalle Sezioni A–D: il B11 OECD misura le persone a cui è concesso l'ingresso/soggiorno legale, in gran parte indipendente dagli eventi di controllo frontaliero. Non è direttamente comparabile ai conteggi Eurostat di respingimenti o asilo, ma mostra che il rapporto migratorio complessivo tra Spagna e Marocco si è approfondito strutturalmente in 25 anni — una tendenza più lenta che offre contesto, ma non spiega, un singolo evento di frontiera. Il flusso <code>opensdmx --provider oecd</code> non supporta il comando <code>constraints</code>; i codici sono stati verificati con <code>opensdmx values</code> e confermati con una query di anteprima a wildcard. Fonte: <a href="https://www.oecd.org/en/data/datasets/international-migration-database.html" target="_blank">OECD International Migration Database</a>.</span>
+    </p>
+  </section>
+
+</main>
+
+<div id="shell-bottom"></div>
+
+<div class="container">
+<div id="shell-footer"></div>
+</div>
+
+<script src="../../assets/shell.js"></script>
+<script src="../../assets/lang.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+// ── CHART.JS DEFAULTS ────────────────────────────────────────────────────────
+Chart.defaults.font.family = "'IBM Plex Mono', monospace";
+Chart.defaults.font.size   = 14;
+Chart.defaults.color       = '#333';
+
+// ── DATA ARRAYS ───────────────────────────────────────────────────────────────
+const YEARS_RE = [2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
+const LAND_MA_ES = [493630,375880,281555,219455,194115,188205,167115,162775,185085,194580,221515,483285,155,5,35,65,155,180];
+
+const SEA_TOTAL_ES = [2785,1165,230,250,510,435,495,540,965,1880,1975,1505,240,10,445,510,345,370];
+const SEA_TOTAL_IT = [1445,1190,1270,4345,3210,2225,2460,2760,3725,4395,1345,1840,1075,2180,2020,1225,1320,1405];
+const SEA_TOTAL_EL = [210,385,165,225,220,260,235,250,275,420,345,205,60,60,295,425,535,405];
+
+const MONTHS = ['2018-01','2018-02','2018-03','2018-04','2018-05','2018-06','2018-07','2018-08','2018-09','2018-10','2018-11','2018-12','2019-01','2019-02','2019-03','2019-04','2019-05','2019-06','2019-07','2019-08','2019-09','2019-10','2019-11','2019-12','2020-01','2020-02','2020-03','2020-04','2020-05','2020-06','2020-07','2020-08','2020-09','2020-10','2020-11','2020-12','2021-01','2021-02','2021-03','2021-04','2021-05','2021-06','2021-07','2021-08','2021-09','2021-10','2021-11','2021-12','2022-01','2022-02','2022-03','2022-04','2022-05','2022-06','2022-07','2022-08','2022-09','2022-10','2022-11','2022-12','2023-01','2023-02','2023-03','2023-04','2023-05','2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'];
+const MA_ES = [75,75,65,75,115,50,155,155,165,150,135,95,170,200,280,240,260,210,290,115,185,235,205,145,225,215,90,0,0,70,75,120,40,85,65,110,145,210,390,355,350,1065,905,805,775,750,380,410,340,405,320,300,255,260,290,300,575,435,245,155,200,205,270,155,245,245,270,375,305,295,260,245,355,420,290,290,305,245,270,350,575,595,360,195,150,145,185,195,205,200,245,270,470,510,205,215,190,260,335,240,240,null];
+const MA_IT = [210,175,220,145,200,175,155,130,130,140,135,95,140,110,145,120,140,160,135,120,145,140,150,95,80,80,20,0,50,25,30,10,20,60,50,65,90,125,140,125,155,145,135,155,125,120,160,160,135,230,195,220,305,260,190,235,270,285,290,240,255,340,455,295,415,400,410,465,485,650,570,480,580,640,835,895,1035,870,990,755,1015,1045,940,755,855,855,1035,445,1060,785,755,660,665,885,860,630,720,630,670,580,640,550];
+const MA_EL = [45,35,15,35,25,45,45,30,35,35,25,35,20,15,15,30,15,15,25,40,20,40,30,30,40,25,10,0,10,25,20,20,25,10,10,10,15,10,5,15,5,15,10,15,5,25,15,10,5,5,10,10,25,30,10,10,15,15,30,60,25,15,15,10,5,15,30,40,15,30,20,10,25,30,10,5,0,10,20,10,10,15,10,15,20,20,15,10,10,10,10,20,15,10,10,5,5,5,15,5,10,null];
+
+const YEARS_ASY = [2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
+const ASY_TOTAL_ES = [14785,15760,36610,54065,117815,88540,65325,117965,162435,167750,143720];
+const ASY_TOTAL_IT = [83535,122960,128865,59955,43775,26950,53610,84285,135815,158610,135495];
+const ASY_TOTAL_EL = [13210,51105,58660,66980,77280,40560,28355,37380,64225,73685,61620];
+
+const OECD_YEARS = [1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023];
+const OECD_ESP = [6898,10557,14904,38344,39517,40172,41171,73380,82519,78512,84978,71761,43178,30169,27978,22444,20516,19994,23831,29712,39841,60935,72866,44940,99460,113725,123468];
+const OECD_ITA = [null,7329,19350,20093,17267,15327,40821,34792,26057,21784,23483,37275,33128,29960,23885,19590,19568,17637,15009,14651,15690,16941,20281,12480,15372,19364,20928];
+
+// ── SHELL CONFIG ──────────────────────────────────────────────────────────────
+initShell({
+  researchQuestion: "Il racconto di una nuova ondata di decine di migliaia di persone a Ceuta nel 2026 trova riscontro nei dati ufficiali sui flussi migratori marocchini verso la Spagna, e come si colloca rispetto alle altre rotte europee?",
+  researchQuestion_en: "Does the account of a new wave of tens of thousands of people at Ceuta in 2026 find support in official data on Moroccan migration flows to Spain, and how does it compare with the other European routes?",
+  statisticalProxy: "Eurostat MIGR_EIRFS — cittadini di paesi terzi respinti alle frontiere esterne, per tipo di frontiera (terra/mare), cittadinanza e paese UE, dati annuali 2008–2025. Eurostat MIGR_ASYAPPCTZM — richiedenti asilo per cittadinanza e paese UE, dati mensili 2008–2026.",
+  statisticalProxy_en: "Eurostat MIGR_EIRFS — third-country nationals refused entry at external borders, by border type (land/sea), citizenship and EU country, annual data 2008–2025. Eurostat MIGR_ASYAPPCTZM — asylum applicants by citizenship and EU country, monthly data 2008–2026.",
+
+  title:    "Ceuta 2026, e poi? Cosa dicono davvero i dati sulle rotte migratorie verso l'Europa",
+  title_en: "Ceuta 2026, and Then? What the Data Really Say About Migration Routes to Europe",
+  date:     "31 luglio 2026",
+  date_en:  "31 July 2026",
+  intro:    "Una nuova crisi migratoria a Ceuta nel 2026 è stata riportata dai principali media europei, con circa 50.000 persone che avrebbero attraversato il confine in 24 ore e 43 morti — cifre ancora provvisorie al momento della stesura. Questo report confronta quei numeri con i dati Eurostat più recenti su respingimenti alla frontiera e richieste d'asilo, per la Spagna e per le altre due rotte principali verso l'UE (Italia, Grecia).",
+  intro_en: "A new 2026 migration crisis at Ceuta has been reported by major European media, with around 50,000 people said to have crossed the border in 24 hours and 43 deaths — figures still provisional at the time of writing. This report compares those numbers with the most recent Eurostat data on border refusals and asylum applications, for Spain and for the other two main routes into the EU (Italy, Greece).",
+
+  badges: [
+    { label: "Eurostat", value: "MIGR_EIRFS · MIGR_ASYAPPCTZM" },
+    { label: "OECD",     value: "DF_MIG" },
+    { label: "Periodo",  value: "1997–2026", label_en: "Period" },
+    { label: "Paesi",    value: "ES · IT · EL", label_en: "Countries" }
+  ],
+
+  nav: [
+    { id: "terra",           label: "Frontiera terra",   label_en: "Land border" },
+    { id: "mare",            label: "Frontiera mare",    label_en: "Sea border"  },
+    { id: "asilo-marocco",   label: "Asilo Marocco",     label_en: "Morocco asylum" },
+    { id: "confronto-rotte", label: "Confronto rotte",   label_en: "Route comparison" },
+    { id: "oecd-flussi",     label: "Flussi regolari OECD", label_en: "OECD regular flows" }
+  ],
+
+  introTitle:    "Contesto e risultati",
+  introTitle_en: "Context and findings",
+  introSubtitle:    "Respingimenti alla frontiera e richieste d'asilo: Spagna, Italia, Grecia, 2008–2026",
+  introSubtitle_en: "Border refusals and asylum applications: Spain, Italy, Greece, 2008–2026",
+
+  scopeLimit:    "MIGR_EIRFS misura i respingimenti alla frontiera (persone fermate e a cui è negato l'ingresso), non gli arrivi irregolari totali né gli attraversamenti riusciti. Non copre eventi puntuali su scala giornaliera/oraria — solo aggregati annuali. MIGR_ASYAPPCTZM copre le domande d'asilo formalmente registrate, non tutte le persone che attraversano un confine.",
+  scopeLimit_en: "MIGR_EIRFS measures border refusals (people stopped and denied entry), not total irregular arrivals or successful crossings. It does not cover single-day/hour events — only annual aggregates. MIGR_ASYAPPCTZM covers formally registered asylum applications, not everyone who crosses a border.",
+
+  introExtra: `
+    <div class="summary mb-5">
+      <h3 class="mb-3">
+        <span class="en">What the data says</span>
+        <span class="it">Cosa dicono i dati</span>
+      </h3>
+      <p>
+        <span class="en">The reported 2026 figures — roughly 50,000 people crossing in 24 hours, 60,000 total (70% of Ceuta's population), 43 deaths — are still provisional media estimates and are not yet reflected in Eurostat's official statistics, which are published with a reporting lag and do not capture single-day or single-week events at all. The closest comparable episode already visible in the official record is the <strong>June 2021 Ceuta crisis</strong>: Moroccan asylum applications to Spain spiked to 1,065 that month, the highest value in the entire 2018–2026 series. → <a href="#asilo-marocco">Morocco asylum chart</a></span>
+        <span class="it">Le cifre riportate per il 2026 — circa 50.000 persone in 24 ore, 60.000 totali (70% della popolazione di Ceuta), 43 morti — sono ancora stime giornalistiche provvisorie e non risultano al momento riflesse nelle statistiche ufficiali Eurostat, che vengono pubblicate con un ritardo di rilevazione e non registrano comunque eventi su scala di un singolo giorno o settimana. L'episodio comparabile più vicino già visibile nella serie ufficiale è la <strong>crisi di Ceuta di giugno 2021</strong>: le richieste d'asilo marocchine verso la Spagna salgono a 1.065 quel mese, il valore più alto dell'intera serie 2018–2026. → <a href="#asilo-marocco">grafico asilo Marocco</a></span>
+      </p>
+      <p>
+        <span class="en">Border refusals at the Ceuta/Melilla land border tell a similar story of discontinuity, not escalation: from 483,285 Moroccan citizens refused entry in 2019, the count collapsed to 155 in 2020 with the COVID-19 border closures, and has stayed in the low hundreds every year since (180 in 2025). There is no post-2020 rebound, let alone a 2026 surge. → <a href="#terra">land border chart</a></span>
+        <span class="it">I respingimenti alla frontiera terrestre di Ceuta/Melilla raccontano una storia simile di discontinuità, non di escalation: da 483.285 cittadini marocchini respinti nel 2019, il conteggio è crollato a 155 nel 2020 con le chiusure di frontiera Covid-19, e resta nell'ordine di poche centinaia ogni anno da allora (180 nel 2025). Non c'è alcuna ripresa post-2020, tantomeno un'impennata nel 2026. → <a href="#terra">grafico frontiera terra</a></span>
+      </p>
+      <p>
+        <span class="en">Widening the lens to all nationalities and all three main EU entry routes, the picture is one of gradual rebalancing over a decade, not a single dramatic spike: Spain's total asylum applications grew from 14,785 in 2015 to 167,750 in 2024, roughly matching Italy (158,610 in 2024) — a structural shift in migratory geography built up over years, not something that happened in a single day. → <a href="#confronto-rotte">route comparison chart</a></span>
+        <span class="it">Allargando lo sguardo a tutte le nazionalità e alle tre rotte principali d'ingresso in UE, il quadro è quello di un riequilibrio graduale in un decennio, non di un singolo picco eclatante: le richieste d'asilo totali della Spagna crescono da 14.785 nel 2015 a 167.750 nel 2024, avvicinandosi all'Italia (158.610 nel 2024) — uno spostamento strutturale della geografia migratoria costruito in anni, non accaduto in un solo giorno. → <a href="#confronto-rotte">grafico confronto rotte</a></span>
+      </p>
+      <p>
+        <span class="en"><strong>Editorial note:</strong> the 2026 Ceuta crisis reported by European media is treated here as a real event; what remains provisional is the precise scale, since the specific figures in circulation are not yet cross-checkable against official statistics and Eurostat data is published with a reporting lag (extraction date: 31 July 2026, latest data points: 2025 annual / May–June 2026 monthly). This report documents what the official statistical record shows so far — the 2021 precedent and the underlying route trends — as context for evaluating the 2026 reporting as it is confirmed.</span>
+        <span class="it"><strong>Nota editoriale:</strong> la crisi di Ceuta del 2026 riportata dai media europei è qui trattata come un evento reale; ciò che resta provvisorio è la portata esatta, poiché le cifre specifiche in circolazione non sono ancora riscontrabili nelle statistiche ufficiali e i dati Eurostat vengono pubblicati con un ritardo di rilevazione (data di estrazione: 31 luglio 2026, ultimi dati: 2025 annuale / maggio–giugno 2026 mensile). Questo report documenta ciò che la serie statistica ufficiale mostra finora — il precedente del 2021 e le tendenze di fondo delle rotte — come contesto per valutare la cronaca 2026 man mano che viene confermata.</span>
+      </p>
+    </div>
+  `,
+
+  findingCards: [
+    { value: "483.285 → 180", label: "respingimenti terra Ceuta/Melilla, 2019 vs 2025", label_en: "Ceuta/Melilla land refusals, 2019 vs 2025", color: "accent" },
+    { value: "1.065",  label: "picco richieste asilo Marocco→Spagna, giu 2021", label_en: "peak Morocco→Spain asylum applications, Jun 2021", color: "default" },
+    { value: "240",    label: "richieste asilo Marocco→Spagna, mag 2026 (ultimo dato)", label_en: "Morocco→Spain asylum applications, May 2026 (latest)", color: "blue" },
+    { value: "167.750", label: "richieste asilo totali Spagna, 2024 (vs 14.785 nel 2015)", label_en: "total Spain asylum applications, 2024 (vs 14,785 in 2015)", color: "accent" },
+    { value: "6.898 → 123.468", label: "flusso regolare Marocco→Spagna (OECD), 1997 vs 2023", label_en: "regular Morocco→Spain inflow (OECD), 1997 vs 2023", color: "blue" }
+  ],
+
+  rawData: {
+    license:           "Eurostat CC BY 4.0",
+    extractionDate:    "31 luglio 2026",
+    extractionDate_en: "31 July 2026",
+    files: [
+      {
+        provider:  "Eurostat",
+        datasetId: "MIGR_EIRFS",
+        desc:      "Respinti alla frontiera esterna — terra+mare, MA+TOTAL, ES/IT/EL — annuale 2008–2025",
+        desc_en:   "Refused entry at external border — land+sea, MA+TOTAL, ES/IT/EL — annual 2008–2025",
+        rows:      200,
+        period:    "2008 / 2025",
+        file:      "output/refused_entry.csv"
+      },
+      {
+        provider:  "Eurostat",
+        datasetId: "MIGR_ASYAPPCTZM",
+        desc:      "Richiedenti asilo — MA+TOTAL, ES/IT/EL — mensile 2008–2026",
+        desc_en:   "Asylum applicants — MA+TOTAL, ES/IT/EL — monthly 2008–2026",
+        rows:      1328,
+        period:    "2008-01 / 2026-06",
+        file:      "output/asylum_applicants.csv"
+      },
+      {
+        provider:  "OECD",
+        datasetId: "DF_MIG",
+        desc:      "Flussi regolari in entrata, cittadinanza marocchina — ES/IT/EL — annuale 1997–2023",
+        desc_en:   "Regular inflows, Moroccan citizenship — ES/IT/EL — annual 1997–2023",
+        rows:      55,
+        period:    "1997 / 2023",
+        file:      "output/oecd_inflows_morocco.csv"
+      }
+    ]
+  },
+
+  methodology: {
+    githubUrl: "https://github.com/datapitch-it/automatic-reports/reports/14_rotte-migratorie",
+    classifications: [
+      { code: "MIGR_EIRFS",     system: "dataflow", meaning: "Cittadini di paesi terzi respinti alla frontiera esterna",  meaning_en: "Third-country nationals refused entry at the external border" },
+      { code: "MIGR_ASYAPPCTZM", system: "dataflow", meaning: "Richiedenti asilo per tipo, cittadinanza, età e sesso",     meaning_en: "Asylum applicants by type, citizenship, age and sex" },
+      { code: "LAND",  system: "border",   meaning: "Frontiera terrestre",              meaning_en: "Land border" },
+      { code: "SEA",   system: "border",   meaning: "Frontiera marittima",              meaning_en: "Sea border" },
+      { code: "MA",    system: "citizen",  meaning: "Marocco",                          meaning_en: "Morocco" },
+      { code: "TOTAL", system: "citizen",  meaning: "Tutte le cittadinanze",            meaning_en: "All citizenships" },
+      { code: "ES",    system: "geo",      meaning: "Spagna",                           meaning_en: "Spain" },
+      { code: "IT",    system: "geo",      meaning: "Italia",                           meaning_en: "Italy" },
+      { code: "EL",    system: "geo",      meaning: "Grecia",                           meaning_en: "Greece" },
+      { code: "FRST",  system: "applicant", meaning: "Richiedente prima domanda",       meaning_en: "First-time applicant" },
+      { code: "p",     system: "OBS_FLAG", meaning: "Valore provvisorio",               meaning_en: "Provisional value" },
+      { code: "DF_MIG", system: "dataflow", meaning: "OECD International Migration Database", meaning_en: "OECD International Migration Database" },
+      { code: "B11",   system: "MEASURE",  meaning: "Flussi in entrata di popolazione straniera", meaning_en: "Inflows of foreign population" },
+      { code: "ESP/ITA/GRC", system: "REF_AREA", meaning: "Spagna/Italia/Grecia (codici ISO3, schema OECD)", meaning_en: "Spain/Italy/Greece (ISO3 codes, OECD scheme)" },
+      { code: "MAR",   system: "CITIZENSHIP", meaning: "Marocco (codice ISO3, schema OECD)", meaning_en: "Morocco (ISO3 code, OECD scheme)" }
+    ],
+    extra: `
+      <p class="note pt-2 mb-2">
+        <strong>Nota sulla pista di ricerca originale</strong><br>
+        La crisi di Ceuta descritta nella pista di ricerca è avvenuta realmente il 31 luglio 2026 ed è riportata dai principali media europei; le cifre puntuali (~50.000 persone in 24 ore, 60.000 totali, 43 morti, ipotesi di sospensione Schengen) restano però provvisorie al momento della stesura e non ancora riscontrabili nelle serie SDMX Eurostat, che riportano solo aggregati mensili/annuali con un fisiologico ritardo di pubblicazione. Il testo è usato come angolo giornalistico e fattuale di partenza; i dati Eurostat presentati in questo report documentano il contesto storico delle rotte (incluso il precedente di Ceuta 2021), non l'evento del 31 luglio 2026 in sé.
+      </p>
+      <p class="note pt-2 mb-2">
+        <strong>Double check — MIGR_EIRFS</strong><br>
+        Query 1 (opensdmx get): 201 righe (200 dati + header). Verifica struttura dimensioni via <code>opensdmx info MIGR_EIRFS</code>: freq, border, unit, reason, citizen, geo → <strong>ordine confermato</strong>.<br>
+        URL: <code>https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/MIGR_EIRFS/A.LAND+SEA.PER.TOTAL.MA+TOTAL.ES+IT+EL/?startPeriod=2008&endPeriod=2025&format=SDMX-CSV</code>
+      </p>
+      <p class="note pt-2 mb-2">
+        <strong>Double check — MIGR_ASYAPPCTZM</strong><br>
+        Query 1 (opensdmx get): 1329 righe (1328 dati + header). Verifica struttura dimensioni via <code>opensdmx info MIGR_ASYAPPCTZM</code>: freq, unit, citizen, sex, applicant, age, geo → <strong>ordine confermato</strong>.<br>
+        URL: <code>https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/MIGR_ASYAPPCTZM/M.PER.MA+TOTAL.T.TOTAL.TOTAL.ES+IT+EL/?startPeriod=2008&endPeriod=2026&format=SDMX-CSV</code>
+      </p>
+      <p class="note pt-2 mb-2">
+        <strong>Double check — OECD DF_MIG</strong><br>
+        Il provider OECD non supporta il comando <code>constraints</code>. Codici verificati con <code>opensdmx values DSD_MIG@DF_MIG REF_AREA/CITIZENSHIP/MEASURE/UNIT_MEASURE --provider oecd</code> e confermati con una query wildcard di anteprima prima della query mirata. Query 1 (opensdmx get): 56 righe (55 dati + header) → <strong>coerente con l'anteprima</strong>. Nota: Grecia (GRC) restituisce solo 2 osservazioni, entrambe nulle — esclusa dal grafico.<br>
+        URL: <code>https://sdmx.oecd.org/public/rest/data/OECD.ELS.IMD,DSD_MIG@DF_MIG/ESP+ITA+GRC.MAR.A.B11._T._Z._Z.PS</code>
+      </p>
+    `,
+    apiUrls: [
+      {
+        datasetId: "MIGR_EIRFS",
+        provider:  "Eurostat",
+        desc:      "Respinti alla frontiera esterna — terra+mare — MA+TOTAL — ES/IT/EL — dal 2008",
+        desc_en:   "Refused entry at external border — land+sea — MA+TOTAL — ES/IT/EL — from 2008",
+        url:       "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/MIGR_EIRFS/A.LAND+SEA.PER.TOTAL.MA+TOTAL.ES+IT+EL/?startPeriod=2008&endPeriod=2025&format=SDMX-CSV"
+      },
+      {
+        datasetId: "MIGR_ASYAPPCTZM",
+        provider:  "Eurostat",
+        desc:      "Richiedenti asilo — MA+TOTAL — ES/IT/EL — dal 2008",
+        desc_en:   "Asylum applicants — MA+TOTAL — ES/IT/EL — from 2008",
+        url:       "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/MIGR_ASYAPPCTZM/M.PER.MA+TOTAL.T.TOTAL.TOTAL.ES+IT+EL/?startPeriod=2008&endPeriod=2026&format=SDMX-CSV"
+      },
+      {
+        datasetId: "DF_MIG",
+        provider:  "OECD",
+        desc:      "Flussi regolari in entrata — cittadinanza marocchina — ES/IT/EL — dal 1997",
+        desc_en:   "Regular inflows — Moroccan citizenship — ES/IT/EL — from 1997",
+        url:       "https://sdmx.oecd.org/public/rest/data/OECD.ELS.IMD,DSD_MIG@DF_MIG/ESP+ITA+GRC.MAR.A.B11._T._Z._Z.PS"
+      }
+    ],
+    cliCommands: [
+      { dataset: "MIGR_EIRFS",      command: "opensdmx run queries/refused_entry.yaml --out output/refused_entry.csv" },
+      { dataset: "MIGR_ASYAPPCTZM", command: "opensdmx run queries/asylum_applicants.yaml --out output/asylum_applicants.csv" },
+      { dataset: "OECD DF_MIG",     command: "opensdmx run queries/oecd_inflows_morocco.yaml --out output/oecd_inflows_morocco.csv" }
+    ],
+    files: [
+      { file: "output/refused_entry.csv",        desc: "200 righe · terra+mare · MA+TOTAL · ES/IT/EL · annuale 2008–2025" },
+      { file: "output/asylum_applicants.csv",    desc: "1328 righe · MA+TOTAL · ES/IT/EL · mensile 2008–2026" },
+      { file: "output/oecd_inflows_morocco.csv", desc: "55 righe · MAR · ES/IT/EL · annuale 1997–2023" },
+      { file: "queries/refused_entry.yaml",      desc: "Query YAML riproducibile — MIGR_EIRFS" },
+      { file: "queries/asylum_applicants.yaml",  desc: "Query YAML riproducibile — MIGR_ASYAPPCTZM" },
+      { file: "queries/oecd_inflows_morocco.yaml", desc: "Query YAML riproducibile — OECD DF_MIG" },
+      { file: "notes.md",                        desc: "Log cronologico delle operazioni" }
+    ]
+  },
+
+  providers: "Eurostat",
+  github:    "https://github.com/datapitch-it/automatic-reports"
+});
+
+// ── CHART A: RESPINGIMENTI TERRA CEUTA/MELILLA ────────────────────────────────
+new Chart(document.getElementById('chart-terra'), {
+  type: 'line',
+  data: {
+    labels: YEARS_RE,
+    datasets: [{
+      label: 'MAROCCO → SPAGNA (FRONTIERA TERRA)',
+      data: LAND_MA_ES,
+      borderColor: '#b02020',
+      backgroundColor: 'transparent',
+      pointRadius: 4,
+      pointHoverRadius: 6,
+      borderWidth: 2,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString('it-IT')} PERSONE` } }
+    },
+    scales: {
+      x: { title: { display: true, text: 'ANNO' } },
+      y: { min: 0, title: { display: true, text: 'PERSONE' }, grid: { color: '#eee' } }
+    }
+  }
+});
+
+// ── CHART B: RESPINGIMENTI MARE ES vs IT vs EL ────────────────────────────────
+new Chart(document.getElementById('chart-mare'), {
+  type: 'line',
+  data: {
+    labels: YEARS_RE,
+    datasets: [
+      { label: 'SPAGNA', data: SEA_TOTAL_ES, borderColor: '#b02020', backgroundColor: 'transparent', pointRadius: 3, borderWidth: 2 },
+      { label: 'ITALIA', data: SEA_TOTAL_IT, borderColor: '#1a6fa8', backgroundColor: 'transparent', pointRadius: 3, borderWidth: 2 },
+      { label: 'GRECIA', data: SEA_TOTAL_EL, borderColor: '#27ae60', backgroundColor: 'transparent', pointRadius: 3, borderWidth: 2 }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString('it-IT')} PERSONE` } }
+    },
+    scales: {
+      x: { title: { display: true, text: 'ANNO' } },
+      y: { min: 0, title: { display: true, text: 'PERSONE' }, grid: { color: '#eee' } }
+    }
+  }
+});
+
+// ── CHART C: RICHIESTE ASILO MAROCCO, MENSILE ─────────────────────────────────
+new Chart(document.getElementById('chart-asilo-marocco'), {
+  type: 'line',
+  data: {
+    labels: MONTHS,
+    datasets: [
+      { label: 'MAROCCO → SPAGNA', data: MA_ES, borderColor: '#b02020', backgroundColor: 'transparent', pointRadius: 0, borderWidth: 2, spanGaps: true },
+      { label: 'MAROCCO → ITALIA', data: MA_IT, borderColor: '#1a6fa8', backgroundColor: 'transparent', pointRadius: 0, borderWidth: 2, spanGaps: true },
+      { label: 'MAROCCO → GRECIA', data: MA_EL, borderColor: '#27ae60', backgroundColor: 'transparent', pointRadius: 0, borderWidth: 2, spanGaps: true }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: {
+        callbacks: {
+          title: ctx => ctx[0].label,
+          label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y == null ? 'N/D' : ctx.parsed.y.toLocaleString('it-IT')} PERSONE`
+        }
+      }
+    },
+    scales: {
+      x: { title: { display: true, text: 'MESE' }, ticks: { maxTicksLimit: 12 } },
+      y: { min: 0, title: { display: true, text: 'PERSONE' }, grid: { color: '#eee' } }
+    }
+  }
+});
+
+// ── CHART D: CONFRONTO ROTTE, TOTALE ANNUALE ──────────────────────────────────
+new Chart(document.getElementById('chart-confronto'), {
+  type: 'line',
+  data: {
+    labels: YEARS_ASY,
+    datasets: [
+      { label: 'SPAGNA', data: ASY_TOTAL_ES, borderColor: '#b02020', backgroundColor: 'transparent', pointRadius: 4, borderWidth: 2 },
+      { label: 'ITALIA', data: ASY_TOTAL_IT, borderColor: '#1a6fa8', backgroundColor: 'transparent', pointRadius: 4, borderWidth: 2 },
+      { label: 'GRECIA', data: ASY_TOTAL_EL, borderColor: '#27ae60', backgroundColor: 'transparent', pointRadius: 4, borderWidth: 2 }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString('it-IT')} PERSONE` } }
+    },
+    scales: {
+      x: { title: { display: true, text: 'ANNO' } },
+      y: { min: 0, title: { display: true, text: 'PERSONE' }, grid: { color: '#eee' } }
+    }
+  }
+});
+
+// ── CHART E: OECD FLUSSI REGOLARI MAROCCO → ES/IT ─────────────────────────────
+new Chart(document.getElementById('chart-oecd'), {
+  type: 'line',
+  data: {
+    labels: OECD_YEARS,
+    datasets: [
+      { label: 'SPAGNA', data: OECD_ESP, borderColor: '#b02020', backgroundColor: 'transparent', pointRadius: 3, borderWidth: 2, spanGaps: true },
+      { label: 'ITALIA', data: OECD_ITA, borderColor: '#1a6fa8', backgroundColor: 'transparent', pointRadius: 3, borderWidth: 2, spanGaps: true }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y == null ? 'N/D' : ctx.parsed.y.toLocaleString('it-IT')} PERSONE` } }
+    },
+    scales: {
+      x: { title: { display: true, text: 'ANNO' } },
+      y: { min: 0, title: { display: true, text: 'PERSONE' }, grid: { color: '#eee' } }
+    }
+  }
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+provider: eurostat
+provider_url: https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1
+agency_id: ESTAT
+dataset: MIGR_ASYAPPCTZM
+description: Asylum applicants by type, citizenship, age and sex - monthly data
+filters:
+  unit:
+    value: PER
+    description: Person
+  citizen:
+    value: MA+TOTAL
+    description: ''
+  sex:
+    value: T
+    description: ''
+  applicant:
+    value: TOTAL
+    description: Total
+  age:
+    value: TOTAL
+    description: ''
+  geo:
+    value: ES+IT+EL
+    description: ''
+start_period: '2008'
+end_period: '2026'
+last_n: null
+first_n: null
