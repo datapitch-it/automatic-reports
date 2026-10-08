@@ -1,0 +1,1102 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Milano dall'alto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sidebar sinistra con l'indice degli esperimenti, colonna di lettura a destra; su telefono la sidebar diventa una barra in alto */
+:root {
+  --bg: #f1f3f2;
+  --surface: #ffffff;
+  --sunk: #e6eae8;
+  --fg: #17201c;
+  --muted: #56625d;
+  --line: #d3dad6;
+  --accent: #3b2f8f;
+  --film: #17201c;
+  /* serie dei grafici (palette validata: scripts/validate_palette.js della skill dataviz) */
+  --s1: #4a3aa7; --s2: #eda100; --s3: #008300;
+  --t1: #2a78d6; --t2: #eb6834; --t3: #1baf7a; --t4: #eda100; --t5: #e87ba4; --t6: #9a9e9b;
+  /* epoche: grigio di contesto + rampe sequenziali a luminosità monotona */
+  --ep0: #e4e1da;
+  --b1: #f2c46b; --b2: #e8773c; --b3: #b8325a; --b4: #6e2479; --b5: #2e2063;
+  --c1: #f2c46b; --c2: #ee8f3f; --c3: #d8503a; --c4: #a92a5c; --c5: #6e2479; --c6: #2e2063;
+  --ex: #3f8f4a;
+  --agri: #a0794a;
+  /* scala tipografica: nessun testo sotto i 16 px (anche grigio o in maiuscolo) */
+  --fs-caption: 16px;   /* etichette, didascalie, assi, intestazioni di tabella */
+  --fs-small: 17px;     /* testo secondario, tabelle, controlli */
+  --fs-body: 18px;      /* corpo */
+  --fs-lede: 22px;      /* sottotitolo di pagina */
+  --fs-h3: 20px;
+  --fs-h2: 30px;
+  --fs-h1: clamp(38px, 4.6vw, 58px);
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --body: "Source Sans 3", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111513; --surface: #1a1f1d; --sunk: #232a27; --fg: #e7ece9; --muted: #9aa7a1; --line: #2e3733; --accent: #a99cf0; --film: #0b0e0d;
+    --s1: #9085e9; --s2: #c98500; --s3: #008300;
+    --t1: #3987e5; --t2: #d95926; --t3: #199e70; --t4: #c98500; --t5: #d55181; --t6: #6f7571;
+    --ep0: #3a3f3c;
+    --b1: #6a3d8f; --b2: #b5457a; --b3: #e2644f; --b4: #f2a145; --b5: #fbe07a;
+    --c1: #5b3a86; --c2: #9a3f86; --c3: #d14f62; --c4: #ec7a42; --c5: #f4ad48; --c6: #fbe07a;
+    --ex: #6fbf6a; --agri: #b8905f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111513; --surface: #1a1f1d; --sunk: #232a27; --fg: #e7ece9; --muted: #9aa7a1; --line: #2e3733; --accent: #a99cf0; --film: #0b0e0d;
+  --s1: #9085e9; --s2: #c98500; --s3: #008300;
+  --t1: #3987e5; --t2: #d95926; --t3: #199e70; --t4: #c98500; --t5: #d55181; --t6: #6f7571;
+  --ep0: #3a3f3c;
+  --b1: #6a3d8f; --b2: #b5457a; --b3: #e2644f; --b4: #f2a145; --b5: #fbe07a;
+  --c1: #5b3a86; --c2: #9a3f86; --c3: #d14f62; --c4: #ec7a42; --c5: #f4ad48; --c6: #fbe07a;
+  --ex: #6fbf6a; --agri: #b8905f;
+  color-scheme: dark;
+}
+html, body { background: var(--bg); margin: 0; }
+[hidden] { display: none !important; }
+*, *::before, *::after { box-sizing: border-box; }
+body { color: var(--fg); font-family: var(--body); font-size: var(--fs-body); line-height: 1.55; }
+a { color: var(--accent); }
+code, .mono { font-family: var(--mono); font-size: max(.92em, var(--fs-caption)); overflow-wrap: anywhere; }
+
+.app { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: env(safe-area-inset-top, 0px); align-self: start; height: 100vh; overflow-y: auto; border-right: 1px solid var(--line); background: var(--surface); padding: 24px 18px; display: flex; flex-direction: column; gap: 22px; }
+.brand { font: 700 30px/1 var(--display); letter-spacing: .01em; margin: 0; }
+.brand small { display: block; font: 400 var(--fs-caption)/1.45 var(--body); color: var(--muted); margin-top: 6px; letter-spacing: 0; }
+.nav { display: flex; flex-direction: column; gap: 4px; }
+.nav a { display: block; text-decoration: none; color: var(--fg); padding: 9px 10px; border-radius: 4px; border-left: 3px solid transparent; }
+.nav a span { display: block; font: 600 var(--fs-caption)/1.25 var(--body); text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin-bottom: 2px; }
+.nav a b { font-weight: 600; }
+.nav a:hover { background: var(--sunk); }
+.nav a[aria-current="page"] { background: var(--sunk); border-left-color: var(--accent); }
+.nav a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.side .foot { margin-top: auto; font-size: var(--fs-caption); color: var(--muted); }
+
+main { min-width: 0; padding-inline: 28px; padding-block: 24px 64px; }
+.view { max-width: 1600px; margin-inline: auto; display: grid; gap: 24px; }
+.view.method { max-width: 1000px; }
+.eyebrow { font: 600 var(--fs-caption)/1.25 var(--body); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0 0 6px; }
+h1 { font: 700 var(--fs-h1)/1.02 var(--display); margin: 0; text-wrap: balance; letter-spacing: .005em; }
+h2 { font: 700 var(--fs-h2)/1.1 var(--display); margin: 0 0 4px; text-wrap: balance; letter-spacing: .01em; }
+h3 { font: 700 var(--fs-h3)/1.3 var(--body); margin: 18px 0 6px; }
+.lede { font-size: var(--fs-lede); color: var(--muted); max-width: 64ch; margin: 10px 0 0; }
+p { max-width: 68ch; margin: 0 0 10px; }
+.sub { color: var(--muted); font-size: var(--fs-small); margin: 0 0 12px; max-width: 68ch; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 20px; min-width: 0; }
+
+/* stat tile */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; }
+.tile .k { font: 600 var(--fs-caption)/1.25 var(--body); text-transform: uppercase; letter-spacing: .09em; color: var(--muted); }
+.tile .v { font: 700 44px/1 var(--display); margin: 8px 0 4px; font-variant-numeric: tabular-nums; }
+.tile .d { font-size: var(--fs-small); color: var(--muted); }
+.finding { border-left: 3px solid var(--accent); padding: 4px 0 4px 16px; font-size: var(--fs-body); max-width: 72ch; }
+.finding p { max-width: none; }
+
+/* viewer */
+.stage { --sh: clamp(420px, 76vh, 940px); height: var(--sh); position: relative; background: var(--film); overflow: hidden; border-radius: 6px; }
+.frame { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(100%, calc(var(--sh) * var(--arn))); max-height: 100%; overflow: hidden; touch-action: none; cursor: grab; user-select: none; }
+.frame.dragging { cursor: grabbing; }
+.plane { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
+.plane img, .plane canvas, .plane svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; -webkit-user-drag: none; }
+.plane img, .plane canvas { pointer-events: none; }
+.pin { position: absolute; transform: translate(-50%, -50%) scale(calc(1 / var(--z, 1))); pointer-events: none; }
+.pin i { display: block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid #fff; background: #c2410c; box-shadow: 0 0 0 1px rgba(0,0,0,.5); }
+.pin span { position: absolute; left: 12px; top: -4px; white-space: nowrap; font: 600 var(--fs-caption)/1.25 var(--body); color: #fff; text-shadow: 0 1px 2px #000, 0 0 4px #000; }
+.pin.l span { left: auto; right: 12px; }
+.no-pins .pin { display: none; }
+.swipe-line { position: absolute; top: 0; bottom: 0; width: 2px; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.35); pointer-events: none; }
+.badge { position: absolute; top: 12px; font: 700 22px/1 var(--display); color: #fff; background: rgba(0,0,0,.6); padding: 6px 10px 5px; border-radius: 2px; pointer-events: none; letter-spacing: .03em; }
+.badge.l { left: 12px; } .badge.r { right: 12px; }
+.scale { position: absolute; left: 12px; bottom: 12px; color: #fff; font: 500 var(--fs-caption)/1 var(--mono); pointer-events: none; text-shadow: 0 1px 2px #000; }
+.scale div { height: 6px; border: 2px solid #fff; border-top: 0; margin-top: 4px; }
+.zoom { position: absolute; right: 12px; bottom: 12px; display: grid; gap: 4px; }
+.zoom button { width: 34px; height: 34px; border: 0; border-radius: 3px; background: rgba(0,0,0,.62); color: #fff; font: 600 18px/1 var(--body); cursor: pointer; }
+.nil path { fill: transparent; stroke: rgba(255,255,255,.7); stroke-width: calc(1.2px / var(--z, 1)); vector-effect: non-scaling-stroke; pointer-events: all; }
+.nil path.mun { stroke: #fff; stroke-width: calc(2.4px / var(--z, 1)); pointer-events: none; fill: none; }
+.nil path.hover { stroke: #fff; stroke-width: calc(3px / var(--z, 1)); fill: rgba(255,255,255,.12); }
+.no-nil .nil { display: none; }
+
+/* controlli */
+.ctl { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; }
+.year { font: 700 32px/1 var(--display); font-variant-numeric: tabular-nums; }
+.year.active { color: var(--accent); }
+input[type=range] { width: 100%; accent-color: var(--accent); height: 28px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+button { font-family: var(--body); }
+.seg button, .btn { font: 600 var(--fs-small)/1 var(--body); padding: 9px 14px; border: 0; background: var(--surface); color: var(--fg); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.btn { border: 1px solid var(--line); border-radius: 4px; }
+.btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+label.chk { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-small); cursor: pointer; }
+label.chk input { accent-color: var(--accent); width: 16px; height: 16px; }
+.hint { color: var(--muted); font-size: var(--fs-caption); }
+.hint code, .foot code { font-size: 1em; }
+.ticks { position: relative; height: 18px; margin-top: -4px; }
+.ticks span { position: absolute; transform: translateX(-50%); font: 500 var(--fs-caption)/1 var(--mono); color: var(--muted); white-space: nowrap; }
+.yearbig { font: 700 40px/1 var(--display); font-variant-numeric: tabular-nums; min-width: 4.6em; }
+
+/* legenda epoche */
+.legend { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px 6px 8px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--fg); cursor: pointer; font: 400 var(--fs-small)/1.25 var(--body); }
+.chip i { width: 14px; height: 14px; border-radius: 2px; flex: none; }
+.chip b { font-weight: 600; }
+.chip small { color: var(--muted); font-variant-numeric: tabular-nums; font-size: var(--fs-caption); }
+.chip[aria-pressed="false"] { opacity: .45; }
+.chip[aria-pressed="false"] i { background: transparent !important; box-shadow: inset 0 0 0 1.5px var(--muted); }
+.legend-key { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: var(--fs-caption); color: var(--muted); }
+.legend-key span { display: inline-flex; align-items: center; gap: 6px; }
+.legend-key i { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+.legend-key i.ln { height: 2px; width: 16px; border-radius: 1px; }
+
+/* grafici */
+.chart { position: relative; width: 100%; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart text { font-family: var(--body); }
+.tip { position: fixed; z-index: 10; pointer-events: none; background: var(--surface); color: var(--fg); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; font-size: var(--fs-caption); line-height: 1.45; box-shadow: 0 4px 16px rgba(0,0,0,.2); max-width: 280px; font-variant-numeric: tabular-nums; }
+.tip b { display: block; }
+.tip .r { display: flex; gap: 10px; justify-content: space-between; }
+.tip .r i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; }
+
+.bars { display: grid; gap: 6px; }
+.bar-row { display: grid; grid-template-columns: minmax(0, var(--name-w, 11em)) minmax(0, 1fr) 7.5em; gap: 10px; align-items: center; font-size: var(--fs-small); }
+.bar-row .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-row .val { font-variant-numeric: tabular-nums; text-align: right; color: var(--muted); font-size: var(--fs-caption); }
+.track { height: 16px; display: flex; gap: 2px; }
+.track > div { height: 100%; border-radius: 0 3px 3px 0; min-width: 1px; }
+.track.stack > div { border-radius: 0; }
+.track.stack > div:last-child { border-radius: 0 3px 3px 0; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }
+
+/* tabelle */
+.tbl-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: var(--fs-small); font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+td.n, th.n { text-align: right; white-space: nowrap; }
+td.nw { white-space: nowrap; }
+td .mini { display: inline-block; height: 8px; background: var(--s1); border-radius: 0 2px 2px 0; vertical-align: middle; margin-right: 8px; }
+.ok { color: var(--s3); font-weight: 600; } .ko { color: #c2410c; font-weight: 600; } .warn { color: #a66a00; font-weight: 600; }
+:root[data-theme="dark"] .ko { color: #f08a5d; } :root[data-theme="dark"] .warn { color: #e0a23a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ko { color: #f08a5d; } :root:not([data-theme="light"]) .warn { color: #e0a23a; } }
+
+/* metodologia */
+.toc { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: var(--fs-small); }
+.method section { display: grid; gap: 6px; }
+.method ol, .method ul { margin: 0 0 10px; padding-left: 22px; max-width: 68ch; }
+.method li { margin-bottom: 6px; }
+pre { background: var(--sunk); border-radius: 4px; padding: 12px 14px; overflow-x: auto; font: var(--fs-caption)/1.5 var(--mono); margin: 0 0 10px; }
+.err { color: #c2410c; }
+
+/* layout degli esperimenti: intestazione, workspace mappa + pannello, analisi */
+.intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.intro .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.intro .tile .v { font-size: 36px; }
+.intro .finding { font-size: var(--fs-body); }
+.workspace { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; align-items: start; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); max-height: calc(100vh - 24px); overflow-y: auto; }
+.psec { padding: 14px 16px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; }
+.psec:last-child { border-bottom: 0; }
+.ptitle { font: 700 24px/1.1 var(--display); margin: 0; letter-spacing: .01em; text-wrap: balance; }
+.plabel { font: 600 var(--fs-caption)/1.25 var(--body); text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin: 0; }
+.psec .hint { margin: 0; }
+.seg.full { display: flex; } .seg.full button { flex: 1; }
+.legend.col { flex-direction: column; flex-wrap: nowrap; }
+.legend.col .chip small { margin-left: auto; }
+.panel .yearbig { min-width: 0; }
+.panel .ticks span { font-size: var(--fs-caption); }
+.zinfo b { display: block; font-size: var(--fs-small); margin-bottom: 4px; }
+.zinfo .r { display: flex; justify-content: space-between; gap: 12px; font-size: var(--fs-caption); font-variant-numeric: tabular-nums; padding: 3px 0; border-bottom: 1px dotted var(--line); }
+.zinfo .r span:first-child { color: var(--muted); }
+.analysis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.analysis .wide { grid-column: 1 / -1; }
+.brand .short, .nav .ico { display: none; }
+@media (min-width: 861px) and (max-width: 1399px) {
+  .app { grid-template-columns: 76px minmax(0, 1fr); }
+  .side { padding: 18px 8px; align-items: stretch; }
+  .brand .full, .brand small, .side .foot, .nav a span, .nav a b { display: none; }
+  .brand .short { display: block; font-size: 22px; text-align: center; }
+  .nav a { text-align: center; padding: 10px 4px; }
+  .nav a .ico { display: block; font: 700 24px/1 var(--display); font-style: normal; }
+}
+@media (max-width: 1200px) {
+  .analysis, .intro { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 1100px) {
+  .workspace { grid-template-columns: minmax(0, 1fr); }
+  .panel { position: static; max-height: none; }
+  .stage { --sh: clamp(320px, 70vh, 760px); height: auto; }
+  .frame { position: relative; left: auto; top: auto; transform: none; margin-inline: auto; max-height: none; }
+}
+@media (max-width: 560px) {
+  .intro .tiles { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 860px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .side { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: 16px; gap: 12px; }
+  .nav { flex-direction: row; overflow-x: auto; }
+  .nav a { flex: none; border-left: 0; border-bottom: 3px solid transparent; }
+  .nav a[aria-current="page"] { border-bottom-color: var(--accent); }
+  .side .foot { display: none; }
+  main { padding-inline: 16px; padding-block: 20px 48px; }
+  .bar-row { grid-template-columns: minmax(0, 8em) minmax(0, 1fr) 6.5em; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="app">
+  <aside class="side">
+    <div>
+      <p class="brand"><span class="full">Milano dall'alto</span><span class="short" aria-hidden="true">MdA</span><small>Casi d'uso di openrndt: dati territoriali trovati nel Repertorio Nazionale dei Dati Territoriali</small></p>
+    </div>
+    <nav class="nav" aria-label="Esperimenti">
+      <a href="#milano" title="Esperimento 1 · Comune di Milano, 1954 → 2024"><i class="ico" aria-hidden="true">1</i><span>Esperimento 1</span><b>Comune di Milano, 1954 → 2024</b></a>
+      <a href="#isola" title="Esperimento 2 · Isola e Porta Nuova, 1954 → 2024"><i class="ico" aria-hidden="true">2</i><span>Esperimento 2</span><b>Isola e Porta Nuova, 1954 → 2024</b></a>
+      <a href="#metodo" title="Metodologia · Fonti, calcoli, verifiche"><i class="ico" aria-hidden="true">M</i><span>Metodologia</span><b>Fonti, calcoli, verifiche</b></a>
+    </nav>
+    <div class="foot">Dati: Regione Lombardia (CC BY 4.0) e Comune di Milano, trovati con <code>openrndt</code>.</div>
+  </aside>
+
+  <main>
+    <!-- ============ ESPERIMENTO 1 ============ -->
+    <section class="view" id="v-isola" hidden>
+      <header>
+        <p class="eyebrow">Esperimento 2</p>
+        <h1>Isola e Porta Nuova, 1954 → 2024</h1>
+        <p class="lede">Lo stesso metodo del Comune, applicato a un quartiere: dieci voli aerei e dieci edizioni DUSAF su un riquadro di 1,9 × 2,3 km. L'area di studio sono due NIL, Isola e Porta Garibaldi - Porta Nuova: il secondo è incluso perché la trasformazione più grande sta lì.</p>
+      </header>
+      <div class="intro">
+        <div class="tiles" id="iTiles"></div>
+        <div class="finding" id="iFinding"><p>Caricamento dei dati…</p></div>
+      </div>
+
+      <div class="workspace" id="iMapCard"></div>
+
+      <div class="analysis">
+        <div class="card">
+          <h2>Che cosa c'è sul suolo, edizione per edizione</h2>
+          <p class="sub">Ettari per tipo d'uso DUSAF nell'area di studio. Il punto vuoto del 1980 è l'edizione a 1:50.000, poco precisa.</p>
+          <div class="legend-key" id="iLineKey"></div>
+          <div class="chart" id="iLineChart"></div>
+        </div>
+        <div class="card">
+          <h2>Che cosa è diventato cosa</h2>
+          <p class="sub">I passaggi più grandi fra tipi d'uso, in ettari: superfici che nel primo anno avevano un uso e nel 2024 un altro.</p>
+          <div class="row" style="margin-bottom:12px">
+            <div class="seg" id="iTransFrom" role="group" aria-label="Periodo"><button aria-pressed="true">1999 → 2024</button><button aria-pressed="false">1954 → 2024</button></div>
+            <div class="seg" id="iTransZone" role="group" aria-label="Zona"><button aria-pressed="true">Area di studio</button><button aria-pressed="false">Isola</button><button aria-pressed="false">Porta Nuova</button></div>
+          </div>
+          <div class="bars" id="iTrans" style="--name-w:21em"></div>
+          <p class="hint" id="iTransNote" style="margin:10px 0 0"></p>
+        </div>
+        <div class="card wide">
+          <h2>I due quartieri</h2>
+          <div class="tbl-wrap"><table id="iZoneTbl"></table></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ESPERIMENTO 2 ============ -->
+    <section class="view" id="v-milano">
+      <header>
+        <p class="eyebrow">Esperimento 1</p>
+        <h1>Comune di Milano, 1954 → 2024</h1>
+        <p class="lede">Dove e quando la città è diventata costruita, misurato su dieci edizioni della carta di uso del suolo DUSAF di Regione Lombardia e guardato su dieci voli aerei.</p>
+      </header>
+      <div class="intro">
+        <div class="tiles" id="tiles"></div>
+        <div class="finding" id="finding"><p>Caricamento dei dati…</p></div>
+      </div>
+
+      <div class="workspace" id="mMapCard"></div>
+
+      <div class="analysis">
+        <div class="card">
+          <h2>Il suolo del Comune, edizione per edizione</h2>
+          <p class="sub">Ettari per grande classe DUSAF, dentro i confini comunali. Il punto vuoto del 1980 è l'edizione a 1:50.000: il suo costruito è sovrastimato.</p>
+          <div class="legend-key" id="lineKey"></div>
+          <div class="chart" id="lineChart"></div>
+          <p class="hint" style="margin:8px 0 0" id="lineNote"></p>
+        </div>
+        <div class="card">
+          <h2>1954 → 1999: dove</h2>
+          <p class="sub" id="nil1Sub">I dieci quartieri (NIL) con più nuovo costruito stabile.</p>
+          <div class="bars" id="nil1"></div>
+        </div>
+        <div class="card wide">
+          <h2>Dopo il 1999: cosa</h2>
+          <p class="sub" id="nil2Sub">I dieci quartieri con più nuovo costruito, per tipo di uso nel 2024.</p>
+          <div class="legend-key" id="typeKey" style="margin-bottom:10px"></div>
+          <div class="bars" id="nil2"></div>
+          <p class="hint" id="nil2Note" style="margin:10px 0 0"></p>
+        </div>
+        <div class="card wide">
+          <h2>I nove Municipi</h2>
+          <p class="sub">Quota di superficie costruita nel 1954 e nel 2024, nuovo costruito stabile per periodo e aree costruite tornate verdi.</p>
+          <div class="tbl-wrap"><table id="munTbl"></table></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ METODOLOGIA ============ -->
+    <section class="view method" id="v-metodo" hidden>
+      <header>
+        <p class="eyebrow">Metodologia</p>
+        <h1>Fonti, calcoli, verifiche</h1>
+        <p class="lede">Come sono stati trovati i dati, come sono stati calcolati i numeri, quali controlli li sostengono e come rifare tutto da zero.</p>
+      </header>
+      <nav class="toc" aria-label="Indice">
+        <a href="#metodo" data-go="m-domanda">Domanda</a><a href="#metodo" data-go="m-fonti">Fonti</a><a href="#metodo" data-go="m-passi">Passaggi</a>
+        <a href="#metodo" data-go="m-1980">Il problema del 1980</a><a href="#metodo" data-go="m-verifiche">Verifiche</a>
+        <a href="#metodo" data-go="m-frase">La frase iniziale</a><a href="#metodo" data-go="m-resa">Dati e resa della mappa</a><a href="#metodo" data-go="m-limiti">Limiti</a><a href="#metodo" data-go="m-riprodurre">Riprodurre</a><a href="#metodo" data-go="m-isola">Isola e Porta Nuova</a>
+      </nav>
+
+      <section id="m-domanda" class="card">
+        <h2>Domanda</h2>
+        <p>Dove si è costruito di più nel Comune di Milano dal primo volo aereo disponibile a oggi, e quando? Le foto aeree mostrano le trasformazioni ma non le misurano; per misurarle serve una carta che classifichi ogni pezzo di suolo, rifatta più volte con criteri confrontabili. In Lombardia è il DUSAF (Destinazione d'Uso dei Suoli Agricoli e Forestali) di Regione Lombardia ed ERSAF.</p>
+        <p>Una serie ogni cinque anni non esiste: le edizioni sono del 1954, 1980, 1999, 2007, 2009, 2012, 2015, 2018, 2021 e 2024. I periodi seguono le edizioni, e dove serve confrontarli si usa il ritmo in ettari l'anno.</p>
+      </section>
+
+      <section id="m-fonti" class="card">
+        <h2>Fonti</h2>
+        <p>Tutte le schede sono state trovate nel RNDT con <code>openrndt</code> e lette per intero (titolo, abstract, lineage, scala, vincoli d'uso). I dati sono stati scaricati dai servizi indicati nelle schede.</p>
+        <h3>Uso del suolo DUSAF (Regione Lombardia)</h3>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Edizione</th><th>Scheda RNDT</th><th class="n">Scala</th><th>Come è stata prodotta (dalla scheda)</th></tr></thead>
+          <tbody>
+            <tr><td>1954</td><td><code>r_lombar:14934f49-2ada-44b6-a069-0a72e76865b3</code></td><td class="n">1:10.000</td><td>Fotointerpretazione del volo GAI 1954, con legenda coerente con DUSAF 1.1–3.0</td></tr>
+            <tr><td><b>1980</b></td><td><code>r_lombar:8929a37b-ed6d-4c5a-af26-86b83aea52fc</code></td><td class="n"><b>1:50.000</b></td><td>Digitalizzazione di carte tematiche 1:50.000 dal volo TEM1 (1980–82); <b>poligoni non più piccoli di 4 ha</b></td></tr>
+            <tr><td>1999</td><td><code>r_lombar:827294eb-110b-4fb7-8cbc-6776dc8c2953</code></td><td class="n">1:10.000</td><td>DUSAF 1.1, da ortofoto IT2000</td></tr>
+            <tr><td>2007</td><td><code>r_lombar:884bcd97-0bc8-4c1a-8e36-ac52ec6bb9a3</code></td><td class="n">1:10.000</td><td>DUSAF 2.1</td></tr>
+            <tr><td>2009</td><td><code>r_lombar:8885f244-7dba-43c0-9cc8-708a5b5059a6</code></td><td class="n">1:10.000</td><td>DUSAF 3.0</td></tr>
+            <tr><td>2012</td><td><code>r_lombar:3545c5b7-c808-47d5-be66-6a6d3b656009</code></td><td class="n">1:10.000</td><td>DUSAF 4.0</td></tr>
+            <tr><td>2015</td><td><code>r_lombar:cbc7ef8a-2012-4463-a197-7ffd04760bbb</code></td><td class="n">1:10.000</td><td>DUSAF 5.0</td></tr>
+            <tr><td>2018</td><td><code>r_lombar:3850b793-c13f-45ee-8bf8-31c020fdbe0e</code></td><td class="n">1:10.000</td><td>DUSAF 6.0</td></tr>
+            <tr><td>2021</td><td><code>r_lombar:7cd05e9f-b693-4d7e-a8de-71b40b45f54e</code></td><td class="n">1:10.000</td><td>DUSAF 7.0</td></tr>
+            <tr><td>2024</td><td><code>r_lombar:b4bf7c32-ebbf-4ea6-a8a4-50c5e77c2e82</code></td><td class="n">1:10.000</td><td>DUSAF 8.0, da ortofoto AGEA 2024 a 20 cm; superficie minima 1.600 m²</td></tr>
+          </tbody>
+        </table></div>
+        <p class="hint">Licenza: CC BY 4.0 per tutte le edizioni, dichiarata nel campo «altri vincoli» della scheda (<code>apiso_OtherConstraints_s</code>). <code>openrndt</code> riporta per queste schede <code>license: null</code>, perché legge solo <code>isOpendata</code>.</p>
+        <h3>Ortofoto (Regione Lombardia)</h3>
+        <p>Voli 1954, 1975, 1998, 2003, 2007, 2012, 2015, 2018–19, 2021, 2024, letti dai servizi ArcGIS ImageServer (MapServer per il 1954) indicati nelle schede RNDT. Gli identificativi sono in <code>scripts/03_ortofoto_citta.py</code>. La licenza CC BY 4.0 è stata controllata sulla scheda del 1975.</p>
+        <h3>Confini</h3>
+        <p>Municipi (<code>ds379</code>) e Nuclei d'Identità Locale vigenti, PGT 2030 (<code>ds964</code>), dal portale open data del Comune di Milano. Non sono nel RNDT: sono stati cercati sul portale CKAN del Comune.</p>
+      </section>
+
+      <section id="m-passi" class="card">
+        <h2>Passaggi</h2>
+        <ol>
+          <li><b>Trovare i dati.</b> <code>openrndt search --q '"uso e copertura del suolo"' --org "regione lombardia"</code> elenca le edizioni DUSAF; <code>openrndt get &lt;id&gt;</code> dà per ognuna il servizio MapServer e la scheda completa.</li>
+          <li><b>Scaricare.</b> <code>01_scarica_dusaf.py</code> interroga ogni MapServer sul riquadro del Comune: prima gli identificativi dei poligoni, poi le geometrie in blocchi da 300, in UTM 32N (EPSG:32632). I nomi dei campi cambiano fra le edizioni (<code>CODICE</code>, <code>COD5</code>, <code>LIV_1…5</code>, <code>LIV1…5</code>, codice in testa a <code>DESCR</code>): lo script li riconduce tutti al codice DUSAF.</li>
+          <li><b>Rasterizzare.</b> <code>02_analisi.py</code> disegna ogni edizione su una griglia di <span class="gRes"></span> (<span class="gCells"></span> celle) con il codice di secondo livello. I poligoni si disegnano dal più grande al più piccolo e senza buchi: il DUSAF copre il territorio senza sovrapposizioni, quindi i buchi sono riempiti dai poligoni più piccoli disegnati dopo.</li>
+          <li><b>Definire il costruito.</b> Classi <b>11</b> (zone urbanizzate: tessuto residenziale, cascine) e <b>12</b> (insediamenti produttivi, commerciali, servizi, impianti tecnologici, reti stradali e ferroviarie). Restano fuori 13 (cave, discariche, cantieri: suolo in trasformazione, non ancora costruito) e 14 (verde urbano, aree sportive).</li>
+          <li><b>Assegnare l'epoca.</b> Per ogni cella costruita nel 2024: la prima edizione da cui risulta costruita in tutte le successive, con al massimo un'eccezione. La tolleranza assorbe le oscillazioni di classificazione fra edizioni (una cella che passa da 12 a 14 e torna 12). Esempio: costruita nel 1999, 2007, non nel 2009, poi sempre → epoca 1954–1999.</li>
+          <li><b>Aree tornate verdi.</b> Celle costruite in almeno due edizioni confrontabili e nel 2024 verde urbano, agricolo o bosco.</li>
+          <li><b>Ripartire per zona.</b> Municipi e NIL vengono rasterizzati sulla stessa griglia; ogni cella conta 100 m².</li>
+          <li><b>Tipo del nuovo costruito.</b> Per le celle costruite dopo il 1999 si legge il codice DUSAF 2024 completo: residenziale (111x, 112x), produttivo e commerciale (1211x), servizi e impianti (1212x: ospedali, impianti tecnologici, cimiteri, aree militari…), strade (1221), ferrovie (1222).</li>
+          <li><b>Verificare.</b> <code>04_verifiche.py</code> rifà i calcoli in modo indipendente e prova regole alternative (sezione Verifiche).</li>
+          <li><b>Foto aeree.</b> <code>03_ortofoto_citta.py</code> chiede a ogni servizio un'immagine dello stesso riquadro a 7,5 m per pixel (in due metà, per i limiti di dimensione dei servizi) e rende trasparente l'esterno del Comune.</li>
+        </ol>
+      </section>
+
+      <section id="m-1980" class="card">
+        <h2>Il problema del 1980</h2>
+        <p>L'edizione 1980 è disegnata a 1:50.000 con poligoni di almeno 4 ha, le altre a 1:10.000. Dentro il Comune la differenza si vede nella grana:</p>
+        <div class="tbl-wrap"><table id="t1980"></table></div>
+        <p style="margin-top:10px">Un poligono di 16 ha classificato «tessuto residenziale» ingloba i campi, i cortili e i giardini più piccoli di 4 ha che contiene. Il costruito 1980 risulta quindi sovrastimato: è più alto di quello del 1999, cosa che non succede nella realtà. Per questo i numeri principali confrontano solo le edizioni a 1:10.000 (1954 → 1999 → … → 2024). Nella mappa il 1980 si può attivare come tappa, sapendo che la quota 1954–1980 è un massimo e quella 1980–1999 un minimo.</p>
+      </section>
+
+      <section id="m-verifiche" class="card">
+        <h2>Verifiche</h2>
+        <h3>1. Superficie del Comune</h3>
+        <p id="vComune"></p>
+        <h3>2. Ricalcolo sui poligoni originali</h3>
+        <p>Il costruito di ogni edizione ricalcolato con le geometrie vettoriali (intersezione con il confine comunale, senza raster). I numeri principali usano il vettore, le ripartizioni spaziali il raster.</p>
+        <div class="tbl-wrap"><table id="tVec"></table></div>
+        <h3>3. Saldo fra edizioni confrontabili</h3>
+        <p>Celle diventate costruite (guadagni), non più costruite (perdite) e saldo, sulla griglia di <span class="gRes"></span>. Dopo il 1999 guadagni e perdite sono dello stesso ordine: la città si trasforma, ma il totale cambia poco.</p>
+        <div class="tbl-wrap"><table id="tFlows"></table></div>
+        <h3>4. Sensibilità alla regola dell'epoca</h3>
+        <p>Ettari di costruito 2024 assegnati a ciascuna edizione con tre regole: quella usata (stabile, tolleranza di un'eccezione), «prima comparsa» (la prima edizione in cui la cella è costruita) e stabile senza il 1980.</p>
+        <div class="tbl-wrap"><table id="tSens"></table></div>
+        <h3>5. Classifiche dei quartieri</h3>
+        <div class="grid2">
+          <div><p><b>1954 → 1999</b> (senza il 1980)</p><div class="tbl-wrap"><table id="tNil99"></table></div></div>
+          <div><p><b>1954 → 1980</b> (con il 1980, per controllo)</p><div class="tbl-wrap"><table id="tNil80"></table></div></div>
+        </div>
+        <h3>6. Che cosa c'è nel nuovo costruito dopo il 1999</h3>
+        <p>Per i cinque quartieri in cima, il codice DUSAF 2024 delle celle nuove e la classe che avevano nel 1999. Serve a distinguere edificazione vera da cambi di classificazione.</p>
+        <div class="tbl-wrap"><table id="tDetail"></table></div>
+      </section>
+
+      <section id="m-frase" class="card">
+        <h2>La frase iniziale, verificata</h2>
+        <p>La prima sintesi era: «tra il 1954 e il 1980 sono stati costruiti 2.313 ha (circa 89 ha/anno), concentrati a Gallaratese, Forlanini, Niguarda e Quarto Oggiaro, con un calo netto del ritmo dopo il 1980 (zone più attive: Cascina Merlata, Parco delle Abbazie, Cimiano, Bosco in Città); il Municipio 1 era già edificato per l'88% nel 1954». Controllata parte per parte:</p>
+        <div class="tbl-wrap"><table id="tFrase"></table></div>
+        <p style="margin-top:10px">La versione corretta è quella in testa all'<a href="#milano">Esperimento 1</a>.</p>
+      </section>
+
+      <section id="m-resa" class="card">
+        <h2>Dai poligoni alla mappa: estrarre e rendere i dati</h2>
+        <p>Lo stesso dato si può portare sulla pagina in modi diversi, e la scelta cambia sia la precisione dei numeri sia quello che si vede zoomando. Qui sotto le strade possibili, quella seguita e come cambiarla.</p>
+
+        <h3>Che cosa arriva dal servizio</h3>
+        <p>I MapServer DUSAF indicati nelle schede RNDT restituiscono <b>poligoni vettoriali</b>: anelli di coordinate in UTM 32N, con il codice di uso del suolo. È la forma più precisa possibile, ma una mappa delle epoche non è un singolo strato: per ogni punto bisogna incrociare dieci edizioni e trovare quella da cui il punto resta costruito.</p>
+
+        <h3>Tre strade</h3>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Strada</th><th>Come funziona</th><th>Pro</th><th>Contro</th></tr></thead>
+          <tbody>
+            <tr><td><b>Griglia</b> (usata qui)</td><td>Ogni edizione viene disegnata su una griglia di celle quadrate; l'incrocio fra edizioni diventa un confronto cella per cella. Il risultato è un'immagine indice (un valore per cella) che la pagina colora nel browser.</td><td>Calcolo semplice e veloce, regole flessibili (la tolleranza di un'eccezione è una riga di codice), legenda e tema chiaro/scuro gestiti dal browser.</td><td>La precisione dipende dalla dimensione della cella: celle grandi danno bordi a scalini e perdono le strade sottili.</td></tr>
+            <tr><td><b>Sovrapposizione vettoriale</b></td><td>Intersezioni e differenze fra i poligoni delle dieci edizioni (per esempio con <code>shapely</code>), fino a ottenere un poligono per ogni epoca.</td><td>Bordi esatti a qualunque zoom, nessun errore di discretizzazione.</td><td>Calcolo molto più pesante su migliaia di poligoni per edizione; la regola di stabilità con tolleranza è complicata da scrivere; file più grandi da disegnare nel browser.</td></tr>
+            <tr><td><b>Immagini dal servizio</b></td><td>Chiedere al MapServer un'immagine già disegnata di ogni edizione (<code>export</code> o WMS).</td><td>Nessun calcolo, resa curata dall'ente.</td><td>Solo da vedere: niente epoche, niente numeri. In più i WMS regionali non offrono la proiezione EPSG:3857 delle mappe web.</td></tr>
+          </tbody>
+        </table></div>
+
+        <h3>La dimensione della cella, misurata</h3>
+        <p>La prima versione usava celle da 10 m per il Comune e da 2 m per Isola. Zoomando si vedevano i blocchi delle celle, resi più evidenti dal fatto che la pagina le disegnava con bordi a scalini (<code>image-rendering: pixelated</code>). Il confronto con le griglie attuali:</p>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Griglia</th><th class="n">Celle</th><th class="n">Immagine indice</th><th class="n">Scarto dal vettore</th><th class="n">Una cella a zoom 6×</th></tr></thead>
+          <tbody>
+            <tr><td>Comune, 10 m (prima versione)</td><td class="n">1.890 × 1.695</td><td class="n">143 KB</td><td class="n">da −1,5% a +0,5%</td><td class="n">2,4 px</td></tr>
+            <tr><td><b>Comune, 5 m</b></td><td class="n">3.780 × 3.390</td><td class="n">319 KB</td><td class="n" id="resDiff">—</td><td class="n">1,2 px</td></tr>
+            <tr><td>Isola, 2 m (prima versione)</td><td class="n">935 × 1.165</td><td class="n">—</td><td class="n">—</td><td class="n">3,5 px</td></tr>
+            <tr><td><b>Isola, 1 m</b></td><td class="n">1.870 × 2.330</td><td class="n">38 KB</td><td class="n" id="resDiffI">—</td><td class="n">1,8 px</td></tr>
+          </tbody>
+        </table></div>
+        <p class="hint" style="margin-top:6px">Ultima colonna: lato a schermo di una cella con lo zoom a 6×, misurato su una finestra di 1.440 × 900 px (mappa del Comune larga 763 px, di Isola 549 px). Indicativamente, da circa 2 px in su i blocchi si notano; su schermi ad alta densità i pixel fisici sono il doppio.</p>
+        <p style="margin-top:10px">Perché non scendere ancora? Una griglia di 2,5 m sul Comune avrebbe 7.560 × 6.780 celle, cioè 51 milioni di pixel: oltre il limite di circa 16,7 milioni di pixel che Safari su iPhone accetta per un canvas. A 5 m (12,8 milioni) la mappa funziona anche lì. L'analisi a 5 m (<code>02_analisi.py</code>) richiede 51 secondi e 1,1 GB di memoria sul computer usato per questo lavoro.</p>
+
+        <h3>Come la pagina la disegna</h3>
+        <ul>
+          <li>L'immagine indice è un PNG in scala di grigi: 0 = vuoto, 1…n = periodo, 255 = costruito oggi verde. Il browser la legge e colora ogni cella con i colori del tema in uso, quindi accendere o spegnere un periodo o passare al tema scuro non richiede nuove immagini.</li>
+          <li>Il canvas viene ingrandito con interpolazione, non a blocchi: ai bordi i colori sfumano invece di fare scalini.</li>
+          <li>Confini dei quartieri ed etichette sono vettoriali (SVG) e il loro spessore viene diviso per il fattore di zoom, così restano sottili e leggibili a qualunque ingrandimento.</li>
+        </ul>
+
+        <h3>Come cambiarla</h3>
+<pre># risoluzione del Comune: scripts/griglia.py
+RES = 5          # metri; W e H si ricalcolano da soli
+
+# risoluzione di Isola: scripts/05_isola.py
+RES = 1.0
+
+# poi si rifanno calcoli e verifiche (le foto non si riscaricano)
+uv run $DEPS python scripts/02_analisi.py
+uv run $DEPS python scripts/04_verifiche.py
+uv run $DEPS python scripts/05_isola.py</pre>
+        <p>Per la strada vettoriale il punto di partenza è lo stesso dato scaricato (<code>data/raw/dusaf_&lt;anno&gt;.json</code>): si uniscono i poligoni costruiti di ogni edizione e si calcolano le differenze in ordine di tempo, per esempio «costruito nel 1999 e nel 2024, ma non nel 1954». Senza tolleranza il risultato è vicino alla regola «prima comparsa» della sezione Verifiche, non a quella usata nelle pagine.</p>
+      </section>
+
+      <section id="m-limiti" class="card">
+        <h2>Limiti</h2>
+        <ul>
+          <li><b>Costruito non vuol dire edifici.</b> La classe 12 comprende strade, ferrovie e impianti; il DUSAF misura l'uso del suolo, non la superficie coperta da edifici né i volumi. Una densificazione (case basse sostituite da torri) non cambia la classe e non compare.</li>
+          <li><b>Cambi di classificazione.</b> Parte del «nuovo costruito» è riclassificazione: per esempio a Forze Armate l'ex Piazza d'Armi entra come «aree militari obliterate», ma era già classe 12 nel 1999. La regola di stabilità ne assorbe una parte, non tutta.</li>
+          <li><b>Periodi di lunghezza diversa.</b> 45 anni fra 1954 e 1999, 2–8 anni dopo: si confrontano i ritmi (ha l'anno), non i totali.</li>
+          <li><b>Il 1954 parte da un volo</b> fotointerpretato a posteriori: la legenda è allineata al DUSAF, ma la qualità delle foto in bianco e nero è inferiore.</li>
+          <li><b>Griglia di calcolo.</b> Le edizioni sono convertite in celle di <span class="gRes"></span> (1 m per Isola): le strade più sottili si perdono in parte. Lo scarto dal vettore è nella sezione Verifiche.</li>
+          <li><b>Confini attuali.</b> Municipi e NIL sono quelli di oggi, applicati a tutte le epoche.</li>
+          <li><b>Ortofoto.</b> Ricampionate a 7,5 m per pixel: adatte a vedere la città intera, non i singoli edifici. Il volo 1975 ha zone non coperte.</li>
+        </ul>
+      </section>
+
+      <section id="m-riprodurre" class="card">
+        <h2>Riprodurre</h2>
+        <p>Serve <code>uv</code> e una connessione internet; nessuna installazione di GDAL. Dalla cartella del caso d'uso:</p>
+<pre>cd casiduso/milano-evoluzione
+DEPS="--no-project --with shapely,pyproj,numpy,pillow,httpx"
+
+# confini dal portale open data del Comune
+curl -o data/raw/municipi.geojson "https://dati.comune.milano.it/dataset/36ba21c2-8b48-43ce-bbe1-e236a8a49ff6/resource/99ecd085-0b04-4fb2-a66e-9795694d4fc4/download/ds379_municipi_label.geojson"
+curl -o data/raw/nil.geojson "https://dati.comune.milano.it/dataset/e8e765fc-d882-40b8-95d8-16ff3d39eb7c/resource/9c4e0776-56fc-4f3d-8a90-f4992a3be426/download/ds964_nil_wm.geojson"
+
+uv run $DEPS python scripts/01_scarica_dusaf.py     # ~2 min, data/raw/dusaf_*.json
+uv run $DEPS python scripts/02_analisi.py           # ~30 s, epoche e statistiche
+uv run $DEPS python scripts/03_ortofoto_citta.py    # ~3 min, site/img/citta_*.webp
+uv run $DEPS python scripts/04_verifiche.py         # ~2 min, data/derived/verifiche.json
+uv run $DEPS python scripts/05_isola.py             # ~3 min, Esperimento 2 (isola.json, isola_*.webp)
+
+cd site && python3 -m http.server 8000             # poi http://localhost:8000</pre>
+        <p>Struttura: <code>data/raw/</code> (dati scaricati), <code>data/derived/</code> (statistiche e verifiche), <code>scripts/</code>, <code>site/</code> (questa pagina con immagini e JSON). Il <code>README.md</code> della cartella ripete tutto questo per un agente AI.</p>
+        <p>Tutti i numeri delle pagine sono letti da <code>stats.json</code>, <code>verifiche.json</code> e <code>isola.json</code>: nessuna cifra è scritta a mano nel testo.</p>
+      </section>
+
+      <section id="m-isola" class="card">
+        <h2>Esperimento 2: Isola e Porta Nuova</h2>
+        <p>Stesso metodo del Comune (<code>05_isola.py</code>), con tre differenze.</p>
+        <ul>
+          <li><b>Area di studio.</b> I NIL 11 «Isola» e 9 «Porta Garibaldi - Porta Nuova», più 150 m di margine per il riquadro (UTM 514000–515870 E, 5036080–5038410 N). Il NIL Isola da solo non comprende Porta Nuova, dove avviene la trasformazione più visibile nelle foto.</li>
+          <li><b>Griglia di <span class="iRes"></span></b> invece di <span class="gRes"></span>, e <b>ortofoto a 0,6 m</b> per pixel, chieste a ogni servizio sullo stesso riquadro.</li>
+          <li><b>Cambio d'uso.</b> In un'area già costruita nel 1954 la domanda utile non è quanto si è costruito ma che cosa è diventato cosa. Ogni cella riceve un tipo d'uso dal codice DUSAF completo (residenziale 111x–112x, produttivo 1211x, servizi e impianti 1212x, strade 1221, ferrovie 1222, cantieri 13x, verde urbano 14x, agricolo 2x) e si contano i passaggi fra due anni.</li>
+        </ul>
+        <p><b>Cautela sul 1954 → 2024.</b> Le edizioni recenti separano dentro gli isolati scuole, servizi e cortili che il 1954 classifica come tessuto residenziale: parte dei passaggi «residenziale → servizi e impianti» è maggiore dettaglio, non cambio reale. Il confronto 1999 → 2024, fra edizioni prodotte con lo stesso metodo, è più affidabile.</p>
+        <p><b>Verifica.</b> Costruito nell'area di studio sui poligoni originali e sulla griglia di <span class="iRes"></span>:</p>
+        <div class="tbl-wrap"><table id="tIsolaVec"></table></div>
+        <p style="margin-top:10px">I punti di riferimento vengono da Nominatim (OpenStreetMap), convertiti in UTM e controllati a vista sull'ortofoto 2024. Il volo 1975 ha un'area non coperta a nord-ovest.</p>
+      </section>
+    </section>
+  </main>
+</div>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+(async () => {
+  const $ = id => document.getElementById(id);
+  // formattazione italiana con il punto delle migliaia anche a 4 cifre (Intl it-IT non lo mette sotto 10.000)
+  const fmt = (x, d) => {
+    const [i, f] = Math.abs(x).toFixed(d).split('.');
+    return (x < 0 && +x.toFixed(d) !== 0 ? '−' : '') + i.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + (f ? ',' + f : '');
+  };
+  const nf0 = { format: x => fmt(x, 0) }, nf1 = { format: x => fmt(x, 1) };
+  const pct = (x, d = 0) => fmt(x * 100, d) + '%';
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const shortName = n => n.split(' - ')[0].replace(/^Q\.re /, '');
+  // articolo davanti a una percentuale: "l'88%", "il 27%"
+  const art = n => { const s = String(Math.round(n)); return (s === '1' || s === '11' || s === '18' || s.startsWith('8')) ? "l'" : 'il '; };
+
+  /* ---------- routing ---------- */
+  const views = { milano: 'v-milano', isola: 'v-isola', metodo: 'v-metodo' };
+  const onShow = {};
+  function route() {
+    const key = views[location.hash.slice(1)] ? location.hash.slice(1) : 'milano';
+    for (const [k, id] of Object.entries(views)) $(id).hidden = k !== key;
+    document.querySelectorAll('.nav a').forEach(a => a.getAttribute('href') === '#' + key ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+    onShow[key]?.();
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', route);
+  document.querySelectorAll('[data-go]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault(); $(a.dataset.go).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }));
+
+  /* ---------- viewer con zoom e pan ---------- */
+  class Viewer {
+    constructor(stage, plane, groundM, root = stage) {
+      Object.assign(this, { stage, plane, groundM, s: 1, tx: 0, ty: 0, onrender: null, dragging: false });
+      this.scaleEl = root.querySelector('.scale');
+      const ptrs = new Map(); let pinch = null, moved = 0;
+      stage.addEventListener('wheel', e => {
+        e.preventDefault();
+        const r = stage.getBoundingClientRect();
+        this.zoomAt(Math.exp(-e.deltaY * 0.0015), e.clientX - r.left, e.clientY - r.top);
+      }, { passive: false });
+      stage.addEventListener('dblclick', e => {
+        const r = stage.getBoundingClientRect();
+        this.zoomAt(e.shiftKey ? 0.5 : 2, e.clientX - r.left, e.clientY - r.top);
+      });
+      stage.addEventListener('pointerdown', e => {
+        if (e.target.closest('button')) return;
+        stage.setPointerCapture(e.pointerId);
+        ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); moved = 0;
+        if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); }
+      });
+      stage.addEventListener('pointermove', e => {
+        if (!ptrs.has(e.pointerId)) return;
+        const prev = ptrs.get(e.pointerId);
+        ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        const r = stage.getBoundingClientRect();
+        if (ptrs.size === 2 && pinch) {
+          const [a, b] = [...ptrs.values()]; const d = Math.hypot(a.x - b.x, a.y - b.y);
+          this.zoomAt(d / pinch, (a.x + b.x) / 2 - r.left, (a.y + b.y) / 2 - r.top); pinch = d;
+        } else if (ptrs.size === 1) {
+          moved += Math.abs(e.clientX - prev.x) + Math.abs(e.clientY - prev.y);
+          if (moved > 3) { this.dragging = true; stage.classList.add('dragging'); }
+          this.tx += e.clientX - prev.x; this.ty += e.clientY - prev.y; this.clamp(); this.render();
+        }
+      });
+      const up = e => { ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; if (!ptrs.size) { this.dragging = false; stage.classList.remove('dragging'); } };
+      stage.addEventListener('pointerup', up); stage.addEventListener('pointercancel', up);
+      root.querySelectorAll('.zoom button').forEach(b => b.addEventListener('click', () => {
+        const c = [stage.clientWidth / 2, stage.clientHeight / 2];
+        if (b.dataset.z === 'in') this.zoomAt(1.6, ...c);
+        else if (b.dataset.z === 'out') this.zoomAt(1 / 1.6, ...c);
+        else { this.s = 1; this.tx = this.ty = 0; this.render(); }
+      }));
+      let lastW = 0;
+      new ResizeObserver(() => {
+        const w = stage.clientWidth; if (!w) return;
+        if (lastW) { const k = w / lastW; this.tx *= k; this.ty *= k; }
+        lastW = w; this.clamp(); this.render();
+      }).observe(stage);
+    }
+    clamp() {
+      const w = this.stage.clientWidth, h = this.stage.clientHeight;
+      this.s = Math.min(12, Math.max(1, this.s));
+      this.tx = Math.min(0, Math.max(w - w * this.s, this.tx));
+      this.ty = Math.min(0, Math.max(h - h * this.s, this.ty));
+    }
+    zoomAt(f, cx, cy) {
+      const ns = Math.min(12, Math.max(1, this.s * f));
+      this.tx = cx - (cx - this.tx) * ns / this.s; this.ty = cy - (cy - this.ty) * ns / this.s; this.s = ns;
+      this.clamp(); this.render();
+    }
+    render() {
+      this.plane.style.transform = `translate(${this.tx}px,${this.ty}px) scale(${this.s})`;
+      this.plane.style.setProperty('--z', this.s);  // confini ed etichette restano costanti allo zoom
+      if (this.scaleEl && this.stage.clientWidth) {
+        const pxPerM = this.stage.clientWidth * this.s / this.groundM;
+        const steps = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000];
+        const m = steps.find(v => v * pxPerM >= 70) || 5000;
+        this.scaleEl.querySelector('div').style.width = (m * pxPerM) + 'px';
+        this.scaleEl.querySelector('span').textContent = m >= 1000 ? (m / 1000) + ' km' : m + ' m';
+      }
+      this.onrender?.();
+    }
+  }
+
+  route();
+
+  /* ---------- tooltip condiviso dei grafici ---------- */
+  const tip = $('tip');
+  const showTip = (html, x, y) => {
+    tip.innerHTML = html; tip.hidden = false;
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(innerWidth - w - 8, x + 14) + 'px';
+    tip.style.top = (y + h + 20 > innerHeight ? y - h - 14 : y + 14) + 'px';
+  };
+  const hideTip = () => { tip.hidden = true; };
+  const bindTips = root => root.querySelectorAll('[data-tip]').forEach(el => {
+    el.addEventListener('pointermove', e => {
+      const [a, b, c] = el.dataset.tip.split('|');
+      showTip(`<b>${a}</b><div class="r"><span>${b}</span><span>${c}</span></div>`, e.clientX, e.clientY);
+    });
+    el.addEventListener('pointerleave', hideTip);
+  });
+
+  /* ---------- dati ---------- */
+  let S, V, I;
+  try {
+    [S, V, I] = await Promise.all(['stats.json', 'verifiche.json', 'isola.json'].map(u => fetch(u).then(r => { if (!r.ok) throw new Error(u + ': HTTP ' + r.status); return r.json(); })));
+  } catch (e) {
+    const msg = `<p class="err">Non riesco a leggere i dati (${esc(e.message)}). Se apri la pagina dal disco, servila con <code>python3 -m http.server</code> dalla cartella <code>site/</code>.</p>`;
+    $('finding').innerHTML = msg; $('iFinding').innerHTML = msg;
+    return;
+  }
+
+  /* ---------- componente mappa: epoche DUSAF + foto aeree ---------- */
+  const hex = h => { h = h.replace('#', ''); return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)); };
+  const periodVars = v => v === 'base' ? ['--ep0', '--b1', '--b2', '--b3', '--b4', '--b5'] : ['--ep0', '--c1', '--c2', '--c3', '--c4', '--c5', '--c6'];
+  async function loadIdx(url) {
+    const im = new Image(); im.src = url; await im.decode();
+    const c = document.createElement('canvas'); c.width = im.naturalWidth; c.height = im.naturalHeight;
+    const x = c.getContext('2d'); x.drawImage(im, 0, 0);
+    const d = x.getImageData(0, 0, c.width, c.height).data, out = new Uint8Array(c.width * c.height);
+    for (let i = 0; i < out.length; i++) out[i] = d[i * 4];
+    return out;
+  }
+  const maps = [];
+  function initMap(p, o) {
+    const pins = (o.pins || []).map(q => `<div class="pin${q.side === 'l' ? ' l' : ''}" style="left:${q.left}%;top:${q.top}%"><i></i><span>${esc(q.name)}</span></div>`).join('');
+    const last0 = o.photoYears.length - 1;
+    $(p + 'MapCard').innerHTML = `
+      <div class="stage" id="${p}Stage">
+        <div class="frame" id="${p}Frame" style="aspect-ratio:${o.w}/${o.h};--arn:${(o.w / o.h).toFixed(4)}" aria-label="${esc(o.title)}">
+          <div class="plane" id="${p}Plane">
+            <div id="${p}Photos"></div>
+            <canvas id="${p}Canvas" width="${o.w}" height="${o.h}" aria-hidden="true"></canvas>
+            <svg class="nil" id="${p}Svg" viewBox="0 0 ${o.w} ${o.h}" preserveAspectRatio="none"></svg>
+            ${pins}
+          </div>
+        </div>
+        <div class="scale"><span></span><div></div></div>
+        <div class="zoom"><button data-z="in" aria-label="Ingrandisci">+</button><button data-z="out" aria-label="Riduci">−</button><button data-z="reset" aria-label="Vista intera" style="font-size:13px">⤢</button></div>
+      </div>
+      <aside class="panel" aria-label="Controlli della mappa">
+        <div class="psec"><h2 class="ptitle">${o.title}</h2><p class="hint">${o.sub}</p></div>
+        <div class="psec">
+          <div class="seg full" role="group" aria-label="Cosa mostrare"><button id="${p}Ep" aria-pressed="true">Epoche</button><button id="${p}Ph" aria-pressed="false">Foto aeree</button></div>
+        </div>
+        <div class="psec" id="${p}EpCtl">
+          <p class="plabel">Diventato costruito nel periodo</p>
+          <div class="legend col" id="${p}Legend"></div>
+          <label class="chk"><input type="checkbox" id="${p}80"> Dividi al 1980</label>
+          <p class="hint" style="padding-left:22px;margin-top:-6px">edizione a 1:50.000, poco precisa</p>
+          <label class="chk"><input type="checkbox" id="${p}Bg" checked> Foto 2024 sotto</label>
+          <label class="chk">Opacità <input type="range" id="${p}Op" min="0" max="100" value="${o.opacity ?? 85}" style="flex:1" aria-label="Opacità delle epoche"></label>
+        </div>
+        <div class="psec" id="${p}PhCtl" hidden>
+          <p class="plabel">Volo</p>
+          <div class="yearbig" id="${p}PhYear">${o.photoYears[0]}</div>
+          <div><input type="range" id="${p}PhPos" min="0" max="${last0}" step="0.01" value="0" aria-label="Anno della foto aerea"><div class="ticks" id="${p}PhTicks"></div></div>
+          <button class="btn" id="${p}PhPlay" aria-pressed="false">▶ Anima</button>
+          <p class="hint">${o.photoHint}</p>
+        </div>
+        <div class="psec">
+          <p class="plabel">Livelli</p>
+          <label class="chk"><input type="checkbox" id="${p}Nil" checked> ${o.zonesLabel}</label>
+          ${pins ? `<label class="chk"><input type="checkbox" id="${p}Pins" checked> Riferimenti</label>` : ''}
+        </div>
+        <div class="psec zinfo" aria-live="polite">
+          <p class="plabel">${o.zoneLabel || 'Zona'}</p>
+          <div id="${p}Zone"><p class="hint">Passa sopra un'area della mappa, o toccala, per vederne i numeri.</p></div>
+        </div>
+      </aside>`;
+    const v = new Viewer($(p + 'Frame'), $(p + 'Plane'), o.groundM, $(p + 'Stage'));
+    const canvas = $(p + 'Canvas'), ctx = canvas.getContext('2d'), Y = o.photoYears, last = Y.length - 1;
+    const photos = Y.map(y => {
+      const im = document.createElement('img'); im.alt = `Ortofoto ${y}`; im.decoding = 'async'; im.style.opacity = 0;
+      $(p + 'Photos').appendChild(im); return im;
+    });
+    const need = i => { const im = photos[i]; if (im && !im.src) im.src = o.photoUrl(Y[i]); };
+    $(p + 'Svg').innerHTML = o.zones.map((z, i) => `<path data-i="${i}" d="${z.path}"></path>`).join('') +
+      (o.outlines || []).map(d => `<path class="mun" d="${d}"></path>`).join('');
+
+    const idxCache = {}, enabled = {};
+    let variant = 'base', mode = 'ep', pos = 0;
+    async function paint() {
+      idxCache[variant] ||= await loadIdx(o.epochUrl(variant));
+      const idx = idxCache[variant], cols = periodVars(variant).map(n => hex(css(n))), ex = hex(css('--ex')), en = enabled[variant];
+      const im = ctx.createImageData(o.w, o.h), d = im.data;
+      for (let i = 0; i < idx.length; i++) {
+        const k = idx[i]; if (!k) continue;
+        let c;
+        if (k === 255) { if (!en.ex) continue; c = ex; } else { if (!en.p[k - 1]) continue; c = cols[k - 1]; }
+        const j = i * 4; d[j] = c[0]; d[j + 1] = c[1]; d[j + 2] = c[2]; d[j + 3] = 255;
+      }
+      ctx.putImageData(im, 0, 0);
+    }
+    function legend() {
+      const P = o.variants[variant];
+      enabled[variant] ||= { p: P.periods.map(() => true), ex: true };
+      const en = enabled[variant], vars = periodVars(variant);
+      $(p + 'Legend').innerHTML = P.periods.map((q, k) =>
+        `<button class="chip" data-k="${k}" aria-pressed="${en.p[k]}"><i style="background:var(${vars[k]})"></i><b>${esc(q.label)}</b><small>${o.fmtHa(P.periods_ha[k])} ha</small></button>`).join('') +
+        `<button class="chip" data-k="ex" aria-pressed="${en.ex}"><i style="background:var(--ex)"></i><b>Costruito, oggi verde</b><small>${o.fmtHa(o.exHa)} ha</small></button>`;
+      $(p + 'Legend').querySelectorAll('.chip').forEach(b => b.onclick = () => {
+        if (b.dataset.k === 'ex') en.ex = !en.ex; else en.p[+b.dataset.k] = !en.p[+b.dataset.k];
+        b.setAttribute('aria-pressed', b.dataset.k === 'ex' ? en.ex : en.p[+b.dataset.k]);
+        paint();
+      });
+    }
+    function apply() {
+      if (mode === 'ep') {
+        const bg = $(p + 'Bg').checked;
+        photos.forEach((im, k) => im.style.opacity = (k === last && bg) ? 1 : 0);
+        if (bg) need(last);
+        canvas.style.display = ''; canvas.style.opacity = $(p + 'Op').value / 100;
+      } else {
+        canvas.style.display = 'none';
+        const i = Math.floor(pos), f = pos - i;
+        need(i); need(Math.min(i + 1, last)); need(Math.min(i + 2, last));
+        photos.forEach((im, k) => im.style.opacity = k === i ? 1 : (k === i + 1 ? f : 0));
+        $(p + 'PhYear').textContent = f < 0.04 ? Y[i] : f > 0.96 ? Y[i + 1] : `${Y[i]}→${String(Y[i + 1]).slice(2)}`;
+      }
+    }
+    let raf = null, lastTs = 0;
+    const stop = () => { if (raf) cancelAnimationFrame(raf); raf = null; lastTs = 0; $(p + 'PhPlay').setAttribute('aria-pressed', 'false'); $(p + 'PhPlay').textContent = '▶ Anima'; };
+    const tick = ts => {
+      const dt = lastTs ? (ts - lastTs) / 1000 : 0; lastTs = ts;
+      pos = Math.min(last, pos + dt * 0.55); $(p + 'PhPos').value = pos; apply();
+      if (pos >= last) return stop();
+      raf = requestAnimationFrame(tick);
+    };
+    const setMode = m => {
+      mode = m;
+      $(p + 'Ep').setAttribute('aria-pressed', m === 'ep'); $(p + 'Ph').setAttribute('aria-pressed', m === 'ph');
+      $(p + 'EpCtl').hidden = m !== 'ep'; $(p + 'PhCtl').hidden = m !== 'ph';
+      stop(); apply();
+    };
+    $(p + 'Ep').onclick = () => setMode('ep'); $(p + 'Ph').onclick = () => setMode('ph');
+    $(p + '80').onchange = async e => { variant = e.target.checked ? 'con1980' : 'base'; legend(); await paint(); };
+    $(p + 'Bg').onchange = apply; $(p + 'Op').oninput = apply;
+    $(p + 'Nil').onchange = e => $(p + 'Stage').classList.toggle('no-nil', !e.target.checked);
+    if (pins) $(p + 'Pins').onchange = e => $(p + 'Stage').classList.toggle('no-pins', !e.target.checked);
+    $(p + 'PhTicks').innerHTML = Y.map((y, k) => `<span style="left:${k / last * 100}%">${k % 2 === 0 || k === last ? y : ''}</span>`).join('');
+    $(p + 'PhPos').addEventListener('input', e => { pos = +e.target.value; apply(); });
+    $(p + 'PhPos').addEventListener('pointerdown', stop);
+    $(p + 'PhPlay').onclick = () => {
+      if (raf) return stop();
+      if (pos >= last) pos = 0;
+      $(p + 'PhPlay').setAttribute('aria-pressed', 'true'); $(p + 'PhPlay').textContent = '❚❚ Ferma';
+      raf = requestAnimationFrame(tick);
+    };
+    // riquadro della zona nel pannello (hover con il mouse, tocco su schermi touch)
+    const frame = $(p + 'Frame'), zbox = $(p + 'Zone'); let hover = null;
+    const showZone = q => {
+      if (hover && hover !== q) hover.classList.remove('hover');
+      hover = q;
+      if (q) { q.classList.add('hover'); zbox.innerHTML = o.zoneTip(+q.dataset.i); }
+    };
+    frame.addEventListener('pointermove', e => { if (!v.dragging) { const q = e.target.closest?.('path[data-i]'); if (q) showZone(q); } });
+    frame.addEventListener('click', e => { const q = e.target.closest?.('path[data-i]'); if (q) showZone(q); });
+    frame.addEventListener('pointerleave', () => hover?.classList.remove('hover'));
+    legend(); apply(); paint();
+    const m = { v, paint }; maps.push(m); return m;
+  }
+
+  /* ---------- componente grafico a linee ---------- */
+  const charts = [];
+  function lineChart(el, keyEl, rows, series, o) {
+    keyEl.innerHTML = series.map(([, v, l]) => `<span><i class="ln" style="background:var(${v})"></i>${l}</span>`).join('') +
+      `<span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4" fill="var(--surface)" stroke="var(--muted)" stroke-width="2"/></svg>1980, poco preciso</span>`;
+    const draw = () => {
+      const W = el.clientWidth || 600, H = Math.max(340, series.length * 48 + 110), m = { l: 70, r: 200, t: 14, b: 34 };
+      const x0 = 1950, x1 = 2026, ymax = o.ymax;
+      const X = y => m.l + (y - x0) / (x1 - x0) * (W - m.l - m.r);
+      const Yv = v => m.t + (1 - v / ymax) * (H - m.t - m.b);
+      let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.label)}">`;
+      for (let v = 0; v <= ymax; v += o.step) {
+        s += `<line x1="${m.l}" x2="${W - m.r}" y1="${Yv(v)}" y2="${Yv(v)}" stroke="var(--line)" stroke-width="1"/>`;
+        s += `<text x="${m.l - 8}" y="${Yv(v) + 4}" text-anchor="end" font-size="16" fill="var(--muted)">${nf0.format(v)}${v + o.step > ymax ? ' ha' : ''}</text>`;
+      }
+      // passo delle etichette degli anni: almeno ~56 px fra una e l'altra
+      const ystep = (X(1970) - X(1960)) >= 56 ? 10 : 20;
+      for (let y = 1960; y <= 2020; y += ystep) s += `<text x="${X(y)}" y="${H - 4}" text-anchor="middle" font-size="16" fill="var(--muted)">${y}</text>`;
+      const solid = rows.filter(r => r.year !== 1980), dash = rows.filter(r => r.year <= 1999), ends = [];
+      for (const [k, v, l] of series) {
+        s += `<path d="${dash.map((r, i) => (i ? 'L' : 'M') + X(r.year) + ',' + Yv(r[k] || 0)).join('')}" fill="none" stroke="var(${v})" stroke-width="2" stroke-dasharray="3 4" opacity=".55"/>`;
+        s += `<path d="${solid.map((r, i) => (i ? 'L' : 'M') + X(r.year) + ',' + Yv(r[k] || 0)).join('')}" fill="none" stroke="var(${v})" stroke-width="2" stroke-linejoin="round"/>`;
+        for (const r of rows) {
+          const hollow = r.year === 1980;
+          s += `<circle cx="${X(r.year)}" cy="${Yv(r[k] || 0)}" r="4" fill="${hollow ? 'var(--surface)' : `var(${v})`}" stroke="${hollow ? `var(${v})` : 'var(--surface)'}" stroke-width="2"/>`;
+        }
+        ends.push({ y: Yv(rows.at(-1)[k] || 0), l, val: rows.at(-1)[k] || 0 });
+      }
+      ends.sort((a, b) => a.y - b.y);
+      for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 42) ends[i].y = ends[i - 1].y + 42;
+      const over = ends.length ? ends.at(-1).y - (H - 6) : 0;
+      if (over > 0) ends.forEach(e => e.y -= over);
+      for (const e of ends) s += `<text x="${W - m.r + 10}" y="${e.y}" font-size="17" font-weight="600" fill="var(--fg)">${e.l}</text><text x="${W - m.r + 10}" y="${e.y + 19}" font-size="16" fill="var(--muted)">${o.fmt(e.val)} ha</text>`;
+      s += `<line class="lcX" x1="0" x2="0" y1="${m.t}" y2="${H - m.b}" stroke="var(--muted)" stroke-width="1" visibility="hidden"/>`;
+      s += `<rect class="lcHit" x="${m.l}" y="${m.t}" width="${W - m.l - m.r}" height="${H - m.t - m.b}" fill="transparent"/></svg>`;
+      el.innerHTML = s;
+      const hit = el.querySelector('.lcHit'), cx = el.querySelector('.lcX');
+      hit.addEventListener('pointermove', e => {
+        const r = el.querySelector('svg').getBoundingClientRect(), xv = (e.clientX - r.left) * W / r.width;
+        const row = rows.reduce((a, b) => Math.abs(X(b.year) - xv) < Math.abs(X(a.year) - xv) ? b : a);
+        cx.setAttribute('x1', X(row.year)); cx.setAttribute('x2', X(row.year)); cx.setAttribute('visibility', 'visible');
+        showTip(`<b>${row.year}${row.year === 1980 ? ' · 1:50.000, poco preciso' : ''}</b>` + series.map(([k, v, l]) =>
+          `<div class="r"><span><i style="background:var(${v})"></i>${l}</span><span>${o.fmt(row[k] || 0)} ha</span></div>`).join(''), e.clientX, e.clientY);
+      });
+      hit.addEventListener('pointerleave', () => { cx.setAttribute('visibility', 'hidden'); hideTip(); });
+    };
+    draw(); new ResizeObserver(draw).observe(el); charts.push(draw);
+  }
+
+  /* ---------- Esperimento 1 (Comune): numeri chiave (dal vettore) ---------- */
+  const vv = Object.fromEntries(V.vector_vs_raster.map(r => [r.year, r]));
+  const net1 = vv[1999].built_ha_vector - vv[1954].built_ha_vector, per1 = net1 / 45;
+  const net2 = vv[2024].built_ha_vector - vv[1999].built_ha_vector, per2 = net2 / 25;
+  const m1 = V.municipio1.share_1954;
+  const types = S.post1999_types_ha;
+  const typesTot = Object.values(types).reduce((a, b) => a + b, 0);
+  const infra = (types['strade'] || 0) + (types['ferrovie'] || 0) + (types['servizi e impianti'] || 0) + (types['altre infrastrutture'] || 0);
+  const top5 = V.nil_1954_1999.slice(0, 5).map(n => shortName(n.name));
+
+  $('tiles').innerHTML = `
+    <div class="tile"><div class="k">1954 → 1999</div><div class="v">+${nf0.format(net1)} ha</div><div class="d">di costruito netto, ${nf0.format(per1)} ha l'anno</div></div>
+    <div class="tile"><div class="k">1999 → 2024</div><div class="v">+${nf0.format(net2)} ha</div><div class="d">di costruito netto, ${nf0.format(per2)} ha l'anno</div></div>
+    <div class="tile"><div class="k">Municipio 1 nel 1954</div><div class="v">${pct(m1)}</div><div class="d">della superficie già costruita (${pct(V.municipio1.built_2024_ha / V.municipio1.area_ha)} nel 2024)</div></div>`;
+  $('finding').innerHTML = `<p>Fra il 1954 e il 1999 il costruito nel Comune è cresciuto di circa <b>${nf0.format(net1)} ha netti</b> (${nf0.format(per1)} ha l'anno). La crescita è diffusa sull'anello periferico: i quartieri con più nuove superfici sono ${top5.slice(0, -1).join(', ')} e ${top5.at(-1)}, ma insieme valgono solo ${art(V.nil_1954_1999_top5_share * 100)}${pct(V.nil_1954_1999_top5_share)} del totale. Fra il 1999 e il 2024 il saldo è di <b>${nf0.format(net2)} ha</b> (${nf0.format(per2)} ha l'anno): la città si trasforma più che crescere, e il nuovo costruito di questi anni è per ${art(infra / typesTot * 100)}${pct(infra / typesTot)} strade, ferrovie, servizi e impianti, per ${art(types['produttivo e commerciale'] / typesTot * 100)}${pct(types['produttivo e commerciale'] / typesTot)} produttivo e commerciale e solo per ${art(types['residenziale'] / typesTot * 100)}${pct(types['residenziale'] / typesTot)} residenziale. Il centro (Municipio 1) era già costruito per ${art(m1 * 100)}${pct(m1)} nel 1954. <a href="#metodo">Come sono stati calcolati</a>.</p>`;
+
+  const ORTHO = [1954, 1975, 1998, 2003, 2007, 2012, 2015, 2018, 2021, 2024];
+  const mMap = initMap('m', {
+    title: 'Quando ogni area è diventata costruita',
+    sub: 'Ogni area costruita nel 2024 ha il colore del periodo da cui risulta costruita in modo stabile. In verde le aree costruite in passato e oggi parco, campo o bosco.',
+    zonesLabel: 'Confini dei quartieri', zoneLabel: 'Quartiere (NIL)', w: S.grid.w, h: S.grid.h, groundM: S.grid.w * S.grid.res,
+    photoYears: ORTHO, photoUrl: y => `img/citta_${y}.webp`, epochUrl: v => `img/epoche_${v}.png`,
+    photoHint: "Dieci voli di Regione Lombardia, 7,5 m per pixel. Fra un volo e l'altro l'immagine sfuma: gli intervalli non sono regolari (1954, 1975, poi dal 1998 ogni 3-5 anni).",
+    variants: S.variants, exHa: S.ex_built_ha, fmtHa: x => nf0.format(x),
+    zones: S.nil, outlines: S.municipi.map(m => m.path),
+    zoneTip: i => {
+      const n = S.nil[i], b = n.periods_ha.base;
+      return `<b>${esc(n.name)}</b>
+        <div class="r"><span>Costruito 1954</span><span>${pct(n.built_1954_ha / n.area_ha)}</span></div>
+        <div class="r"><span>Costruito 2024</span><span>${pct(n.built_2024_ha / n.area_ha)}</span></div>
+        <div class="r"><span>Nuovo 1954–1999</span><span>${nf0.format(b[1])} ha</span></div>
+        <div class="r"><span>Nuovo dopo il 1999</span><span>${nf0.format(b.slice(2).reduce((a, c) => a + c, 0))} ha</span></div>
+        <div class="r"><span>Costruito, oggi verde</span><span>${nf0.format(n.ex_built_ha)} ha</span></div>`;
+    },
+  });
+  lineChart($('lineChart'), $('lineKey'), S.by_year,
+    [['costruito', '--s1', 'Costruito'], ['agricolo', '--s2', 'Agricolo'], ['verde urbano', '--s3', 'Verde urbano']],
+    { ymax: 12000, step: 3000, fmt: x => nf0.format(x), label: 'Ettari di costruito, agricolo e verde urbano per edizione DUSAF' });
+
+  /* ---------- Esperimento 2: Isola e Porta Nuova ---------- */
+  {
+    const T = I.total, Z = I.zones;
+    const ivv = Object.fromEntries(I.vector_vs_raster.map(r => [r.year, r]));
+    const comp = y => T.composition.find(r => r.year === y);
+    const c54 = comp(1954), c24 = comp(2024);
+    const tr99 = T.transitions.find(t => t.from === 1999), tr54 = T.transitions.find(t => t.from === 1954);
+    const pn = Z.find(z => z.id === 9), isola = Z.find(z => z.id === 11);
+    const newAfter = z => z.periods_ha.base.slice(2).reduce((a, b) => a + b, 0);
+    const pair = (t, a, b) => (t.pairs.find(q => q.from === a && q.to === b) || { ha: 0 }).ha;
+    const b54 = ivv[1954].built_ha_vector / T.area_ha, b24 = ivv[2024].built_ha_vector / T.area_ha;
+
+    $('iTiles').innerHTML = `
+      <div class="tile"><div class="k">Costruito nel 1954</div><div class="v">${pct(b54)}</div><div class="d">dell'area di studio (${nf0.format(T.area_ha)} ha); ${pct(b24)} nel 2024</div></div>
+      <div class="tile"><div class="k">Cambio d'uso 1999 → 2024</div><div class="v">${nf0.format(tr99.changed_ha)} ha</div><div class="d">${pct(tr99.changed_ha / tr99.area_ha)} dell'area, fra edizioni con lo stesso metodo</div></div>
+      <div class="tile"><div class="k">Ferrovie, 1954 → 2024</div><div class="v">${nf1.format(c54['ferrovie'])} → ${nf1.format(c24['ferrovie'])}</div><div class="d">ettari; il verde urbano passa da ${nf1.format(c54['verde urbano'])} a ${nf1.format(c24['verde urbano'])} ha</div></div>`;
+    $('iFinding').innerHTML = `<p>Nell'area di studio il suolo era già costruito per ${art(b54 * 100)}<b>${pct(b54)}</b> nel 1954 e lo è per ${art(b24 * 100)}${pct(b24)} nel 2024: qui la città non si è allargata, ha <b>cambiato uso</b>. Le ferrovie sono passate da ${nf1.format(c54['ferrovie'])} a ${nf1.format(c24['ferrovie'])} ha, il verde urbano da ${nf1.format(c54['verde urbano'])} a ${nf1.format(c24['verde urbano'])} ha, servizi e impianti da ${nf1.format(c54['servizi e impianti'])} a ${nf1.format(c24['servizi e impianti'])} ha; ${nf1.format(pair(tr54, 'ferrovie', 'verde urbano'))} ha di ferrovia sono diventati verde urbano. Fra il 1999 e il 2024 ha cambiato uso ${nf0.format(tr99.changed_ha)} ha, ${art(tr99.changed_ha / tr99.area_ha * 100)}${pct(tr99.changed_ha / tr99.area_ha)} dell'area, e ${nf1.format(newAfter(pn))} dei ${nf1.format(newAfter(T))} ha di nuovo costruito stanno a Porta Nuova. <a href="#metodo" data-go-m="m-isola">Come sono stati calcolati</a>.</p>`;
+
+    const iMap = initMap('i', {
+      title: 'Quando ogni area è diventata costruita',
+      sub: `Stessa regola del Comune, su una griglia di ${nf0.format(I.grid.res)} m. Le aree già costruite nel 1954 sono in grigio; i colori segnano dove il costruito è arrivato dopo; in verde ciò che era costruito ed è diventato parco. Con «Foto aeree» scorri i dieci voli.`,
+      zonesLabel: 'Confini dei due NIL', zoneLabel: 'Quartiere (NIL)', w: I.grid.w, h: I.grid.h, groundM: I.extent.x1 - I.extent.x0,
+      photoYears: ORTHO, photoUrl: y => `img/isola_${y}.webp`, epochUrl: v => `img/isola_epoche_${v}.png`,
+      photoHint: `Dieci voli di Regione Lombardia, ${nf1.format(I.photo.res)} m per pixel, sullo stesso riquadro. Il volo 1975 non copre l'angolo nord-ovest (Farini, Monumentale).`,
+      variants: Object.fromEntries(Object.entries(I.variants).map(([k, v]) => [k, { periods: v.periods, periods_ha: T.periods_ha[k] }])),
+      exHa: T.ex_built_ha, fmtHa: x => nf1.format(x), opacity: 70,
+      zones: Z, pins: I.pins,
+      zoneTip: i => {
+        const z = Z[i], t = z.transitions.find(t => t.from === 1999), c1 = z.composition[0], c2 = z.composition.at(-1);
+        const built = c => ['residenziale', 'produttivo e commerciale', 'servizi e impianti', 'strade', 'ferrovie', 'altro costruito'].reduce((a, k) => a + (c[k] || 0), 0);
+        return `<b>${esc(z.name)}</b>
+          <div class="r"><span>Superficie</span><span>${nf1.format(z.area_ha)} ha</span></div>
+          <div class="r"><span>Costruito 1954</span><span>${pct(built(c1) / z.area_ha)}</span></div>
+          <div class="r"><span>Costruito 2024</span><span>${pct(built(c2) / z.area_ha)}</span></div>
+          <div class="r"><span>Cambio d'uso 1999–2024</span><span>${nf1.format(t.changed_ha)} ha</span></div>
+          <div class="r"><span>Nuovo costruito dopo il 1999</span><span>${nf1.format(newAfter(z))} ha</span></div>`;
+      },
+    });
+    onShow.isola = () => { iMap.v.render(); charts.forEach(d => d()); };
+
+    const USE = [['residenziale', '--t1', 'Residenziale'], ['servizi e impianti', '--t3', 'Servizi e impianti'], ['strade', '--t4', 'Strade'], ['ferrovie', '--t5', 'Ferrovie'], ['verde urbano', '--s3', 'Verde urbano']];
+    lineChart($('iLineChart'), $('iLineKey'), T.composition, USE,
+      { ymax: 160, step: 40, fmt: x => nf1.format(x), label: "Ettari per tipo d'uso nell'area di studio, per edizione DUSAF" });
+
+    // che cosa è diventato cosa
+    const COL = { 'residenziale': '--t1', 'produttivo e commerciale': '--t2', 'servizi e impianti': '--t3', 'strade': '--t4', 'ferrovie': '--t5', 'cantieri, cave, discariche': '--t6', 'verde urbano': '--s3', 'agricolo': '--agri', 'altro costruito': '--t6', 'altro': '--t6' };
+    let tFrom = 1999, tZone = 0;
+    const zonesT = [T, isola, pn];
+    const drawTrans = () => {
+      const z = zonesT[tZone], t = z.transitions.find(q => q.from === tFrom), max = t.pairs[0]?.ha || 1;
+      $('iTrans').innerHTML = t.pairs.slice(0, 10).map(q => `<div class="bar-row" data-tip="${esc(q.from)} → ${esc(q.to)}|${tFrom} → 2024|${nf1.format(q.ha)} ha">
+        <span class="nm" title="${esc(q.from)} → ${esc(q.to)}"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(${COL[q.from]});margin-right:4px"></i>${esc(q.from)} → <i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(${COL[q.to]});margin:0 4px"></i>${esc(q.to)}</span>
+        <div class="track"><div style="width:${q.ha / max * 100}%;background:var(${COL[q.to]})"></div></div>
+        <span class="val">${nf1.format(q.ha)} ha</span></div>`).join('');
+      $('iTransNote').textContent = `Hanno cambiato uso ${nf1.format(t.changed_ha)} ha su ${nf1.format(t.area_ha)} (${pct(t.changed_ha / t.area_ha)}). ` +
+        (tFrom === 1954 ? "Fra il 1954 e il 2024 una parte dei passaggi fra tipi di costruito (per esempio residenziale → servizi) dipende dal maggior dettaglio delle edizioni recenti, che separano scuole e servizi dentro gli isolati." : 'Le edizioni 1999 e 2024 sono prodotte con lo stesso metodo, a 1:10.000.');
+      bindTips($('iTrans'));
+    };
+    const segBtns = (id, vals, set) => $(id).querySelectorAll('button').forEach((b, k) => b.onclick = () => {
+      $(id).querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); set(vals[k]); drawTrans();
+    });
+    segBtns('iTransFrom', [1999, 1954], v => tFrom = v);
+    segBtns('iTransZone', [0, 1, 2], v => tZone = v);
+    drawTrans();
+
+    const builtOf = c => ['residenziale', 'produttivo e commerciale', 'servizi e impianti', 'strade', 'ferrovie', 'altro costruito'].reduce((a, k) => a + (c[k] || 0), 0);
+    $('iZoneTbl').innerHTML = `<thead><tr><th>Zona</th><th class="n">Superficie</th><th class="n">Costruito 1954</th><th class="n">Costruito 2024</th><th class="n">Cambio d'uso 1999–2024</th><th class="n">Nuovo costruito dopo il 1999</th><th class="n">Costruito, oggi verde</th></tr></thead><tbody>` +
+      [isola, pn, T].map(z => {
+        const t = z.transitions.find(q => q.from === 1999);
+        return `<tr${z === T ? ' style="font-weight:600"' : ''}><td>${esc(z === T ? 'Area di studio' : z.name)}</td><td class="n">${nf1.format(z.area_ha)} ha</td><td class="n">${pct(builtOf(z.composition[0]) / z.area_ha)}</td><td class="n">${pct(builtOf(z.composition.at(-1)) / z.area_ha)}</td><td class="n">${nf1.format(t.changed_ha)} ha</td><td class="n">${nf1.format(newAfter(z))} ha</td><td class="n">${nf1.format(z.ex_built_ha)} ha</td></tr>`;
+      }).join('') + '</tbody>';
+
+    // verifica nella Metodologia
+    $('tIsolaVec').innerHTML = `<thead><tr><th>Edizione</th><th class="n">Costruito, vettore</th><th class="n">Costruito, raster ${nf0.format(I.grid.res)} m</th></tr></thead><tbody>` +
+      I.vector_vs_raster.map(r => `<tr><td>${r.year}</td><td class="n">${nf1.format(r.built_ha_vector)} ha</td><td class="n">${nf1.format(r.built_ha_raster)} ha</td></tr>`).join('') + '</tbody>';
+    document.querySelectorAll('[data-go-m]').forEach(a => a.addEventListener('click', () => setTimeout(() => $(a.dataset.goM).scrollIntoView({ block: 'start' }), 50)));
+  }
+
+  /* ---------- tabella Municipi ---------- */
+  {
+    const rows = [...S.municipi].sort((a, b) => a.id - b.id);
+    const sumAfter = m => m.periods_ha.base.slice(2).reduce((a, b) => a + b, 0);
+    const max1 = Math.max(...rows.map(m => m.periods_ha.base[1]));
+    $('munTbl').innerHTML = `<thead><tr><th>Municipio</th><th class="n">Superficie</th><th class="n">Costruito 1954</th><th class="n">Costruito 2024</th><th>Nuovo 1954–1999</th><th class="n">Nuovo dopo il 1999</th><th class="n">Costruito, oggi verde</th></tr></thead><tbody>` +
+      rows.map(m => `<tr><td>${m.id}</td><td class="n">${nf0.format(m.area_ha)} ha</td><td class="n">${pct(m.built_1954_ha / m.area_ha)}</td><td class="n">${pct(m.built_2024_ha / m.area_ha)}</td>
+        <td class="nw"><span class="mini" style="width:${m.periods_ha.base[1] / max1 * 90}px"></span>${nf0.format(m.periods_ha.base[1])} ha</td>
+        <td class="n">${nf0.format(sumAfter(m))} ha</td><td class="n">${nf0.format(m.ex_built_ha)} ha</td></tr>`).join('') + '</tbody>';
+  }
+
+  /* ---------- NIL ---------- */
+  {
+    const list = V.nil_1954_1999, max = list[0].ha;
+    $('nil1Sub').textContent = `I dieci quartieri (NIL) con più nuovo costruito stabile. Insieme valgono ${pct(list.reduce((a, n) => a + n.share, 0))} dei ${nf0.format(V.nil_1954_1999_total_ha)} ha del periodo: la crescita è diffusa.`;
+    $('nil1').innerHTML = list.map(n => `<div class="bar-row" data-tip="${esc(n.name)}|${nf1.format(n.ha)} ha|${pct(n.share, 1)} del periodo">
+      <span class="nm" title="${esc(n.name)}">${esc(shortName(n.name))}</span>
+      <div class="track"><div style="width:${n.ha / max * 100}%;background:var(--s1)"></div></div>
+      <span class="val">${nf0.format(n.ha)} ha · ${pct(n.share, 1)}</span></div>`).join('');
+
+    const TYPES = [['residenziale', '--t1'], ['produttivo e commerciale', '--t2'], ['servizi e impianti', '--t3'], ['strade', '--t4'], ['ferrovie', '--t5'], ['altre infrastrutture', '--t6']];
+    $('typeKey').innerHTML = TYPES.map(([l, v]) => `<span><i style="background:var(${v})"></i>${l}</span>`).join('');
+    const l2 = V.nil_post1999, max2 = l2[0].ha;
+    $('nil2').innerHTML = l2.map(n => `<div class="bar-row">
+      <span class="nm" title="${esc(n.name)}">${esc(shortName(n.name))}</span>
+      <div class="track stack" style="width:${n.ha / max2 * 100}%">${TYPES.filter(([l]) => n.types_ha[l]).map(([l, v]) =>
+        `<div data-tip="${esc(n.name)}|${esc(l)}|${nf1.format(n.types_ha[l])} ha" style="flex:${n.types_ha[l]} 0 0;background:var(${v})"></div>`).join('')}</div>
+      <span class="val">${nf0.format(n.ha)} ha</span></div>`).join('');
+    const fa = V.post1999_detail['Forze Armate'];
+    if (fa) {
+      const mil = fa.in_2024_come.find(([c]) => c.startsWith('12125'));
+      $('nil2Note').textContent = mil ? `Attenzione: a Forze Armate ${nf0.format(mil[1])} ha sono l'ex Piazza d'Armi, ora classificata «aree militari obliterate», che nel 1999 era già costruita (classe 12). È un cambio di classificazione, non edificazione.` : '';
+    }
+    for (const el of document.querySelectorAll('[data-tip]')) {
+      el.addEventListener('pointermove', e => {
+        const [a, b, c] = el.dataset.tip.split('|');
+        showTip(`<b>${a}</b><div class="r"><span>${b}</span><span>${c}</span></div>`, e.clientX, e.clientY);
+      });
+      el.addEventListener('pointerleave', hideTip);
+    }
+  }
+
+  /* ---------- Metodologia: tabelle dai JSON ---------- */
+  {
+    document.querySelectorAll('.gRes').forEach(e => e.textContent = `${S.grid.res} m`);
+    document.querySelectorAll('.iRes').forEach(e => e.textContent = `${nf0.format(I.grid.res)} m`);
+    document.querySelectorAll('.gCells').forEach(e => e.textContent = `${nf0.format(S.grid.w)} × ${nf0.format(S.grid.h)}`);
+    const diffs = V.vector_vs_raster.map(r => r.diff_pct);
+    $('lineNote').textContent = `Valori calcolati sulla griglia di ${S.grid.res} m; rispetto ai poligoni originali differiscono fra ${fmt(Math.min(...diffs), 1)}% e +${fmt(Math.max(...diffs), 1)}% (vedi Metodologia).`;
+    $('resDiff').textContent = `da ${fmt(Math.min(...diffs), 1)}% a +${fmt(Math.max(...diffs), 1)}%`;
+    { const d = I.vector_vs_raster.map(r => (r.built_ha_raster / r.built_ha_vector - 1) * 100);
+      $('resDiffI').textContent = `da ${fmt(Math.min(...d), 2)}% a +${fmt(Math.max(...d), 2)}%`; }
+    $('vComune').textContent = `Dai confini dei Municipi: ${nf1.format(V.comune_ha_vector)} ha sui poligoni, ${nf1.format(V.comune_ha_raster)} ha sulla griglia di ${S.grid.res} m (+${pct(V.comune_ha_raster / V.comune_ha_vector - 1, 2)}). Il dato ufficiale è di circa 181,7 km². Le dieci edizioni DUSAF coprono tutte l'intero territorio comunale.`;
+    $('t1980').innerHTML = `<thead><tr><th>Edizione</th><th class="n">Poligoni nel Comune</th><th class="n">Dimensione mediana</th><th class="n">Sotto i 4 ha</th></tr></thead><tbody>` +
+      V.vector_vs_raster.map(r => `<tr${r.year === 1980 ? ' style="font-weight:600"' : ''}><td>${r.year}</td><td class="n">${nf0.format(r.polygons)}</td><td class="n">${nf1.format(r.median_poly_ha)} ha</td><td class="n">${pct(r.share_under_4ha)}</td></tr>`).join('') + '</tbody>';
+    $('tVec').innerHTML = `<thead><tr><th>Edizione</th><th class="n">Costruito, vettore</th><th class="n">Costruito, raster ${S.grid.res} m</th><th class="n">Differenza</th></tr></thead><tbody>` +
+      V.vector_vs_raster.map(r => `<tr><td>${r.year}</td><td class="n">${nf1.format(r.built_ha_vector)} ha</td><td class="n">${nf1.format(r.built_ha_raster)} ha</td><td class="n">${r.diff_pct > 0 ? '+' : ''}${nf1.format(r.diff_pct)}%</td></tr>`).join('') + '</tbody>';
+    $('tFlows').innerHTML = `<thead><tr><th>Intervallo</th><th class="n">Anni</th><th class="n">Guadagni</th><th class="n">Perdite</th><th class="n">Saldo</th><th class="n">Saldo l'anno</th></tr></thead><tbody>` +
+      V.flows_comparable.map(f => `<tr><td>${f.from} → ${f.to}</td><td class="n">${f.years}</td><td class="n">${nf0.format(f.gain_ha)} ha</td><td class="n">${nf0.format(f.loss_ha)} ha</td><td class="n">${f.net_ha > 0 ? '+' : ''}${nf0.format(f.net_ha)} ha</td><td class="n">${f.net_ha_per_year > 0 ? '+' : ''}${nf1.format(f.net_ha_per_year)}</td></tr>`).join('') + '</tbody>';
+    const rules = Object.entries(V.sensitivity), eds = S.years;
+    $('tSens').innerHTML = `<thead><tr><th>Regola</th>${eds.map(y => `<th class="n">${y}</th>`).join('')}</tr></thead><tbody>` +
+      rules.map(([name, vals]) => `<tr><td>${esc(name)}</td>${eds.map(y => `<td class="n">${vals[y] != null ? nf0.format(vals[y]) : '—'}</td>`).join('')}</tr>`).join('') + '</tbody>';
+    const nilTbl = (list, tot) => `<thead><tr><th>#</th><th>Quartiere (NIL)</th><th class="n">ha</th><th class="n">Quota</th></tr></thead><tbody>` +
+      list.map(n => `<tr><td>${n.rank}</td><td>${esc(n.name)}</td><td class="n">${nf1.format(n.ha)}</td><td class="n">${pct(n.share, 1)}</td></tr>`).join('') +
+      `<tr><td></td><td class="hint">Totale del periodo</td><td class="n">${nf0.format(tot)}</td><td></td></tr></tbody>`;
+    $('tNil99').innerHTML = nilTbl(V.nil_1954_1999, V.nil_1954_1999_total_ha);
+    $('tNil80').innerHTML = nilTbl(V.nil_1954_1980, V.nil_1954_1980_total_ha);
+    // classi DUSAF di secondo livello (legenda Corine Land Cover adattata)
+    const CLS = { 11: 'zone urbanizzate', 12: 'insediamenti produttivi, servizi, reti', 13: 'cave, discariche, cantieri', 14: 'verde urbano', 21: 'seminativi', 22: 'colture permanenti', 23: 'prati permanenti', 31: 'boschi', 32: 'vegetazione arbustiva', 33: 'vegetazione rada', 41: 'zone umide', 51: 'acque' };
+    $('tDetail').innerHTML = `<thead><tr><th>Quartiere</th><th class="n">Nuovo dopo il 1999</th><th>Nel 2024 è (codice DUSAF, ha)</th><th>Nel 1999 era (classe DUSAF, ha)</th></tr></thead><tbody>` +
+      Object.entries(V.post1999_detail).map(([name, d]) => `<tr><td>${esc(name)}</td><td class="n">${nf1.format(d.post1999_ha)} ha</td>
+        <td>${d.in_2024_come.map(([c, h]) => `${esc(c.replace(/^(\d+) \1\s+/, '$1 '))}: ${nf1.format(h)}`).join('<br>')}</td>
+        <td>${d.nel_1999_era_classe.map(([c, h]) => `${c} ${CLS[c] || ''}: ${nf1.format(h)}`).join('<br>')}</td></tr>`).join('') + '</tbody>';
+    const t80 = V.nil_1954_1980, s80 = V.sensitivity['stabile, con 1980 (pagina)'];
+    const post99 = V.nil_post1999.slice(0, 4);
+    const quartoRank = t80.find(n => n.name.startsWith('Quarto Oggiaro'))?.rank;
+    const claims = [
+      ['«tra il 1954 e il 1980 sono stati costruiti 2.313 ha (circa 89 ha/anno)»', 'warn', 'Da riformulare',
+        `Il calcolo è giusto (${nf1.format(s80['1980'])} ha, ${nf1.format(s80['1980'] / 26)} ha/anno), ma il limite del 1980 cade su un'edizione a 1:50.000 che sovrastima il costruito. Fra edizioni confrontabili: 1954 → 1999, +${nf0.format(net1)} ha netti sui poligoni, ${nf0.format(per1)} ha/anno.`],
+      ['«concentrati a Gallaratese, Forlanini, Niguarda e Quarto Oggiaro»', 'ko', 'Sbagliata',
+        `Nella classifica 1954–1980 Quarto Oggiaro è ${quartoRank}°; il 4° è ${esc(t80[3].name)}. I primi quattro valgono ${pct(V.nil_1954_1980_top4_share)} del periodo: la crescita non è concentrata.`],
+      ['«calo netto del ritmo dopo il 1980»', 'warn', 'Vero, ma non databile al 1980',
+        `Fra edizioni confrontabili il saldo passa da ${nf0.format(per1)} ha/anno (1954–1999) a ${nf0.format(per2)} ha/anno (1999–2024). Dove cada la svolta fra il 1954 e il 1999 non si può dire con questi dati.`],
+      ['«zone più attive: Cascina Merlata, Parco delle Abbazie, Cimiano, Bosco in Città»', 'ko', 'Fuorviante',
+        `Con il 1980 incluso la classifica era quella; senza, dopo il 1999 i primi sono ${post99.map(n => esc(shortName(n.name))).join(', ')}. In entrambi i casi il nuovo costruito è soprattutto strade, impianti e servizi, e in parte riclassificazione (sezione 6).`],
+      ['«il Municipio 1 era già edificato per l\'88% nel 1954»', 'ok', 'Confermata',
+        `${nf1.format(V.municipio1.built_1954_ha)} ha costruiti su ${nf1.format(V.municipio1.area_ha)} ha = ${pct(V.municipio1.share_1954, 1)}. Nel 2024: ${pct(V.municipio1.built_2024_ha / V.municipio1.area_ha, 1)}.`],
+    ];
+    $('tFrase').innerHTML = `<thead><tr><th>Affermazione</th><th>Esito</th><th>Che cosa dicono i dati</th></tr></thead><tbody>` +
+      claims.map(([c, k, e, d]) => `<tr><td>${c}</td><td class="${k}">${e}</td><td>${d}</td></tr>`).join('') + '</tbody>';
+  }
+
+  /* ---------- tema: ridisegna ciò che legge i colori in JS ---------- */
+  const repaint = () => { maps.forEach(m => m.paint()); charts.forEach(d => d()); };
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', repaint);
+  new MutationObserver(repaint).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  onShow.milano = () => { mMap.v.render(); charts.forEach(d => d()); };
+  route();
+})();
+</script>
