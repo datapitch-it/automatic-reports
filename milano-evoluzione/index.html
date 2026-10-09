@@ -67,6 +67,7 @@ code, .mono { font-family: var(--mono); font-size: max(.92em, var(--fs-caption))
 .app { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: 100vh; }
 .side { position: sticky; top: env(safe-area-inset-top, 0px); align-self: start; height: 100vh; overflow-y: auto; border-right: 1px solid var(--line); background: var(--surface); padding: 24px 18px; display: flex; flex-direction: column; gap: 22px; }
 .brand { font: 700 30px/1 var(--display); letter-spacing: .01em; margin: 0; }
+.brand small a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .brand small { display: block; font: 400 var(--fs-caption)/1.45 var(--body); color: var(--muted); margin-top: 6px; letter-spacing: 0; }
 .nav { display: flex; flex-direction: column; gap: 4px; }
 .nav a { display: block; text-decoration: none; color: var(--fg); padding: 9px 10px; border-radius: 4px; border-left: 3px solid transparent; }
@@ -254,7 +255,7 @@ pre { background: var(--sunk); border-radius: 4px; padding: 12px 14px; overflow-
 <div class="app">
   <aside class="side">
     <div>
-      <p class="brand"><span class="full">Milano dall'alto</span><span class="short" aria-hidden="true">MdA</span><small>Casi d'uso di openrndt: dati territoriali trovati nel Repertorio Nazionale dei Dati Territoriali</small></p>
+      <p class="brand"><span class="full">Milano dall'alto</span><span class="short" aria-hidden="true">MdA</span><small>Casi d'uso di <a href="https://github.com/ondata/openrndt" target="_blank" rel="noopener">openrndt</a>: dati territoriali trovati nel Repertorio Nazionale dei Dati Territoriali</small></p>
     </div>
     <nav class="nav" aria-label="Esperimenti">
       <a href="#milano" title="Esperimento 1 · Comune di Milano, 1954 → 2024"><i class="ico" aria-hidden="true">1</i><span>Esperimento 1</span><b>Comune di Milano, 1954 → 2024</b></a>
