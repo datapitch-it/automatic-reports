@@ -1,0 +1,2713 @@
+{
+  "_note": "Manifesto degli strati della demo. Fonte di verità: si modifica qui (o si chiede «cambia X»). `rendering` è scritto da `render_strati.py` (raster) e da `vettorizza.py` (vettori; per i vettori contiene anche elementi, data di scarico e tolleranza). Nessun numero della pagina va scritto a mano nell'HTML: tutto, compresa la pagina «Catalogo e metodo», si legge da qui.",
+  "riquadro": {
+    "crs": "EPSG:32632",
+    "bbox": [
+      502900,
+      5025700,
+      522000,
+      5042800
+    ],
+    "m_per_pixel": 5,
+    "dimensioni_px": [
+      3820,
+      3420
+    ],
+    "nota": "Comune di Milano con margine. 13,06 milioni di pixel: sotto il limite di circa 16,7 milioni di un canvas su Safari/iPhone. Le richieste partono in EPSG:32632 (REST: imageSR/bboxSR; WMS: primo CRS accettato fra 32632, 25832, 7791: il CRS usato è in rendering.crs_usato)."
+  },
+  "viste": [
+    {
+      "id": "v1",
+      "numero": 1,
+      "titolo": "Base",
+      "descrizione": "Ortofoto e cartografia di base del Comune.",
+      "tipologia": "—",
+      "strati": [
+        "ortofoto_2018",
+        "dbt_edifici",
+        "dbt_strade"
+      ],
+      "attivi": [
+        "ortofoto_2018"
+      ]
+    },
+    {
+      "id": "v2",
+      "numero": 2,
+      "titolo": "Suolo e costruito",
+      "descrizione": "Uso e copertura del suolo, impermeabilizzazione, consumo di suolo.",
+      "tipologia": "5",
+      "strati": [
+        "dusaf_2024",
+        "dusaf_2021",
+        "dusaf_2018",
+        "dusaf_2015",
+        "dusaf_2012",
+        "dusaf_2009",
+        "dusaf_2007",
+        "dusaf_1980",
+        "dusaf_1954",
+        "copernicus_impermeabilizzazione",
+        "corine_2018",
+        "uso_suolo_ispra_2022",
+        "consumo_suolo_ispra"
+      ],
+      "attivi": [
+        "dusaf_2024"
+      ]
+    },
+    {
+      "id": "v3",
+      "numero": 3,
+      "titolo": "Verde e alberi",
+      "descrizione": "Verde, boschi, parchi, alberi.",
+      "tipologia": "4",
+      "strati": [
+        "dbt_verde",
+        "dbt_bosco",
+        "carta_forestale",
+        "parchi_regionali_nazionali",
+        "plis",
+        "alberi_monumentali",
+        "copernicus_foresta",
+        "tcc_2023",
+        "verde_alberi",
+        "verde_arbusti",
+        "verde_siepi",
+        "verde_elementi_areali",
+        "progetti_alleanza_aria_clima"
+      ],
+      "attivi": [
+        "dbt_verde"
+      ]
+    },
+    {
+      "id": "v4",
+      "numero": 4,
+      "titolo": "Caldo",
+      "descrizione": "Isola di calore, temperatura superficiale, rischio e vulnerabilità al caldo.",
+      "tipologia": "6",
+      "strati": [
+        "pt9_isola_calore",
+        "lst_media",
+        "lst_pac_2013_17",
+        "lst_pac_2017_21",
+        "lst_pac_2019_23",
+        "rischio_caldo_2017",
+        "rischio_caldo_2021",
+        "rischio_caldo_2023",
+        "vulnerabilita_caldo_2011",
+        "vulnerabilita_caldo_2021"
+      ],
+      "attivi": [
+        "rischio_caldo_2023"
+      ]
+    },
+    {
+      "id": "v5",
+      "numero": 5,
+      "titolo": "Aria",
+      "descrizione": "Stazioni, zone e mappe di concentrazione degli inquinanti.",
+      "tipologia": "1",
+      "strati": [
+        "stazioni_aria_ispra",
+        "zone_aria_ispra",
+        "campioni_inquinanti_ispra",
+        "zonizzazione_aria_lombardia",
+        "aria_no2_2017",
+        "aria_no2_2023",
+        "aria_pm2_5_2017",
+        "aria_pm2_5_2023",
+        "aria_pm10_2017",
+        "aria_pm10_2023"
+      ],
+      "attivi": [
+        "aria_no2_2023"
+      ]
+    },
+    {
+      "id": "v6",
+      "numero": 6,
+      "titolo": "Mobilità",
+      "descrizione": "Reti, ciclabili, aree pedonali e ZTL, zone a velocità limitata.",
+      "tipologia": "2, 3",
+      "strati": [
+        "rete_ferroviaria",
+        "rete_metropolitana",
+        "stazioni_metropolitana",
+        "stazioni_ferroviarie",
+        "piste_ciclabili",
+        "ciclabili_pac_2017",
+        "ciclabili_pac_2022",
+        "ciclabili_pac_2023",
+        "rastrelliere_bici",
+        "aree_pedonali_ztl",
+        "zone_30",
+        "pedonali_ztl_pac_2017",
+        "pedonali_ztl_pac_2021",
+        "pedonali_ztl_pac_2023",
+        "velocita_limitata_2017",
+        "velocita_limitata_2021",
+        "velocita_limitata_2023"
+      ],
+      "attivi": [
+        "piste_ciclabili"
+      ]
+    },
+    {
+      "id": "v7",
+      "numero": 7,
+      "titolo": "Acqua e spazio pubblico",
+      "descrizione": "Reticolo idrografico, permeabilità, depavimentazione, interventi sullo spazio pubblico, fontanelle.",
+      "tipologia": "8",
+      "strati": [
+        "dbt_acqua",
+        "reticolo_idrografico",
+        "permeabilita_100k",
+        "temperature_falda",
+        "depavimentazione",
+        "interventi_tattici_2019",
+        "interventi_tattici_2021",
+        "interventi_tattici_2023",
+        "interventi_tattici_2025",
+        "interventi_tattici_2027",
+        "interventi_tattici_2029",
+        "fontanelle",
+        "case_acqua",
+        "scuole_pac"
+      ],
+      "attivi": [
+        "depavimentazione"
+      ]
+    },
+    {
+      "id": "v8",
+      "numero": 8,
+      "titolo": "Crea la tua vista",
+      "descrizione": "Sovrapponi gli strati che vuoi, senza una guida.",
+      "libera": true
+    }
+  ],
+  "strati": [
+    {
+      "id": "ortofoto_2018",
+      "vista": "v1",
+      "titolo": "Ortofoto 2018",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:59dbea55-1fa0-4568-ae87-3389f3a7b898",
+      "tipo": "wms",
+      "servizio": "https://www.cartografia.servizirl.it/arcgis2/services/BaseMap/Ortofoto2018_2019/ImageServer/WMSServer",
+      "layer": "0",
+      "anno": "2018",
+      "anno_fonte": "titolo",
+      "scala": "1:5.000",
+      "licenza": "da leggere: copyright",
+      "n_matrice": 46,
+      "crs": [
+        "EPSG:32632"
+      ],
+      "lossy": true,
+      "note": "Ortofoto AGEA 2018: il dato vero è a 0,2 m. Qui a 5 m per pixel in panoramica; sopra i 4,5 m per pixel sullo schermo la pagina usa tessere locali a 1,2 m su tutto il Comune e a 0,3 m su una zona centrale di 3,6 × 3,0 km attorno al Duomo (dettaglio-base.md). Il servizio risponde a vuoto circa una volta su due: le tessere sono scaricate con nuovi tentativi.",
+      "intermittente": true,
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 100.0,
+        "richieste": 16,
+        "secondi": 30.8,
+        "file": "img/ortofoto_2018.webp",
+        "crs_usato": "EPSG:32632",
+        "byte": 5544326
+      },
+      "tessere": "tessere/ortofoto.json",
+      "tessere_byte": 133583706
+    },
+    {
+      "id": "dbt_edifici",
+      "vista": "v1",
+      "titolo": "DBT 2020 — Edifici",
+      "fonte": "RNDT",
+      "id_scheda": "c_f205:M_DS2889",
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/DBGT/Milano_2020_DBGT/MapServer",
+      "layer": "31",
+      "anno": "2020",
+      "anno_fonte": "titolo",
+      "scala": "1:1.000",
+      "licenza": "CC BY (link opendefinition)",
+      "n_matrice": 0,
+      "note": "Vettore scaricato il 2026-10-14 dal layer «020102 - Edificio» (33.893 edifici) e disegnato nella pagina: resta nitido a qualsiasi zoom. Coordinate a 0,1 m; il dato originale è in dati/dbt-2020/. Non include gli edifici minori. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/dbt_edifici.json",
+        "byte": 3889913,
+        "elementi": 33893,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "poly",
+      "stile": {
+        "fill": [
+          196,
+          181,
+          184,
+          255
+        ]
+      }
+    },
+    {
+      "id": "dbt_strade",
+      "vista": "v1",
+      "titolo": "DBT 2020 — Area stradale",
+      "fonte": "RNDT",
+      "id_scheda": "c_f205:M_DS2889",
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/DBGT/Milano_2020_DBGT/MapServer",
+      "layer": "41,39,42,37",
+      "anno": "2020",
+      "anno_fonte": "titolo",
+      "scala": "1:1.000",
+      "licenza": "CC BY (link opendefinition)",
+      "n_matrice": 0,
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/dbt_strade.json",
+        "byte": 4305453,
+        "elementi": 48917,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.3,
+        "contorno_px": 0
+      }
+    },
+    {
+      "id": "dbt_verde",
+      "vista": "v3",
+      "titolo": "DBT 2020 — Area verde",
+      "fonte": "RNDT",
+      "id_scheda": "c_f205:M_DS2889",
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/DBGT/Milano_2020_DBGT/MapServer",
+      "layer": "36",
+      "anno": "2020",
+      "anno_fonte": "titolo",
+      "scala": "1:1.000",
+      "licenza": "CC BY (link opendefinition)",
+      "n_matrice": 0,
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/dbt_verde.json",
+        "byte": 6329140,
+        "elementi": 89326,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.3,
+        "contorno_px": 0
+      }
+    },
+    {
+      "id": "dbt_bosco",
+      "vista": "v3",
+      "titolo": "DBT 2020 — Bosco",
+      "fonte": "RNDT",
+      "id_scheda": "c_f205:M_DS2889",
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/DBGT/Milano_2020_DBGT/MapServer",
+      "layer": "62",
+      "anno": "2020",
+      "anno_fonte": "titolo",
+      "scala": "1:1.000",
+      "licenza": "CC BY (link opendefinition)",
+      "n_matrice": 0,
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/dbt_bosco.json",
+        "byte": 58306,
+        "elementi": 163,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.3,
+        "contorno_px": 0.6
+      }
+    },
+    {
+      "id": "dbt_acqua",
+      "vista": "v7",
+      "titolo": "DBT 2020 — Corsi d'acqua e specchi d'acqua",
+      "fonte": "RNDT",
+      "id_scheda": "c_f205:M_DS2889",
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/DBGT/Milano_2020_DBGT/MapServer",
+      "layer": "60,61",
+      "anno": "2020",
+      "anno_fonte": "titolo",
+      "scala": "1:1.000",
+      "licenza": "CC BY (link opendefinition)",
+      "n_matrice": 0,
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/dbt_acqua.json",
+        "byte": 324528,
+        "elementi": 3446,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.4,
+        "contorno_px": 0.8
+      }
+    },
+    {
+      "id": "dusaf_2024",
+      "vista": "v2",
+      "titolo": "Uso e Copertura del Suolo 2024 (DUSAF 8.0)",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:b4bf7c32-ebbf-4ea6-a8a4-50c5e77c2e82",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/arcgis1/rest/services/territorio/dusaf8/MapServer",
+      "layer": "1",
+      "anno": "2024",
+      "anno_fonte": "titolo",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 1,
+      "serie": {
+        "id": "dusaf",
+        "etichetta": "2024"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/dusaf_2024.json",
+        "byte": 2024630,
+        "elementi": 7202,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.1,
+        "contorno_px": 0
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m)."
+    },
+    {
+      "id": "dusaf_2021",
+      "vista": "v2",
+      "titolo": "Uso e Copertura del Suolo 2021 (Dusaf 7.0)",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:7cd05e9f-b693-4d7e-a8de-71b40b45f54e",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/arcgis1/rest/services/territorio/dusaf7/MapServer",
+      "layer": "1",
+      "anno": "2021",
+      "anno_fonte": "titolo",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 2,
+      "serie": {
+        "id": "dusaf",
+        "etichetta": "2021"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/dusaf_2021.json",
+        "byte": 1975124,
+        "elementi": 7150,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.1,
+        "contorno_px": 0
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m)."
+    },
+    {
+      "id": "dusaf_2018",
+      "vista": "v2",
+      "titolo": "Uso e copertura del suolo 2018 (DUSAF 6.0)",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:3850b793-c13f-45ee-8bf8-31c020fdbe0e",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/arcgis1/rest/services/territorio/dusaf6/MapServer",
+      "layer": "1",
+      "anno": "2018",
+      "anno_fonte": "titolo",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 3,
+      "serie": {
+        "id": "dusaf",
+        "etichetta": "2018"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/dusaf_2018.json",
+        "byte": 1809275,
+        "elementi": 6924,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.1,
+        "contorno_px": 0
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m)."
+    },
+    {
+      "id": "dusaf_2015",
+      "vista": "v2",
+      "titolo": "Uso e copertura del suolo 2015 (DUSAF 5.0)",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:cbc7ef8a-2012-4463-a197-7ffd04760bbb",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/arcgis1/rest/services/territorio/dusaf5/MapServer",
+      "layer": "1",
+      "anno": "2015",
+      "anno_fonte": "titolo",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 4,
+      "serie": {
+        "id": "dusaf",
+        "etichetta": "2015"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/dusaf_2015.json",
+        "byte": 1690628,
+        "elementi": 6217,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.1,
+        "contorno_px": 0
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m)."
+    },
+    {
+      "id": "dusaf_2012",
+      "vista": "v2",
+      "titolo": "Uso e copertura del suolo 2012 (DUSAF 4.0)",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:3545c5b7-c808-47d5-be66-6a6d3b656009",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/arcgis1/rest/services/territorio/DUSAF4/MapServer",
+      "layer": "2",
+      "anno": "2012",
+      "anno_fonte": "titolo",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 5,
+      "serie": {
+        "id": "dusaf",
+        "etichetta": "2012"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/dusaf_2012.json",
+        "byte": 1463234,
+        "elementi": 5663,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.1,
+        "contorno_px": 0
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m)."
+    },
+    {
+      "id": "dusaf_2009",
+      "vista": "v2",
+      "titolo": "Uso e copertura del suolo 2009 (DUSAF 3.0)",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:8885f244-7dba-43c0-9cc8-708a5b5059a6",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/arcgis1/rest/services/territorio/dusaf3_UW/MapServer",
+      "layer": "2",
+      "anno": "2009",
+      "anno_fonte": "titolo",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 6,
+      "serie": {
+        "id": "dusaf",
+        "etichetta": "2009"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/dusaf_2009.json",
+        "byte": 1182943,
+        "elementi": 5669,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.1,
+        "contorno_px": 0
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m)."
+    },
+    {
+      "id": "dusaf_2007",
+      "vista": "v2",
+      "titolo": "Uso e copertura del suolo 2007 (DUSAF 2.1)",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:884bcd97-0bc8-4c1a-8e36-ac52ec6bb9a3",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/arcgis1/rest/services/territorio/dusaf21_UW/MapServer",
+      "layer": "2",
+      "anno": "2007",
+      "anno_fonte": "titolo",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 7,
+      "serie": {
+        "id": "dusaf",
+        "etichetta": "2007"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/dusaf_2007.json",
+        "byte": 1284448,
+        "elementi": 5639,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.1,
+        "contorno_px": 0
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m)."
+    },
+    {
+      "id": "dusaf_1980",
+      "vista": "v2",
+      "titolo": "Uso e copertura del suolo 1980",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:8929a37b-ed6d-4c5a-af26-86b83aea52fc",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/arcgis2/rest/services/agricoltura/Uso_suolo_1980/MapServer",
+      "layer": "0",
+      "anno": "1980",
+      "anno_fonte": "titolo",
+      "scala": "1:50.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 9,
+      "serie": {
+        "id": "dusaf",
+        "etichetta": "1980"
+      },
+      "note": "Il DUSAF 1980 è a scala 1:50.000 (poligoni ≥ 4 ha) e non è confrontabile con le altre edizioni. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/dusaf_1980.json",
+        "byte": 1218612,
+        "elementi": 468,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.1,
+        "contorno_px": 0
+      }
+    },
+    {
+      "id": "dusaf_1954",
+      "vista": "v2",
+      "titolo": "Uso e copertura del suolo storico 1954",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:14934f49-2ada-44b6-a069-0a72e76865b3",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/arcgis1/rest/services/territorio/dusafGAI_UW/MapServer",
+      "layer": "2",
+      "anno": "1954",
+      "anno_fonte": "titolo",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 10,
+      "serie": {
+        "id": "dusaf",
+        "etichetta": "1954"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/dusaf_1954.json",
+        "byte": 2738179,
+        "elementi": 2218,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.1,
+        "contorno_px": 0
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m)."
+    },
+    {
+      "id": "copernicus_impermeabilizzazione",
+      "vista": "v2",
+      "titolo": "Copernicus — Impermeabilizzazione (2012–2015)",
+      "fonte": "RNDT",
+      "id_scheda": "ispra_rm:Meta_Geo_CS003_DT",
+      "tipo": "wms",
+      "servizio": "http://sgi2.isprambiente.it/arcgis/services/copertura_del_suolo/IMPERVIOUSNESS/MapServer/WMSServer",
+      "layer": "8",
+      "anno": "2012-2015",
+      "anno_fonte": "periodo",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 19,
+      "crs": [
+        "EPSG:32632"
+      ],
+      "note": "Periodo 2012–2015 (risoluzione 20 m). Raster con celle native da 20 m (misurate su un campione): nella pagina si disegnano come pixel netti, non sfocati.",
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 54.04,
+        "richieste": 9,
+        "secondi": 5.3,
+        "file": "img/copernicus_impermeabilizzazione.webp",
+        "crs_usato": "EPSG:32632",
+        "byte": 172878
+      },
+      "cella_m": 20
+    },
+    {
+      "id": "corine_2018",
+      "vista": "v2",
+      "titolo": "Corine Land Cover 2018",
+      "fonte": "RNDT",
+      "id_scheda": "ispra_rm:01CLC2018_DT",
+      "tipo": "vettore",
+      "servizio": "https://sdi.isprambiente.it/geoserver/lc/wfs",
+      "layer": "lc:clc18_it_4258",
+      "anno": "2018",
+      "anno_fonte": "titolo",
+      "scala": "1:100.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 17,
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/corine_2018.json",
+        "byte": 1575317,
+        "elementi": 171,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.1,
+        "contorno_px": 0
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m)."
+    },
+    {
+      "id": "uso_suolo_ispra_2022",
+      "vista": "v2",
+      "titolo": "Carta di uso del suolo ISPRA 2022",
+      "fonte": "RNDT",
+      "id_scheda": "ispra_rm:01UsoSuolo2022_DT",
+      "tipo": "wms",
+      "servizio": "https://snpageoserver.isprambiente.it/geoserver/lu1/uso_suolo_2022/wms",
+      "layer": "uso_suolo_2022",
+      "anno": "2022",
+      "anno_fonte": "titolo",
+      "scala": "1:2.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 15,
+      "crs": [
+        "EPSG:32632",
+        "EPSG:25832"
+      ],
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 100.0,
+        "richieste": 9,
+        "secondi": 48.3,
+        "file": "img/uso_suolo_ispra_2022.webp",
+        "crs_usato": "EPSG:32632",
+        "byte": 95226
+      }
+    },
+    {
+      "id": "consumo_suolo_ispra",
+      "vista": "v2",
+      "titolo": "Consumo di suolo ISPRA (serie 2006–2023, 10 m)",
+      "fonte": "RNDT",
+      "id_scheda": "ispra_rm:01ConSuolo2019_SV",
+      "tipo": "export",
+      "servizio": "http://sgi2.isprambiente.it/arcgis/rest/services/Consumo_di_suolo/consumo_di_suolo_2019_10m/MapServer",
+      "layer": 0,
+      "anno": "2006-2023",
+      "anno_fonte": "titolo",
+      "scala": null,
+      "licenza": "CC BY 4.0",
+      "n_matrice": 14,
+      "note": "Il server è `http`: da una pagina `https` il browser lo bloccherebbe (qui le immagini sono pre-renderizzate). Raster con celle native da 10 m (misurate su un campione): nella pagina si disegnano come pixel netti, non sfocati.",
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 52.25,
+        "richieste": 9,
+        "secondi": 13.0,
+        "file": "img/consumo_suolo_ispra.webp",
+        "byte": 288436,
+        "legenda_voci": 2
+      },
+      "cella_m": 10
+    },
+    {
+      "id": "carta_forestale",
+      "vista": "v3",
+      "titolo": "Carta forestale regionale",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:7ceabf1c-28b2-4c0b-b4ba-4be3d17afa33",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/arcgis2/rest/services/agricoltura/carta_forestale/MapServer",
+      "layer": "7,19,21,22,27,34,58,60,65",
+      "anno": "2026",
+      "anno_fonte": "revisione",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 26,
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/carta_forestale.json",
+        "byte": 176464,
+        "elementi": 645,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.3,
+        "contorno_px": 0.6
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m)."
+    },
+    {
+      "id": "parchi_regionali_nazionali",
+      "vista": "v3",
+      "titolo": "Parchi regionali e nazionali",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:f7e4f4fe-54ae-4967-b1f5-91bf305a610a",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/arcgis2/rest/services/ambiente/Parchi_Regionali_Nazionali/MapServer",
+      "layer": "1,2",
+      "anno": "2023",
+      "anno_fonte": "revisione",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 22,
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/parchi_regionali_nazionali.json",
+        "byte": 115610,
+        "elementi": 2,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.5,
+        "contorno_px": 1
+      }
+    },
+    {
+      "id": "plis",
+      "vista": "v3",
+      "titolo": "Parchi locali di interesse sovracomunale (PLIS)",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:6a05ab00-7580-44f8-ab4f-7b5ed568f5af",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/arcgis2/rest/services/ambiente/PLIS/MapServer",
+      "layer": "0",
+      "anno": "2025",
+      "anno_fonte": "revisione",
+      "scala": "1:10",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 23,
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/plis.json",
+        "byte": 23556,
+        "elementi": 2,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.4,
+        "contorno_px": 1
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m)."
+    },
+    {
+      "id": "alberi_monumentali",
+      "vista": "v3",
+      "titolo": "Alberi monumentali",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:09e67617-a80e-40e2-8456-30ef4fb4df8d",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/expo/rest/services/gpt/alberi_monumentali/MapServer",
+      "layer": "0",
+      "anno": "2026",
+      "anno_fonte": "revisione",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 25,
+      "note": "26 alberi nel riquadro di Milano. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/alberi_monumentali.json",
+        "byte": 817,
+        "elementi": 26,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "punto_px": 4,
+        "icona_px": 14
+      },
+      "geom": "point"
+    },
+    {
+      "id": "copernicus_foresta",
+      "vista": "v3",
+      "titolo": "Copernicus — Copertura forestale (2012–2015)",
+      "fonte": "RNDT",
+      "id_scheda": "ispra_rm:Meta_Geo_CS001_DT",
+      "tipo": "wms",
+      "servizio": "http://sgi2.isprambiente.it/arcgis/services/copertura_del_suolo/FOREST/MapServer/WMSServer",
+      "layer": "0",
+      "anno": "2012-2015",
+      "anno_fonte": "periodo",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 20,
+      "crs": [
+        "EPSG:32632"
+      ],
+      "note": "Periodo 2012–2015 (risoluzione 20 m). Raster con celle native da 20 m (misurate su un campione): nella pagina si disegnano come pixel netti, non sfocati.",
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 15.53,
+        "richieste": 9,
+        "secondi": 6.3,
+        "file": "img/copernicus_foresta.webp",
+        "crs_usato": "EPSG:32632",
+        "byte": 116268
+      },
+      "cella_m": 20
+    },
+    {
+      "id": "tcc_2023",
+      "vista": "v3",
+      "titolo": "Copertura arborea 2023 (Google Environmental Insights Explorer)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/4__Copertura_Arborea__TCC__2023__Google_EIE/MapServer",
+      "layer": "0",
+      "anno": "2023",
+      "anno_fonte": "testo del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/tcc_2023.json",
+        "byte": 11826822,
+        "elementi": 188490,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.2,
+        "contorno_px": 0
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m)."
+    },
+    {
+      "id": "verde_alberi",
+      "vista": "v3",
+      "titolo": "Alberi (censimento, aggiornato ogni giorno)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/D_Verde_ambiente/Verde_Realtime/MapServer",
+      "layer": "1",
+      "anno": "dato giornaliero",
+      "anno_fonte": "testo del servizio",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "note": "252.629 punti nel bbox di Milano. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/verde_alberi.json",
+        "byte": 1696705,
+        "elementi": 252629,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "point",
+      "stile": {
+        "punto_px": 1.4,
+        "schiarisci": 0.3
+      }
+    },
+    {
+      "id": "verde_arbusti",
+      "vista": "v3",
+      "titolo": "Arbusti",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/D_Verde_ambiente/Verde_Realtime/MapServer",
+      "layer": "8",
+      "anno": "dato giornaliero",
+      "anno_fonte": "testo del servizio",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/verde_arbusti.json",
+        "byte": 247350,
+        "elementi": 38859,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "point",
+      "stile": {
+        "punto_px": 1.6,
+        "schiarisci": 0.2
+      }
+    },
+    {
+      "id": "verde_siepi",
+      "vista": "v3",
+      "titolo": "Siepi",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/D_Verde_ambiente/Verde_Realtime/MapServer",
+      "layer": "5",
+      "anno": "dato giornaliero",
+      "anno_fonte": "testo del servizio",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/verde_siepi.json",
+        "byte": 207489,
+        "elementi": 6886,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.5,
+        "larghezza_px": 1.6
+      },
+      "geom": "line"
+    },
+    {
+      "id": "verde_elementi_areali",
+      "vista": "v3",
+      "titolo": "Elementi areali del verde",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/D_Verde_ambiente/Verde_Realtime/MapServer",
+      "layer": "10",
+      "anno": "dato giornaliero",
+      "anno_fonte": "testo del servizio",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/verde_elementi_areali.json",
+        "byte": 3793597,
+        "elementi": 53712,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.3,
+        "contorno_px": 0
+      }
+    },
+    {
+      "id": "progetti_alleanza_aria_clima",
+      "vista": "v3",
+      "titolo": "Progetti «Alleanza Aria Clima»",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/D_Verde_ambiente/Progetti/MapServer",
+      "layer": "0",
+      "anno": "non dichiarato",
+      "anno_fonte": "—",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/progetti_alleanza_aria_clima.json",
+        "byte": 1549,
+        "elementi": 74,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "icona_px": 14,
+        "punto_px": 4
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "geom": "point"
+    },
+    {
+      "id": "pt9_isola_calore",
+      "vista": "v4",
+      "titolo": "PTR PT9 — Vulnerabilità all'isola di calore",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:51818138-d37f-405d-bc8b-00cbf78f1243",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/arcgis6/rest/services/PTR/Tavola_PT9_view/MapServer",
+      "layer": "2",
+      "anno": "2025",
+      "anno_fonte": "revisione",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 44,
+      "note": "Indice relativo 0–100 su griglia di 500 m, senza unità dichiarata, non è una temperatura. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/pt9_isola_calore.json",
+        "byte": 35807,
+        "elementi": 906,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.1,
+        "contorno_px": 0
+      }
+    },
+    {
+      "id": "lst_media",
+      "vista": "v4",
+      "titolo": "Temperatura media del suolo (dato statico, pubblicazione 2017)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/Fonte_Ext/Average_Land_Surface_Temperature_Milan/MapServer",
+      "layer": "0",
+      "anno": "2017",
+      "anno_fonte": "testo del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "note": "I termini d'uso rimandano a un PDF sull'host morto del Comune. Layer vettoriale (7.390 poligoni). Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/lst_media.json",
+        "byte": 1647129,
+        "elementi": 7390,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "poly",
+      "stile": {
+        "contorno_px": 0
+      }
+    },
+    {
+      "id": "lst_pac_2013_17",
+      "vista": "v4",
+      "titolo": "Temperatura superficiale 2013–2017 (PAC, progetto Reachout)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "export",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_4_LST/MapServer",
+      "layer": 0,
+      "anno": "2013–2017",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "CC Attribution 1.0 Generic (dichiarata nel testo del layer)",
+      "serie": {
+        "id": "lst_pac",
+        "etichetta": "2013–2017"
+      },
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 91.76,
+        "richieste": 9,
+        "secondi": 5.3,
+        "file": "img/lst_pac_2013_17.webp",
+        "byte": 333884,
+        "legenda_voci": 1
+      },
+      "cella_m": 30,
+      "note": "Raster con celle native da 30 m (misurate su un campione): nella pagina si disegnano come pixel netti, non sfocati."
+    },
+    {
+      "id": "lst_pac_2017_21",
+      "vista": "v4",
+      "titolo": "Temperatura superficiale 2017–2021 (PAC, progetto Reachout)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "export",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_4_LST/MapServer",
+      "layer": 1,
+      "anno": "2017–2021",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "CC Attribution 1.0 Generic (dichiarata nel testo del layer)",
+      "serie": {
+        "id": "lst_pac",
+        "etichetta": "2017–2021"
+      },
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 91.76,
+        "richieste": 9,
+        "secondi": 5.2,
+        "file": "img/lst_pac_2017_21.webp",
+        "byte": 333332,
+        "legenda_voci": 1
+      },
+      "cella_m": 30,
+      "note": "Raster con celle native da 30 m (misurate su un campione): nella pagina si disegnano come pixel netti, non sfocati."
+    },
+    {
+      "id": "lst_pac_2019_23",
+      "vista": "v4",
+      "titolo": "Temperatura superficiale 2019–2023 (PAC, progetto Reachout)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "export",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_4_LST/MapServer",
+      "layer": 2,
+      "anno": "2019–2023",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "CC Attribution 1.0 Generic (dichiarata nel testo del layer)",
+      "serie": {
+        "id": "lst_pac",
+        "etichetta": "2019–2023"
+      },
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 91.76,
+        "richieste": 9,
+        "secondi": 4.7,
+        "file": "img/lst_pac_2019_23.webp",
+        "byte": 334844,
+        "legenda_voci": 1
+      },
+      "cella_m": 30,
+      "note": "Raster con celle native da 30 m (misurate su un campione): nella pagina si disegnano come pixel netti, non sfocati."
+    },
+    {
+      "id": "rischio_caldo_2017",
+      "vista": "v4",
+      "titolo": "Rischio caldo 2017 (sezioni di censimento)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "export",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_4_rischio_caldo/MapServer",
+      "layer": 4,
+      "anno": "2017",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "rischio_caldo",
+        "etichetta": "2017"
+      },
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 55.46,
+        "richieste": 9,
+        "secondi": 5.3,
+        "file": "img/rischio_caldo_2017.webp",
+        "byte": 126446,
+        "legenda_voci": 1
+      }
+    },
+    {
+      "id": "rischio_caldo_2021",
+      "vista": "v4",
+      "titolo": "Rischio caldo 2021 (sezioni di censimento)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "export",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_4_rischio_caldo/MapServer",
+      "layer": 3,
+      "anno": "2021",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "rischio_caldo",
+        "etichetta": "2021"
+      },
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 55.68,
+        "richieste": 9,
+        "secondi": 5.3,
+        "file": "img/rischio_caldo_2021.webp",
+        "byte": 141382,
+        "legenda_voci": 1
+      }
+    },
+    {
+      "id": "rischio_caldo_2023",
+      "vista": "v4",
+      "titolo": "Rischio caldo 2023 (sezioni di censimento)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "export",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_4_rischio_caldo/MapServer",
+      "layer": 2,
+      "anno": "2023",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "rischio_caldo",
+        "etichetta": "2023"
+      },
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 55.68,
+        "richieste": 9,
+        "secondi": 4.7,
+        "file": "img/rischio_caldo_2023.webp",
+        "byte": 141868,
+        "legenda_voci": 1
+      }
+    },
+    {
+      "id": "vulnerabilita_caldo_2011",
+      "vista": "v4",
+      "titolo": "Vulnerabilità al caldo 2011 (sezioni di censimento)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "export",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_4_rischio_caldo/MapServer",
+      "layer": 1,
+      "anno": "2011",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "vulnerabilita_caldo",
+        "etichetta": "2011"
+      },
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 86.36,
+        "richieste": 9,
+        "secondi": 4.9,
+        "file": "img/vulnerabilita_caldo_2011.webp",
+        "byte": 40850,
+        "legenda_voci": 7
+      }
+    },
+    {
+      "id": "vulnerabilita_caldo_2021",
+      "vista": "v4",
+      "titolo": "Vulnerabilità al caldo 2021 (sezioni di censimento)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "export",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_4_rischio_caldo/MapServer",
+      "layer": 0,
+      "anno": "2021",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "vulnerabilita_caldo",
+        "etichetta": "2021"
+      },
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 86.82,
+        "richieste": 9,
+        "secondi": 4.9,
+        "file": "img/vulnerabilita_caldo_2021.webp",
+        "byte": 41524,
+        "legenda_voci": 7
+      }
+    },
+    {
+      "id": "stazioni_aria_ispra",
+      "vista": "v5",
+      "titolo": "Stazioni di monitoraggio della qualità dell'aria (ISPRA)",
+      "fonte": "RNDT",
+      "id_scheda": "ispra_rm:001_RAQ_DataflowD_DT",
+      "tipo": "vettore",
+      "servizio": "https://sdi.isprambiente.it/geoserver/ac/wfs",
+      "layer": "ac:stations_v",
+      "anno": "2016",
+      "anno_fonte": "periodo",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 39,
+      "note": "9 stazioni nel bbox di Milano (dato 2016): solo posizione e inquinanti campionati, nessuna serie. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie non semplificate).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/stazioni_aria_ispra.json",
+        "byte": 312,
+        "elementi": 9,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0
+      },
+      "geom": "point",
+      "stile": {
+        "punto_px": 4.5,
+        "schiarisci": 0.0
+      }
+    },
+    {
+      "id": "zone_aria_ispra",
+      "vista": "v5",
+      "titolo": "Zone e agglomerati per la qualità dell'aria (ISPRA)",
+      "fonte": "RNDT",
+      "id_scheda": "ispra_rm:001_RAQ_DataflowB_DT",
+      "tipo": "wms",
+      "servizio": "https://sdi.isprambiente.it/geoserver/ac/zones/wms",
+      "layer": "zones",
+      "anno": "2016",
+      "anno_fonte": "periodo",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 40,
+      "crs": [
+        "EPSG:25832",
+        "EPSG:7791"
+      ],
+      "rendering": {
+        "esito": "vuoto",
+        "pixel_pieni_pct": 0.0,
+        "richieste": 9,
+        "secondi": 2.1,
+        "file": "img/zone_aria_ispra.webp",
+        "crs_usato": "EPSG:25832",
+        "byte": 564
+      },
+      "note": " Nel riquadro del Comune non ci sono zone (0 elementi dal servizio WFS): lo strato resta vuoto."
+    },
+    {
+      "id": "campioni_inquinanti_ispra",
+      "vista": "v5",
+      "titolo": "Campioni di inquinanti alle stazioni (ISPRA)",
+      "fonte": "RNDT",
+      "id_scheda": "ispra_rm:002_RAQ_DataflowD_DT",
+      "tipo": "vettore",
+      "servizio": "https://sdi.isprambiente.it/geoserver/ac/wfs",
+      "layer": "ac:stations_pollutants_v",
+      "anno": "2016",
+      "anno_fonte": "periodo",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 41,
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/campioni_inquinanti_ispra.json",
+        "byte": 389,
+        "elementi": 29,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0
+      },
+      "geom": "point",
+      "stile": {
+        "punto_px": 4.5,
+        "schiarisci": 0.2
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie non semplificate)."
+    },
+    {
+      "id": "zonizzazione_aria_lombardia",
+      "vista": "v5",
+      "titolo": "Zonizzazione regionale per la qualità dell'aria",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:a1d4f76d-6863-41f4-9633-5f2def42493b",
+      "tipo": "export",
+      "servizio": "https://www.cartografia.servizirl.it/expo/rest/services/gpt/zonizzazione_aria/MapServer",
+      "layer": 0,
+      "anno": "2013",
+      "anno_fonte": "revisione",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 38,
+      "note": "Revisione 2013 (DGR 2011): la vigenza non è stata verificata.",
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 100.0,
+        "richieste": 9,
+        "secondi": 4.5,
+        "file": "img/zonizzazione_aria_lombardia.webp",
+        "byte": 214360,
+        "legenda_voci": 0
+      }
+    },
+    {
+      "id": "aria_no2_2017",
+      "vista": "v5",
+      "titolo": "NO₂ — concentrazione media annua 2017 (modello AMAT)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "export",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_122_concentrazioni_inquinanti_aria/MapServer",
+      "layer": 2,
+      "anno": "2017",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "aria_no2",
+        "etichetta": "2017"
+      },
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 55.66,
+        "richieste": 9,
+        "secondi": 4.5,
+        "file": "img/aria_no2_2017.webp",
+        "byte": 6996,
+        "legenda_voci": 5
+      }
+    },
+    {
+      "id": "aria_no2_2023",
+      "vista": "v5",
+      "titolo": "NO₂ — concentrazione media annua 2023 (modello AMAT)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "export",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_122_concentrazioni_inquinanti_aria/MapServer",
+      "layer": 1,
+      "anno": "2023",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "aria_no2",
+        "etichetta": "2023"
+      },
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 55.66,
+        "richieste": 9,
+        "secondi": 4.2,
+        "file": "img/aria_no2_2023.webp",
+        "byte": 17610,
+        "legenda_voci": 5
+      },
+      "cella_m": 25,
+      "note": "Raster con celle native da 25 m (misurate su un campione): nella pagina si disegnano come pixel netti, non sfocati."
+    },
+    {
+      "id": "aria_pm2_5_2017",
+      "vista": "v5",
+      "titolo": "PM2,5 — concentrazione media annua 2017 (modello AMAT)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "export",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_122_concentrazioni_inquinanti_aria/MapServer",
+      "layer": 4,
+      "anno": "2017",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "aria_pm2_5",
+        "etichetta": "2017"
+      },
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 55.66,
+        "richieste": 9,
+        "secondi": 4.5,
+        "file": "img/aria_pm2_5_2017.webp",
+        "byte": 6806,
+        "legenda_voci": 4
+      }
+    },
+    {
+      "id": "aria_pm2_5_2023",
+      "vista": "v5",
+      "titolo": "PM2,5 — concentrazione media annua 2023 (modello AMAT)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "export",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_122_concentrazioni_inquinanti_aria/MapServer",
+      "layer": 3,
+      "anno": "2023",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "aria_pm2_5",
+        "etichetta": "2023"
+      },
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 55.66,
+        "richieste": 9,
+        "secondi": 4.3,
+        "file": "img/aria_pm2_5_2023.webp",
+        "byte": 12462,
+        "legenda_voci": 4
+      }
+    },
+    {
+      "id": "aria_pm10_2017",
+      "vista": "v5",
+      "titolo": "PM10 — concentrazione media annua 2017 (modello AMAT)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "export",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_122_concentrazioni_inquinanti_aria/MapServer",
+      "layer": 6,
+      "anno": "2017",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "aria_pm10",
+        "etichetta": "2017"
+      },
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 55.66,
+        "richieste": 9,
+        "secondi": 4.4,
+        "file": "img/aria_pm10_2017.webp",
+        "byte": 8710,
+        "legenda_voci": 5
+      }
+    },
+    {
+      "id": "aria_pm10_2023",
+      "vista": "v5",
+      "titolo": "PM10 — concentrazione media annua 2023 (modello AMAT)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "export",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_122_concentrazioni_inquinanti_aria/MapServer",
+      "layer": 5,
+      "anno": "2023",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "aria_pm10",
+        "etichetta": "2023"
+      },
+      "rendering": {
+        "esito": "ok",
+        "pixel_pieni_pct": 55.66,
+        "richieste": 9,
+        "secondi": 4.1,
+        "file": "img/aria_pm10_2023.webp",
+        "byte": 10412,
+        "legenda_voci": 5
+      }
+    },
+    {
+      "id": "rete_ferroviaria",
+      "vista": "v6",
+      "titolo": "Rete ferroviaria",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:3417cfea-5192-467e-a388-947bdd7a85f2",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/expo/rest/services/gpt/infrastrutture_mobilita/MapServer",
+      "layer": "3",
+      "anno": "2024",
+      "anno_fonte": "revisione",
+      "scala": "1:10.000",
+      "licenza": "da leggere: nessuna licenza dichiarata",
+      "n_matrice": 30,
+      "note": "Licenza non dichiarata nella scheda (il vincolo contiene solo la parola «license»). Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/rete_ferroviaria.json",
+        "byte": 15265,
+        "elementi": 116,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.7,
+        "larghezza_px": 1.6
+      },
+      "geom": "line"
+    },
+    {
+      "id": "rete_metropolitana",
+      "vista": "v6",
+      "titolo": "Rete metropolitana",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:3417cfea-5192-467e-a388-947bdd7a85f2",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/expo/rest/services/gpt/infrastrutture_mobilita/MapServer",
+      "layer": "5",
+      "anno": "2024",
+      "anno_fonte": "revisione",
+      "scala": "1:10.000",
+      "licenza": "da leggere: nessuna licenza dichiarata",
+      "n_matrice": 30,
+      "note": "Licenza non dichiarata nella scheda (il vincolo contiene solo la parola «license»). Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/rete_metropolitana.json",
+        "byte": 7980,
+        "elementi": 120,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.15,
+        "larghezza_px": 2.4
+      },
+      "geom": "line"
+    },
+    {
+      "id": "stazioni_metropolitana",
+      "vista": "v6",
+      "titolo": "Stazioni della metropolitana",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:3417cfea-5192-467e-a388-947bdd7a85f2",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/expo/rest/services/gpt/infrastrutture_mobilita/MapServer",
+      "layer": "4",
+      "anno": "2024",
+      "anno_fonte": "revisione",
+      "scala": "1:10.000",
+      "licenza": "da leggere: nessuna licenza dichiarata",
+      "n_matrice": 30,
+      "note": "Licenza non dichiarata nella scheda (il vincolo contiene solo la parola «license»). Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/stazioni_metropolitana.json",
+        "byte": 2218,
+        "elementi": 116,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "icona_px": 16,
+        "punto_px": 4
+      },
+      "geom": "point"
+    },
+    {
+      "id": "stazioni_ferroviarie",
+      "vista": "v6",
+      "titolo": "Stazioni ferroviarie",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:3417cfea-5192-467e-a388-947bdd7a85f2",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/expo/rest/services/gpt/infrastrutture_mobilita/MapServer",
+      "layer": "2",
+      "anno": "2024",
+      "anno_fonte": "revisione",
+      "scala": "1:10.000",
+      "licenza": "da leggere: nessuna licenza dichiarata",
+      "n_matrice": 30,
+      "note": "Licenza non dichiarata nella scheda (il vincolo contiene solo la parola «license»). Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/stazioni_ferroviarie.json",
+        "byte": 1305,
+        "elementi": 37,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "icona_px": 16,
+        "punto_px": 4
+      },
+      "geom": "point"
+    },
+    {
+      "id": "piste_ciclabili",
+      "vista": "v6",
+      "titolo": "Piste ciclabili (ultima rilevazione 2023)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/D_Mobilita/Piste_ciclabili/MapServer",
+      "layer": "0",
+      "anno": "2023",
+      "anno_fonte": "testo del layer",
+      "scala": null,
+      "licenza": "CC BY 4.0 (dichiarata nel testo del layer)",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/piste_ciclabili.json",
+        "byte": 155351,
+        "elementi": 4411,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "linea": [
+          234,
+          88,
+          12,
+          255
+        ],
+        "larghezza_px": 2
+      },
+      "note": "Colore arancione scelto da noi per la leggibilità. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "geom": "line"
+    },
+    {
+      "id": "ciclabili_pac_2017",
+      "vista": "v6",
+      "titolo": "Ciclabili al 31/12/2017 (PAC)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_212_ciclabili/MapServer",
+      "layer": "3",
+      "anno": "2017",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "ciclabili_pac",
+        "etichetta": "2017"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/ciclabili_pac_2017.json",
+        "byte": 86182,
+        "elementi": 2017,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.4,
+        "larghezza_px": 2
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "geom": "line"
+    },
+    {
+      "id": "ciclabili_pac_2022",
+      "vista": "v6",
+      "titolo": "Ciclabili al 31/12/2022 (PAC)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_212_ciclabili/MapServer",
+      "layer": "2",
+      "anno": "2022",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "ciclabili_pac",
+        "etichetta": "2022"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/ciclabili_pac_2022.json",
+        "byte": 134566,
+        "elementi": 3722,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.4,
+        "larghezza_px": 2
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "geom": "line"
+    },
+    {
+      "id": "ciclabili_pac_2023",
+      "vista": "v6",
+      "titolo": "Ciclabili al 31/12/2023 (PAC)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_212_ciclabili/MapServer",
+      "layer": "1",
+      "anno": "2023",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "ciclabili_pac",
+        "etichetta": "2023"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/ciclabili_pac_2023.json",
+        "byte": 141135,
+        "elementi": 3921,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.4,
+        "larghezza_px": 2
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "geom": "line"
+    },
+    {
+      "id": "rastrelliere_bici",
+      "vista": "v6",
+      "titolo": "Rastrelliere (aree di sosta per le bici)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/D_Mobilita/Bike_area_sosta/MapServer",
+      "layer": "0",
+      "anno": "2023",
+      "anno_fonte": "testo del layer",
+      "scala": null,
+      "licenza": "CC BY 4.0 (dichiarata nel testo del layer)",
+      "note": "Non è il bike sharing, che non è nel catalogo pubblico. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/rastrelliere_bici.json",
+        "byte": 28232,
+        "elementi": 3288,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "point",
+      "stile": {
+        "punto_px": 3,
+        "schiarisci": 0.3,
+        "icona_px": 12
+      }
+    },
+    {
+      "id": "aree_pedonali_ztl",
+      "vista": "v6",
+      "titolo": "Aree pedonali e ZTL",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/D_Mobilita/Zone30_AreePedonali_ZTL/MapServer",
+      "layer": "0",
+      "anno": "non dichiarato",
+      "anno_fonte": "—",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "note": "Non sono Area C e Area B, che non sono nel catalogo pubblico. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/aree_pedonali_ztl.json",
+        "byte": 52669,
+        "elementi": 217,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.35,
+        "contorno_px": 1.2
+      }
+    },
+    {
+      "id": "zone_30",
+      "vista": "v6",
+      "titolo": "Zone 30",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/D_Mobilita/Zone30_AreePedonali_ZTL/MapServer",
+      "layer": "1",
+      "anno": "non dichiarato",
+      "anno_fonte": "—",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/zone_30.json",
+        "byte": 283682,
+        "elementi": 1235,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.35,
+        "contorno_px": 1.2
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m)."
+    },
+    {
+      "id": "pedonali_ztl_pac_2017",
+      "vista": "v6",
+      "titolo": "Aree pedonali e ZTL al 31/12/2017 (PAC)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_212_aree_pedonali_ZTL/MapServer",
+      "layer": "2",
+      "anno": "2017",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "pedonali_ztl_pac",
+        "etichetta": "2017"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/pedonali_ztl_pac_2017.json",
+        "byte": 57895,
+        "elementi": 265,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.35,
+        "contorno_px": 1.2
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "geom": "poly"
+    },
+    {
+      "id": "pedonali_ztl_pac_2021",
+      "vista": "v6",
+      "titolo": "Aree pedonali e ZTL al 31/12/2021 (PAC)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_212_aree_pedonali_ZTL/MapServer",
+      "layer": "3",
+      "anno": "2021",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "pedonali_ztl_pac",
+        "etichetta": "2021"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/pedonali_ztl_pac_2021.json",
+        "byte": 73359,
+        "elementi": 301,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.35,
+        "contorno_px": 1.2
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "geom": "poly"
+    },
+    {
+      "id": "pedonali_ztl_pac_2023",
+      "vista": "v6",
+      "titolo": "Aree pedonali e ZTL al 31/12/2023 (PAC)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_212_aree_pedonali_ZTL/MapServer",
+      "layer": "4",
+      "anno": "2023",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "pedonali_ztl_pac",
+        "etichetta": "2023"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/pedonali_ztl_pac_2023.json",
+        "byte": 79379,
+        "elementi": 344,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.35,
+        "contorno_px": 1.2
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "geom": "poly"
+    },
+    {
+      "id": "velocita_limitata_2017",
+      "vista": "v6",
+      "titolo": "Aree a velocità limitata al 31/12/2017 (PAC)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_1411_aree_velocità_limitata/MapServer",
+      "layer": "2",
+      "anno": "2017",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "velocita_limitata",
+        "etichetta": "2017"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/velocita_limitata_2017.json",
+        "byte": 147394,
+        "elementi": 677,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.35,
+        "contorno_px": 1.2
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "geom": "poly"
+    },
+    {
+      "id": "velocita_limitata_2021",
+      "vista": "v6",
+      "titolo": "Aree a velocità limitata al 31/12/2021 (PAC)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_1411_aree_velocità_limitata/MapServer",
+      "layer": "3",
+      "anno": "2021",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "velocita_limitata",
+        "etichetta": "2021"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/velocita_limitata_2021.json",
+        "byte": 271878,
+        "elementi": 1150,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.35,
+        "contorno_px": 1.2
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "geom": "poly"
+    },
+    {
+      "id": "velocita_limitata_2023",
+      "vista": "v6",
+      "titolo": "Aree a velocità limitata al 31/12/2023 (PAC)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_1411_aree_velocità_limitata/MapServer",
+      "layer": "4",
+      "anno": "2023",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "serie": {
+        "id": "velocita_limitata",
+        "etichetta": "2023"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/velocita_limitata_2023.json",
+        "byte": 303165,
+        "elementi": 1291,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.35,
+        "contorno_px": 1.2
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "geom": "poly"
+    },
+    {
+      "id": "reticolo_idrografico",
+      "vista": "v7",
+      "titolo": "Reticolo idrografico regionale unificato",
+      "fonte": "RNDT",
+      "id_scheda": "r_lombar:e8f83865-9405-48e3-ae4f-168d851f7208",
+      "tipo": "vettore",
+      "servizio": "https://www.cartografia.servizirl.it/arcgis1/rest/services/territorio/ReticoloIdrografico_RIRU/MapServer",
+      "layer": "10",
+      "anno": "2026",
+      "anno_fonte": "revisione",
+      "scala": "1:10.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 37,
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/reticolo_idrografico.json",
+        "byte": 266787,
+        "elementi": 2572,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "line",
+      "stile": {
+        "schiarisci": 0.5,
+        "larghezza_px": 1.4
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m)."
+    },
+    {
+      "id": "permeabilita_100k",
+      "vista": "v7",
+      "titolo": "Carta della permeabilità 1:100.000 (ISPRA)",
+      "fonte": "RNDT",
+      "id_scheda": "ispra_rm:Meta_GeoPerm100K_DT",
+      "tipo": "vettore",
+      "servizio": "https://sgi2.isprambiente.it/geoserver/ge-core8/wfs",
+      "layer": "ge-core8:litologia100k",
+      "anno": "2020-2022",
+      "anno_fonte": "periodo",
+      "scala": "1:100.000",
+      "licenza": "CC BY 4.0",
+      "n_matrice": 21,
+      "note": "Scala 1:100.000: grossolana per un quartiere. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 1,0 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/permeabilita_100k.json",
+        "byte": 67647,
+        "elementi": 7,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 1.0
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.0,
+        "contorno_px": 0.8
+      }
+    },
+    {
+      "id": "temperature_falda",
+      "vista": "v7",
+      "titolo": "Temperature di falda (Città Metropolitana)",
+      "fonte": "RNDT",
+      "id_scheda": "cmmi:000006:20250619:125642",
+      "tipo": "vettore",
+      "servizio": "https://decimetro.cittametropolitana.mi.it/geoserver/geonode/wfs",
+      "layer": "geonode:temperature_falda_exp_06_05_2026",
+      "anno": "2025",
+      "anno_fonte": "revisione",
+      "scala": "1:5.000",
+      "licenza": "da leggere: Il materiale è fornito per le finalità istituzionali dell'Ente, con licenza Creative Commo",
+      "n_matrice": 45,
+      "note": "Acque sotterranee, non calore urbano. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie non semplificate).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/temperature_falda.json",
+        "byte": 628,
+        "elementi": 54,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0
+      },
+      "geom": "point",
+      "stile": {
+        "punto_px": 4,
+        "schiarisci": 0.2
+      }
+    },
+    {
+      "id": "depavimentazione",
+      "vista": "v7",
+      "titolo": "Depavimentazione (PAC 4.3.1)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_431_Depavimentazione/MapServer",
+      "layer": "1",
+      "anno": "2023",
+      "anno_fonte": "testo del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "note": "La struttura dei dati è del 2023; stato di avanzamento delle aree. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/depavimentazione.json",
+        "byte": 36333,
+        "elementi": 453,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "poly",
+      "stile": {
+        "schiarisci": 0.35,
+        "contorno_px": 1.2
+      }
+    },
+    {
+      "id": "interventi_tattici_2019",
+      "vista": "v7",
+      "titolo": "Interventi tattici al 31/12/2019 (PAC 1.4.1.2)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_1412_interventi_tattici/MapServer",
+      "layer": "6",
+      "anno": "2019",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "note": "Non verificato se coincidono con le «Piazze Aperte». Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "serie": {
+        "id": "interventi_tattici",
+        "etichetta": "2019"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/interventi_tattici_2019.json",
+        "byte": 3487,
+        "elementi": 11,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.3,
+        "contorno_px": 1.5
+      },
+      "geom": "poly"
+    },
+    {
+      "id": "interventi_tattici_2021",
+      "vista": "v7",
+      "titolo": "Interventi tattici al 31/12/2021 (PAC 1.4.1.2)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_1412_interventi_tattici/MapServer",
+      "layer": "5",
+      "anno": "2021",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "note": "Non verificato se coincidono con le «Piazze Aperte». Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "serie": {
+        "id": "interventi_tattici",
+        "etichetta": "2021"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/interventi_tattici_2021.json",
+        "byte": 9301,
+        "elementi": 37,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.3,
+        "contorno_px": 1.5
+      },
+      "geom": "poly"
+    },
+    {
+      "id": "interventi_tattici_2023",
+      "vista": "v7",
+      "titolo": "Interventi tattici al 31/12/2023 (PAC 1.4.1.2)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_1412_interventi_tattici/MapServer",
+      "layer": "4",
+      "anno": "2023",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "note": "Non verificato se coincidono con le «Piazze Aperte». Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "serie": {
+        "id": "interventi_tattici",
+        "etichetta": "2023"
+      },
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/interventi_tattici_2023.json",
+        "byte": 11525,
+        "elementi": 43,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.3,
+        "contorno_px": 1.5
+      },
+      "geom": "poly"
+    },
+    {
+      "id": "interventi_tattici_2025",
+      "vista": "v7",
+      "titolo": "Interventi tattici al 31/12/2025 (PAC 1.4.1.2) — programmati",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_1412_interventi_tattici/MapServer",
+      "layer": "8",
+      "anno": "2025",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "note": "Non verificato se coincidono con le «Piazze Aperte». Istantanea futura: dato di programma, non realizzato. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "serie": {
+        "id": "interventi_tattici",
+        "etichetta": "2025 (prog.)"
+      },
+      "programmato": true,
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/interventi_tattici_2025.json",
+        "byte": 14204,
+        "elementi": 62,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.3,
+        "contorno_px": 1.5
+      },
+      "geom": "poly"
+    },
+    {
+      "id": "interventi_tattici_2027",
+      "vista": "v7",
+      "titolo": "Interventi tattici al 31/12/2027 (PAC 1.4.1.2) — programmati",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_1412_interventi_tattici/MapServer",
+      "layer": "9",
+      "anno": "2027",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "note": "Non verificato se coincidono con le «Piazze Aperte». Istantanea futura: dato di programma, non realizzato. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "serie": {
+        "id": "interventi_tattici",
+        "etichetta": "2027 (prog.)"
+      },
+      "programmato": true,
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/interventi_tattici_2027.json",
+        "byte": 14706,
+        "elementi": 64,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.3,
+        "contorno_px": 1.5
+      },
+      "geom": "poly"
+    },
+    {
+      "id": "interventi_tattici_2029",
+      "vista": "v7",
+      "titolo": "Interventi tattici al 31/12/2029 (PAC 1.4.1.2) — programmati",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_1412_interventi_tattici/MapServer",
+      "layer": "10",
+      "anno": "2029",
+      "anno_fonte": "nome del layer",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "note": "Non verificato se coincidono con le «Piazze Aperte». Istantanea futura: dato di programma, non realizzato. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "serie": {
+        "id": "interventi_tattici",
+        "etichetta": "2029 (prog.)"
+      },
+      "programmato": true,
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/interventi_tattici_2029.json",
+        "byte": 14706,
+        "elementi": 64,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "schiarisci": 0.3,
+        "contorno_px": 1.5
+      },
+      "geom": "poly"
+    },
+    {
+      "id": "fontanelle",
+      "vista": "v7",
+      "titolo": "Fontanelle",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/MM/Fontanelle/MapServer",
+      "layer": "3",
+      "anno": "non dichiarato",
+      "anno_fonte": "—",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/fontanelle.json",
+        "byte": 8244,
+        "elementi": 679,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "point",
+      "stile": {
+        "punto_px": 3,
+        "schiarisci": 0.3,
+        "icona_px": 14
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m)."
+    },
+    {
+      "id": "case_acqua",
+      "vista": "v7",
+      "titolo": "Case dell'acqua",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/MM/Fontanelle/MapServer",
+      "layer": "5",
+      "anno": "non dichiarato",
+      "anno_fonte": "—",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/case_acqua.json",
+        "byte": 1860,
+        "elementi": 52,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "stile": {
+        "punto_px": 3,
+        "schiarisci": 0.3,
+        "icona_px": 14
+      },
+      "note": "Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "geom": "point"
+    },
+    {
+      "id": "scuole_pac",
+      "vista": "v7",
+      "titolo": "Scuole (PAC 3.2.1, punti)",
+      "fonte": "gisportal (non RNDT)",
+      "id_scheda": null,
+      "tipo": "vettore",
+      "servizio": "https://gisportal.comune.milano.it/federated/rest/services/PAC/PAC_321_Scuole/MapServer",
+      "layer": "1",
+      "anno": "non dichiarato",
+      "anno_fonte": "—",
+      "scala": null,
+      "licenza": "non dichiarata",
+      "note": "Sono le scuole, non le strade scolastiche. Vettore scaricato dal servizio e disegnato nella pagina (nitido a ogni zoom; stile dal servizio, schiarito dove serve per la leggibilità; geometrie semplificate a 0,5 m).",
+      "rendering": {
+        "esito": "ok",
+        "file": "vettori/scuole_pac.json",
+        "byte": 5481,
+        "elementi": 456,
+        "data_scarico": "2026-10-14",
+        "tolleranza_m": 0.5
+      },
+      "geom": "point",
+      "stile": {
+        "punto_px": 3,
+        "schiarisci": 0.3,
+        "icona_px": 14
+      }
+    }
+  ],
+  "non_mostrati": [
+    {
+      "n_matrice": 8,
+      "titolo": "Uso e copertura del suolo 1999 (DUSAF 1.1)",
+      "id_scheda": "r_lombar:827294eb-110b-4fb7-8cbc-6776dc8c2953",
+      "motivo": "servizio degradato (export vuoto)"
+    },
+    {
+      "n_matrice": 11,
+      "titolo": "Evoluzione temporale DUSAF",
+      "id_scheda": "r_lombar:c19db136-f33d-43f8-afab-d6fd8383a1f7",
+      "motivo": "nessun servizio utilizzabile"
+    },
+    {
+      "n_matrice": 12,
+      "titolo": "Consumo di suolo 2021 - Dataset",
+      "id_scheda": "ispra_rm:01ConSuolo2021_DT",
+      "motivo": "solo download (raster nazionale da ritagliare)"
+    },
+    {
+      "n_matrice": 13,
+      "titolo": "Consumo di suolo 2023 - Dataset",
+      "id_scheda": "ispra_rm:01ConSuolo2023_DT",
+      "motivo": "solo download (raster nazionale da ritagliare)"
+    },
+    {
+      "n_matrice": 16,
+      "titolo": "Carta di copertura del suolo 2022 - View Service",
+      "id_scheda": "ispra_rm:01CopSuolo2022_SV",
+      "motivo": "nessun servizio utilizzabile"
+    },
+    {
+      "n_matrice": 18,
+      "titolo": "Impermeabilizzazione del suolo (Serie)",
+      "id_scheda": "ispra_rm:SoilSealingSerie01Raster",
+      "motivo": "nessun servizio utilizzabile"
+    },
+    {
+      "n_matrice": 24,
+      "titolo": "Rete Natura 2000",
+      "id_scheda": "r_lombar:43ac3aac-250e-48fe-917d-5b4cf34d4afc",
+      "motivo": "non copre Milano"
+    },
+    {
+      "n_matrice": 27,
+      "titolo": "Interventi di forestazione finanziati con risorse pubbliche",
+      "id_scheda": "r_lombar:dbf93380-8556-4279-81d5-1a9062018af7",
+      "motivo": "servizio degradato (export vuoto)"
+    },
+    {
+      "n_matrice": 28,
+      "titolo": "Terreni gestiti dai consorzi forestali e da ERSAF",
+      "id_scheda": "r_lombar:e8cf3089-8854-44c9-8204-176a43c183d7",
+      "motivo": "servizio degradato (export vuoto)"
+    },
+    {
+      "n_matrice": 29,
+      "titolo": "PTR - Tavola PT8 - Spazi aperti metropolitani",
+      "id_scheda": "r_lombar:35288819-fa3e-4660-8dc9-3167901b3ccb",
+      "motivo": "PT8: molti layer, da scegliere"
+    },
+    {
+      "n_matrice": 31,
+      "titolo": "Rete Ciclabile Piano Regionale della Mobilità Ciclistica (PRMC)",
+      "id_scheda": "r_lombar:2f829fa4-dfd1-4124-b46a-77d6d85a6ec8",
+      "motivo": "nessun servizio utilizzabile"
+    },
+    {
+      "n_matrice": 32,
+      "titolo": "Stradario",
+      "id_scheda": "r_lombar:5f358a56-79e3-40f6-9cbb-23e212dc392e",
+      "motivo": "Stradario regionale: molti layer di rete, da scegliere"
+    },
+    {
+      "n_matrice": 33,
+      "titolo": "Classificazione funzionale e qualificazione rete viaria ex art.3 LR 9/2001",
+      "id_scheda": "r_lombar:55f000d2-e39e-4d11-b509-113163f2e04d",
+      "motivo": "copertura non determinata"
+    },
+    {
+      "n_matrice": 34,
+      "titolo": "OpenStreetMap",
+      "id_scheda": "r_lombar:f0d6a058-cd54-49c0-aaa9-4b111a79fba2",
+      "motivo": "nessun servizio utilizzabile"
+    },
+    {
+      "n_matrice": 35,
+      "titolo": "Strade",
+      "id_scheda": "cmmi:fcdbc135-9964-4561-a0ab-a062643669d4",
+      "motivo": "nessun servizio utilizzabile"
+    },
+    {
+      "n_matrice": 36,
+      "titolo": "Metroponte",
+      "id_scheda": "cmmi:2165d8f2-58ca-4145-8c99-855d6d331efb",
+      "motivo": "nessun servizio utilizzabile"
+    },
+    {
+      "n_matrice": 42,
+      "titolo": "Qualità dell'Aria - View Service",
+      "id_scheda": "ispra_rm:001_RAQ_Dataflow_SV",
+      "motivo": "è il livello dei confini dei comuni, non un dato"
+    },
+    {
+      "n_matrice": 43,
+      "titolo": "Stazioni POLLnet  - Dataset",
+      "id_scheda": "ispra_rm:Meta001_Pollnet_Stat_DT",
+      "motivo": "copertura non determinata"
+    },
+    {
+      "n_matrice": 47,
+      "titolo": "Ortofoto 2018 - 2019",
+      "id_scheda": "r_lombar:a5f9df46-db2d-48ce-8137-9872e454f20f",
+      "motivo": "stesso servizio dell'ortofoto 2018"
+    },
+    {
+      "n_matrice": 48,
+      "titolo": "Copertura Rilievi LiDAR",
+      "id_scheda": "r_lombar:975979a7-68e8-4524-b759-0db4d8284939",
+      "motivo": "copertura dei rilievi LiDAR: da scegliere i layer"
+    }
+  ],
+  "lacune": [
+    "Area C e Area B",
+    "Bike sharing",
+    "ForestaMi",
+    "Rifugi climatici («Spazi Freschi»): tipologia 7 di Città Vive",
+    "Tetti verdi",
+    "Stazioni ARPA con serie temporali",
+    "Piazze Aperte (da verificare con gli interventi tattici)"
+  ],
+  "serie_titoli": {
+    "dusaf": "Uso e copertura del suolo (DUSAF)",
+    "lst_pac": "Temperatura superficiale (PAC, Reachout)",
+    "rischio_caldo": "Rischio caldo (sezioni di censimento)",
+    "vulnerabilita_caldo": "Vulnerabilità al caldo (sezioni di censimento)",
+    "aria_no2": "NO₂ — concentrazione media annua (modello AMAT)",
+    "aria_pm2_5": "PM2,5 — concentrazione media annua (modello AMAT)",
+    "aria_pm10": "PM10 — concentrazione media annua (modello AMAT)",
+    "ciclabili_pac": "Ciclabili (PAC)",
+    "pedonali_ztl_pac": "Aree pedonali e ZTL (PAC)",
+    "velocita_limitata": "Aree a velocità limitata (PAC)",
+    "interventi_tattici": "Interventi tattici (PAC 1.4.1.2)"
+  }
+}

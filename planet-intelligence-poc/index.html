@@ -1,0 +1,591 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Milano — dati RNDT per Città Vive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout del template di milano-evoluzione: sidebar sinistra con l'elenco delle viste, mappa al centro, pannello a destra. Una vista alla volta. */
+:root {
+  --bg: #f1f3f2; --surface: #ffffff; --sunk: #e6eae8; --fg: #17201c; --muted: #56625d; --line: #d3dad6; --accent: #3b2f8f; --film: #1d2421;
+  --ok: #008300; --warn: #a66a00; --ko: #c2410c;
+  --fs-caption: 16px; --fs-small: 17px; --fs-body: 18px; --fs-lede: 22px; --fs-h2: 30px; --fs-h1: clamp(34px, 4vw, 52px);
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif; --body: "Source Sans 3", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #111513; --surface: #1a1f1d; --sunk: #232a27; --fg: #e7ece9; --muted: #9aa7a1; --line: #2e3733; --accent: #a99cf0; --film: #0b0e0d; --warn: #e0a23a; --ko: #f08a5d; color-scheme: dark; }
+}
+html, body { background: var(--bg); margin: 0; }
+[hidden] { display: none !important; }
+*, *::before, *::after { box-sizing: border-box; }
+body { color: var(--fg); font-family: var(--body); font-size: var(--fs-body); line-height: 1.5; }
+a { color: var(--accent); }
+code, .mono { font-family: var(--mono); font-size: max(.9em, var(--fs-caption)); overflow-wrap: anywhere; }
+.app { display: grid; grid-template-columns: 260px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto; border-right: 1px solid var(--line); background: var(--surface); padding: 22px 16px; display: flex; flex-direction: column; gap: 18px; }
+.brandtop { font: 600 var(--fs-caption)/1.3 var(--body); text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin: 0 0 8px; }
+.brand { font: 700 28px/1.05 var(--display); margin: 0; }
+.brand small { display: block; font: 400 var(--fs-caption)/1.4 var(--body); color: var(--muted); margin-top: 6px; }
+.nav { display: flex; flex-direction: column; gap: 3px; }
+.nav button { display: grid; grid-template-columns: 30px 1fr; align-items: baseline; text-align: left; cursor: pointer; border: 0; border-left: 3px solid transparent; border-radius: 4px; background: none; color: var(--fg); padding: 8px 8px; font: 600 var(--fs-small)/1.25 var(--body); }
+.nav button i { font: 700 24px/1 var(--display); font-style: normal; color: var(--muted); }
+.nav button:hover { background: var(--sunk); }
+.nav button[aria-current="page"] { background: var(--sunk); border-left-color: var(--accent); }
+.nav .sep { height: 1px; background: var(--line); margin: 6px 0; }
+.side .foot { margin-top: auto; font-size: var(--fs-caption); color: var(--muted); }
+main { min-width: 0; padding: 22px 26px 56px; }
+.view { max-width: 1700px; margin-inline: auto; display: grid; gap: 18px; }
+.eyebrow { font: 600 var(--fs-caption)/1.25 var(--body); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0 0 4px; }
+h1 { font: 700 var(--fs-h1)/1.02 var(--display); margin: 0; }
+h2 { font: 700 var(--fs-h2)/1.1 var(--display); margin: 22px 0 6px; }
+.lede { font-size: var(--fs-lede); color: var(--muted); max-width: 70ch; margin: 8px 0 0; }
+p { max-width: 72ch; margin: 0 0 10px; }
+.workspace { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 16px; align-items: start; }
+.stage { --sh: clamp(440px, 78vh, 980px); height: var(--sh); position: relative; background: var(--film); overflow: hidden; border-radius: 6px; }
+.frame { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(100%, calc(var(--sh) * var(--arn))); max-height: 100%; aspect-ratio: var(--arn); overflow: hidden; touch-action: none; cursor: grab; user-select: none; }
+.frame.dragging { cursor: grabbing; }
+.plane { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
+.plane img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
+.plane.crisp img { image-rendering: pixelated; }
+.plane canvas.vec { position: absolute; pointer-events: none; }
+.plane img.px { image-rendering: pixelated; }
+.toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 9px 15px; border-radius: 6px; font: 600 14px var(--body); z-index: 50; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: 90vw; }
+.toast.on { opacity: 1; }
+.plane div.tess { position: absolute; inset: 0; pointer-events: none; }
+.plane div.tess img { position: absolute; display: block; image-rendering: auto; }
+.zoom { position: absolute; right: 12px; bottom: 12px; display: grid; gap: 4px; }
+.zoom button { width: 36px; height: 36px; border: 0; border-radius: 3px; background: rgba(0,0,0,.65); color: #fff; font: 600 18px/1 var(--body); cursor: pointer; }
+.readout { position: absolute; left: 12px; bottom: 12px; color: #fff; font: 500 var(--fs-caption)/1.35 var(--mono); text-shadow: 0 1px 2px #000; pointer-events: none; }
+.empty { position: absolute; inset: 0; display: grid; place-items: center; color: #cfd8d3; text-align: center; padding: 20px; pointer-events: none; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; }
+.psec { padding: 14px 16px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; }
+.psec:last-child { border-bottom: 0; }
+.ptitle { font: 700 24px/1.1 var(--display); margin: 0; }
+.plabel { font: 600 var(--fs-caption)/1.25 var(--body); text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin: 0; }
+.hint { color: var(--muted); font-size: var(--fs-caption); margin: 0; }
+button { font-family: var(--body); }
+.btn { font: 600 var(--fs-caption)/1 var(--body); padding: 8px 11px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--fg); cursor: pointer; }
+.btn:hover { background: var(--sunk); }
+.btn[disabled] { opacity: .4; cursor: default; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.seg button { font: 600 var(--fs-caption)/1 var(--body); padding: 8px 12px; border: 0; background: var(--surface); color: var(--fg); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.seg.wrap { flex-wrap: wrap; }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+input[type=search], select { width: 100%; font: var(--fs-small)/1.2 var(--body); padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--fg); }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.item { border: 1px solid var(--line); border-radius: 5px; padding: 8px 10px; display: grid; gap: 6px; background: var(--surface); }
+.item.on { border-color: var(--accent); }
+.item .t { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: start; font-size: var(--fs-small); line-height: 1.25; }
+.item .t input { margin-top: 3px; accent-color: var(--accent); width: 17px; height: 17px; }
+.item .t b { font-weight: 600; }
+.item .meta { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; font-size: var(--fs-caption); color: var(--muted); }
+.tag { display: inline-block; padding: 1px 7px; border-radius: 10px; border: 1px solid var(--line); font-size: 14.5px; line-height: 1.5; white-space: nowrap; }
+.tag.rndt { border-color: var(--ok); color: var(--ok); } .tag.non { border-color: var(--warn); color: var(--warn); } .tag.prog { border-color: var(--ko); color: var(--ko); }
+.item .sid { font-family: var(--mono); font-size: 14.5px; color: var(--muted); }
+.item.off { opacity: .55; }
+.info { font-size: var(--fs-caption); display: grid; gap: 3px; border-top: 1px dotted var(--line); padding-top: 6px; }
+.info .r { display: grid; grid-template-columns: 7.5em 1fr; gap: 8px; }
+.info .r span:first-child { color: var(--muted); }
+.legend-sw { display: grid; gap: 2px; max-height: 220px; overflow-y: auto; }
+.legend-sw .l { display: flex; gap: 8px; align-items: center; font-size: 15px; }
+.legend-sw img { flex: none; max-height: 18px; image-rendering: pixelated; border: 1px solid var(--line); }
+.avvisi { display: grid; gap: 6px; }
+.avviso { font-size: var(--fs-caption); line-height: 1.35; padding: 6px 9px; border-left: 3px solid var(--warn); background: var(--sunk); border-radius: 0 4px 4px 0; }
+.avviso.k { border-left-color: var(--ko); } .avviso.i { border-left-color: var(--muted); }
+details.grp { border: 1px solid var(--line); border-radius: 5px; }
+details.grp > summary { cursor: pointer; padding: 8px 10px; font: 600 var(--fs-small)/1.2 var(--body); }
+details.grp > div { padding: 0 8px 8px; display: grid; gap: 6px; }
+table { border-collapse: collapse; width: 100%; font-size: var(--fs-caption); }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.tbl-wrap { overflow-x: auto; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px; }
+.method { max-width: 1100px; }
+.method ul { margin: 0 0 10px; padding-left: 22px; max-width: 74ch; } .method li { margin-bottom: 5px; }
+@media (max-width: 1100px) { .workspace { grid-template-columns: minmax(0, 1fr); } .panel { position: static; max-height: none; } .stage { --sh: clamp(320px, 66vh, 760px); } }
+@media (max-width: 860px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .side { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: 14px; gap: 10px; }
+  .nav { flex-direction: row; overflow-x: auto; } .nav button { flex: none; border-left: 0; border-bottom: 3px solid transparent; } .nav button[aria-current="page"] { border-bottom-color: var(--accent); }
+  .side .foot { display: none; } main { padding: 16px 14px 40px; }
+}
+</style>
+
+<div class="app">
+  <aside class="side">
+    <div><p class="brandtop">Planet Intelligence - Proof of Concept</p><p class="brand">Milano<small id="brandSub"></small></p></div>
+    <nav class="nav" id="nav" aria-label="Viste"></nav>
+    <div class="foot" id="foot"></div>
+  </aside>
+  <main><div class="view" id="view"></div></main>
+</div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmt = n => Number(n).toLocaleString('it-IT');
+const kb = b => b >= 1e6 ? (b / 1e6).toLocaleString('it-IT', { maximumFractionDigits: 1 }) + ' MB' : Math.max(1, Math.round(b / 1000)).toLocaleString('it-IT') + ' KB';      // MB e KB decimali
+const MAX_ATTIVI = 6;
+let M, byId = {}, serieDi = {}, vistaCorrente = 'v1', S = {};   // S[vista] = { att: [{k, op, per}], sfondo }
+let legende = {};
+
+/* ---------- dati ---------- */
+const stratoDi = (k, per) => k.startsWith('S:') ? M.strati.find(s => s.serie && s.serie.id === k.slice(2) && s.serie.etichetta === per) : byId[k];
+const titoloSerie = id => (M.serie_titoli && M.serie_titoli[id]) ||
+  serieDi[id][0].titolo.replace(/\s*[—-]?\s*\(?(al 31\/12\/)?\d{4}([–-]\d{4})?\)?/g, '').replace(/\s{2,}/g, ' ').replace(/[—\s]+$/g, '').trim();
+const anni = a => { const m = String(a ?? '').match(/\d{4}/g); return m ? [Math.min(...m), Math.max(...m)] : null; };
+const ok = s => s.rendering && s.rendering.esito === 'ok';
+const chiave = s => s.serie ? 'S:' + s.serie.id : s.id;
+function voci(ids) {   // elenco di voci (strati singoli o serie) senza duplicati, nell'ordine del manifesto
+  const out = [], visti = new Set();
+  for (const id of ids) { const s = byId[id]; const k = chiave(s); if (!visti.has(k)) { visti.add(k); out.push(k); } }
+  return out;
+}
+const periodi = k => serieDi[k.slice(2)].map(s => s.serie.etichetta);
+function statoVista(v) {
+  if (!S[v.id]) {
+    const att = (v.attivi || []).map(id => byId[id]).filter(s => s && ok(s)).map(s => ({ k: chiave(s), op: 85, per: s.serie ? s.serie.etichetta : null }));
+    S[v.id] = { att, sfondo: v.id === 'v1' ? 'scuro' : 'scuro' };
+  }
+  return S[v.id];
+}
+
+/* ---------- avvisi di lettura (calcolati dal manifesto) ---------- */
+const nomeAv = s => `<b>${esc(s.id)}</b>`;
+function avvisiStrato(s) {
+  const out = [], nome = nomeAv;
+  {
+    if (s.anno_fonte === 'revisione') out.push(['', `${nome(s)}: l'anno ${esc(s.anno)} è la data di revisione della scheda, non l'anno del dato.`]);
+    if (s.programmato) out.push(['k', `${nome(s)}: istantanea futura, dato di programma e non realizzato.`]);
+    if (s.dpi) out.push(['i', `${nome(s)}: visibile solo a scala ${esc(s.scala_limite)} o più fine; qui è reso con dpi ridotti, i simboli sono molto piccoli.`]);
+    if (s.fonte !== 'RNDT') out.push(['i', `${nome(s)}: fonte «non RNDT» (catalogo del Comune); licenza: ${esc(s.licenza)}.`]);
+    else if (/non dichiarata/i.test(s.licenza)) out.push(['i', `${nome(s)}: licenza non dichiarata.`]);
+  }
+  return out;
+}
+function avvisiCoppie(A) {
+  const out = [], nome = nomeAv;
+  for (let i = 0; i < A.length; i++) for (let j = i + 1; j < A.length; j++) {
+    const a = A[i], b = A[j], ya = anni(a.anno), yb = anni(b.anno);
+    if (ya && yb) {
+      const gap = Math.max(ya[0] - yb[1], yb[0] - ya[1], 0);
+      if (gap > 3) out.push(['', `Anni distanti: ${nome(a)} (${esc(a.anno)}) e ${nome(b)} (${esc(b.anno)}), ${gap} anni.`]);
+    }
+    const sa = parseInt(String(a.scala || '').replace(/\D/g, '')), sb = parseInt(String(b.scala || '').replace(/\D/g, ''));
+    if (a.tipo !== 'vettore' && b.tipo !== 'vettore' && sa && sb && Math.max(sa, sb) / Math.min(sa, sb) >= 5) out.push(['', `Scale molto diverse: ${nome(a)} (${esc(a.scala)}) e ${nome(b)} (${esc(b.scala)}).`]);
+  }
+  if (A.length > 1) out.push(['i', 'Sovrapporre non significa correlare: gli strati sono ricampionati a ' + M.riquadro.m_per_pixel + ' m e riproiettati in ' + esc(M.riquadro.crs) + '.']);
+  return out;
+}
+function avvisi(att) {
+  const A = att.map(a => stratoDi(a.k, a.per)).filter(Boolean);
+  return [...A.flatMap(avvisiStrato), ...avvisiCoppie(A)];
+}
+
+/* ---------- mappa: pan e zoom sul riquadro comune ---------- */
+const mp = { z: 1, x: 0, y: 0 };
+const ZOOM_MAX = 96;
+let ultimaCoord = '';
+function testoZoom() {
+  const fr = $('frame'); if (!fr) return '';
+  const mpx = (M.riquadro.bbox[2] - M.riquadro.bbox[0]) / (fr.getBoundingClientRect().width * mp.z);
+  return `ZOOM ${mp.z.toLocaleString('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}× · 1 px = ${mpx.toLocaleString('it-IT', { maximumFractionDigits: mpx >= 10 ? 0 : 1 })} m`;
+}
+function aggiornaReadout() { const r = $('readout'); if (r) r.textContent = (ultimaCoord ? ultimaCoord + '   ' : '') + testoZoom(); }
+function applyPlane() { const p = $('plane'); if (p) p.style.transform = `translate(${mp.x}px,${mp.y}px) scale(${mp.z})`; aggiornaReadout(); pianificaVettori(); pianificaTessere(); aggiornaHash(); }
+
+function zoomAt(f, cx, cy) {
+  const fr = $('frame').getBoundingClientRect(), nz = Math.min(ZOOM_MAX, Math.max(1, mp.z * f)), k = nz / mp.z;
+  const px = cx ?? fr.width / 2, py = cy ?? fr.height / 2;
+  mp.x = px - (px - mp.x) * k; mp.y = py - (py - mp.y) * k; mp.z = nz; clamp(); applyPlane();
+}
+function clamp() { const fr = $('frame').getBoundingClientRect(); mp.x = Math.min(0, Math.max(fr.width * (1 - mp.z), mp.x)); mp.y = Math.min(0, Math.max(fr.height * (1 - mp.z), mp.y)); }
+function initMap() {
+  const f = $('frame'); let drag = null;
+  f.addEventListener('wheel', e => { e.preventDefault(); const r = f.getBoundingClientRect(); zoomAt(e.deltaY < 0 ? 1.25 : 0.8, e.clientX - r.left, e.clientY - r.top); }, { passive: false });
+  f.addEventListener('pointerdown', e => { drag = { x: e.clientX - mp.x, y: e.clientY - mp.y }; f.setPointerCapture(e.pointerId); f.classList.add('dragging'); });
+  f.addEventListener('pointermove', e => {
+    const r = f.getBoundingClientRect(), B = M.riquadro.bbox;
+    const u = (e.clientX - r.left - mp.x) / (r.width * mp.z), v = (e.clientY - r.top - mp.y) / (r.height * mp.z);
+    if (u >= 0 && u <= 1 && v >= 0 && v <= 1) { ultimaCoord = `E ${fmt(Math.round(B[0] + u * (B[2] - B[0])))}  N ${fmt(Math.round(B[3] - v * (B[3] - B[1])))}  (${M.riquadro.crs})`; aggiornaReadout(); }
+    if (drag) { mp.x = e.clientX - drag.x; mp.y = e.clientY - drag.y; clamp(); applyPlane(); }
+  });
+  const end = () => { drag = null; f.classList.remove('dragging'); };
+  f.addEventListener('pointerup', end); f.addEventListener('pointercancel', end);
+  $('zin').onclick = () => zoomAt(1.5); $('zout').onclick = () => zoomAt(1 / 1.5); $('zres').onclick = () => { mp.z = 1; mp.x = mp.y = 0; applyPlane(); };
+}
+/* ---------- strati vettoriali (vettori/<id>.json, vedi vettori.md): punti, linee e poligoni scaricati in locale e disegnati in un canvas a ogni zoom e
+   spostamento: nitidi a qualsiasi scala, con stile del servizio (classi) e ritocchi del manifesto (`stile`) ---------- */
+const VET = {};
+const rgba = (c, k = 0) => c ? `rgba(${Math.round(c[0] + (255 - c[0]) * k)},${Math.round(c[1] + (255 - c[1]) * k)},${Math.round(c[2] + (255 - c[2]) * k)},${(c[3] === undefined ? 255 : c[3]) / 255})` : null;
+function caricaVettore(s) {
+  if (VET[s.id]) return VET[s.id].pronto;
+  const v = VET[s.id] = { gruppi: [], n: 0 };
+  // Un solo Path2D con centinaia di migliaia di vertici si costruisce in modo più che proporzionale (80 s per 909.000 vertici): pezzi da 1.000
+  // elementi, costruiti a blocchi cedendo il controllo al browser e disegnati man mano che sono pronti.
+  v.pronto = fetch(s.rendering.file).then(r => r.json()).then(async d => {
+    const PEZZO = 1000, BLOCCO = 4; let nb = 0;
+    v.geom = d.geom; v.classi = d.classi; v.n = d.classi.reduce((a, c) => a + c.n, 0);
+    for (const c of v.classi) if (c.stile && c.stile.icona) { c.img = new Image(); c.img.src = `data:${c.stile.tipo_icona || 'image/png'};base64,${c.stile.icona}`; }
+    for (const [ci, g] of d.dati) {
+      if (d.geom === 'point') {
+        const n = g.length / 2, xs = new Int32Array(n), ys = new Int32Array(n); let x = g[0], y = g[1]; xs[0] = x; ys[0] = y;
+        for (let i = 1; i < n; i++) { x += g[2 * i]; y += g[2 * i + 1]; xs[i] = x; ys[i] = y; }
+        v.gruppi.push({ ci, xs, ys });
+        continue;
+      }
+      for (let i = 0; i < g.length; i += PEZZO) {
+        const path = new Path2D(), chiuso = d.geom === 'poly';      // coordinate intere in decimetri dall'angolo in alto a sinistra del riquadro
+        for (const f of g.slice(i, i + PEZZO)) for (const a of f) {
+          let x = a[0], y = a[1]; path.moveTo(x, y);
+          for (let k = 2; k < a.length; k += 2) { x += a[k]; y += a[k + 1]; path.lineTo(x, y); }
+          if (chiuso) path.closePath();
+        }
+        v.gruppi.push({ ci, path });
+        if (++nb % BLOCCO === 0) { pianificaVettori(); await new Promise(r => setTimeout(r)); }
+      }
+    }
+    v.pronto_ms = Math.round(performance.now());
+  }).catch(() => { v.errore = true; });
+  return v.pronto;
+}
+let rafVet = 0;
+function pianificaVettori() { if (!rafVet) rafVet = requestAnimationFrame(() => { rafVet = 0; disegnaVettori(); }); }
+function disegnaVettori() {
+  const fr = $('frame'), plane = $('plane'); if (!fr || !plane) return;
+  const r = fr.getBoundingClientRect(), fw = r.width, fh = r.height, z = mp.z, dpr = window.devicePixelRatio || 1;
+  const kpx = fw * z / (M.riquadro.bbox[2] - M.riquadro.bbox[0]);      // pixel dello schermo per metro
+  for (const c of plane.querySelectorAll('canvas.vec')) {
+    // il canvas sta nel piano ma occupa esattamente il riquadro visibile: la trasformazione del piano si annulla e il disegno resta nitido
+    c.style.left = (-mp.x / z) + 'px'; c.style.top = (-mp.y / z) + 'px'; c.style.width = (fw / z) + 'px'; c.style.height = (fh / z) + 'px';
+    const W = Math.round(fw * dpr), H = Math.round(fh * dpr);
+    if (c.width !== W || c.height !== H) { c.width = W; c.height = H; }
+    const ctx = c.getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);
+    const v = VET[c.dataset.vec], s = byId[c.dataset.vec]; if (!v || !v.gruppi.length) continue;
+    const st = s.stile || {}, k = st.schiarisci || 0, sc = dpr * kpx * 0.1;      // le coordinate sono decimetri
+    ctx.setTransform(sc, 0, 0, sc, dpr * mp.x, dpr * mp.y); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    for (const g of v.gruppi) {
+      if (!g.path) continue;
+      const cl = v.classi[g.ci].stile || {};
+      if (v.geom === 'poly') {
+        const fill = rgba(st.fill || cl.fill, k); if (fill) { ctx.fillStyle = fill; ctx.fill(g.path, 'evenodd'); }
+        const lin = rgba(st.linea || cl.linea, k), lw = st.contorno_px !== undefined ? st.contorno_px : Math.max(0.6, (cl.lw || 0) * 1.33);
+        if (lin && lw > 0 && (v.n < 4000 || z >= 3)) { ctx.lineWidth = lw * dpr / sc; ctx.strokeStyle = lin; ctx.stroke(g.path); }
+      } else {
+        const lin = rgba(st.linea || cl.linea, k); if (!lin) continue;
+        ctx.lineWidth = Math.max(st.larghezza_px || 1.5, (cl.lw || 1) * 1.33) * dpr / sc; ctx.strokeStyle = lin;
+        const dash = /Dash|Dot/.test(cl.tratto || '') ? [6 * dpr / sc, 4 * dpr / sc] : []; ctx.setLineDash(dash); ctx.stroke(g.path); ctx.setLineDash([]);
+      }
+    }
+    // punti: disegnati in coordinate dello schermo, con raggio in pixel (visibili a ogni zoom)
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    for (const g of v.gruppi) {
+      if (!g.xs) continue;
+      const cl = v.classi[g.ci], sti = cl.stile || {}, n = g.xs.length, kx = 0.1 * kpx * dpr, ox = mp.x * dpr, oy = mp.y * dpr;
+      if (cl.img && n <= 6000 && cl.img.complete && cl.img.naturalWidth) {
+        const lato = (st.icona_px || 16) * Math.min(1, 0.45 + 0.1 * z) * dpr;      // icone più piccole da lontano
+        for (let i = 0; i < n; i++) { const sx = g.xs[i] * kx + ox, sy = g.ys[i] * kx + oy; if (sx > -lato && sy > -lato && sx < W + lato && sy < H + lato) ctx.drawImage(cl.img, sx - lato / 2, sy - lato / 2, lato, lato); }
+        continue;
+      }
+      const rad = Math.max(st.punto_px || 2.5, (sti.size || 4) * 0.1 * Math.min(1, 0.3 + 0.1 * z)) * dpr, fill = rgba(st.fill || sti.fill || sti.linea, k); if (!fill) continue;
+      ctx.fillStyle = fill;
+      if (n <= 20000) { ctx.beginPath(); for (let i = 0; i < n; i++) { const sx = g.xs[i] * kx + ox, sy = g.ys[i] * kx + oy; if (sx > -rad && sy > -rad && sx < W + rad && sy < H + rad) { ctx.moveTo(sx + rad, sy); ctx.arc(sx, sy, rad, 0, 6.2832); } } ctx.fill(); }
+      else for (let i = 0; i < n; i++) { const sx = g.xs[i] * kx + ox, sy = g.ys[i] * kx + oy; if (sx > -rad && sy > -rad && sx < W + rad && sy < H + rad) ctx.fillRect(sx - rad * 0.8, sy - rad * 0.8, rad * 1.6, rad * 1.6); }
+    }
+  }
+}
+
+/* ---------- ortofoto a tessere: livelli più fini scaricati in locale (tessere/<id>.json, vedi vettori.md); sotto 4,5 m per pixel sullo schermo si usano le tessere ---------- */
+const TESS = {};
+let tessTimer = 0;
+function pianificaTessere() { clearTimeout(tessTimer); tessTimer = setTimeout(aggiornaTessere, 100); }
+async function aggiornaTessere() {
+  const plane = $('plane'), fr = $('frame'); if (!plane || !fr) return;
+  for (const cont of plane.querySelectorAll('div.tess')) {
+    const s = byId[cont.dataset.tess]; if (!s) continue;
+    if (!(s.id in TESS)) TESS[s.id] = await fetch(s.tessere).then(r => r.json()).catch(() => null);
+    const D = TESS[s.id]; if (!D) continue;
+    const r = fr.getBoundingClientRect(), fw = r.width, fh = r.height, z = mp.z, B = M.riquadro.bbox, mpp = (B[2] - B[0]) / (fw * z);
+    const base = cont.previousElementSibling, necessarie = new Map();
+    const livelli = mpp < 1.0 ? ['L1', 'L2'] : mpp < 4.5 ? ['L1'] : [];
+    const E0 = B[0] + (-mp.x / z) / fw * (B[2] - B[0]), E1 = B[0] + ((-mp.x + fw) / z) / fw * (B[2] - B[0]);
+    const N1 = B[3] - (-mp.y / z) / fh * (B[3] - B[1]), N0 = B[3] - ((-mp.y + fh) / z) / fh * (B[3] - B[1]);
+    for (const L of livelli) {
+      const d = D.livelli[L]; if (!d) continue;
+      const c0 = Math.max(0, Math.floor((E0 - d.sinistra) / d.tessera_m)), c1 = Math.min(d.colonne - 1, Math.floor((E1 - d.sinistra) / d.tessera_m));
+      const r0 = Math.max(0, Math.floor((d.alto - N1) / d.tessera_m)), r1 = Math.min(d.righe - 1, Math.floor((d.alto - N0) / d.tessera_m));
+      const presenti = new Set(d.tessere.map(t => t.join(',')));
+      for (let rr = r0; rr <= r1; rr++) for (let cc = c0; cc <= c1; cc++) if (presenti.has(cc + ',' + rr)) necessarie.set(`${L}_${cc}_${rr}`, { L, cc, rr, d });
+    }
+    for (const im of [...cont.children]) if (!necessarie.has(im.dataset.k)) im.remove();
+    const gia = new Set([...cont.children].map(im => im.dataset.k));
+    for (const [k, t] of necessarie) {
+      if (gia.has(k)) continue;
+      const { d, cc, rr, L } = t, im = new Image(); im.dataset.k = k; im.alt = '';
+      const x = d.sinistra + cc * d.tessera_m, y = d.alto - rr * d.tessera_m;
+      im.style.cssText = `left:${(x - B[0]) / (B[2] - B[0]) * 100}%;top:${(B[3] - y) / (B[3] - B[1]) * 100}%;width:${d.tessera_m / (B[2] - B[0]) * 100}%;height:${d.tessera_m / (B[3] - B[1]) * 100}%;z-index:${L === 'L2' ? 2 : 1}`;
+      im.src = d.file.replace('{c}', cc).replace('{r}', rr);
+      cont.appendChild(im);
+    }
+    if (base && base.tagName === 'IMG') base.style.visibility = livelli.length ? 'hidden' : '';
+  }
+}
+
+function disegna(v) {
+  const st = statoVista(v), plane = $('plane'); if (!plane) return;
+  const sf = { scuro: 'var(--film)', chiaro: '#e9ebea' }[st.sfondo] || 'var(--film)';
+  $('frame').style.background = sf;
+  let html = '';
+  if (st.sfondo === 'ortofoto' && byId.ortofoto_2018 && ok(byId.ortofoto_2018)) html += `<img alt="" src="${byId.ortofoto_2018.rendering.file}">`;
+  for (const a of [...st.att].reverse()) {
+    const s = stratoDi(a.k, a.per); if (!s || !ok(s)) continue;
+    if (s.tipo === 'vettore') html += `<canvas class="vec" data-vec="${esc(s.id)}" style="opacity:${a.op / 100}"></canvas>`;
+    else html += `<img class="${s.cella_m >= 10 ? 'px' : ''}" alt="${esc(s.titolo)}" src="${s.rendering.file}" style="opacity:${a.op / 100}">` + (s.tessere ? `<div class="tess" data-tess="${esc(s.id)}" style="opacity:${a.op / 100}"></div>` : '');
+  }
+  plane.innerHTML = html;
+  $('empty').hidden = st.att.length > 0;
+  for (const a of st.att) { const s = stratoDi(a.k, a.per); if (s && ok(s) && s.tipo === 'vettore') caricaVettore(s).then(pianificaVettori); }
+  pianificaVettori(); pianificaTessere();
+}
+
+/* ---------- pannello ---------- */
+function rigaInfo(s) {
+  const r = s.rendering || {};
+  const righe = [['id', `<span class="mono">${esc(s.id)}</span>`], ['Fonte', esc(s.fonte)], ['Scheda RNDT', s.id_scheda ? `<span class="mono">${esc(s.id_scheda)}</span>` : '—'],
+    ['Servizio', `<span class="mono">${esc(s.servizio)}</span> · layer <span class="mono">${esc(s.layer)}</span>`],
+    ['Anno', esc(s.anno) + (s.anno_fonte ? ` <span class="hint">(da: ${esc(s.anno_fonte)})</span>` : '')], ['Scala', esc(s.scala || 'non dichiarata')], ['Licenza', esc(s.licenza)]];
+  if (s.note) righe.push(['Note', esc(s.note)]);
+  righe.push(['Rendering', ok(s) && s.tipo === 'vettore' ? `vettore locale: ${fmt(r.elementi)} elementi · ${kb(r.byte)} · scaricato il ${esc(r.data_scarico)}` : ok(s) ? `${esc(r.pixel_pieni_pct)} % di pixel pieni · ${kb(r.byte)} · ${r.richieste} richieste${r.crs_usato ? ' · CRS ' + esc(r.crs_usato) : ''}` : `<span style="color:var(--ko)">${esc(r.esito || 'non renderizzato')}${r.dettaglio ? ': ' + esc(r.dettaglio) : ''}</span>`]);
+  return righe.map(([a, b]) => `<div class="r"><span>${a}</span><span>${b}</span></div>`).join('') + `<div class="legend-sw" id="leg_${esc(s.id)}"></div>`;
+}
+async function caricaLegenda(s) {
+  const box = document.getElementById('leg_' + s.id); if (!box) return;
+  if (!(s.id in legende)) { try { legende[s.id] = await (await fetch(`legende/${s.id}.json`)).json(); } catch { legende[s.id] = null; } }
+  const L = legende[s.id]; if (!L) { box.innerHTML = s.tipo === 'wms' ? '<span class="hint">Legenda non scaricata per i servizi WMS.</span>' : ''; return; }
+  const voci = L.flatMap(l => l.legend || []);
+  box.innerHTML = '<p class="plabel">Legenda del servizio</p>' + voci.map(e => `<div class="l">${e.imageData ? `<img alt="" src="data:${e.contentType || 'image/png'};base64,${e.imageData}">` : ''}<span>${esc(e.label || s.titolo)}</span></div>`).join('');
+}
+function rigaAttiva(a, i, n) {
+  const s = stratoDi(a.k, a.per), tit = a.k.startsWith('S:') ? titoloSerie(a.k.slice(2)) : s.titolo;
+  const tag = s.fonte === 'RNDT' ? '<span class="tag rndt">RNDT</span>' : '<span class="tag non">non RNDT</span>';
+  const per = a.k.startsWith('S:') ? `<div class="seg wrap" role="group" aria-label="Periodo">${periodi(a.k).map(p => `<button data-act="per" data-i="${i}" data-p="${esc(p)}" aria-pressed="${p === a.per}">${esc(p)}</button>`).join('')}</div>` : '';
+  return `<div class="item on" data-i="${i}">
+    <div class="t"><span></span><b>${esc(tit)}</b><span class="row"><button class="btn" data-act="su" data-i="${i}" ${i === 0 ? 'disabled' : ''} title="Porta sopra">▲</button><button class="btn" data-act="giu" data-i="${i}" ${i === n - 1 ? 'disabled' : ''} title="Porta sotto">▼</button><button class="btn" data-act="x" data-i="${i}" title="Togli dalla mappa">✕</button></span></div>
+    <div class="meta">${tag}<span>${esc(s.anno)}</span><span class="sid">${esc(s.id)}</span>${s.programmato ? '<span class="tag prog">programmato</span>' : ''}</div>
+    ${per}<label class="hint">Opacità ${a.op} %<input type="range" min="10" max="100" step="5" value="${a.op}" data-act="op" data-i="${i}"></label>
+    <details><summary class="hint" style="cursor:pointer">Informazioni e legenda</summary><div class="info" data-info="${esc(s.id)}">${rigaInfo(s)}</div></details></div>`;
+}
+function rigaDisponibile(k, v, st) {
+  const sSerie = k.startsWith('S:'), s = sSerie ? serieDi[k.slice(2)][0] : byId[k];
+  const attivo = st.att.some(a => a.k === k), ren = sSerie ? serieDi[k.slice(2)].some(ok) : ok(s);
+  const tit = sSerie ? titoloSerie(k.slice(2)) : s.titolo;
+  const tag = s.fonte === 'RNDT' ? '<span class="tag rndt">RNDT</span>' : '<span class="tag non">non RNDT</span>';
+  const anno = sSerie ? periodi(k)[0] + '…' + periodi(k).slice(-1)[0] : s.anno;
+  return `<div class="item ${ren ? '' : 'off'}"><label class="t"><input type="checkbox" data-act="tgl" data-k="${esc(k)}" ${attivo ? 'checked' : ''} ${ren ? '' : 'disabled'}><b>${esc(tit)}</b><span></span></label>
+    <div class="meta">${tag}<span>${esc(anno)}</span>${sSerie ? `<span class="tag">${periodi(k).length} periodi</span>` : ''}<span class="sid">${esc(sSerie ? k.slice(2) : s.id)}</span>${ren ? '' : '<span class="tag prog">non renderizzato</span>'}</div></div>`;
+}
+function rigaUnica(k, st) {
+  const i = st.att.findIndex(a => a.k === k), a = st.att[i], n = st.att.length;
+  if (i < 0) return rigaDisponibile(k, null, st);
+  const s = stratoDi(a.k, a.per), tit = k.startsWith('S:') ? titoloSerie(k.slice(2)) : s.titolo;
+  const tag = s.fonte === 'RNDT' ? '<span class="tag rndt">RNDT</span>' : '<span class="tag non">non RNDT</span>';
+  const per = k.startsWith('S:') ? `<div class="seg wrap" role="group" aria-label="Periodo">${periodi(k).map(p => `<button data-act="per" data-i="${i}" data-p="${esc(p)}" aria-pressed="${p === a.per}">${esc(p)}</button>`).join('')}</div>` : '';
+  const av = avvisiStrato(s).map(([c, t]) => `<div class="avviso ${c}">${t}</div>`).join('');
+  return `<div class="item on" data-i="${i}">
+    <label class="t"><input type="checkbox" data-act="tgl" data-k="${esc(k)}" checked><b>${esc(tit)}</b><span class="row"><button class="btn" data-act="su" data-i="${i}" ${i === 0 ? 'disabled' : ''} title="Porta sopra">▲</button><button class="btn" data-act="giu" data-i="${i}" ${i === n - 1 ? 'disabled' : ''} title="Porta sotto">▼</button></span></label>
+    <div class="meta">${tag}<span>${esc(s.anno)}</span><span class="sid">${esc(s.id)}</span>${s.programmato ? '<span class="tag prog">programmato</span>' : ''}<span>livello ${i + 1} di ${n}${i === 0 ? ' (sopra)' : ''}</span></div>
+    ${per}<label class="hint">Opacità ${a.op} %<input type="range" min="10" max="100" step="5" value="${a.op}" data-act="op" data-i="${i}"></label>
+    ${av ? `<div class="avvisi">${av}</div>` : ''}
+    <details><summary class="hint" style="cursor:pointer">Informazioni e legenda</summary><div class="info" data-info="${esc(s.id)}">${rigaInfo(s)}</div></details></div>`;
+}
+let filtro = { q: '', fonte: 'tutte', lic: 'tutte' };
+function pannello(v) {
+  const st = statoVista(v), n = st.att.length;
+  const sezioni = [];
+  sezioni.push(`<div class="psec"><p class="plabel">Vista ${v.numero} · <span class="mono">${v.id}</span></p><h2 class="ptitle">${esc(v.titolo)}</h2><p class="hint">${esc(v.descrizione)}</p><p><button class="btn" type="button" data-act="link">Copia il link a questa vista</button></p>${v.tipologia && v.tipologia !== '—' ? `<p class="hint">Tipologie di Città Vive: ${esc(v.tipologia)}</p>` : ''}</div>`);
+  sezioni.push(`<div class="psec"><p class="plabel">Sfondo</p><div class="seg" role="group">${['scuro', 'chiaro', 'ortofoto'].map(x => `<button data-act="sfondo" data-x="${x}" aria-pressed="${st.sfondo === x}">${x[0].toUpperCase() + x.slice(1)}</button>`).join('')}</div></div>`);
+  if (!v.libera) {
+    sezioni.push(`<div class="psec"><p class="plabel">Strati (${n} sulla mappa, al massimo ${MAX_ATTIVI}; ▲▼ cambiano il livello, non la posizione nell'elenco)</p><div style="display:grid;gap:6px">${voci(v.strati).map(k => rigaUnica(k, st)).join('')}</div></div>`);
+    const avc = avvisiCoppie(st.att.map(a => stratoDi(a.k, a.per)).filter(Boolean));
+    if (avc.length) sezioni.push(`<div class="psec"><p class="plabel">Avvisi di lettura</p><div class="avvisi">${avc.map(([c, t]) => `<div class="avviso ${c}">${t}</div>`).join('')}</div></div>`);
+  } else {
+    sezioni.push(`<div class="psec"><p class="plabel">Strati sulla mappa (${n} di ${MAX_ATTIVI} al massimo; il primo sta sopra)</p>${n ? st.att.map((a, i) => rigaAttiva(a, i, n)).join('') : '<p class="hint">Nessuno strato attivo: sceglili nell\'elenco qui sotto.</p>'}</div>`);
+  const av = avvisi(st.att);
+  if (av.length) sezioni.push(`<div class="psec"><p class="plabel">Avvisi di lettura</p><div class="avvisi">${av.map(([c, t]) => `<div class="avviso ${c}">${t}</div>`).join('')}</div></div>`);
+  }
+  if (v.libera) {
+    sezioni.push(`<div class="psec"><p class="plabel">Parti da</p><select id="parti"><option value="">Vista vuota</option>${M.viste.filter(x => !x.libera).map(x => `<option value="${x.id}">${x.numero} · ${esc(x.titolo)}</option>`).join('')}</select>
+      <p class="plabel" style="margin-top:6px">Cerca e filtra</p><input type="search" id="cerca" placeholder="Cerca per titolo o id" value="${esc(filtro.q)}">
+      <div class="row"><div class="seg" role="group">${['tutte', 'RNDT', 'non RNDT'].map(x => `<button data-act="ffonte" data-x="${x}" aria-pressed="${filtro.fonte === x}">${x}</button>`).join('')}</div>
+      <div class="seg" role="group">${[['tutte', 'Ogni licenza'], ['dichiarata', 'Licenza dichiarata']].map(([x, l]) => `<button data-act="flic" data-x="${x}" aria-pressed="${filtro.lic === x}">${l}</button>`).join('')}</div></div></div>`);
+    const q = filtro.q.trim().toLowerCase();
+    const passa = s => (!q || (s.titolo + ' ' + s.id).toLowerCase().includes(q)) && (filtro.fonte === 'tutte' || (filtro.fonte === 'RNDT') === (s.fonte === 'RNDT')) && (filtro.lic === 'tutte' || !/non dichiarata|^—$/i.test(s.licenza));
+    const grp = M.viste.filter(x => !x.libera).map(x => {
+      const ks = voci(x.strati.filter(id => passa(byId[id])));
+      return ks.length ? `<details class="grp" ${q ? 'open' : ''}><summary>${x.numero} · ${esc(x.titolo)} <span class="hint">(${ks.length})</span></summary><div>${ks.map(k => rigaDisponibile(k, v, st)).join('')}</div></details>` : '';
+    }).join('');
+    sezioni.push(`<div class="psec"><p class="plabel">Tutti gli strati disponibili</p><div style="display:grid;gap:6px">${grp || '<p class="hint">Nessuno strato corrisponde al filtro.</p>'}</div></div>`);
+  }
+  $('panel').innerHTML = sezioni.join('');
+  for (const a of st.att) { const s = stratoDi(a.k, a.per); const d = document.querySelector(`details:has([data-info="${s.id}"])`); if (d) { d.addEventListener('toggle', () => { if (d.open) { caricaLegenda(s); apertoId = s.id; } else if (apertoId === s.id) apertoId = null; aggiornaHash(); }); if (apertoId === s.id && !d.open) d.open = true; } }
+}
+function aggiorna(v, soloMappa) { disegna(v); if (!soloMappa) pannello(v); }
+function azione(e) {
+  const t = e.target.closest('[data-act]'); if (!t) return;
+  const v = M.viste.find(x => x.id === vistaCorrente), st = statoVista(v), i = +t.dataset.i, act = t.dataset.act;
+  if (act === 'op') { st.att[i].op = +t.value; disegna(v); t.parentElement.firstChild.nodeValue = `Opacità ${t.value} %`; aggiornaHash(); return; }
+  if (e.type === 'input') return;
+  if (act === 'link') { copiaLink(); return; }
+  if (act === 'tgl') {
+    const k = t.dataset.k;
+    if (t.checked) {
+      if (st.att.length >= MAX_ATTIVI) { t.checked = false; alert(`Al massimo ${MAX_ATTIVI} strati attivi: togline uno.`); return; }
+      const per = k.startsWith('S:') ? periodi(k).filter(p => ok(stratoDi(k, p))).slice(-1)[0] : null;
+      st.att.unshift({ k, op: 85, per });
+    } else st.att = st.att.filter(a => a.k !== k);
+  } else if (act === 'x') st.att.splice(i, 1);
+  else if (act === 'su' && i > 0) [st.att[i - 1], st.att[i]] = [st.att[i], st.att[i - 1]];
+  else if (act === 'giu' && i < st.att.length - 1) [st.att[i + 1], st.att[i]] = [st.att[i], st.att[i + 1]];
+  else if (act === 'per') st.att[i].per = t.dataset.p;
+  else if (act === 'sfondo') st.sfondo = t.dataset.x;
+  else if (act === 'ffonte') filtro.fonte = t.dataset.x;
+  else if (act === 'flic') filtro.lic = t.dataset.x;
+  aggiorna(v); aggiornaHash();
+}
+
+/* ---------- viste e catalogo ---------- */
+function mostraVista(id) {
+  vistaCorrente = id; document.title = (id === 'catalogo' ? 'Catalogo e metodo' : M.viste.find(x => x.id === id).titolo) + ' — Planet Intelligence · Milano'; aggiornaHash(); document.querySelectorAll('#nav button').forEach(b => b.setAttribute('aria-current', b.dataset.v === id ? 'page' : 'false'));
+  if (id === 'catalogo') return mostraCatalogo();
+  const v = M.viste.find(x => x.id === id), r = M.riquadro;
+  $('view').innerHTML = `<div><p class="eyebrow">Vista ${v.numero} · <span class="mono">${v.id}</span></p><h1>${esc(v.titolo)}</h1><p class="lede">${esc(v.descrizione)}</p></div>
+    <div class="workspace"><div class="stage" id="stage"><div class="frame" id="frame" style="--arn:${r.dimensioni_px[0] / r.dimensioni_px[1]}"><div class="plane" id="plane"></div></div>
+      <div class="empty" id="empty" hidden><p>Nessuno strato attivo.<br>Scegli gli strati nel pannello a destra.</p></div>
+      <div class="readout" id="readout"></div><div class="zoom"><button id="zin" aria-label="Ingrandisci">+</button><button id="zout" aria-label="Riduci">−</button><button id="zres" aria-label="Riquadro intero">⤢</button></div></div>
+      <aside class="panel" id="panel" aria-label="Strati e informazioni"></aside></div>`;
+  mp.z = 1; mp.x = mp.y = 0; ultimaCoord = ''; initMap(); aggiornaReadout();
+  $('panel').addEventListener('click', azione); $('panel').addEventListener('input', azione);
+  $('panel').addEventListener('change', e => {
+    if (e.target.id === 'parti') { const da = M.viste.find(x => x.id === e.target.value); const st = statoVista(v); st.att = da ? statoVista(da).att.map(a => ({ ...a })) : []; aggiorna(v); aggiornaHash(); }
+  });
+  $('panel').addEventListener('input', e => { if (e.target.id === 'cerca') { filtro.q = e.target.value; aggiornaHash(); const pos = e.target.selectionStart; pannello(v); const c = $('cerca'); c.focus(); c.setSelectionRange(pos, pos); } });
+  aggiorna(v);
+}
+async function mostraCatalogo() {
+  const somma = (a, f) => a.reduce((t, x) => t + f(x), 0), vet = M.strati.filter(s => s.tipo === 'vettore'), ras = M.strati.filter(s => s.tipo !== 'vettore');
+  const orto = M.strati.find(s => s.tessere), D = orto ? await fetch(orto.tessere).then(r => r.json()).catch(() => null) : null;
+  const celle = ras.filter(s => s.cella_m), senzaVettore = ras.filter(s => s !== orto && ok(s)), vuoti = M.strati.filter(s => !ok(s));
+  const tol = [...new Set(vet.map(s => s.rendering.tolleranza_m))].sort((a, b) => a - b).map(t => t ? String(t).replace('.', ',') : 'nessuna'), date = [...new Set(vet.map(s => s.rendering.data_scarico))].sort();
+  const stileNostro = vet.filter(s => s.stile && (s.stile.fill || s.stile.linea)), rev = M.strati.filter(s => s.anno_fonte === 'revisione');
+  const nonRndt = M.strati.filter(s => s.fonte !== 'RNDT'), senzaLic = M.strati.filter(s => /non dichiarat|^—$|da leggere/i.test(s.licenza || ''));
+  const peso = s => (s.rendering && s.rendering.byte || 0) + (s.tessere_byte || 0);
+  const rapp = s => s.tipo === 'vettore' ? `vettore (${{ poly: 'poligoni', line: 'linee', point: 'punti' }[s.geom] || s.geom}, ${fmt(s.rendering.elementi)})` : s.tessere ? 'raster 5 m + tessere' : !ok(s) ? '<span style="color:var(--ko)">vuoto</span>' : s.cella_m ? `raster, celle da ${s.cella_m} m` : 'raster 5 m';
+  const rows = M.strati.map(s => `<tr><td class="mono">${esc(s.id)}</td><td>${esc(s.vista)}</td><td>${esc(s.titolo)}</td><td>${esc(s.fonte)}</td><td>${esc(s.anno)}${s.anno_fonte ? ` <span class="hint">(${esc(s.anno_fonte)})</span>` : ''}</td><td>${rapp(s)}</td><td>${esc(s.scala && s.tipo === 'vettore' ? 'nominale ' + s.scala : s.scala || '—')}</td><td>${esc(s.licenza)}</td><td>${ok(s) ? kb(peso(s)) + (s.tessere_byte ? ` <span class="hint">(base ${kb(s.rendering.byte)} + tessere)</span>` : '') : '—'}</td><td>${esc((s.rendering || {}).data_scarico || '—')}</td></tr>`).join('');
+  const nm = M.non_mostrati.map(s => `<tr><td>${esc(s.titolo)}</td><td class="mono">${esc(s.id_scheda)}</td><td>${esc(s.motivo)}</td></tr>`).join('');
+  const r = M.riquadro, liv = D ? Object.entries(D.livelli).map(([k, l]) => `${l.passo_m.toLocaleString('it-IT')} m per pixel (${fmt(l.tessere.length)} tessere da ${fmt(l.tessera_m)} m${k === 'L1' ? ', tutto il Comune' : ', zona centrale'})`).join(' e ') : '';
+  $('view').innerHTML = `<div class="method"><p class="eyebrow">Catalogo e metodo</p><h1>Cosa c'è, da dove viene, cosa non va dato per buono</h1>
+    <p class="lede">Demo locale di lavoro. Per chiedere una modifica indica l'<b>id</b> dello strato (es. <code>dusaf_2018</code>) o della vista (es. <code>v3</code>). I numeri di questa pagina sono letti dal manifesto degli strati.</p>
+    <h2>Come sono fatti i dati</h2><ul>
+      <li><b>Vettori</b>: ${fmt(vet.length)} strati su ${fmt(M.strati.length)} (${kb(somma(vet, s => s.rendering.byte))}). Scaricati dai servizi il ${date.map(esc).join(', ')}, solo gli elementi nel riquadro del Comune, e disegnati nel browser: restano nitidi a qualsiasi zoom. Si caricano solo quando accendi lo strato. Sono <b>istantanee</b>: non si aggiornano da sole. Coordinate a 0,1 m; geometrie semplificate (tolleranza ${tol.filter(t => t !== 'nessuna').join(' o ')} m a seconda della scala del dato${tol.includes('nessuna') ? '; alcuni strati di punti non sono semplificati' : ''}). Lo stile è quello del servizio (classi e colori), schiarito per leggerlo sullo sfondo scuro${stileNostro.length ? `; il colore di ${fmt(stileNostro.length)} strati (${stileNostro.map(s => '<code>' + esc(s.id) + '</code>').join(', ')}) l'abbiamo scelto noi` : ''}.</li>
+      <li><b>Raster</b>: ${fmt(ras.length)} strati (${kb(somma(ras.filter(ok), s => s.rendering.byte))} comprese le immagini di base dell'ortofoto): immagini pre-renderizzate nello stesso riquadro del Comune, ${esc(r.crs)}, ${r.dimensioni_px.map(fmt).join(' × ')} pixel a ${r.m_per_pixel} m per pixel, con lo stile del servizio. ${celle.length ? `${fmt(celle.length)} hanno una cella nativa più grossolana, misurata su un campione (${[...new Set(celle.map(s => s.cella_m))].sort((a, b) => a - b).join(', ')} m): si disegnano con pixel netti, non sfocati.` : ''} ${esc(r.nota)}</li>
+      ${orto ? `<li><b>Ortofoto 2018</b>: oltre all'immagine a ${r.m_per_pixel} m, tessere locali a ${liv} (${kb(orto.tessere_byte)} in tutto) che la pagina usa quando lo zoom lo richiede. Il dato originale è a 0,2 m.</li>` : ''}
+      <li><b>Zoom</b>: fino a ${ZOOM_MAX}×; il livello e la scala sul terreno sono accanto alle coordinate della mappa.</li>
+      <li><b>Link</b>: l'indirizzo della pagina descrive la vista, gli strati accesi (con opacità e periodo), lo sfondo, la posizione della mappa e, in «Crea la tua vista», i filtri: si può copiare, incollare e usare con il tasto Indietro. Il pulsante «Copia il link a questa vista» sta in cima al pannello.</li></ul>
+    <h2>Cosa non va dato per buono</h2><ul>
+      <li>Un'immagine «piena» prova che il servizio disegna qualcosa, non che il dato sia giusto; un vettore prova che il servizio ha restituito gli elementi, non che siano aggiornati o corretti.</li>
+      ${senzaVettore.length ? `<li><b>${fmt(senzaVettore.length)} strati restano raster</b> perché il dato è un raster o il servizio non restituisce un vettore utilizzabile: ${senzaVettore.map(s => '<code>' + esc(s.id) + '</code>').join(', ')}.</li>` : ''}
+      ${vuoti.length ? `<li><b>Strati vuoti</b>: ${vuoti.map(s => '<code>' + esc(s.id) + '</code>').join(', ')}${vuoti.some(s => s.note) ? ' — ' + vuoti.filter(s => s.note).map(s => esc(s.note.split('. ').slice(-1)[0])).join(' ') : ''}</li>` : ''}
+      <li>L'anno di uno strato è quello dichiarato nel titolo o nel testo; per ${fmt(rev.length)} strati la scheda non lo dice e l'anno è la data di revisione: lo strato porta l'avviso.</li>
+      <li>Fonti: ${fmt(M.strati.length - nonRndt.length)} strati vengono dal Repertorio Nazionale dei Dati Territoriali, ${fmt(nonRndt.length)} no (catalogo del Comune, <code>gisportal</code>, e altri servizi). Per ${fmt(senzaLic.length)} strati la licenza non è dichiarata o è da leggere.</li>
+      <li>Avvisi di lettura (nel pannello): anni distanti più di 3, scale molto diverse tra raster, anno che è la data di revisione, dato programmato, fonte non RNDT, licenza non dichiarata. <b>Sovrapporre non significa correlare.</b></li>
+      <li>Non verificato: Safari, telefono e tema scuro; le prestazioni su macchine lente con più strati pesanti accesi insieme.</li></ul>
+    <h2>Lacune: non trovate</h2><ul>${M.lacune.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
+    <h2>Strati RNDT non mostrati</h2><div class="card tbl-wrap"><table><thead><tr><th>Titolo</th><th>Scheda</th><th>Motivo</th></tr></thead><tbody>${nm}</tbody></table></div>
+    <h2>Tutti gli strati mostrati</h2><div class="card tbl-wrap"><table><thead><tr><th>id</th><th>Vista</th><th>Titolo</th><th>Fonte</th><th>Anno</th><th>Rappresentazione</th><th>Scala</th><th>Licenza</th><th>Peso</th><th>Scaricato il</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+}
+
+/* ---------- routing: l'indirizzo descrive lo stato. #/<vista|catalogo>?s=<strati>&bg=<sfondo>&z=<zoom>&c=<E,N>&q=&f=&l=&i=<strato aperto>
+   s: id separati da virgola, il primo sta sopra; per le serie `serie.<id>@<periodo>`; `*<opacità>` se diversa da 85. Il cambio di vista è una voce di
+   cronologia (il tasto Indietro la annulla); strati, zoom e filtri sostituiscono la voce corrente. ---------- */
+let apertoId = null, hashTimer = 0, daRoute = false, toastTimer = 0;
+const kStr = k => k.startsWith('S:') ? 'serie.' + k.slice(2) : k, strK = x => x.startsWith('serie.') ? 'S:' + x.slice(6) : x;
+function toast(t) {
+  let el = document.getElementById('toast'); if (!el) { el = document.createElement('div'); el.id = 'toast'; el.className = 'toast'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+  el.textContent = t; el.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('on'), 3800);
+}
+function costruisciHash() {
+  if (vistaCorrente === 'catalogo') return '#/catalogo';
+  const v = M.viste.find(x => x.id === vistaCorrente), st = statoVista(v), p = [];
+  p.push('s=' + st.att.map(a => kStr(a.k) + (a.per ? '@' + a.per : '') + (a.op !== 85 ? '*' + a.op : '')).join(','));
+  if (st.sfondo !== 'scuro') p.push('bg=' + st.sfondo);
+  const fr = $('frame');
+  if (fr && mp.z > 1.001) {
+    const r = fr.getBoundingClientRect(), B = M.riquadro.bbox, u = ((-mp.x + r.width / 2) / mp.z) / r.width, w = ((-mp.y + r.height / 2) / mp.z) / r.height;
+    p.push('z=' + mp.z.toFixed(2).replace(/\.?0+$/, ''), 'c=' + Math.round(B[0] + u * (B[2] - B[0])) + ',' + Math.round(B[3] - w * (B[3] - B[1])));
+  }
+  if (v.libera) { if (filtro.q) p.push('q=' + encodeURIComponent(filtro.q)); if (filtro.fonte !== 'tutte') p.push('f=' + encodeURIComponent(filtro.fonte)); if (filtro.lic !== 'tutte') p.push('l=' + filtro.lic); }
+  if (apertoId && st.att.some(a => stratoDi(a.k, a.per) && stratoDi(a.k, a.per).id === apertoId)) p.push('i=' + apertoId);
+  return '#/' + vistaCorrente + '?' + p.join('&');
+}
+function aggiornaHash() {
+  if (daRoute || !M) return;
+  clearTimeout(hashTimer);
+  hashTimer = setTimeout(() => { const h = costruisciHash(); if (h !== location.hash) history.replaceState(null, '', h); }, 350);
+}
+function copiaLink() {
+  clearTimeout(hashTimer); const h = costruisciHash(); history.replaceState(null, '', h);
+  const fine = () => toast('Link copiato negli appunti'), errore = () => toast('Non riesco a copiare: l\'indirizzo nella barra è già quello giusto');
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(fine, errore); else errore();
+}
+function centraSu(E, N) {
+  const r = $('frame').getBoundingClientRect(), B = M.riquadro.bbox;
+  mp.x = r.width / 2 - (E - B[0]) / (B[2] - B[0]) * r.width * mp.z; mp.y = r.height / 2 - (B[3] - N) / (B[3] - B[1]) * r.height * mp.z; clamp();
+}
+function route() {
+  const m = location.hash.match(/^#\/([^?]*)\??(.*)$/), vista = m ? m[1] : '', valida = vista === 'catalogo' || M.viste.some(x => x.id === vista);
+  const p = new URLSearchParams(m && valida ? m[2] : ''), id = valida ? vista : 'v1', ignorati = [];      // indirizzo non valido: vista 1 con gli strati iniziali
+  daRoute = true;
+  try {
+    if (id !== 'catalogo') {
+      const v = M.viste.find(x => x.id === id), st = statoVista(v), consentiti = v.libera ? null : new Set(voci(v.strati));
+      if (p.has('s')) {
+        const att = [];
+        for (const it of p.get('s').split(',').filter(Boolean)) {
+          const mm = it.match(/^([^@*]+)(?:@([^*]*))?(?:\*(\d+))?$/); if (!mm) { ignorati.push(it); continue; }
+          const k = strK(mm[1]), serie = k.startsWith('S:');
+          let per = null, s;
+          if (serie) { const ps = serieDi[k.slice(2)] ? periodi(k) : []; per = ps.includes(mm[2]) ? mm[2] : ps.filter(x => ok(stratoDi(k, x))).slice(-1)[0] || null; s = per && stratoDi(k, per); } else s = byId[k];
+          if (!s || !ok(s) || (consentiti && !consentiti.has(k)) || att.some(a => a.k === k)) { ignorati.push(mm[1]); continue; }
+          att.push({ k, op: Math.min(100, Math.max(10, +mm[3] || 85)), per });
+        }
+        if (att.length > MAX_ATTIVI) { ignorati.push(...att.slice(MAX_ATTIVI).map(a => a.k)); att.length = MAX_ATTIVI; }
+        st.att = att;
+      }
+      if (['scuro', 'chiaro', 'ortofoto'].includes(p.get('bg'))) st.sfondo = p.get('bg');
+      if (v.libera) { filtro.q = p.get('q') || ''; filtro.fonte = ['RNDT', 'non RNDT'].includes(p.get('f')) ? p.get('f') : 'tutte'; filtro.lic = p.get('l') === 'dichiarata' ? 'dichiarata' : 'tutte'; }
+      apertoId = byId[p.get('i')] ? p.get('i') : null;
+    }
+    mostraVista(id);
+    if (id !== 'catalogo') {
+      const z = parseFloat(p.get('z')), c = (p.get('c') || '').split(',').map(Number);
+      if (z >= 1 && z <= ZOOM_MAX) { mp.z = z; if (c.length === 2 && c.every(Number.isFinite)) centraSu(c[0], c[1]); else clamp(); applyPlane(); }
+    }
+  } finally { daRoute = false; }
+  if (ignorati.length) toast(`Link: ${ignorati.length} ${ignorati.length === 1 ? 'strato ignorato' : 'strati ignorati'} (non validi o non di questa vista): ${ignorati.slice(0, 3).join(', ')}${ignorati.length > 3 ? '…' : ''}`);
+  aggiornaHash();
+}
+
+/* ---------- avvio ---------- */
+fetch('strati.json').then(r => r.json()).then(m => {
+  M = m;
+  for (const s of M.strati) { byId[s.id] = s; if (s.serie) (serieDi[s.serie.id] ||= []).push(s); }
+  $('brandSub').textContent = 'Dati territoriali per Città Vive, da RNDT e dal catalogo del Comune';
+  $('nav').innerHTML = M.viste.map(v => `<button data-v="${v.id}"><i>${v.numero}</i><span>${esc(v.titolo)}</span></button>`).join('') + '<div class="sep"></div><button data-v="catalogo"><i>≡</i><span>Catalogo e metodo</span></button>';
+  $('nav').addEventListener('click', e => { const b = e.target.closest('button'); if (b) location.hash = '#/' + b.dataset.v; });      // il cambio di vista è una voce di cronologia; lo stato è scritto da aggiornaHash()
+  $('foot').innerHTML = 'Demo locale di lavoro.<br>Cita l\'<b>id</b> di vista o strato per chiedere modifiche.';
+  window.addEventListener('hashchange', route); route();
+}).catch(e => { $('view').innerHTML = `<p class="err">Impossibile leggere strati.json: ${esc(e.message)}. Serve un server locale (python3 -m http.server).</p>`; });
+</script>
