@@ -44,6 +44,11 @@ p { max-width: 72ch; margin: 0 0 10px; }
 .stage { --sh: clamp(440px, 78vh, 980px); height: var(--sh); position: relative; background: var(--film); overflow: hidden; border-radius: 6px; }
 .frame { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(100%, calc(var(--sh) * var(--arn))); max-height: 100%; aspect-ratio: var(--arn); overflow: hidden; touch-action: none; cursor: grab; user-select: none; }
 .frame.dragging { cursor: grabbing; }
+.osm { position: absolute; inset: 0; pointer-events: none; isolation: isolate; }
+.frame .osm.leaflet-container { position: absolute; inset: 0; background: transparent; font: inherit; }
+.plane div.tinta { position: absolute; inset: 0; pointer-events: none; }
+.osm-attr { position: absolute; right: 0; bottom: 0; z-index: 3; background: rgba(255,255,255,.8); color: #333; font: 11px/1.4 var(--body); padding: 1px 6px; pointer-events: auto; }
+.osm-attr a { color: #0b5cad; }
 .plane { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
 .plane img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 .plane.crisp img { image-rendering: pixelated; }
@@ -56,6 +61,7 @@ p { max-width: 72ch; margin: 0 0 10px; }
 .zoom { position: absolute; right: 12px; bottom: 12px; display: grid; gap: 4px; }
 .zoom button { width: 36px; height: 36px; border: 0; border-radius: 3px; background: rgba(0,0,0,.65); color: #fff; font: 600 18px/1 var(--body); cursor: pointer; }
 .readout { position: absolute; left: 12px; bottom: 12px; color: #fff; font: 500 var(--fs-caption)/1.35 var(--mono); text-shadow: 0 1px 2px #000; pointer-events: none; }
+.empty p { background: rgba(29,36,33,.85); margin: 0; padding: 10px 14px; border-radius: 6px; }
 .empty { position: absolute; inset: 0; display: grid; place-items: center; color: #cfd8d3; text-align: center; padding: 20px; pointer-events: none; }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; }
 .psec { padding: 14px 16px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; }
@@ -148,7 +154,7 @@ const periodi = k => serieDi[k.slice(2)].map(s => s.serie.etichetta);
 function statoVista(v) {
   if (!S[v.id]) {
     const att = (v.attivi || []).map(id => byId[id]).filter(s => s && ok(s)).map(s => ({ k: chiave(s), op: 85, per: s.serie ? s.serie.etichetta : null }));
-    S[v.id] = { att, sfondo: v.id === 'v1' ? 'scuro' : 'scuro' };
+    S[v.id] = { att, sfondo: 'osm', opsf: 60 };
   }
   return S[v.id];
 }
@@ -195,7 +201,7 @@ function testoZoom() {
   return `ZOOM ${mp.z.toLocaleString('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}× · 1 px = ${mpx.toLocaleString('it-IT', { maximumFractionDigits: mpx >= 10 ? 0 : 1 })} m`;
 }
 function aggiornaReadout() { const r = $('readout'); if (r) r.textContent = (ultimaCoord ? ultimaCoord + '   ' : '') + testoZoom(); }
-function applyPlane() { const p = $('plane'); if (p) p.style.transform = `translate(${mp.x}px,${mp.y}px) scale(${mp.z})`; aggiornaReadout(); pianificaVettori(); pianificaTessere(); aggiornaHash(); }
+function applyPlane() { const p = $('plane'); if (p) p.style.transform = `translate(${mp.x}px,${mp.y}px) scale(${mp.z})`; aggiornaReadout(); sincronizzaOsm(); pianificaVettori(); pianificaTessere(); aggiornaHash(); }
 
 function zoomAt(f, cx, cy) {
   const fr = $('frame').getBoundingClientRect(), nz = Math.min(ZOOM_MAX, Math.max(1, mp.z * f)), k = nz / mp.z;
@@ -298,6 +304,45 @@ function disegnaVettori() {
   }
 }
 
+/* ---------- sfondo OpenStreetMap (predefinito): Leaflet (caricato dal CDN) segue pan e zoom della nostra mappa; è solo uno sfondo, senza interazione.
+   Le tessere sono in Web Mercator e la mappa in EPSG:32632: lo scarto (convergenza dei meridiani, circa 0,13°) resta di 1-2 pixel sullo schermo a qualsiasi zoom ---------- */
+const OSM = { mappa: null, script: null };
+function utmALatLon(E, N) {      // WGS84, fuso 32 nord (Snyder)
+  const a = 6378137, e2 = 0.00669437999014, ep2 = e2 / (1 - e2), k0 = 0.9996, x = E - 500000;
+  const mu = (N / k0) / (a * (1 - e2 / 4 - 3 * e2 * e2 / 64 - 5 * e2 ** 3 / 256)), q = Math.sqrt(1 - e2), e1 = (1 - q) / (1 + q);
+  const f1 = mu + (3 * e1 / 2 - 27 * e1 ** 3 / 32) * Math.sin(2 * mu) + (21 * e1 * e1 / 16 - 55 * e1 ** 4 / 32) * Math.sin(4 * mu) + (151 * e1 ** 3 / 96) * Math.sin(6 * mu) + (1097 * e1 ** 4 / 512) * Math.sin(8 * mu);
+  const s = Math.sin(f1), c = Math.cos(f1), t = Math.tan(f1), C = ep2 * c * c, T = t * t, Nu = a / Math.sqrt(1 - e2 * s * s), R = a * (1 - e2) / Math.pow(1 - e2 * s * s, 1.5), D = x / (Nu * k0);
+  const lat = f1 - (Nu * t / R) * (D * D / 2 - (5 + 3 * T + 10 * C - 4 * C * C - 9 * ep2) * D ** 4 / 24 + (61 + 90 * T + 298 * C + 45 * T * T - 252 * ep2 - 3 * C * C) * D ** 6 / 720);
+  const lon = 9 * Math.PI / 180 + (D - (1 + 2 * T + C) * D ** 3 / 6 + (5 - 2 * C + 28 * T - 3 * C * C + 8 * ep2 + 24 * T * T) * D ** 5 / 120) / c;
+  return [lat * 180 / Math.PI, lon * 180 / Math.PI];
+}
+function sincronizzaOsm() {
+  const el = $('osm'), at = $('osmattr'), fr = $('frame'); if (!el || !fr) return;
+  const v = M.viste.find(x => x.id === vistaCorrente), on = !!v && statoVista(v).sfondo === 'osm';
+  el.hidden = !on; at.hidden = !on;
+  if (on) el.style.opacity = statoVista(v).opsf / 100;
+  if (!on) return;
+  if (!window.L) {
+    if (!OSM.script) {
+      const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css'; document.head.appendChild(css);
+      OSM.script = document.createElement('script'); OSM.script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';
+      OSM.script.onload = sincronizzaOsm;
+      OSM.script.onerror = () => { OSM.script = null; toast('OpenStreetMap non è raggiungibile: serve internet.'); };
+      document.head.appendChild(OSM.script);
+    }
+    return;
+  }
+  if (OSM.mappa && OSM.mappa.getContainer() !== el) { OSM.mappa.remove(); OSM.mappa = null; }
+  if (!OSM.mappa) {
+    OSM.mappa = L.map(el, { zoomControl: false, attributionControl: false, dragging: false, touchZoom: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false, zoomSnap: 0, zoomAnimation: false, fadeAnimation: false, inertia: false });
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxNativeZoom: 19, maxZoom: 28 }).addTo(OSM.mappa);
+  }
+  const r = fr.getBoundingClientRect(), B = M.riquadro.bbox, u = ((-mp.x + r.width / 2) / mp.z) / r.width, w = ((-mp.y + r.height / 2) / mp.z) / r.height;
+  const [lat, lon] = utmALatLon(B[0] + u * (B[2] - B[0]), B[3] - w * (B[3] - B[1])), mpp = (B[2] - B[0]) / (r.width * mp.z);
+  OSM.mappa.invalidateSize({ animate: false });
+  OSM.mappa.setView([lat, lon], Math.log2(156543.03392 * Math.cos(lat * Math.PI / 180) / mpp), { animate: false });
+}
+
 /* ---------- ortofoto a tessere: livelli più fini scaricati in locale (tessere/<id>.json, vedi vettori.md); sotto 4,5 m per pixel sullo schermo si usano le tessere ---------- */
 const TESS = {};
 let tessTimer = 0;
@@ -336,10 +381,11 @@ async function aggiornaTessere() {
 
 function disegna(v) {
   const st = statoVista(v), plane = $('plane'); if (!plane) return;
-  const sf = { scuro: 'var(--film)', chiaro: '#e9ebea' }[st.sfondo] || 'var(--film)';
-  $('frame').style.background = sf;
+  $('frame').style.background = '#e9ebea';      // base chiara: a 0 % ogni sfondo sfuma verso il chiaro
+  const of = st.opsf / 100;
   let html = '';
-  if (st.sfondo === 'ortofoto' && byId.ortofoto_2018 && ok(byId.ortofoto_2018)) html += `<img alt="" src="${byId.ortofoto_2018.rendering.file}">`;
+  if (st.sfondo === 'scuro') html += `<div class="tinta" style="background:var(--film);opacity:${of}"></div>`;
+  else if (st.sfondo === 'ortofoto' && byId.ortofoto_2018 && ok(byId.ortofoto_2018)) html += `<img alt="" src="${byId.ortofoto_2018.rendering.file}" style="opacity:${of}">` + (byId.ortofoto_2018.tessere ? `<div class="tess" data-tess="ortofoto_2018" style="opacity:${of}"></div>` : '');
   for (const a of [...st.att].reverse()) {
     const s = stratoDi(a.k, a.per); if (!s || !ok(s)) continue;
     if (s.tipo === 'vettore') html += `<canvas class="vec" data-vec="${esc(s.id)}" style="opacity:${a.op / 100}"></canvas>`;
@@ -348,7 +394,7 @@ function disegna(v) {
   plane.innerHTML = html;
   $('empty').hidden = st.att.length > 0;
   for (const a of st.att) { const s = stratoDi(a.k, a.per); if (s && ok(s) && s.tipo === 'vettore') caricaVettore(s).then(pianificaVettori); }
-  pianificaVettori(); pianificaTessere();
+  pianificaVettori(); pianificaTessere(); sincronizzaOsm();
 }
 
 /* ---------- pannello ---------- */
@@ -406,7 +452,7 @@ function pannello(v) {
   const st = statoVista(v), n = st.att.length;
   const sezioni = [];
   sezioni.push(`<div class="psec"><p class="plabel">Vista ${v.numero} · <span class="mono">${v.id}</span></p><h2 class="ptitle">${esc(v.titolo)}</h2><p class="hint">${esc(v.descrizione)}</p><p><button class="btn" type="button" data-act="link">Copia il link a questa vista</button></p>${v.tipologia && v.tipologia !== '—' ? `<p class="hint">Tipologie di Città Vive: ${esc(v.tipologia)}</p>` : ''}</div>`);
-  sezioni.push(`<div class="psec"><p class="plabel">Sfondo</p><div class="seg" role="group">${['scuro', 'chiaro', 'ortofoto'].map(x => `<button data-act="sfondo" data-x="${x}" aria-pressed="${st.sfondo === x}">${x[0].toUpperCase() + x.slice(1)}</button>`).join('')}</div></div>`);
+  sezioni.push(`<div class="psec"><p class="plabel">Sfondo</p><div class="seg" role="group">${['osm', 'ortofoto', 'scuro', 'chiaro'].map(x => `<button data-act="sfondo" data-x="${x}" aria-pressed="${st.sfondo === x}">${x === 'osm' ? 'OpenStreetMap' : x[0].toUpperCase() + x.slice(1)}</button>`).join('')}</div><label class="hint">Dissolvenza ${st.opsf} %<input type="range" min="0" max="100" step="5" value="${st.opsf}" data-act="sfop"></label></div>`);
   if (!v.libera) {
     sezioni.push(`<div class="psec"><p class="plabel">Strati (${n} sulla mappa, al massimo ${MAX_ATTIVI}; ▲▼ cambiano il livello, non la posizione nell'elenco)</p><div style="display:grid;gap:6px">${voci(v.strati).map(k => rigaUnica(k, st)).join('')}</div></div>`);
     const avc = avvisiCoppie(st.att.map(a => stratoDi(a.k, a.per)).filter(Boolean));
@@ -436,6 +482,7 @@ function aggiorna(v, soloMappa) { disegna(v); if (!soloMappa) pannello(v); }
 function azione(e) {
   const t = e.target.closest('[data-act]'); if (!t) return;
   const v = M.viste.find(x => x.id === vistaCorrente), st = statoVista(v), i = +t.dataset.i, act = t.dataset.act;
+  if (act === 'sfop') { st.opsf = +t.value; disegna(v); t.parentElement.firstChild.nodeValue = `Dissolvenza ${t.value} %`; aggiornaHash(); return; }
   if (act === 'op') { st.att[i].op = +t.value; disegna(v); t.parentElement.firstChild.nodeValue = `Opacità ${t.value} %`; aggiornaHash(); return; }
   if (e.type === 'input') return;
   if (act === 'link') { copiaLink(); return; }
@@ -462,7 +509,7 @@ function mostraVista(id) {
   if (id === 'catalogo') return mostraCatalogo();
   const v = M.viste.find(x => x.id === id), r = M.riquadro;
   $('view').innerHTML = `<div><p class="eyebrow">Vista ${v.numero} · <span class="mono">${v.id}</span></p><h1>${esc(v.titolo)}</h1><p class="lede">${esc(v.descrizione)}</p></div>
-    <div class="workspace"><div class="stage" id="stage"><div class="frame" id="frame" style="--arn:${r.dimensioni_px[0] / r.dimensioni_px[1]}"><div class="plane" id="plane"></div></div>
+    <div class="workspace"><div class="stage" id="stage"><div class="frame" id="frame" style="--arn:${r.dimensioni_px[0] / r.dimensioni_px[1]}"><div class="osm" id="osm" hidden></div><div class="plane" id="plane"></div><div class="osm-attr" id="osmattr" hidden>© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</div></div>
       <div class="empty" id="empty" hidden><p>Nessuno strato attivo.<br>Scegli gli strati nel pannello a destra.</p></div>
       <div class="readout" id="readout"></div><div class="zoom"><button id="zin" aria-label="Ingrandisci">+</button><button id="zout" aria-label="Riduci">−</button><button id="zres" aria-label="Riquadro intero">⤢</button></div></div>
       <aside class="panel" id="panel" aria-label="Strati e informazioni"></aside></div>`;
@@ -493,6 +540,7 @@ async function mostraCatalogo() {
       <li><b>Raster</b>: ${fmt(ras.length)} strati (${kb(somma(ras.filter(ok), s => s.rendering.byte))} comprese le immagini di base dell'ortofoto): immagini pre-renderizzate nello stesso riquadro del Comune, ${esc(r.crs)}, ${r.dimensioni_px.map(fmt).join(' × ')} pixel a ${r.m_per_pixel} m per pixel, con lo stile del servizio. ${celle.length ? `${fmt(celle.length)} hanno una cella nativa più grossolana, misurata su un campione (${[...new Set(celle.map(s => s.cella_m))].sort((a, b) => a - b).join(', ')} m): si disegnano con pixel netti, non sfocati.` : ''} ${esc(r.nota)}</li>
       ${orto ? `<li><b>Ortofoto 2018</b>: oltre all'immagine a ${r.m_per_pixel} m, tessere locali a ${liv} (${kb(orto.tessere_byte)} in tutto) che la pagina usa quando lo zoom lo richiede. Il dato originale è a 0,2 m.</li>` : ''}
       <li><b>Zoom</b>: fino a ${ZOOM_MAX}×; il livello e la scala sul terreno sono accanto alle coordinate della mappa.</li>
+      <li><b>Sfondo</b>: quattro scelte (OpenStreetMap, predefinito; Ortofoto, con le stesse tessere dello strato; Scuro; Chiaro) e un solo cursore di dissolvenza: a 0 % lo sfondo sfuma verso il chiaro. <b>OpenStreetMap è l'unica parte che usa servizi esterni</b> (serve internet): le tessere standard di <code>tile.openstreetmap.org</code> sono mostrate con la libreria Leaflet (caricata dal CDN) e seguono lo zoom e lo spostamento della mappa. Dati © contributori di OpenStreetMap, licenza ODbL. Le tessere sono in Web Mercator e la mappa in EPSG:32632: lo scarto è di 1-2 pixel sullo schermo, ma non è un allineamento al metro.</li>
       <li><b>Link</b>: l'indirizzo della pagina descrive la vista, gli strati accesi (con opacità e periodo), lo sfondo, la posizione della mappa e, in «Crea la tua vista», i filtri: si può copiare, incollare e usare con il tasto Indietro. Il pulsante «Copia il link a questa vista» sta in cima al pannello.</li></ul>
     <h2>Cosa non va dato per buono</h2><ul>
       <li>Un'immagine «piena» prova che il servizio disegna qualcosa, non che il dato sia giusto; un vettore prova che il servizio ha restituito gli elementi, non che siano aggiornati o corretti.</li>
@@ -520,7 +568,8 @@ function costruisciHash() {
   if (vistaCorrente === 'catalogo') return '#/catalogo';
   const v = M.viste.find(x => x.id === vistaCorrente), st = statoVista(v), p = [];
   p.push('s=' + st.att.map(a => kStr(a.k) + (a.per ? '@' + a.per : '') + (a.op !== 85 ? '*' + a.op : '')).join(','));
-  if (st.sfondo !== 'scuro') p.push('bg=' + st.sfondo);
+  if (st.sfondo !== 'osm') p.push('bg=' + st.sfondo);
+  if (st.opsf !== 60) p.push('bo=' + st.opsf);
   const fr = $('frame');
   if (fr && mp.z > 1.001) {
     const r = fr.getBoundingClientRect(), B = M.riquadro.bbox, u = ((-mp.x + r.width / 2) / mp.z) / r.width, w = ((-mp.y + r.height / 2) / mp.z) / r.height;
@@ -564,7 +613,8 @@ function route() {
         if (att.length > MAX_ATTIVI) { ignorati.push(...att.slice(MAX_ATTIVI).map(a => a.k)); att.length = MAX_ATTIVI; }
         st.att = att;
       }
-      if (['scuro', 'chiaro', 'ortofoto'].includes(p.get('bg'))) st.sfondo = p.get('bg');
+      if (['osm', 'ortofoto', 'scuro', 'chiaro'].includes(p.get('bg'))) st.sfondo = p.get('bg');
+      if (/^\d{1,3}$/.test(p.get('bo') || '') && +p.get('bo') <= 100) st.opsf = +p.get('bo');
       if (v.libera) { filtro.q = p.get('q') || ''; filtro.fonte = ['RNDT', 'non RNDT'].includes(p.get('f')) ? p.get('f') : 'tutte'; filtro.lic = p.get('l') === 'dichiarata' ? 'dichiarata' : 'tutte'; }
       apertoId = byId[p.get('i')] ? p.get('i') : null;
     }

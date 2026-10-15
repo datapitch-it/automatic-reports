@@ -27,9 +27,7 @@
         "dbt_edifici",
         "dbt_strade"
       ],
-      "attivi": [
-        "ortofoto_2018"
-      ]
+      "attivi": []
     },
     {
       "id": "v2",
